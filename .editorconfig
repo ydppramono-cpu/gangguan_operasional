@@ -16,6 +16,6 @@ indent_size = 4
 trim_trailing_whitespace = false
 
 # Seed data dibangkitkan alat — jangan diformat ulang
-[src/1[0-8]_Seed*.gs]
+[src/1[0-9]_Seed*.gs]
 trim_trailing_whitespace = false
 insert_final_newline = false

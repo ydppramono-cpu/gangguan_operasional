@@ -525,4 +525,14 @@ details summary { cursor: pointer; font-size: var(--fs-sm); }
 .tbl td.wrap { white-space: normal; } .tbl td.wrap > div { display: block; }
 .rt-elev { position: relative; padding-top: 30px; margin-top: 6px; }
 @media (max-width: 720px) { .rt-win { grid-template-columns: 1fr; } .rt-win > .muted { grid-column: 1; } .chart.rt-marey { height: 460px; } }
+
+/* Grafik perjalanan (Marey) — View.Gapeka */
+.mr-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.mr-ctl .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.mr-lintas select { max-width: min(560px, 80vw); }
+.mr-wrap { position: relative; overflow-x: hidden; border: 1px solid var(--line-soft); border-radius: var(--r-md); background: #fff; }
+.mr-host { position: relative; width: 100%; }
+.mr-host canvas { display: block; }
+.mr-tip { position: absolute; z-index: 5; pointer-events: none; background: #fff; border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow-2); padding: 8px 10px; font-size: 12.5px; line-height: 1.45; max-width: 230px; }
+@media (max-width: 640px) { .mr-ctl { gap: 8px; } .mr-ctl .field { flex-wrap: wrap; } }
 </style>

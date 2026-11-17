@@ -17,7 +17,7 @@ Semua aturan yang bisa diperiksa mesin diperiksa oleh `npm run check`. Aturan la
 
 - Include **hanya** dengan bentuk baku `<?!= include('Nama'); ?>` (tanpa `.html`). Penanda template lain (`<? ?>`, `<?= ?>`) tidak dipakai.
 - Setiap berkas HTML wajib terjangkau dari `Index` (berkas yatim ditolak oleh `check_build.py`).
-- Seed besar (`10_Seed`, `11_SeedJadwal`, `12_SeedRujukan`, `13_AsetLaporan`, `14_SeedResor`, `17_SeedDuksar`, `18_SeedPeta`, `Ui.Logo`) **dibangkitkan alat**, tidak disunting tangan, dan dikecualikan dari lint.
+- Seed besar (`10_Seed`, `11_SeedJadwal`, `12_SeedRujukan`, `13_AsetLaporan`, `14_SeedResor`, `17_SeedDuksar`, `18_SeedPeta`, `19_SeedGapeka26`, `Ui.Logo`) **dibangkitkan alat**, tidak disunting tangan, dan dikecualikan dari lint.
 
 ## 2. Penamaan
 

@@ -19,7 +19,7 @@ from html_include import expand  # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'src')
 SEPARATE = [('11_SeedJadwal.gs', 'SeedJadwal.gs'), ('13_AsetLaporan.gs', 'AsetLaporan.gs'),
-            ('18_SeedPeta.gs', 'SeedPeta.gs'), ('appsscript.json', 'appsscript.json')]
+            ('18_SeedPeta.gs', 'SeedPeta.gs'), ('19_SeedGapeka26.gs', 'SeedGapeka26.gs'), ('appsscript.json', 'appsscript.json')]
 
 
 def read(name):
@@ -34,7 +34,7 @@ def main():
         order = json.load(fh)
     version = read('00_Config.gs').split("APP_VERSION: '")[1].split("'")[0]
     header = ('/**\n * KAI Dashboard Gangguan Operasional v%s — gabungan %d modul dari repo gangguan_operasional/src '
-              '(tools/pack.py).\n * Wajib bersama SeedJadwal.gs, AsetLaporan.gs dan SeedPeta.gs.\n */\n') % (version, len(order))
+              '(tools/pack.py).\n * Wajib bersama SeedJadwal.gs, AsetLaporan.gs, SeedPeta.gs dan SeedGapeka26.gs.\n */\n') % (version, len(order))
     body = ''.join('\n// ===== MODUL %s =====\n%s' % (m, read(m)) for m in order)
     with open(os.path.join(out, 'Code.gs'), 'w', encoding='utf-8') as fh:
         fh.write(header + body)

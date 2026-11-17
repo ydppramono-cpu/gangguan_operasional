@@ -42,6 +42,16 @@ function apiRef(version) {
   });
 }
 
+/**
+ * Data grafik perjalanan (Marey) GAPEKA 2026 — statis dari 19_SeedGapeka26.gs, tidak bergantung snapshot gangguan.
+ * @return {{ok: boolean, gz: string}} gz = base64(gzip(JSON)) dibuka di browser (KAI.gunzipJson).
+ */
+function apiGapeka26() {
+  return guard_(function () {
+    return { ok: true, gz: SEED_GAPEKA26_GZ };
+  });
+}
+
 function apiStatus() {
   return guard_(function () {
     var p = Store.pointer(), log = [];

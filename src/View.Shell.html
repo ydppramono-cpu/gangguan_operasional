@@ -69,7 +69,7 @@
       </div>
       <button class="btn sm" @click="$store.app.go('unduh')" title="Unduh"><svg class="i"><use href="#i-download"/></svg><span class="hide-md">Unduh</span></button>
     </div>
-    <div class="filterbar" role="group" aria-label="Filter global" x-show="['kejadian'].indexOf($store.app.route) < 0">
+    <div class="filterbar" role="group" aria-label="Filter global" x-show="['kejadian', 'gapeka'].indexOf($store.app.route) < 0">
       <div class="field">
         <span class="lbl">Periode</span>
         <div class="seg">
@@ -164,6 +164,8 @@
         <?!= include('Part.RuteData'); ?>
 
         <?!= include('View.Eksposur'); ?>
+
+        <?!= include('View.Gapeka'); ?>
 
         <?!= include('View.Telusuri'); ?>
 

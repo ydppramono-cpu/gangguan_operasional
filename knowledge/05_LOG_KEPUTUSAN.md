@@ -4,6 +4,7 @@ Format setiap entri: tanggal, keputusan, alasan atau sumber. Entri ditulis palin
 
 | Tanggal | Keputusan | Alasan / sumber |
 |---|---|---|
+| 17 Nov 2026 | GAPEKA 2026 diekstrak ke `GAPEKA_2026_Basis_Data`; data OCR Sumatera diberi status `terverifikasi`/`periksa` (koreksi hanya bila cocok unik dengan Penomoran, tidak menebak). Grafik perjalanan memakai judul lintas lembar sebagai filter | Arahan pengguna 17 Nov: lanjutkan GAPEKA 2026, diagram Marey sesuai lembar, tanpa elemen bertumpuk |
 | 17 Nov 2026 | Akses web app tetap `ANYONE_ANONYMOUS` (siapa pun dengan URL, tanpa login) | Keputusan pengguna: "semua orang bisa akses web app" |
 | 17 Nov 2026 | Folder `KAI_Data_Platform` dan proyek GAS web app dipindah ke folder Drive "Web App Gangguan Operasional"; repo kode = GitHub `ydppramono-cpu/gangguan_operasional` | Arahan pengguna 17 Nov |
 | 17 Nov 2026 | Standar kode: ESLint + `tools/check_build.py` wajib lulus sebelum `clasp push`; `Index.html` dipecah menjadi parsial `Css/Ui/Js/View/Part` lewat `include()` (hasil gabung identik dengan v3.10.0 kecuali perbaikan lint) | Arahan pengguna: kode sesuai kaidah penulisan yang baik dan benar |
