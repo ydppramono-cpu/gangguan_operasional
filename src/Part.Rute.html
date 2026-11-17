@@ -1,0 +1,188 @@
+<!-- Part.Rute — tab "Rute jalur" (Wilayah & koridor): peta vektor tanpa ubin, peringkat koridor, diagram lintas, grafik perjalanan (Marey),
+     pendapatan per KA, profil rute & rekomendasi. Mesin: Js.Rute (KAIRoute). Komponen: Part.RuteData (vRute). -->
+<div x-data="vRute">
+  <template x-if="!$store.app.refReady"><div class="card"><div class="card-b"><div class="skel" style="height:320px"></div></div></div></template>
+  <template x-if="$store.app.refReady && !B"><div class="card"><div class="card-b"><p class="note">Data jaringan GAPEKA belum tersedia.</p></div></div></template>
+  <template x-if="$store.app.refReady && B && C">
+    <div>
+      <p class="note story">Alur baca: pilih <b>koridor</b> → lihat <b>siapa yang lewat & berapa pendapatannya</b> → di <b>petak</b> mana prasarana sering terganggu dan <b>jam kosong</b> mana yang bisa dipakai WKP → <b>profil rute</b> (fisik, topografi, kerentanan) & rekomendasi. Data 12 bulan: <b x-text="KAI.fmt.mon(B.from) + '–' + KAI.fmt.mon(B.to)"></b><span x-text="' · pendapatan ' + (B.revYms.length ? KAI.fmt.mon(B.revYms[0]) + '–' + KAI.fmt.mon(B.revYms[B.revYms.length - 1]) : 'tidak tersedia')"></span>.</p>
+
+      <div class="rt-pick" role="tablist" aria-label="Pilih koridor">
+        <template x-for="g in groups" :key="g.k">
+          <div class="rt-grp"><span class="lbl" x-text="g.k"></span>
+            <template x-for="c in g.list" :key="c.id"><button class="chip sm" :aria-pressed="String(c.id === id)" @click="pick(c.id)" x-text="c.name"></button></template>
+          </div>
+        </template>
+      </div>
+
+      <div class="kpis rt-kpis mt">
+        <div class="kpi"><span x-text="C.name"></span><b x-text="KAI.fmt.n(C.len) + ' km'"></b><em x-text="C.path.length + ' stasiun · ganda ' + KAI.fmt.d1(C.len ? C.kmGanda / C.len * 100 : 0) + '%'"></em></div>
+        <div class="kpi"><span>Wilayah dilewati</span><b x-text="C.regions.length + ' wilayah'"></b><em x-text="C.regions.map(function (r) { return r.region + ' ' + KAI.fmt.n(r.km) + ' km'; }).join(' · ')"></em></div>
+        <div class="kpi"><span>Perjalanan harian (GAPEKA 2025)</span><b x-text="KAI.fmt.n(C.nDaily) + ' KA'"></b><em x-text="'penumpang ' + C.nPnp + ' · KRL ' + C.nKrl + ' · barang ' + C.nBrg + ' · dinas ' + C.nDinas"></em></div>
+        <div class="kpi"><span>Pendapatan alokasi km · 12 bln</span><b x-text="KAI.fmt.rp(C.revA)"></b><em x-text="'penumpang ' + KAI.fmt.rp(C.revPA) + ' · barang ' + KAI.fmt.rp(C.revBA)"></em></div>
+        <div class="kpi"><span>Volume alokasi km · 12 bln</span><b x-text="KAI.fmt.n(C.paxA) + ' pnp'"></b><em x-text="KAI.fmt.n(C.tonA) + ' ton barang'"></em></div>
+        <div class="kpi"><span>Kejadian di koridor · 12 bln</span><b x-text="KAI.fmt.n(C.g.n) + ' · ' + KAI.fmt.n(C.g.menit) + '′'"></b><em x-text="'prasarana ' + C.gPras + ' · keamanan ' + C.gSec + ' · alam ' + C.gNat"></em></div>
+      </div>
+
+      <div class="grid g-2-1 mt rt-top">
+        <div class="card">
+          <div class="card-h"><div><h3 x-text="'Peta koridor · ' + C.name"></h3><p>Peta vektor tertanam (tanpa ubin, tanpa kunci API) · klik petak untuk rincian · Ctrl + gulir untuk zoom</p></div>
+            <div class="seg" role="group" aria-label="Warna petak">
+              <template x-for="m in mapModes" :key="m[0]"><button :aria-pressed="String(mapMode === m[0])" @click="mapMode = m[0]" x-text="m[1]"></button></template>
+            </div></div>
+          <div class="card-b"><div class="chart rt-map" x-chart="mapOpt()" @chart-click="onMapClick($event.detail)"></div>
+            <div class="legend rt-leg"><template x-for="l in mapLegend" :key="l[0]"><span><i :style="'background:' + l[1]"></i><span x-text="l[0]"></span></span></template></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><div><h3>Peringkat koridor menurut pendapatan</h3><p>Alokasi km = pendapatan KA × porsi km KA di koridor · klik baris untuk memilih</p></div></div>
+          <div class="card-b tbl-wrap" style="max-height:none">
+            <table class="tbl"><thead><tr><th>Koridor</th><th class="num">Pendapatan</th><th class="num">KA/hari</th><th class="num hide-sm">Ggn pras.</th></tr></thead><tbody>
+              <template x-for="(c, i) in rank" :key="c.id">
+                <tr class="click" :class="c.id === id ? 'sel' : ''" @click="pick(c.id)">
+                   <td class="wrap"><b x-text="(i + 1) + '. ' + c.name"></b><div class="muted sm rt-sub" :title="KAI.fmt.n(c.paxA) + ' pnp · ' + KAI.fmt.n(c.tonA) + ' ton'" x-text="KAI.fmt.n(c.len) + ' km · ' + KAI.fmt.n(c.paxA) + ' pnp · ' + KAI.fmt.n(c.tonA) + ' t'"></div></td>
+                  <td class="num bar-cell"><div class="b" :style="'width:' + (rankMax ? c.revA / rankMax * 100 : 0) + '%'"></div><span x-text="KAI.fmt.rp(c.revA)"></span></td>
+                  <td class="num" x-text="c.nDaily"></td><td class="num hide-sm" x-text="c.gPras"></td>
+                </tr>
+              </template>
+            </tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt">
+        <div class="card-h"><div><h3 x-text="'Diagram lintas · ' + C.sub"></h3><p>Sumbu = km dari stasiun awal · tiap kolom = satu petak (LIST PETAK JALAN) · warna makin pekat = nilai makin tinggi · klik petak untuk rincian</p></div></div>
+        <div class="card-b fill"><div class="chart rt-diag" x-chart="diagOpt()" @chart-click="onDiagClick($event.detail)"></div></div>
+      </div>
+
+      <div class="grid g-2-1 mt">
+        <div class="card">
+          <div class="card-h"><div><h3>Grafik perjalanan (Marey) · GAPEKA 2025</h3><p x-text="'Garis = perjalanan harian (REG/PLB) · miring = berjalan, datar = berhenti · pita hijau = jam kosong petak terpilih' + (seg ? ' (' + seg.nmA + ' – ' + seg.nmB + ')' : '')"></p></div>
+            <div class="seg" role="group" aria-label="Jenis KA"><template x-for="m in mareyCats" :key="m[0]"><button :aria-pressed="String(mCat[m[0]])" @click="mCat[m[0]] = !mCat[m[0]]" x-text="m[1]"></button></template></div></div>
+          <div class="card-b fill"><div class="chart rt-marey" x-chart="mareyOpt()" @chart-click="onMareyClick($event.detail)"></div></div>
+        </div>
+        <div class="card">
+          <template x-if="!seg"><div class="card-b"><p class="note">Pilih petak di peta, diagram lintas, atau tabel petak prioritas.</p></div></template>
+          <template x-if="seg">
+            <div>
+              <div class="card-h"><div><h3 x-text="seg.nmA + ' – ' + seg.nmB"></h3><p x-text="seg.key + ' · ' + KAI.fmt.d1(seg.km) + ' km · ' + (seg.track || 'jalur tidak tercatat').toLowerCase() + ' · ' + seg.region + (seg.resor ? ' · UPT Resor JR ' + seg.resor : '')"></p></div>
+                <button class="btn sm" @click="$store.app.open('petak', seg.key)">Profil petak</button></div>
+              <div class="card-b">
+                <div class="rt-flags"><span class="tag" :class="flagCls(seg.flag)" x-text="seg.flag ? 'Prioritas ' + seg.flag : 'Tidak prioritas'"></span>
+                  <span class="tag" x-text="seg.nTrip + ' KA/hari'"></span><span class="tag" x-text="'Ggn pras. ' + seg.gN + ' · ' + KAI.fmt.n(seg.gM) + '′'"></span>
+                  <span class="tag" x-text="'WKP ' + seg.wkN + 'x (JR ' + seg.wkJR + ')'"></span>
+                  <span class="tag" :class="seg.thi && seg.thi.hi < 70 ? 't-bad' : ''" x-text="seg.thi ? 'THI ' + KAI.fmt.d1(seg.thi.hi) + ' · ' + KAI.fmt.mon(seg.thi.ym) : 'THI petak tidak tersedia'"></span></div>
+                <h4 class="h-s mt">Jam kosong (tanpa KA terjadwal, penyangga ± <span x-text="buf"></span> mnt)</h4>
+                <template x-for="r in winRows" :key="r.k">
+                  <div class="rt-win"><span class="lbl" x-text="r.label"></span>
+                    <div class="rt-day"><template x-for="(g, j) in r.bars" :key="j"><i :style="'left:' + g.l + '%;width:' + g.w + '%'" :title="g.t"></i></template>
+                      <template x-for="h in [0, 6, 12, 18, 24]" :key="h"><em :style="'left:' + (h / 24 * 100) + '%'" x-text="h"></em></template></div>
+                    <span class="muted sm" x-text="r.txt"></span></div>
+                </template>
+                <dl class="kv mt">
+                  <dt>Fisik (OSM)</dt><dd x-text="seg.osm ? seg.osm.br + ' jembatan (' + KAI.fmt.n(seg.osm.brM) + ' m) · ' + seg.osm.tn + ' terowongan (' + KAI.fmt.n(seg.osm.tnM) + ' m) · listrik ' + seg.osm.el + '% · vmax OSM ' + (seg.osm.vmax || '–') + ' km/j' : 'belum ada data (geometri OSM tidak cocok ±25% dengan jarak petak)'"></dd>
+                  <dt>JPL</dt><dd x-text="seg.jpl + ' perlintasan sebidang'"></dd>
+                  <dt>Keamanan</dt><dd x-text="tallyTxt(seg.sec, KAIRoute.SEC)"></dd>
+                  <dt>Alam</dt><dd x-text="tallyTxt(seg.nat, KAIRoute.NAT)"></dd>
+                </dl>
+                <h4 class="h-s mt" x-show="seg.wk.length" x-text="'WKP terakhir di petak ini (' + seg.wk.length + ')'"></h4>
+                <ul class="rt-list"><template x-for="(w, j) in seg.wk.slice().sort(function (a, b) { return a[0] < b[0] ? 1 : -1; }).slice(0, 6)" :key="j"><li><b x-text="w[0].slice(8) + '/' + w[0].slice(5, 7)"></b> <span x-text="(w[9] || '?') + '–' + (w[10] || '?') + ' · ' + w[8]"></span></li></template></ul>
+                <h4 class="h-s mt" x-show="seg.g.length" x-text="'Gangguan prasarana 12 bln (' + seg.g.length + ')'"></h4>
+                <ul class="rt-list"><template x-for="r in seg.g.slice().sort(function (a, b) { return b.menit - a.menit; }).slice(0, 6)" :key="r.id"><li class="click" @click="$store.app.open('kejadian', r.id)"><b x-text="KAI.fmt.n(r.menit) + '′'"></b> <span x-text="KAI.fmt.date(r) + ' · ' + (r.sub || r.judul)"></span></li></template></ul>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <div class="card mt">
+        <div class="card-h"><div><h3>Petak prioritas & rekomendasi WKP</h3><p>P1 = gangguan prasarana ≥ 2 dan (THI &lt; 70 atau WKP jalan rel ≤ 1) · P2 = ada gangguan tanpa WKP jalan rel · P3 = THI &lt; 70 tanpa gangguan · jam kosong dari GAPEKA 2025</p></div></div>
+        <div class="card-b tbl-wrap" style="max-height:420px">
+          <table class="tbl"><thead><tr><th>Petak</th><th>Jalur</th><th class="num">KA/hari</th><th class="num">Ggn pras.</th><th class="num">WKP JR</th><th class="num">THI</th><th>Jam kosong terpanjang</th><th>Status</th></tr></thead><tbody>
+            <template x-for="x in priRows" :key="x.key">
+              <tr class="click" :class="seg && seg.key === x.key ? 'sel' : ''" @click="pickSeg(x.key)">
+                <td x-text="x.nmA + ' – ' + x.nmB"></td><td x-text="(x.track || '–').toLowerCase()"></td><td class="num" x-text="x.nTrip"></td>
+                <td class="num" x-text="x.gN + ' · ' + KAI.fmt.n(x.gM) + '′'"></td><td class="num" x-text="x.wkJR"></td><td class="num" x-text="x.thi ? KAI.fmt.d1(x.thi.hi) : '–'"></td>
+                <td x-text="gapTxt(x)"></td><td><span class="tag" :class="flagCls(x.flag)" x-text="x.flag || '–'"></span></td>
+              </tr>
+            </template>
+          </tbody></table>
+          <p class="muted sm" x-show="!priRows.length">Tidak ada petak berstatus prioritas pada koridor ini dalam 12 bulan terakhir.</p>
+        </div>
+      </div>
+
+      <div class="grid g-2-1 mt">
+        <div class="card">
+          <div class="card-h"><div><h3>Pendapatan koridor per bulan</h3><p>Batang = pendapatan alokasi km (penumpang, barang) · garis = penumpang alokasi km · sumber tab Passenger & Freight</p></div></div>
+          <div class="card-b fill"><div class="chart" x-chart="revOpt()"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><div><h3>Komposisi pendapatan menurut KA</h3><p x-text="'10 teratas dari ' + C.rows.filter(function (r) { return r.rev; }).length + ' KA berpendapatan · porsi alokasi km'"></p></div></div>
+          <div class="card-b fill"><div class="chart" x-chart="kaBarOpt()" @chart-click="openKa($event.detail)"></div></div>
+        </div>
+      </div>
+
+      <div class="card mt">
+        <div class="card-h"><div><h3>KA yang melewati koridor</h3><p>Penuh = seluruh pendapatan KA · alokasi = × (km di koridor ÷ km rute) · indeks isian = penumpang ÷ (kapasitas GAPEKA × hari); bisa &gt; 100% karena kursi terjual ulang antar-relasi · klik untuk profil KA</p></div>
+          <div class="seg" role="group" aria-label="Jenis"><template x-for="m in [['all','Semua'],['PENUMPANG','Penumpang'],['BARANG','Barang']]" :key="m[0]"><button :aria-pressed="String(kaF === m[0])" @click="kaF = m[0]" x-text="m[1]"></button></template></div></div>
+        <div class="card-b tbl-wrap" style="max-height:480px">
+          <table class="tbl"><thead><tr><th>KA</th><th>Kelas</th><th class="num">km di koridor</th><th class="num">Porsi</th><th class="num">Pendapatan penuh</th><th class="num">Alokasi</th><th class="num">Penumpang / ton</th><th class="num">Indeks isian</th><th>Catatan</th></tr></thead><tbody>
+            <template x-for="r in kaRows" :key="r.id">
+              <tr class="click" @click="openKaRow(r)">
+                <td><b x-text="r.no"></b> <span x-text="r.nama"></span></td><td x-text="r.kelas || '–'"></td><td class="num" x-text="KAI.fmt.d1(r.kmOn)"></td>
+                <td class="num" x-text="KAI.fmt.d1(r.share * 100) + '%'"></td><td class="num" x-text="KAI.fmt.rp(r.rev)"></td><td class="num"><b x-text="KAI.fmt.rp(r.revA)"></b></td>
+                <td class="num" x-text="r.jenis === 'BARANG' ? KAI.fmt.n(r.ton) + ' t' : KAI.fmt.n(r.pax)"></td>
+                <td class="num" x-text="r.lf == null ? '–' : KAI.fmt.d1(r.lf) + '%'"></td><td class="muted sm" x-text="r.note"></td>
+              </tr>
+            </template>
+          </tbody></table>
+        </div>
+      </div>
+
+      <h3 class="page-title mt" style="font-size:18px">Profil rute</h3>
+      <div class="grid g-3">
+        <div class="card"><div class="card-h"><div><h3>Struktur & kepemilikan</h3><p>LIST PETAK JALAN GAPEKA 2025 · PETA WILAYAH (UPT Resor JR)</p></div></div>
+          <div class="card-b"><dl class="kv">
+            <dt>Panjang</dt><dd x-text="KAI.fmt.d1(P.km) + ' km · ' + P.nPetak + ' petak · ' + P.nSt + ' stasiun'"></dd>
+            <dt>Jalur</dt><dd x-text="'ganda ' + KAI.fmt.d1(P.kmGanda) + ' km · tunggal ' + KAI.fmt.d1(P.kmTunggal) + ' km'"></dd>
+            <dt>Wilayah</dt><dd x-text="C.regions.map(function (r) { return r.region; }).join(' → ')"></dd>
+            <dt>UPT Resor JR</dt><dd x-text="P.resor.length ? P.resor.length + ' resor (' + P.resor.join(', ') + ')' : 'belum ada data'"></dd>
+            <dt>Perlintasan</dt><dd x-text="KAI.fmt.n(P.jpl) + ' JPL terdaftar di petak koridor'"></dd>
+            <dt>Persinyalan</dt><dd class="muted">belum ada data di sumber aplikasi</dd>
+            <dt>Material rel/bantalan</dt><dd class="muted">belum ada data jenis (THI hanya memuat indeks kondisi material)</dd>
+          </dl></div></div>
+        <div class="card"><div class="card-h"><div><h3>Bangunan & elektrifikasi</h3><p x-text="'OpenStreetMap · cakupan ' + KAI.fmt.d1(P.osmCov * 100) + '% panjang koridor (petak cocok ±25%)'"></p></div></div>
+          <div class="card-b"><dl class="kv">
+            <dt>Jembatan</dt><dd x-text="KAI.fmt.n(P.br) + ' (total ' + KAI.fmt.n(P.brM) + ' m)'"></dd>
+            <dt>Terowongan</dt><dd x-text="KAI.fmt.n(P.tn) + (P.tn ? ' (total ' + KAI.fmt.n(P.tnM) + ' m)' : '')"></dd>
+            <dt>Elektrifikasi</dt><dd x-text="KAI.fmt.d1(P.elKm) + ' km (' + KAI.fmt.d1(P.km ? P.elKm / P.km * 100 : 0) + '%)'"></dd>
+            <dt>vmax tertinggi (OSM)</dt><dd x-text="P.vmax ? P.vmax + ' km/j' : 'belum ada data'"></dd>
+            <dt>Nama lintas (OSM)</dt><dd><template x-for="n in P.names.slice(0, 6)" :key="n.name"><div class="sm" x-text="n.name"></div></template><span class="muted" x-show="!P.names.length">–</span></dd>
+          </dl><p class="muted sm">Jumlah dari jalur terpendek pada satu sepur; jembatan pendek (gorong-gorong) yang ditandai OSM sebagai jembatan ikut terhitung.</p></div></div>
+        <div class="card"><div class="card-h"><div><h3>Kondisi & topografi</h3><p x-text="'THI tingkat petak ' + (P.thiYm ? KAI.fmt.mon(P.thiYm) : '–') + ' · elevasi stasiun m_stasiun (' + P.zN + ' stasiun)'"></p></div></div>
+          <div class="card-b"><dl class="kv">
+            <dt>THI petak</dt><dd x-text="P.thiN ? 'median ' + KAI.fmt.d1(P.thiMed) + ' · ' + P.thiLow + ' dari ' + P.thiN + ' petak < 70' : 'belum ada data'"></dd>
+            <dt>Elevasi</dt><dd x-text="P.zN ? KAI.fmt.n(P.zMin) + '–' + KAI.fmt.n(P.zMax) + ' m dpl' : 'belum ada data'"></dd>
+            <dt>Landai rata-rata terbesar</dt><dd x-text="steepTxt"></dd>
+          </dl><div class="rt-elev" x-show="P.zN >= 2"><div class="chart sm-h" x-chart="P.zN >= 2 ? elevOpt() : null"></div></div></div></div>
+        <div class="card"><div class="card-h"><div><h3>Kerentanan alam</h3><p>Gangguan_Induk 12 bln (tanpa imbas) · titik terbanyak</p></div></div>
+          <div class="card-b"><template x-for="t in P.nat" :key="t.k"><div class="rt-risk"><b x-text="t.label"></b><span class="num" x-text="t.n + ' kej.'"></span><div class="muted sm" x-text="t.top.map(function (x) { return x.label + ' (' + x.n + ')'; }).join(' · ')"></div></div></template>
+            <p class="muted" x-show="!P.nat.length">Tidak ada kejadian alam tercatat di koridor dalam 12 bulan.</p></div></div>
+        <div class="card"><div class="card-h"><div><h3>Rawan keamanan</h3><p>Tertemper orang, pelemparan batu, vandalisme, pencurian · 12 bln</p></div></div>
+          <div class="card-b"><template x-for="t in P.sec" :key="t.k"><div class="rt-risk"><b x-text="t.label"></b><span class="num" x-text="t.n + ' kej.'"></span><div class="muted sm" x-text="t.top.map(function (x) { return x.label + ' (' + x.n + ')'; }).join(' · ')"></div></div></template>
+            <p class="muted" x-show="!P.sec.length">Tidak ada kejadian keamanan tercatat di koridor dalam 12 bulan.</p></div></div>
+        <div class="card"><div class="card-h"><div><h3>Riset publik</h3><p>Fakta bersumber; diakses 13 Nov 2026</p></div></div>
+          <div class="card-b"><template x-for="(f, j) in facts" :key="j"><div class="rt-fact"><p x-text="f.t"></p><a :href="f.url" target="_blank" rel="noopener" x-text="f.src"></a></div></template>
+            <p class="muted" x-show="!facts.length">Belum ada fakta publik terverifikasi untuk koridor ini — tidak diisi dengan perkiraan.</p></div></div>
+      </div>
+
+      <div class="card mt">
+        <div class="card-h"><div><h3>Rekomendasi peningkatan rute</h3><p>Disusun otomatis dari data di atas · tiap butir menyebut buktinya</p></div></div>
+        <div class="card-b"><ol class="rt-recs"><template x-for="(r, j) in D.recs.concat(revRecs)" :key="j"><li :class="'k-' + r.kind"><span class="tag" :class="flagCls(r.pri)" x-text="r.pri"></span> <b x-text="r.title"></b><div class="muted sm" x-text="r.why"></div><div x-text="r.act"></div></li></template></ol>
+          <p class="muted" x-show="!D.recs.length && !revRecs.length">Belum ada rekomendasi untuk koridor ini.</p></div>
+      </div>
+
+      <p class="note mt sm">Metode: koridor = stasiun jangkar yang disambung jalur terpendek graf LIST PETAK. KA lewat dari Daftar Waktu GAPEKA 2025 (jam pasti) dan LIST KA (jam perkiraan). Jam kosong = 24 jam dikurangi waktu tempuh petak tiap perjalanan harian ± penyangga. Peta: © kontributor OpenStreetMap (ODbL) via github.com/enwo02/train-tracker; garis pantai Natural Earth; koordinat stasiun dari 4 sumber terbuka, tiap titik diuji ≤ 1,5 km dari rel.</p>
+    </div>
+  </template>
+</div>

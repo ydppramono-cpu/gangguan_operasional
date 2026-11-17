@@ -1,0 +1,234 @@
+<script>
+/* Part.RuteData — komponen Alpine vRute untuk tab "Rute jalur" (markup: Part.Rute). Mesin: KAIRoute (Js.Rute). */
+document.addEventListener('alpine:init', function () {
+  var memoB = { k: '', v: null }, memoD = { k: '', v: null }, memoM = { k: '', v: null };
+  var CAT = { P: ['KA penumpang', '#252271'], K: ['KRL', '#94A3B8'], B: ['KA barang', '#F06A25'], D: ['Dinas/lok', '#B8C2D3'] };
+  var REG_COL = ['#E8EDF8', '#FDEBDD', '#E3F1EE', '#F3E8F7', '#FFF4D6', '#E6F0FB'];
+  function mix(a, b, t) { var p = function (h, i) { return parseInt(h.slice(1 + i * 2, 3 + i * 2), 16); }, c = [0, 1, 2].map(function (i) { return Math.round(p(a, i) + (p(b, i) - p(a, i)) * Math.max(0, Math.min(1, t))); }); return '#' + c.map(function (v) { return (v < 16 ? '0' : '') + v.toString(16); }).join(''); }
+  function hh(v) { return KAIRoute.fmt(v); }
+  Alpine.data('vRute', function () {
+    return {
+      id: 'utara', segKey: '', mapMode: 'ggn', kaF: 'all', kaLimit: 9999, buf: 5,
+      mCat: { P: true, K: true, B: true, D: false },
+      mapModes: [['ggn', 'Gangguan'], ['ka', 'KA/hari'], ['thi', 'THI'], ['jalur', 'Ganda/tunggal']],
+      mareyCats: [['P', 'Penumpang'], ['K', 'KRL'], ['B', 'Barang'], ['D', 'Dinas']],
+      init: function () { try { var s = KAI.store.get('rute1'); if (s && s.id) this.id = s.id; } catch (e) { } },
+      get B() {
+        var app = this.$store.app; if (!app.refReady || !KAI.data.ref) return null;
+        var end = KAIA.endOf(app.R.P), k = app.ver + '|' + end;
+        if (memoB.k !== k) { try { memoB = { k: k, v: KAIRoute.build(KAI.data.ref, KAI.data.all, { end: end }) }; } catch (e) { console.warn('[KAI] rute', e); memoB = { k: k, v: null }; } }
+        return memoB.v;
+      },
+      get C() { var B = this.B; return B ? B.by[this.id] || B.list[0] : null; },
+      get D() { var C = this.C; if (!C) return null; var k = memoB.k + '|' + C.id + '|' + this.buf; if (memoD.k !== k) memoD = { k: k, v: KAIRoute.detail(KAI.data.ref, C, { buf: this.buf }) }; return memoD.v; },
+      get P() { return this.D.prof; },
+      get groups() { var L = this.B.list; return [{ k: 'Jawa', list: L.filter(function (c) { return !/^(sumut|sumbar|sumsel|babaranjang)$/.test(c.id); }) }, { k: 'Sumatera', list: L.filter(function (c) { return /^(sumut|sumbar|sumsel|babaranjang)$/.test(c.id); }) }]; },
+      get rank() { return this.B.list.slice().sort(function (a, b) { return b.revA - a.revA; }); },
+      get rankMax() { return Math.max.apply(null, this.B.list.map(function (c) { return c.revA; }).concat([0])); },
+      get seg() { var k = this.segKey, D = this.D; return k && D ? D.S.filter(function (x) { return x.key === k; })[0] || null : null; },
+      get facts() { return KAIRoute.FACTS[this.C.id] || []; },
+      pick: function (id) { this.id = id; this.segKey = ''; try { KAI.store.set('rute1', { id: id }); } catch (e) { } },
+      pickSeg: function (k) { this.segKey = this.segKey === k ? '' : k; },
+      flagCls: function (f) { return f === 'P1' ? 't-bad' : f === 'P2' ? 'warn' : f === 'P3' ? 't-info' : ''; },
+      tallyTxt: function (o, list) { var t = list.filter(function (g) { return o[g[0]]; }).map(function (g) { return g[1] + ' ' + o[g[0]]; }); return t.length ? t.join(' · ') : 'tidak ada kejadian 12 bln'; },
+      gapTxt: function (x) {
+        var g = x.gapAll[0]; if (!g) return 'tidak ada';
+        var t = hh(g.a) + '–' + hh(g.b) + ' (' + Math.round(g.dur) + '′)';
+        if (x.gapUp && x.gapUp[0]) t += ' · satu sepur ' + Math.round(Math.max(x.gapUp[0].dur, (x.gapDn && x.gapDn[0] || { dur: 0 }).dur)) + '′';
+        return t;
+      },
+      get steepTxt() { var s = this.P.steep[0]; if (!s) return this.P.zN ? 'tidak terhitung (stasiun berelevasi terlalu jarang)' : 'belum ada data'; var R = KAI.data.ref; return KAI.fmt.d1(Math.abs(s.permil)) + '‰ antara ' + ((R.st[s.a] || {}).name || s.a) + ' – ' + ((R.st[s.b] || {}).name || s.b) + ' (' + KAI.fmt.d1(s.km1 - s.km0) + ' km, beda ' + KAI.fmt.n(Math.abs(s.dz)) + ' m)'; },
+      get priRows() { return this.D.S.filter(function (x) { return x.flag; }).sort(function (a, b) { return a.flag.localeCompare(b.flag) || b.gM - a.gM; }).slice(0, 40); },
+      get winRows() {
+        var x = this.seg; if (!x) return [];
+        function bars(G) { var out = []; (G || []).forEach(function (g) { var t = hh(g.a) + '–' + hh(g.b) + ' · ' + Math.round(g.dur) + ' mnt'; if (g.b <= 1440) out.push({ l: g.a / 14.4, w: g.dur / 14.4, t: t }); else { out.push({ l: g.a / 14.4, w: (1440 - g.a) / 14.4, t: t }); out.push({ l: 0, w: (g.b - 1440) / 14.4, t: t }); } }); return out; }
+        function txt(G) { var L = (G || []).filter(function (g) { return g.dur >= 30; }); return L.length ? L.slice(0, 3).map(function (g) { return hh(g.a) + '–' + hh(g.b) + ' (' + Math.round(g.dur) + '′)'; }).join(' · ') : 'tidak ada jendela ≥ 30 mnt'; }
+        var rows = [{ k: 'all', label: 'Tutup petak', bars: bars(x.gapAll), txt: txt(x.gapAll) }];
+        if (x.gapUp) rows.push({ k: 'up', label: 'Sepur ' + x.a + '→' + x.b, bars: bars(x.gapUp), txt: txt(x.gapUp) }, { k: 'dn', label: 'Sepur ' + x.b + '→' + x.a, bars: bars(x.gapDn), txt: txt(x.gapDn) });
+        return rows;
+      },
+      get kaAll() {
+        var f = this.kaF, days = this.B.revYms.length ? KAIA.sum(this.B.revYms, function (y) { return new Date(+y.slice(0, 4), +y.slice(5, 7), 0).getDate(); }) : 0;
+        return this.C.rows.filter(function (r) { return f === 'all' || r.jenis === f; }).map(function (r) {
+          var lf = r.jenis === 'PENUMPANG' && r.kap && days && r.pax ? r.pax / (r.kap * days) * 100 : null; var lfBad = lf != null && lf < 5;
+          var note = lfBad ? 'indeks isian < 5%: periksa kapasitas/penumpang di sumber' : r.noRev ? 'tidak ada di tab Freight' : !r.rev ? 'tidak ada pendapatan pada periode' : r.share < 0.15 ? 'hanya melintas sebagian kecil koridor' : '';
+          return Object.assign({}, r, { lf: lf, note: note });
+        }).sort(function (a, b) { return b.revA - a.revA || b.kmOn - a.kmOn; });
+      },
+      get kaRows() { return this.kaAll.slice(0, this.kaLimit); },
+      get revRecs() {
+        var rows = this.kaAll.filter(function (r) { return r.jenis === 'PENUMPANG' && r.rev > 0 && r.lf != null && r.lf >= 5; }), out = [], f = KAI.fmt;
+        var low = rows.filter(function (r) { return r.lf < 50; }).sort(function (a, b) { return a.lf - b.lf; }).slice(0, 3);
+        if (low.length) out.push({ kind: 'pendapatan', pri: 'P3', title: 'KA penumpang dengan indeks isian rendah di koridor ini', why: low.map(function (r) { return r.no + ' ' + r.nama + ' ' + f.d1(r.lf) + '%'; }).join(' · '),
+          act: 'Tinjau pola operasi KA tersebut (jam berangkat, susunan rangkaian, tarif dinamis) sebelum menambah frekuensi; kapasitas yang dibebaskan dapat dipakai KA berokupansi tinggi atau jendela WKP.' });
+        var brg = this.kaAll.filter(function (r) { return r.jenis === 'BARANG' && r.noRev; });
+        if (brg.length) out.push({ kind: 'pendapatan', pri: 'P3', title: brg.length + ' nama KA barang berjadwal tanpa pendapatan di tab Freight', why: brg.slice(0, 5).map(function (r) { return r.nama; }).join(' · '),
+          act: 'Cocokkan nama KA GAPEKA dengan tab Freight (ejaan berbeda) atau evaluasi slot barang yang tidak terisi agar kapasitas jalur tidak terbuang.' });
+        return out;
+      },
+      openKaRow: function (r) { if (r.jenis === 'PENUMPANG') return this.$store.app.open('ka', r.no); var no = String(r.no).split(',')[0].trim(); if (no) this.$store.app.open('ka', no); },
+      openKa: function (p) { var r = this.kaAll.filter(function (x) { return x.id === (p.data && p.data.id); })[0]; if (r) this.openKaRow(r); },
+      /* ---------- grafik ---------- */
+      segVal: function (x) {
+        var m = this.mapMode;
+        if (m === 'ka') return x.nTrip; if (m === 'thi') return x.thi ? x.thi.hi : null; if (m === 'jalur') return /GANDA/i.test(x.track) ? 1 : 0;
+        return x.gN;
+      },
+      segColor: function (x, max) {
+        var m = this.mapMode, v = this.segVal(x);
+        if (m === 'jalur') return v ? '#252271' : '#F06A25';
+        if (m === 'thi') return v == null ? '#CBD5E1' : v >= 85 ? '#1F8A2E' : v >= 70 ? '#7FB24A' : v >= 55 ? '#E0A21A' : v >= 40 ? '#E0661A' : '#C0392B';
+        if (m === 'ka') return mix('#C7D2FE', '#252271', max ? v / max : 0);
+        return v ? mix('#FDBA74', '#C0392B', max ? v / max : 0) : '#475569';
+      },
+      get mapLegend() {
+        var m = this.mapMode;
+        if (m === 'jalur') return [['Ganda', '#252271'], ['Tunggal', '#F06A25'], ['Jaringan lain', '#CBD5E1']];
+        if (m === 'thi') return [['≥ 85', '#1F8A2E'], ['70–85', '#7FB24A'], ['55–70', '#E0A21A'], ['40–55', '#E0661A'], ['< 40', '#C0392B'], ['tidak ada THI', '#CBD5E1']];
+        if (m === 'ka') return [['sedikit KA', '#C7D2FE'], ['banyak KA', '#252271'], ['Jaringan lain', '#CBD5E1']];
+        return [['0 gangguan', '#475569'], ['sedikit', '#FDBA74'], ['terbanyak', '#C0392B'], ['Jaringan lain', '#CBD5E1']];
+      },
+      mapOpt: function () {
+        var R = KAI.data.ref, C = this.C, D = this.D, self = this, N = KAIRoute.network(R.peta); if (!N) return null;
+        var G = KAIRoute.corridorGeo(R, C), byKey = {}; D.S.forEach(function (x) { byKey[x.key] = x; });
+        var max = Math.max.apply(null, D.S.map(function (x) { var v = self.segVal(x); return v == null ? 0 : v; }).concat([1]));
+        // bbox koridor → rasio tetap 4:3 (dengan koreksi cos lintang)
+        var xs = [], ys = []; G.lines.concat(G.gap).forEach(function (l) { l.coords.forEach(function (p) { xs.push(p[0]); ys.push(p[1]); }); });
+        if (!xs.length) return null;
+        var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs), y0 = Math.min.apply(null, ys), y1 = Math.max.apply(null, ys);
+        var cy = Math.cos((y0 + y1) / 2 * Math.PI / 180), w = (x1 - x0) * cy, h = y1 - y0, pad = Math.max(w, h) * 0.08 + 0.05; w += 2 * pad; h += 2 * pad;
+        var r = 4 / 3; if (w / h > r) h = w / r; else w = h * r;
+        var cx = (x0 + x1) / 2, cyy = (y0 + y1) / 2, X0 = cx - w / cy / 2, X1 = cx + w / cy / 2, Y0 = cyy - h / 2, Y1 = cyy + h / 2;
+        var land = (R.peta.land || []).map(function (a) { var o = [], x = a[0], y = a[1]; o.push([x / 100, y / 100]); for (var i = 2; i < a.length; i += 2) { x += a[i]; y += a[i + 1]; o.push([x / 100, y / 100]); } return o; });
+        var st = D.ST.filter(function (s) { return s.lat != null; });
+        return {
+          animation: false, grid: { left: 0, right: 0, top: 0, bottom: 0 },
+          xAxis: { type: 'value', min: X0, max: X1, show: false }, yAxis: { type: 'value', min: Y0, max: Y1, show: false },
+          dataZoom: [{ type: 'inside', xAxisIndex: 0, yAxisIndex: 0, zoomOnMouseWheel: 'ctrl', moveOnMouseMove: true, filterMode: 'none' }],
+          tooltip: { trigger: 'item', confine: true, formatter: function (p) {
+            if (p.seriesId === 'st') return '<b>' + p.data.name + '</b> (' + p.data.code + ')<br>km ' + KAI.fmt.d1(p.data.km) + (p.data.z != null ? ' · elevasi ' + p.data.z + ' m' : '') + (p.data.src === 4 ? '<br><i>posisi: interpolasi km</i>' : '');
+            var x = p.data && byKey[p.data.key]; if (!x) return '';
+            return '<b>' + x.nmA + ' – ' + x.nmB + '</b><br>' + KAI.fmt.d1(x.km) + ' km · ' + (x.track || '–').toLowerCase() + ' · ' + x.nTrip + ' KA/hari<br>Gangguan prasarana ' + x.gN + ' · WKP ' + x.wkN + 'x' + (x.thi ? ' · THI ' + KAI.fmt.d1(x.thi.hi) : '') + (p.seriesId === 'gap' ? '<br><i>garis lurus: geometri OSM tidak cocok</i>' : '');
+          } },
+          graphic: [{ type: 'text', right: 8, bottom: 6, style: { text: '© kontributor OpenStreetMap (ODbL) · Natural Earth', fontSize: 10, fill: '#64748B' }, z: 100 }],
+          series: [
+            { id: 'land', type: 'custom', silent: true, renderItem: function (params, api) { var poly = land[params.dataIndex]; return { type: 'polygon', shape: { points: poly.map(function (q) { return api.coord(q); }) }, style: { fill: '#F4F6F9', stroke: '#D9DFE8', lineWidth: 0.6 } }; }, data: land.map(function (l, i) { return i; }), clip: true, z: 1 },
+            { id: 'ne', type: 'lines', coordinateSystem: 'cartesian2d', polyline: true, silent: true, lineStyle: { color: '#CBD5E1', width: 1 }, data: N.ne.map(function (c) { return { coords: c }; }), z: 2 },
+            { id: 'el', type: 'lines', coordinateSystem: 'cartesian2d', polyline: true, silent: true, lineStyle: { color: '#A9B6CC', width: 1.2 }, data: N.el.map(function (c) { return { coords: c }; }), z: 2 },
+            { id: 'cor', type: 'lines', coordinateSystem: 'cartesian2d', polyline: true, z: 5, emphasis: { lineStyle: { width: 7 } },
+              data: G.lines.map(function (l) { var x = byKey[l.key]; return { key: l.key, coords: l.coords, lineStyle: { color: self.segColor(x, max), width: self.segKey === l.key ? 7 : 4.2, cap: 'round' } }; }) },
+            { id: 'gap', type: 'lines', coordinateSystem: 'cartesian2d', polyline: true, z: 4,
+              data: G.gap.map(function (l) { var x = byKey[l.key]; return { key: l.key, coords: l.coords, lineStyle: { color: self.segColor(x, max), width: 3, type: 'dashed' } }; }) },
+            { id: 'st', type: 'scatter', z: 6, data: st.map(function (s) { return { value: [s.lon, s.lat], name: s.name, code: s.code, km: s.km, z: s.z, src: s.src, anchor: s.anchor, symbolSize: s.anchor ? 8 : 4,
+                itemStyle: { color: '#fff', borderColor: '#17223B', borderWidth: s.anchor ? 1.6 : 1 }, label: { show: s.anchor, formatter: s.name, position: 'right', fontSize: 11, color: '#17223B', textBorderColor: '#fff', textBorderWidth: 3 } }; }),
+              labelLayout: { hideOverlap: true } }
+          ]
+        };
+      },
+      onMapClick: function (p) { if (p && p.data && p.data.key) this.pickSeg(p.data.key); else if (p && p.seriesId === 'st') this.$store.app.open('stasiun', p.data.code); },
+      diagOpt: function () {
+        var D = this.D, C = this.C, self = this, S = D.S;
+        var rows = [['reg', 'Daop/Divre'], ['jalur', 'Jalur'], ['ka', 'KA/hari'], ['ggn', 'Ggn prasarana'], ['wkp', 'WKP'], ['thi', 'THI petak'], ['sec', 'Keamanan'], ['nat', 'Alam']];
+        var mx = {}; ['ka', 'ggn', 'wkp', 'sec', 'nat'].forEach(function (k) { mx[k] = Math.max.apply(null, S.map(function (x) { return val(x, k) || 0; }).concat([1])); });
+        function val(x, k) { return k === 'ka' ? x.nTrip : k === 'ggn' ? x.gN : k === 'wkp' ? x.wkN : k === 'sec' ? x.secN : k === 'nat' ? x.natN : k === 'thi' ? (x.thi ? x.thi.hi : null) : null; }
+        var regIdx = {}, ri = 0; C.bands.forEach(function (b) { if (regIdx[b.region] == null) regIdx[b.region] = ri++; });
+        var data = [];
+        S.forEach(function (x, i) {
+          rows.forEach(function (r, j) {
+            var v = val(x, r[0]), col;
+            if (r[0] === 'reg') col = REG_COL[regIdx[x.region] % REG_COL.length];
+            else if (r[0] === 'jalur') col = /GANDA/i.test(x.track) ? '#252271' : '#F06A25';
+            else if (r[0] === 'thi') col = v == null ? '#F1F5F9' : v >= 85 ? '#1F8A2E' : v >= 70 ? '#7FB24A' : v >= 55 ? '#E0A21A' : v >= 40 ? '#E0661A' : '#C0392B';
+            else col = v ? mix('#E2E8F0', { ka: '#252271', ggn: '#C0392B', wkp: '#0F766E', sec: '#7C3AED', nat: '#B45309' }[r[0]], 0.2 + 0.8 * v / mx[r[0]]) : '#F8FAFC';
+            data.push({ value: [x.km0, x.km1, j, i], key: x.key, itemStyle: { color: col, opacity: self.segKey && self.segKey !== x.key ? 0.55 : 1 }, r: r[0], v: v });
+          });
+        });
+        var bandLbl = C.bands.map(function (b) { return { value: [(b.km0 + b.km1) / 2, 0], name: b.region }; });
+        var anchors = [], lastKm = -1e9; D.ST.filter(function (s) { return s.anchor || s.i === 0 || s.i === D.ST.length - 1; }).forEach(function (s) { if (s.km - lastKm >= C.len * 0.035 || s.i === D.ST.length - 1) { if (s.i === D.ST.length - 1 && anchors.length && s.km - anchors[anchors.length - 1].km < C.len * 0.035) anchors.pop(); anchors.push(s); lastKm = s.km; } });
+        return {
+          animation: false, grid: { left: 112, right: 18, top: 44, bottom: 54 },
+          tooltip: { trigger: 'item', confine: true, formatter: function (p) {
+            if (p.seriesIndex !== 0) return '';
+            var x = S[p.data.value[3]], lab = rows[p.data.value[2]][1], v = p.data.v;
+            return '<b>' + x.nmA + ' – ' + x.nmB + '</b> · km ' + KAI.fmt.d1(x.km0) + '–' + KAI.fmt.d1(x.km1) + '<br>' + lab + ': ' + (p.data.r === 'reg' ? x.region : p.data.r === 'jalur' ? (x.track || '–').toLowerCase() : v == null ? 'tidak ada data' : KAI.fmt.d1(v));
+          } },
+          xAxis: { type: 'value', min: 0, max: Math.ceil(C.len), name: 'km', axisLabel: { formatter: function (v) { return KAI.fmt.n(v); } }, splitLine: { show: false } },
+          yAxis: { type: 'category', data: rows.map(function (r) { return r[1]; }), inverse: true, axisTick: { show: false }, axisLine: { show: false } },
+          dataZoom: [{ type: 'inside', xAxisIndex: 0, zoomOnMouseWheel: 'ctrl', filterMode: 'none' }, { type: 'slider', xAxisIndex: 0, height: 16, bottom: 6, brushSelect: false, showDetail: false, borderColor: '#D8DEEA', filterMode: 'none' }],
+          series: [
+            { type: 'custom', renderItem: function (params, api) { var a = api.coord([api.value(0), api.value(2)]), b = api.coord([api.value(1), api.value(2)]), hgt = api.size([0, 1])[1] * 0.78;
+                return { type: 'rect', shape: { x: a[0], y: a[1] - hgt / 2, width: Math.max(1, b[0] - a[0] - 0.6), height: hgt }, style: api.style() }; },
+              encode: { x: [0, 1], y: 2 }, data: data, clip: true },
+            { type: 'scatter', symbolSize: 0, silent: true, data: bandLbl.map(function (b) { return { value: [b.value[0], 'Daop/Divre'], name: b.name }; }), label: { show: true, formatter: function (p) { return p.name; }, fontSize: 11, color: '#17223B', fontWeight: 600 }, labelLayout: { hideOverlap: true } },
+            { type: 'scatter', symbolSize: 0, silent: true, data: [], markLine: { silent: true, symbol: 'none', lineStyle: { color: '#94A3B8', type: 'dotted', width: 1 },
+              label: { position: 'start', fontSize: 10.5, color: '#475569', formatter: '{b}' }, data: anchors.map(function (s) { return { xAxis: s.km, name: s.code }; }) } }
+          ]
+        };
+      },
+      onDiagClick: function (p) { if (p && p.data && p.data.key) this.pickSeg(p.data.key); },
+      mareyOpt: function () {
+        var C = this.C, D = this.D, self = this, k = memoB.k + '|' + C.id;
+        if (memoM.k !== k) memoM = { k: k, v: KAIRoute.marey(KAI.data.ref, C) };
+        var M = memoM.v, anchors = [], lk = -1e9; D.ST.filter(function (s) { return s.anchor; }).forEach(function (s) { if (s.km - lk >= C.len * 0.022) { anchors.push(s); lk = s.km; } }); var names = {}; anchors.forEach(function (s) { names[Math.round(s.km * 1000)] = s.name; });
+        var series = Object.keys(CAT).filter(function (c) { return self.mCat[c]; }).map(function (c) {
+          return { name: CAT[c][0], type: 'lines', coordinateSystem: 'cartesian2d', polyline: true, silent: false, lineStyle: { color: CAT[c][1], width: c === 'K' || c === 'D' ? 0.7 : 1.1, opacity: c === 'K' ? 0.55 : 0.85 },
+            data: M.filter(function (m) { return m.jenis === c; }).map(function (m) { return { coords: m.pts, no: m.no, nama: m.nama, est: m.est }; }) };
+        });
+        var x = this.seg, mark = [];
+        if (x) {
+          mark.push([{ yAxis: x.km0, itemStyle: { color: 'rgba(37,34,113,.06)' } }, { yAxis: x.km1 }]);
+          x.gapAll.filter(function (g) { return g.dur >= 15; }).forEach(function (g) {
+            var segs = g.b <= 1440 ? [[g.a, g.b]] : [[g.a, 1440], [0, g.b - 1440]];
+            segs.forEach(function (q) { mark.push([{ xAxis: q[0], yAxis: x.km0 - (C.len * 0.004), itemStyle: { color: 'rgba(31,138,46,.28)' } }, { xAxis: q[1], yAxis: x.km1 + (C.len * 0.004) }]); });
+          });
+        }
+        series.push({ type: 'scatter', data: [], silent: true, markArea: { silent: true, data: mark } });
+        return {
+          animation: false, legend: { top: 0 }, grid: { left: 108, right: 14, top: 36, bottom: 50 },
+          tooltip: { trigger: 'item', confine: true, formatter: function (p) { return p.data && p.data.no ? '<b>KA ' + p.data.no + '</b> ' + (p.data.nama || '') + (p.data.est ? '<br><i>sebagian jam = interpolasi</i>' : '') : ''; } },
+          xAxis: { type: 'value', min: 0, max: 1440, interval: 120, axisLabel: { formatter: function (v) { return hh(v); } }, splitLine: { lineStyle: { color: '#EEF2F7' } } },
+          yAxis: { type: 'value', min: 0, max: Math.ceil(C.len), inverse: true, axisLabel: { customValues: anchors.map(function (s) { return s.km; }), formatter: function (v) { return names[Math.round(v * 1000)] || ''; }, fontSize: 10.5 },
+            axisTick: { customValues: anchors.map(function (s) { return s.km; }) }, splitLine: { show: false } },
+          dataZoom: [{ type: 'inside', xAxisIndex: 0, yAxisIndex: 0, zoomOnMouseWheel: 'ctrl', filterMode: 'none' }, { type: 'slider', xAxisIndex: 0, height: 16, bottom: 6, brushSelect: false, showDetail: false, borderColor: '#D8DEEA', filterMode: 'none' }],
+          series: series
+        };
+      },
+      onMareyClick: function (p) { if (p && p.data && p.data.no) this.$store.app.open('ka', p.data.no); },
+      revOpt: function () {
+        var C = this.C, B = this.B, mon = C.mon.filter(function (m) { return B.revYms.indexOf(m.ym) >= 0; });
+        return {
+          legend: { top: 0 }, grid: { left: 22, right: 22, top: 40, bottom: 8, containLabel: true },
+          tooltip: { trigger: 'axis', formatter: function (ps) { return KAI.fmt.month(mon[ps[0].dataIndex].ym) + '<br>' + ps.map(function (p) { return p.marker + p.seriesName + ': ' + (p.seriesIndex < 2 ? KAI.fmt.rp(p.value * 1e9) : KAI.fmt.n(p.value)); }).join('<br>'); } },
+          xAxis: { type: 'category', data: mon.map(function (m) { return KAI.fmt.mon(m.ym); }) },
+          yAxis: [{ type: 'value', name: 'Rp miliar', nameLocation: 'middle', nameGap: 46 }, { type: 'value', name: 'Penumpang', nameLocation: 'middle', nameGap: 54, splitLine: { show: false } }],
+          series: [
+            { name: 'Penumpang (Rp)', type: 'bar', stack: 'r', color: '#252271', barMaxWidth: 30, data: mon.map(function (m) { return Math.round(m.revP / 1e8) / 10; }) },
+            { name: 'Barang (Rp)', type: 'bar', stack: 'r', color: '#F06A25', barMaxWidth: 30, data: mon.map(function (m) { return Math.round(m.revB / 1e8) / 10; }) },
+            { name: 'Penumpang (orang)', type: 'line', yAxisIndex: 1, color: '#0F766E', symbolSize: 6, data: mon.map(function (m) { return Math.round(m.pax); }) }
+          ]
+        };
+      },
+      kaBarOpt: function () {
+        var L = this.kaAll.filter(function (r) { return r.revA > 0; }).slice(0, 10).reverse();
+        return {
+          grid: { left: 8, right: 70, top: 36, bottom: 8, containLabel: true },
+          tooltip: { trigger: 'item', formatter: function (p) { var r = L[p.dataIndex]; return '<b>' + r.no + ' ' + r.nama + '</b><br>Alokasi ' + KAI.fmt.rp(r.revA) + '<br>Penuh ' + KAI.fmt.rp(r.rev) + ' · porsi km ' + KAI.fmt.d1(r.share * 100) + '%'; } },
+          xAxis: { type: 'value', axisLabel: { formatter: function (v) { return KAI.fmt.n(v / 1e9); } }, name: 'Rp miliar', nameLocation: 'middle', nameGap: 26 },
+          yAxis: { type: 'category', data: L.map(function (r) { return (r.jenis === 'BARANG' ? r.nama : r.no + ' ' + r.nama).slice(0, 26); }), axisLabel: { width: 170, overflow: 'truncate' } },
+          series: [{ type: 'bar', barMaxWidth: 16, data: L.map(function (r) { return { value: r.revA, id: r.id, itemStyle: { color: r.jenis === 'BARANG' ? '#F06A25' : '#252271', borderRadius: [0, 4, 4, 0] } }; }),
+            label: { show: true, position: 'right', fontSize: 11, formatter: function (p) { return KAI.fmt.d1(p.value / 1e9) + ' M'; } } }]
+        };
+      },
+      elevOpt: function () {
+        var D = this.D, pts = D.ST.filter(function (s) { return s.z != null; });
+        return {
+          grid: { left: 8, right: 12, top: 34, bottom: 8, containLabel: true },
+          tooltip: { trigger: 'item', formatter: function (p) { var s = pts[p.dataIndex]; return s ? '<b>' + s.name + '</b><br>km ' + KAI.fmt.d1(s.km) + ' · ' + s.z + ' m dpl' : ''; } },
+          xAxis: { type: 'value', min: 0, max: Math.ceil(this.C.len), name: 'km', nameLocation: 'middle', nameGap: 22 }, yAxis: { type: 'value', name: 'm dpl' },
+          series: [{ type: 'line', data: pts.map(function (s) { return [s.km, s.z]; }), color: '#B45309', symbolSize: 5, areaStyle: { color: 'rgba(180,83,9,.12)' } }]
+        };
+      }
+    };
+  });
+});
+</script>

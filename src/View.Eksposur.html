@@ -1,0 +1,222 @@
+<!-- View.Eksposur — Pendapatan terekspos (Revenue at Risk): rate bulanan dari tab Passenger & Freight + GAPEKA, Pareto KELKA vs Pareto Rp,
+     cakupan pencocokan, dan model bertahap (Gross → Net → Kerugian aktual → Profit at risk). Bukan kerugian akuntansi. -->
+<template x-if="$store.app.route === 'eksposur' && $store.app.R">
+  <section class="view" x-data="vExpo">
+    <div class="headline">
+      <div style="flex:1">
+        <h2 x-text="'Pendapatan terekspos ' + R.label + ': ' + KAI.fmt.rp(E.tot.rp)"></h2>
+        <p x-text="'KA penumpang ' + KAI.fmt.rp(E.tot.p) + ' · KA barang ' + KAI.fmt.rp(E.tot.b) + ' · Gross revenue at risk = menit KELKA ÷ 60 × rate pendapatan per jam bulan berjalan. Bukan kerugian akuntansi.'"></p>
+      </div>
+      <span class="tag" x-text="engine ? 'Rate bulanan · Passenger/Freight' : 'Rate tetap (cadangan)'"></span>
+    </div>
+    <p class="note story">Alur baca: <b>berapa</b> pendapatan terekspos dan tren bulanannya → <b>dari mana</b> (Pareto: jenis gangguan dengan menit terbanyak belum tentu ber-Rp terbesar) → <b>seberapa yakin</b> (rate, cakupan pencocokan GAPEKA, data yang belum termatch) → <b>tahap berikutnya</b> menuju kerugian aktual.</p>
+    <p class="note warn-note" x-show="!engine">Tab Passenger/Freight belum termuat di snapshot — nilai memakai rate tetap CONFIG.RATE_PER_HOUR sebagai cadangan. Jalankan <code>syncNow()</code>.</p>
+
+    <div class="grid g-4 mt">
+      <template x-for="c in cards" :key="c.id">
+        <div class="card kpi" :style="'--kpi-c:' + c.color">
+          <div class="lbl" x-text="c.label"></div>
+          <div class="val num" x-text="c.val"></div>
+          <div class="deltas" x-show="c.prev != null">
+            <span class="delta" :class="KAI.delta(c.raw, c.prev).cls" :title="R.prevLabel" x-text="'MoM ' + KAI.delta(c.raw, c.prev).text"></span>
+            <span class="delta" :class="KAI.delta(c.raw, c.yoy).cls" :title="R.yoyLabel" x-text="'YoY ' + KAI.delta(c.raw, c.yoy).text"></span>
+          </div>
+          <div class="note" style="margin-top:6px" x-text="c.note"></div>
+        </div>
+      </template>
+    </div>
+
+    <div class="grid g-2 mt">
+      <div class="card">
+        <div class="card-h"><div><h3>Pendapatan terekspos & rate per bulan</h3><p x-text="'Batang bertumpuk = Rp terekspos (sumbu kiri) · garis = rate Rp/jam (sumbu kanan) · ' + KAI.fmt.mon(M.yms[0]) + '–' + KAI.fmt.mon(R.ym)"></p></div></div>
+        <div class="card-b fill"><div class="chart tall" x-chart="comboMonthly()"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3>Pareto KELKA vs Pareto pendapatan terekspos</h3><p>10 subgangguan Rp terbesar · batang = porsi menit vs porsi Rp · garis = kumulatif Rp (%)</p></div></div>
+        <div class="card-b fill"><div class="chart tall" x-chart="comboPareto()"></div></div>
+      </div>
+    </div>
+
+    <div class="card mt">
+      <div class="card-h"><div><h3>Peringkat subgangguan: menit vs Rupiah</h3><p>Δ peringkat = naik/turun posisi bila diurutkan menurut Rp, bukan menit · klik baris untuk menelusuri kejadian</p></div><div class="spacer"></div>
+        <div class="seg sm" role="group" aria-label="Jenis KA"><button :aria-pressed="pj === 'all'" @click="pj = 'all'">Semua</button><button :aria-pressed="pj === 'p'" @click="pj = 'p'">KA penumpang</button><button :aria-pressed="pj === 'b'" @click="pj = 'b'">KA barang</button></div></div>
+      <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th class="num">#Rp</th><th>Subgangguan</th><th class="num">Kej.</th><th class="num">Menit KELKA</th><th class="num">% menit</th><th class="num">#Menit</th><th class="num">Δ peringkat</th><th class="num">Rp terekspos</th><th class="num">% Rp</th><th class="num">Kumulatif</th></tr></thead><tbody>
+        <template x-for="x in paretoRows" :key="x.key"><tr class="click" @click="$store.app.go('telusuri', { ids: x.ids, label: 'Pendapatan terekspos · ' + x.key, period: 'all' })">
+          <td class="num" x-text="x.rankRp"></td><td x-text="x.key"></td><td class="num" x-text="x.n"></td><td class="num" x-text="KAI.fmt.n(x.menit)"></td><td class="num" x-text="KAI.fmt.d1(x.mShare * 100)"></td>
+          <td class="num" x-text="x.rankMenit"></td><td class="num" :class="x.rankMenit - x.rankRp > 0 ? 'bad-t' : x.rankMenit - x.rankRp < 0 ? 'good-t' : ''" x-text="x.rankMenit === x.rankRp ? '=' : (x.rankMenit - x.rankRp > 0 ? '▲' : '▼') + Math.abs(x.rankMenit - x.rankRp)"></td>
+          <td class="num"><b x-text="KAI.fmt.rp(x.rp)"></b></td><td class="num bar-cell"><div class="b" :style="'width:' + x.share * 100 + '%;background:#FDE3D3'"></div><span x-text="KAI.fmt.d1(x.share * 100)"></span></td><td class="num" x-text="KAI.fmt.d1(x.cum * 100) + '%'"></td>
+        </tr></template>
+      </tbody></table></div>
+    </div>
+
+    <div class="grid g-2 mt">
+      <div class="card">
+        <div class="card-h"><div><h3>Per kelas gangguan & wilayah</h3><p>Kelas = aturan K5 · klik untuk menelusuri</p></div></div>
+        <div class="card-b tbl-wrap">
+          <table class="tbl"><thead><tr><th>Kelas</th><th class="num">Kej.</th><th class="num">Menit</th><th class="num">Penumpang</th><th class="num">Barang</th><th class="num">Total</th><th class="num">%</th></tr></thead><tbody>
+            <template x-for="x in E.byClass" :key="x.key"><tr class="click" @click="$store.app.go('telusuri', { ids: x.ids, label: 'Pendapatan terekspos · ' + x.key, period: 'all' })">
+              <td><span class="legend" style="display:inline-flex"><i :style="'background:' + KAI.classColor(x.key)"></i></span> <span x-text="$store.app.classLabel(x.key).split(',')[0]"></span></td>
+              <td class="num" x-text="x.n"></td><td class="num" x-text="KAI.fmt.n(x.menit)"></td><td class="num" x-text="KAI.fmt.rp(x.p)"></td><td class="num" x-text="KAI.fmt.rp(x.b)"></td>
+              <td class="num"><b x-text="KAI.fmt.rp(x.rp)"></b></td><td class="num bar-cell"><div class="b" :style="'width:' + x.share * 100 + '%;background:#FDE3D3'"></div><span x-text="KAI.fmt.d1(x.share * 100)"></span></td></tr></template>
+          </tbody></table>
+          <table class="tbl mt-s"><thead><tr><th>Wilayah</th><th class="num">Kej.</th><th class="num">Menit</th><th class="num">Rp terekspos</th><th class="num">%</th></tr></thead><tbody>
+            <template x-for="x in E.byRegion.slice(0, 10)" :key="x.key"><tr class="click" @click="$store.app.open('wilayah', x.key)"><td x-text="x.key"></td><td class="num" x-text="x.n"></td><td class="num" x-text="KAI.fmt.n(x.menit)"></td><td class="num"><b x-text="KAI.fmt.rp(x.rp)"></b></td><td class="num" x-text="KAI.fmt.d1(x.share * 100)"></td></tr></template>
+          </tbody></table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3>Perbandingan periode & catatan</h3><p>Baca angka bersama catatan ini — dihitung dari data terpilih</p></div></div>
+        <div class="card-b">
+          <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Periode</th><th class="num">Penumpang</th><th class="num">Barang</th><th class="num">Total</th></tr></thead><tbody>
+            <template x-for="c in cmpRows" :key="c[0]"><tr><td x-text="c[0]"></td><td class="num" x-text="KAI.fmt.rp(c[1].p)"></td><td class="num" x-text="KAI.fmt.rp(c[1].b)"></td><td class="num"><b x-text="KAI.fmt.rp(c[1].rp)"></b></td></tr></template>
+          </tbody></table></div>
+          <ul class="ins mt-s"><template x-for="(t, i) in notes" :key="i"><li :class="t.tone"><span class="ins-dot"></span><span x-text="t.text"></span></li></template></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g-2-1 mt">
+      <div class="card">
+        <div class="card-h"><div><h3>Kejadian dengan pendapatan terekspos terbesar</h3><p>Rate = rate bulan kejadian (atau rate acuan) · klik baris untuk detail kejadian</p></div>
+          <div class="spacer"></div><button class="btn sm" @click="exp()">Excel</button></div>
+        <div class="card-b"><div x-table="evSpec" @row-click="$store.app.openEvent($event.detail.id)"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3>Per kereta api</h3><p>15 KA terbesar · klik untuk profil KA</p></div></div>
+        <div class="card-b tbl-wrap"><table class="tbl">
+          <thead><tr><th>KA</th><th class="num">Kej.</th><th class="num">Menit</th><th class="num">Rp terekspos</th></tr></thead><tbody>
+          <template x-for="x in E.byKa" :key="x.key"><tr class="click" @click="$store.app.open('ka', String(x.key).split(' ')[0])"><td><b x-text="'KA ' + String(x.key).split(' ')[0]"></b><div class="note" x-text="kaName(x.key)"></div></td><td class="num" x-text="x.n"></td><td class="num" x-text="KAI.fmt.n(x.menit)"></td><td class="num"><b x-text="KAI.fmt.rp(x.rp)"></b></td></tr></template>
+        </tbody></table></div>
+      </div>
+    </div>
+
+    <!-- ============ Rate & cakupan ============ -->
+    <div x-show="engine">
+      <div class="card mt">
+        <div class="card-h"><div><h3>Rate pendapatan per jam (diperbarui otomatis dari agregat)</h3><p x-text="'Rate acuan (bulan lengkap ' + KAI.fmt.mon(X.P.refFrom) + '–' + KAI.fmt.mon(X.P.refTo) + '): penumpang ' + KAI.fmt.rp(X.P.ref) + '/jam · barang ' + KAI.fmt.rp(X.B.ref) + '/jam'"></p></div></div>
+        <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Bulan</th><th class="num">Rate KA pnp (Rp/jam)</th><th class="num">Pendapatan pnp termatch</th><th class="num">Perjalanan</th><th class="num">Rate KA barang (Rp/jam)</th><th class="num">Pendapatan barang termatch</th><th class="num">Nama KA</th><th>Status</th></tr></thead><tbody>
+          <template x-for="m in rateRows" :key="m.ym"><tr>
+            <td x-text="KAI.fmt.mon(m.ym)"></td><td class="num"><b x-text="m.p ? KAI.fmt.n(Math.round(m.p.rate)) : '–'"></b></td><td class="num" x-text="m.p ? KAI.fmt.d1(m.p.cov * 100) + '%' : '–'"></td><td class="num" x-text="m.p ? m.p.nKa : '–'"></td>
+            <td class="num"><b x-text="m.b ? KAI.fmt.n(Math.round(m.b.rate)) : '–'"></b></td><td class="num" x-text="m.b ? KAI.fmt.d1(m.b.cov * 100) + '%' : '–'"></td><td class="num" x-text="m.b ? m.b.nKa + ' (' + m.b.trips + ' perj.)' : '–'"></td>
+            <td><span class="chip" :class="m.partial ? 'warn' : ''" x-text="m.partial ? 'Belum lengkap → rate acuan' : 'Lengkap'"></span></td>
+          </tr></template>
+        </tbody></table></div>
+        <p class="note" style="padding:0 14px 12px">Rate KA penumpang = Σ pendapatan KA penumpang termatch ÷ Σ jam perjalanan KA termatch (durasi GAPEKA × hari dalam bulan; satu perjalanan GAPEKA dihitung sekali walau tercatat dengan beberapa nomor). Rate KA barang = Σ pendapatan komoditas KA termatch ÷ Σ jam semua perjalanan reguler bernama sama di GAPEKA × hari. Perjalanan fakultatif/KLB tidak dipakai karena frekuensinya tidak diketahui.</p>
+      </div>
+      <div class="card mt">
+        <div class="card-h"><div><h3>Data pendapatan yang belum termatch GAPEKA</h3><p>Tidak masuk rate — perlu dilengkapi agar tidak ada yang terlewat</p></div><div class="spacer"></div>
+          <div class="seg sm" role="group" aria-label="Jenis data"><button :aria-pressed="um === 'p'" @click="um = 'p'">Passenger</button><button :aria-pressed="um === 'b'" @click="um = 'b'">Freight</button></div></div>
+        <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th x-text="um === 'p' ? 'No KA' : 'Nama KA'"></th><th>Nama</th><th>Alasan</th><th class="num">Baris</th><th class="num">Pendapatan</th></tr></thead><tbody>
+          <template x-for="u in unmatched" :key="u.no || u.nama || u.why"><tr><td><b x-text="u.no || u.nama"></b></td><td x-text="u.no ? u.nama : ''"></td><td x-text="u.why"></td><td class="num" x-text="u.n"></td><td class="num" x-text="KAI.fmt.rp(u.rev)"></td></tr></template>
+        </tbody></table></div>
+        <p class="note" style="padding:0 14px 12px" x-text="unmatchedNote"></p>
+      </div>
+    </div>
+
+    <div class="card mt">
+      <div class="card-h"><div><h3>Model bertahap: dari pendapatan terekspos ke kerugian aktual</h3><p>Angka di halaman ini = tahap 1 (Gross RaR). Tahap 2–4 butuh data & persetujuan lintas fungsi.</p></div></div>
+      <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Tahap</th><th>Rumus</th><th>Data yang dibutuhkan</th><th>Status</th><th>Prioritas</th><th>Pareto</th><th>Dashboard Direksi</th><th>Kerugian aktual</th><th>Profit at risk</th></tr></thead><tbody>
+        <template x-for="s in stages" :key="s[0]"><tr><td><b x-text="s[0]"></b></td><td x-text="s[1]"></td><td x-text="s[2]"></td><td><span class="chip" :class="s[3] === 'Aktif' ? 'good' : 'warn'" x-text="s[3]"></span></td>
+          <template x-for="(u, j) in s[4]" :key="j"><td x-text="u"></td></template></tr></template>
+      </tbody></table></div>
+      <p class="note" style="padding:0 14px 12px">Perlu persetujuan Operasi, Komersial, Keuangan, dan Manajemen Risiko sebelum dipakai sebagai kerugian. Arah lanjutan KA barang: rate per komoditas, mitra/kontrak, koridor, dan SLA. Data tidak dapat dipulihkan: <span x-text="anomTxt"></span></p>
+    </div>
+  </section>
+</template>
+<script>
+document.addEventListener('alpine:init', function () {
+  Alpine.data('vExpo', function () {
+    var memo = {};
+    return {
+      pj: 'all', um: 'p',
+      get R() { return this.$store.app.R; },
+      get E() { return this.R.expoD; },
+      get X() { return KAI.data.rar; },
+      get engine() { return !!(KAI.data.rar && KAI.data.rar.ok); },
+      get D() { var k = this.$store.app.ver + '|' + this.R.label + '|' + this.$store.app.f.wilayah.join(',') + '|' + this.$store.app.f.kelas.join(','); if (memo.d && memo.d.k === k) return memo.d.v; var v = this.engine ? KAIP.detail(KAI.data.rar, this.R.L) : null; memo.d = { k: k, v: v }; return v; },
+      get M() {   // batang = R.expoM (filter wilayah/kelas aktif, mesin KAIP); garis = rate per bulan yang dipakai
+        var R = this.R, m = R.expoM, X = this.X, rate = function (j, y) { var q = X && X.ok ? X.rate(j, y) : null; return q ? q.v : (j === 'PENUMPANG' ? R.cfg.rate.PENUMPANG : R.cfg.rate.BARANG); };
+        return { yms: m.yms, p: m.p, b: m.b, rateP: m.yms.map(function (y) { return rate('PENUMPANG', y); }), rateB: m.yms.map(function (y) { return rate('BARANG', y); }) };
+      },
+      get paretoRows() { var D = this.D; if (!D) return this.E.bySub; return (this.pj === 'p' ? D.paretoP : this.pj === 'b' ? D.paretoB : D.paretoAll).slice(0, 15); },
+      get rateRows() { var X = this.X; if (!X) return []; var yms = {}; X.P.list.concat(X.B.list).forEach(function (o) { yms[o.ym] = 1; });
+        return Object.keys(yms).sort().reverse().map(function (y) { var p = X.P.by[y], b = X.B.by[y]; return { ym: y, p: p, b: b, partial: (p && p.partial) || (b && b.partial) }; }); },
+      get unmatched() { var X = this.X; return X ? (this.um === 'p' ? X.unmatchedP : X.unmatchedB).slice(0, 25) : []; },
+      get unmatchedNote() {
+        var X = this.X; if (!X) return ''; var f = KAI.fmt, L = this.um === 'p' ? X.unmatchedP : X.unmatchedB, S = this.um === 'p' ? X.P.list : X.B.list;
+        var tot = KAIA.sum(S, function (o) { return o.revAll; }), un = KAIA.sum(L, function (u) { return u.rev; });
+        return f.n(L.length) + ' ' + (this.um === 'p' ? 'nomor KA' : 'kelompok') + ' belum termatch = ' + f.rp(un) + ' (' + f.d1(tot ? un / tot * 100 : 0) + '% pendapatan ' + (this.um === 'p' ? 'Passenger' : 'Freight') + ' seluruh bulan). Lengkapi di GAPEKA/LIST KA (mis. KA tambahan, nama KA barang baru) agar masuk rate.';
+      },
+      get anomTxt() { var s = (this.X && this.X.stats) || {}, f = (s.frei || {}), p = (s.pass || {}), F = KAI.fmt;
+        return (f.vol0 ? F.n(f.vol0) + ' baris Freight berpendapatan tetapi volume 0 (' + F.rp(f.vol0Rp) + ', tetap dihitung di pendapatan)' : '') + (f.neg ? '; ' + F.n(f.neg) + ' baris koreksi negatif (' + F.rp(f.negRp) + ')' : '') +
+          (p.pnpFixed || f.tarifFixed ? '; angka yang dipulihkan saat dibaca: Passenger ' + F.n(p.pnpFixed + p.rpFixed) + ' sel, Freight ' + F.n(f.tarifFixed + f.revFixed) + ' sel' : '; angka Passenger/Freight sudah bersih (0 sel dipulihkan)') + '.'; },
+      stages: [
+        ['1. Gross RaR', 'Menit KELKA ÷ 60 × rate pendapatan per jam', 'Gangguan_Induk, Passenger, Freight, GAPEKA', 'Aktif', ['Ya', 'Ya', 'Ya', 'Belum', 'Belum']],
+        ['2. Net RaR', 'Gross RaR × faktor dampak (porsi pendapatan yang benar-benar hilang)', 'Studi faktor dampak per jenis KA/kelas', 'Belum', ['Ya', 'Ya', 'Ya', 'Belum', 'Belum']],
+        ['3. Actual Lost Revenue', 'Refund + kompensasi + pembatalan + penalti SLA + klaim − pendapatan terpulihkan', 'Data Komersial & Keuangan per kejadian', 'Belum', ['—', '—', '—', 'Ya (setelah validasi)', 'Belum']],
+        ['4. Profit at Risk', '(Actual Lost Revenue atau Net RaR) × contribution margin', 'Margin kontribusi per layanan (Keuangan)', 'Belum', ['—', '—', '—', '—', 'Ya (setelah validasi)']]
+      ],
+      comboMonthly: function () {
+        var M = this.M, f = KAI.fmt;
+        return { textStyle: { fontFamily: 'Inter, Arial' }, legend: { bottom: 0, type: 'scroll' }, grid: { left: 18, right: 18, top: 16, bottom: 58, containLabel: true },
+          tooltip: { trigger: 'axis', valueFormatter: function (v) { return v == null ? '–' : f.rp(v); } },
+          xAxis: { type: 'category', data: M.yms.map(function (y) { return KAI.fmt.mon(y).replace(/ 20(\d\d)$/, " '$1"); }), name: 'Bulan', nameLocation: 'middle', nameGap: 24 },
+          yAxis: [{ type: 'value', name: 'Rp terekspos (miliar)', nameLocation: 'middle', nameGap: 44, axisLabel: { formatter: function (v) { return String(Math.round(v / 1e8) / 10).replace('.', ','); } } },
+            { type: 'value', name: 'Rate (Rp juta/jam)', nameLocation: 'middle', nameGap: 36, splitLine: { show: false }, axisLabel: { formatter: function (v) { return Math.round(v / 1e6); } } }],
+          series: [{ name: 'KA penumpang', type: 'bar', stack: 'r', data: M.p.map(Math.round), itemStyle: { color: '#1F3B73' } },
+            { name: 'KA barang', type: 'bar', stack: 'r', data: M.b.map(Math.round), itemStyle: { color: '#E0861A' } },
+            { name: 'Rate KA penumpang', type: 'line', yAxisIndex: 1, data: M.rateP.map(function (v) { return v == null ? null : Math.round(v); }), itemStyle: { color: '#0F766E' }, lineStyle: { width: 2 } },
+            { name: 'Rate KA barang', type: 'line', yAxisIndex: 1, data: M.rateB.map(function (v) { return v == null ? null : Math.round(v); }), itemStyle: { color: '#B42318' }, lineStyle: { width: 2, type: 'dashed' } }] };
+      },
+      comboPareto: function () {
+        var P = this.paretoRows.slice(0, 10), cut = function (s) { s = String(s).replace(/^[^-]+-\s*/, ''); return s.length > 26 ? s.slice(0, 25) + '…' : s; };
+        return { textStyle: { fontFamily: 'Inter, Arial' }, legend: { bottom: 0 }, grid: { left: 46, right: 18, top: 16, bottom: 40, containLabel: true }, tooltip: { trigger: 'axis', formatter: function (ps) { var x = P[ps[0].dataIndex]; return '<b>' + x.key + '</b><br>' + ps.map(function (p) { return p.marker + p.seriesName + ': ' + String(p.value).replace('.', ',') + '%'; }).join('<br>'); } },
+          xAxis: { type: 'category', data: P.map(function (x) { return cut(x.key); }), axisLabel: { interval: 0, rotate: 35, fontSize: 10 } },
+          yAxis: [{ type: 'value', name: 'Porsi dari total (%)', nameLocation: 'middle', nameGap: 34 }, { type: 'value', name: 'Kumulatif Rp (%)', min: 0, max: 100, nameLocation: 'middle', nameGap: 36, splitLine: { show: false } }],
+          series: [{ name: '% menit KELKA', type: 'bar', data: P.map(function (x) { return Math.round(x.mShare * 1000) / 10; }), itemStyle: { color: '#9AA3B2' } },
+            { name: '% Rp terekspos', type: 'bar', data: P.map(function (x) { return Math.round(x.share * 1000) / 10; }), itemStyle: { color: '#1F3B73' } },
+            { name: 'Kumulatif Rp', type: 'line', yAxisIndex: 1, data: P.map(function (x) { return Math.round(x.cum * 1000) / 10; }), itemStyle: { color: '#E0861A' }, label: { show: P.length <= 10, position: 'top', formatter: function (p) { return String(p.value).replace('.', ',') + '%'; }, fontSize: 10 } }] };
+      },
+      get evSpec() {
+        var rp = {}, rt = {}; this.E.events.forEach(function (x) { rp[x.r.id] = x.rp; var q = KAI.data.rar && KAI.data.rar.rarOf(x.r); rt[x.r.id] = q ? q.rate : null; });
+        return KAITable.eventSpec('expo-ev', this.E.events.map(function (x) { return x.r; }), {
+          hide: ['sarana', 'kelasLabel'], extraRow: function (r) { return { rp: rp[r.id], rate: rt[r.id], jenisKa: KAI.cap((r.kaJenis || '').toLowerCase()) }; },
+          extra: [{ title: 'Jenis KA', field: 'jenisKa', width: 100 }, { title: 'Rate (Rp/jam)', field: 'rate', hozAlign: 'right', headerHozAlign: 'right', width: 120, formatter: function (c) { return c.getValue() == null ? '–' : KAI.fmt.n(Math.round(c.getValue())); } },
+            { title: 'Rp terekspos', field: 'rp', hozAlign: 'right', headerHozAlign: 'right', width: 132, formatter: function (c) { return '<b>' + KAI.fmt.rp(c.getValue()) + '</b>'; } }],
+          sort: [{ column: 'rp', dir: 'desc' }] });
+      },
+      kaName: function (no) { var k = String(no).split(' ')[0], r = KAI.data.all.filter(function (x) { return x.ka === k && x.kaNama; })[0]; return r ? r.kaNama + ' · ' + (r.kaJenis || '').toLowerCase() : ''; },
+      get cards() {
+        var R = this.R, E = this.E, C = R.expoCmp, f = KAI.fmt, D = this.D, X = this.X, qP = X && X.rate('PENUMPANG', R.ym), qB = X && X.rate('BARANG', R.ym);
+        return [
+          { id: 't', label: 'Pendapatan terekspos (Gross RaR)', val: f.rp(E.tot.rp), raw: E.tot.rp, prev: C.prev.rp, yoy: C.yoy.rp, color: 'var(--c-alam)', note: 'YTD ' + f.rp(C.ytd.rp) + ' (' + KAI.delta(C.ytd.rp, C.ytdPrev.rp).text + ' vs YTD thn lalu)' },
+          { id: 'p', label: 'KA penumpang', val: f.rp(E.tot.p), raw: E.tot.p, prev: C.prev.p, yoy: C.yoy.p, color: 'var(--kai-navy)', note: f.n(E.tot.nP) + ' kej. · ' + f.n(E.tot.mP) + ' mnt' + (D ? ' · KA termatch ' + f.d1(D.tot.covP * 100) + '% menit' : '') },
+          { id: 'b', label: 'KA barang', val: f.rp(E.tot.b), raw: E.tot.b, prev: C.prev.b, yoy: C.yoy.b, color: 'var(--kai-orange)', note: f.n(E.tot.nB) + ' kej. · ' + f.n(E.tot.mB) + ' mnt' + (D ? ' · KA termatch ' + f.d1(D.tot.covB * 100) + '% menit' : '') },
+          { id: 'r', label: 'Rate dipakai ' + KAI.fmt.mon(R.ym), val: qP ? (qP.v / 1e6).toFixed(1).replace('.', ',') + ' · ' + (qB.v / 1e6).toFixed(1).replace('.', ',') + ' jt/jam' : f.n(R.cfg.rate.PENUMPANG / 1e6) + ' · ' + f.n(R.cfg.rate.BARANG / 1e6) + ' jt/jam', raw: null, prev: null, color: 'var(--c-prasarana)',
+            note: qP ? 'Penumpang · barang (' + (qP.src === 'acuan' ? 'rate acuan — data bulan ini belum lengkap' : 'rate bulan berjalan') + ')' : 'Rate tetap cadangan' }
+        ];
+      },
+      get cmpRows() { var R = this.R, C = R.expoCmp; return [[R.P.short, this.E.tot], [R.prevP.short + ' (MoM)', C.prev], [R.yoyP.short + ' (YoY)', C.yoy], ['YTD ' + R.ytdP.short, C.ytd], ['YTD tahun lalu', C.ytdPrev]]; },
+      get notes() {
+        var R = this.R, E = this.E, D = this.D, f = KAI.fmt, out = [], totM = KAIA.sum(R.L, function (r) { return r.menit; });
+        if (!E.tot.rp) return [{ tone: 'info', text: 'Tidak ada kejadian yang bisa dinilai pada pilihan ini.' }];
+        var priced = E.tot.mP + E.tot.mB;
+        out.push({ tone: priced / (totM || 1) < 0.8 ? 'warn' : 'info', text: f.d1(priced / (totM || 1) * 100) + '% dari ' + f.n(totM) + ' menit KELKA dinilai (KA penumpang/barang). Kejadian tanpa nomor KA, KA dinas, atau nomor tak dikenali tidak dihitung — angka ini batas bawah.' });
+        if (D && D.tot.mAcuan) out.push({ tone: 'warn', text: f.n(D.tot.mAcuan) + ' menit dinilai dengan rate acuan karena data Passenger/Freight bulan tersebut belum lengkap atau belum tersedia (mis. bulan berjalan, tahun 2025).' });
+        if (E.paretoTop || (D && D.paretoAll[0])) { var a = D.paretoAll, byM = a.slice().sort(function (x, y) { return y.menit - x.menit; })[0];
+          if (a[0] && byM && a[0].key !== byM.key) out.push({ tone: 'info', text: 'Menit terbanyak: ' + byM.key + ' (' + f.n(byM.menit) + ' mnt), tetapi Rp terbesar: ' + a[0].key + ' (' + f.rp(a[0].rp) + ') — prioritaskan dengan Pareto Rp, bukan menit saja.' }); }
+        out.push({ tone: E.top5share > 0.5 ? 'warn' : 'info', text: '5 kejadian terbesar = ' + f.d1(E.top5share * 100) + '% pendapatan terekspos' + (E.top5share > 0.5 ? ' — tren sangat dipengaruhi kejadian tunggal; cek kewajaran menit KELKA kejadian tersebut.' : '.') });
+        out.push({ tone: 'info', text: 'Satu kejadian dinilai dengan jenis KA dari nomor KA yang tercatat; bila menghambat beberapa KA berbeda jenis, nilainya tetap satu jenis. Gross RaR belum memperhitungkan pendapatan yang tidak hilang (penumpang tetap berangkat).' });
+        return out;
+      },
+      exp: function () {
+        var rows = this.E.events.map(function (x) { return Object.assign({ rate: x.r && KAI.data.rar && KAI.data.rar.rarOf(x.r) ? Math.round(KAI.data.rar.rarOf(x.r).rate) : '', eksposur: Math.round(x.rp) }, x.r); });
+        var cols = [{ title: 'Kunci asal', field: 'id' }, { title: 'Tanggal', get: function (r) { return r.date || r.ym; } }, { title: 'Wilayah', field: 'wilayah' }, { title: 'Kelas', field: 'kelas' },
+          { title: 'Subgangguan', field: 'sub' }, { title: 'Judul', field: 'judul' }, { title: 'Lokasi', field: 'lokasi' }, { title: 'No KA', field: 'ka' }, { title: 'Nama KA', field: 'kaNama' }, { title: 'Jenis KA', field: 'kaJenis' },
+          { title: 'Menit KELKA', field: 'menit' }, { title: 'Rate (Rp/jam)', field: 'rate' }, { title: 'Pendapatan terekspos (Rp)', field: 'eksposur' }];
+        KAIExport.xlsx([{ name: 'Pendapatan terekspos', columns: cols, rows: rows }], 'Pendapatan_terekspos_' + this.R.P.short, this.$store.app.meta).catch(function (e) { Alpine.store('app').say(e.message, true); });
+      }
+    };
+  });
+});
+</script>

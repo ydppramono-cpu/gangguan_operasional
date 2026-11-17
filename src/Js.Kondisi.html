@@ -1,0 +1,384 @@
+<script>
+/**
+ * Js.Kondisi — analitik kondisi prasarana & sarana (fungsi murni; dipakai halaman "Kondisi prasarana & sarana" dan unduhan PPT/PDF).
+ *
+ * PRASARANA  = THI (Track Health Index per UPT Resor JR, bulanan) × gangguan prasarana jalan rel/wesel/track × WKP (window time
+ *              pekerjaan perawatan). Gangguan dipetakan ke UPT JR lewat kode stasiun/petak (SEED_RESOR: transkripsi PETA_WILAYAH).
+ * SARANA     = RHI (Rolling-stock Health Index lokomotif, harian; diringkas per bulan) × gangguan sarana per nomor lokomotif;
+ *              depo pemilik dari master armada (DEPO LOK …) → wilayah depo.
+ * Aturan grade THI (dari data THI): Sangat Baik ≥ 85 · Baik 70–<85 · Cukup 55–<70 · Waspada 40–<55 · Kritis < 40.
+ * Status RHI (ambang tervalidasi data): HEALTHY ≥ 85 · MONITOR 70–<85 · DECLINING < 70.
+ */
+(function (root) {
+  'use strict';
+  var REG_ORDER = ['Daop 1', 'Daop 2', 'Daop 3', 'Daop 4', 'Daop 5', 'Daop 6', 'Daop 7', 'Daop 8', 'Daop 9', 'Divre 1', 'Divre 2', 'Divre 3', 'Divre 4'];
+  var T = { w: 0, ym: 1, lvl: 2, id: 3, unit: 4, hi: 5, ghi: 6, ci: 7, gci: 8, mat: 9, kons: 10, geo: 11, rel: 12, pelat: 13, penambat: 14, wesel: 15, balas: 16, bantalan: 17,
+    badan: 18, drainase: 19, lingk: 20, mi: 21, gmi: 22, insp: 23, ppj: 24, mir: 25, wmr: 26, ppjP: 27, ppjR: 28, mirP: 29, mirR: 30, wmrP: 31, wmrR: 32, msp: 33, hm: 34, hmMat: 35, hmKons: 36 };
+  var COMP = [['rel', 'Rel & sambungan las'], ['pelat', 'Sambungan pelat'], ['penambat', 'Penambat'], ['wesel', 'Wesel'], ['balas', 'Balas/plinth'], ['bantalan', 'Bantalan'],
+    ['badan', 'Badan jalan & lereng'], ['drainase', 'Drainase'], ['lingk', 'Lingkungan'], ['geo', 'Geometri'], ['insp', 'Inspeksi terjadwal'], ['ppj', 'PPJ'], ['mir', 'MIR'], ['wmr', 'Perawatan korektif (WMR)']];
+  var H = { no: 0, tipe: 1, ym: 2, days: 3, hi: 4, hiMean: 5, hiMin: 6, st: 7, dH: 8, dM: 9, dD: 10, rams: 11, rel: 12, mtb: 13, av: 14, mi: 15, ci: 16, on: 17, pt: 18, tp: 19, req: 20, ok: 21, last: 22 };
+  var W = { d: 0, w: 1, grp: 2, id: 3, lok: 4, prog: 5, real: 6, andil: 7, keg: 8, pm: 9, pa: 10 };
+  var WKP_LABEL = { rel: 'Rel & las', wesel: 'Wesel', bantalan: 'Bantalan & penambat', geometri: 'Geometri (MTT/KPJR/listring)', badan: 'Badan jalan & drainase', jembatan: 'Jembatan', sintel: 'Sintel/LAA', lain: 'Lainnya' };
+  var WKP_JR = { rel: 1, wesel: 1, bantalan: 1, geometri: 1, badan: 1 };
+  var JR_GROUP = [
+    ['wesel', /wesel/i],
+    ['track', /^persinyalan.*track|track merah|track petak|track di emplasemen|track wesel/i],
+    ['jembatan', /jembatan/i],
+    ['jr', /jalan rel|rel patah|rel spaten|rel retak|goyang|kecrotan|kpjr|\bmtt\b|\bkpj\b|geometri|bantalan|balas|amblas/i]
+  ];
+  var JR_LABEL = { jr: 'Jalan rel', wesel: 'Wesel', track: 'Track (sirkuit) & wesel listrik', jembatan: 'Jembatan' };
+
+  function grade(v) { return v == null ? '' : v >= 85 ? 'Sangat Baik' : v >= 70 ? 'Baik' : v >= 55 ? 'Cukup' : v >= 40 ? 'Waspada' : 'Kritis'; }
+  function regOfId(id) { if (!id) return ''; var a = id.split('.')[0]; return /^[IV]+$/.test(a) ? 'Divre ' + { I: 1, II: 2, III: 3, IV: 4 }[a] : 'Daop ' + a; }
+  function idOrder(id) { var r = regOfId(id), p = id.split('.'); return REG_ORDER.indexOf(r) * 100 + Number(p[1] || 0); }
+  function ymShift(ym, k) { var y = +ym.slice(0, 4), m = +ym.slice(5, 7) - 1 + k; y += Math.floor(m / 12); m = ((m % 12) + 12) % 12; return y + '-' + (m < 9 ? '0' : '') + (m + 1); }
+  function sum(a, f) { var s = 0; for (var i = 0; i < a.length; i++) s += f ? (f(a[i]) || 0) : (a[i] || 0); return s; }
+  function med(a) { if (!a.length) return 0; var b = a.slice().sort(function (x, y) { return x - y; }), k = Math.floor(b.length / 2); return b.length % 2 ? b[k] : (b[k - 1] + b[k]) / 2; }
+  function hhmmMin(t) { var m = /^(\d{1,2}):(\d{2})$/.exec(t || ''); return m ? +m[1] * 60 + +m[2] : null; }
+
+  var memo = { k: null, v: null };
+  /** Indeks dasar dari ref.kondisi (sekali per versi data). */
+  function prep(K) {
+    if (!K || !K.resor) return null;
+    if (memo.k === K) return memo.v;
+    var X = { K: K, meta: {}, thi: {}, scope: {}, thiYms: [], rhi: {}, rhiYms: [], wkp: K.wkp || [] };
+    (K.resor.meta || []).forEach(function (m) { X.meta[m[0]] = { id: m[0], w: regOfId(m[0]), hq: m[2], nSt: m[3], stations: m[6] }; });
+    var ys = {};
+    (K.thi || []).forEach(function (r) {
+      ys[r[T.ym]] = 1;
+      if (r[T.lvl] === 'Scope') { (X.scope[r[T.ym]] = X.scope[r[T.ym]] || {})[r[T.w]] = r; return; }
+      if (!r[T.id]) return; (X.thi[r[T.ym]] = X.thi[r[T.ym]] || {})[r[T.id]] = r;
+      if (X.meta[r[T.id]]) X.meta[r[T.id]].unit = r[T.unit];
+    });
+    X.thiYms = Object.keys(ys).sort();
+    var ry = {};
+    (K.rhi || []).forEach(function (r) { ry[r[H.ym]] = 1; (X.rhi[r[H.ym]] = X.rhi[r[H.ym]] || []).push(r); });
+    X.rhiYms = Object.keys(ry).sort();
+    memo = { k: K, v: X };
+    return X;
+  }
+
+  /** UPT JR untuk satu kejadian (stasiun, atau petak; petak lintas batas → resor porsi km terbesar). */
+  function resorOf(r, K) {
+    if (!K || !K.resor) return { id: '', via: '' };
+    var c = String(r.lokCode || '').toUpperCase();
+    if (r.lokType === 'stasiun' && K.resor.st[c]) return { id: K.resor.st[c], via: 'stasiun' };
+    if (r.lokType === 'petak' && K.resor.pj[c]) return { id: K.resor.pj[c][0], via: K.resor.pj[c][1] ? 'petak-batas' : 'petak' };
+    if (r.lokType === 'petak') { var p = c.split('-'); for (var i = 0; i < p.length; i++) if (K.resor.st[p[i]]) return { id: K.resor.st[p[i]], via: 'petak-ujung' }; }
+    return { id: '', via: '' };
+  }
+  function jrGroup(r) {
+    if (r.kelas !== 'prasarana') return '';
+    var s = String(r.sub || r.judul || '');
+    if (/persinyalan elektrik|persinyalan mekanik|laa|komunikasi|radiolok|meja pelayanan/i.test(s) && !/track|wesel/i.test(s)) return '';
+    for (var i = 0; i < JR_GROUP.length; i++) if (JR_GROUP[i][1].test(s)) return JR_GROUP[i][0];
+    return '';
+  }
+  /** Kelambatan karena WKP melebihi waktu (gangguan "… waktu perawatan … melebihi …" & "Pengendalian … pekerjaan perawatan prasarana"). */
+  function isWkpDelay(r) { return /melebihi waktu|waktu pekerjaan perawatan prasarana|pekerjaan perawatan prasarana/i.test(String(r.sub || '')); }
+
+  function wkpStat(rows) {
+    var o = { n: 0, nJR: 0, menit: 0, menitJR: 0, over: 0, overMenit: 0, andil: 0, andilN: 0, grp: {} };
+    rows.forEach(function (x) {
+      var real = x[W.real] != null ? x[W.real] : 0, prog = x[W.prog];
+      var pc = hhmmMin(x[W.pa]) != null && hhmmMin(x[W.pm]) != null ? ((hhmmMin(x[W.pa]) - hhmmMin(x[W.pm]) + 1440) % 1440) : null;
+      if (pc != null && (prog == null || Math.abs(prog - pc) > 5)) prog = pc;   // durasi program dihitung ulang dari jam bila kolom durasi janggal
+      o.n++; o.menit += real; o.grp[x[W.grp]] = (o.grp[x[W.grp]] || 0) + 1;
+      if (WKP_JR[x[W.grp]]) { o.nJR++; o.menitJR += real; }
+      if (prog != null && real > prog + 5) { o.over++; o.overMenit += real - prog; }
+      if (x[W.andil] > 0) { o.andil += x[W.andil]; o.andilN++; }
+    });
+    return o;
+  }
+  function gStat(list) { return { n: list.length, menit: Math.round(sum(list, function (r) { return r.menit; })) }; }
+
+  /**
+   * Analisis prasarana untuk bulan ym (THI bulan itu atau bulan THI terakhir ≤ ym) dan cakupan wilayah (kosong = KAI).
+   * recs = kejadian yang sudah dipersiapkan (KAIA.prepare); hanya kelas prasarana kelompok jalan rel/wesel/track dipakai.
+   */
+  function prasarana(recs, K, ym, regions) {
+    var X = prep(K); if (!X || !X.thiYms.length) return null;
+    var tym = X.thiYms.filter(function (y) { return y <= ym; }).pop() || X.thiYms[X.thiYms.length - 1];
+    var pym = X.thiYms.filter(function (y) { return y < tym; }).pop() || '';
+    var first = X.thiYms[0], win = X.thiYms.filter(function (y) { return y <= tym; });
+    var inReg = function (w) { return !regions || !regions.length || regions.indexOf(w) >= 0; };
+    var jr = recs.filter(function (r) { return r.ym && r.ym >= first && r.ym <= ym && jrGroup(r) && inReg(r.wilayah); });
+    var wd = recs.filter(function (r) { return r.ym === ym && isWkpDelay(r) && inReg(r.wilayah); });
+    jr.forEach(function (r) { var q = resorOf(r, K); r._resor = q.id; r._via = q.via; r._jr = jrGroup(r); });
+    wd.forEach(function (r) { var q = resorOf(r, K); r._resor = q.id; });
+    var wk = X.wkp.filter(function (x) { return x[W.d].slice(0, 7) === ym && inReg(x[W.w]); });
+    var wk6 = X.wkp.filter(function (x) { var y = x[W.d].slice(0, 7); return y >= first && y <= ym && inReg(x[W.w]); });
+    var cur = X.thi[tym] || {}, prev = X.thi[pym] || {};
+    var resor = Object.keys(X.meta).filter(function (id) { return inReg(regOfId(id)); }).sort(function (a, b) { return idOrder(a) - idOrder(b); }).map(function (id) {
+      var t = cur[id], p = prev[id], m = X.meta[id];
+      var gm = jr.filter(function (r) { return r._resor === id && r.ym === ym; }), g6 = jr.filter(function (r) { return r._resor === id; });
+      var comps = t ? COMP.map(function (c) { return { k: c[0], label: c[1], v: t[T[c[0]]] }; }).filter(function (c) { return c.v != null; }).sort(function (a, b) { return a.v - b.v; }) : [];
+      var hist = win.map(function (y) { var r = X.thi[y] && X.thi[y][id]; return r ? r[T.hi] : null; });
+      return { id: id, w: regOfId(id), unit: (t && t[T.unit]) || m.unit || ('UPT JR ' + id), hq: m.hq, stations: m.stations,
+        hi: t ? t[T.hi] : null, grade: t ? (t[T.ghi] || grade(t[T.hi])) : '', dhi: t && p && p[T.hi] != null ? Math.round((t[T.hi] - p[T.hi]) * 10) / 10 : null,
+        ci: t ? t[T.ci] : null, mi: t ? t[T.mi] : null, gmi: t ? t[T.gmi] : '', mat: t ? t[T.mat] : null, kons: t ? t[T.kons] : null, geo: t ? t[T.geo] : null,
+        insp: t ? t[T.insp] : null, ppj: t ? t[T.ppj] : null, mir: t ? t[T.mir] : null, wmr: t ? t[T.wmr] : null,
+        mSp: t ? t[T.msp] : null, comps: comps, hist: hist,
+        g: gStat(gm), g6: gStat(g6), gList: gm.sort(function (a, b) { return b.menit - a.menit; }), g6List: g6,
+        wkp: wkpStat(wk.filter(function (x) { return x[W.id] === id; })), wkp6: wkpStat(wk6.filter(function (x) { return x[W.id] === id; })),
+        wd: gStat(wd.filter(function (r) { return r._resor === id; })) };
+    });
+    var withHi = resor.filter(function (u) { return u.hi != null; });
+    var medG6 = med(withHi.map(function (u) { return u.g6.menit; }).filter(function (v) { return v > 0; }));
+    resor.forEach(function (u) {
+      var low = u.hi != null && u.hi < 70, hit = u.g6.n > 0;
+      u.quad = u.hi == null ? '' : low && hit ? 'Prioritas' : low ? 'Rawan laten' : hit ? 'Titik lokal' : 'Terkendali';
+    });
+    var regs = REG_ORDER.filter(inReg).map(function (w) {
+      var U = resor.filter(function (u) { return u.w === w; }), sc = (X.scope[tym] || {})[w], scp = (X.scope[pym] || {})[w];
+      var gm = jr.filter(function (r) { return r.wilayah === w && r.ym === ym; }), g6 = jr.filter(function (r) { return r.wilayah === w; });
+      var hiW = U.filter(function (u) { return u.hi != null; });
+      var wavg = function (k) { var a = hiW.filter(function (u) { return u[k] != null && u.mSp; }), s = sum(a, function (u) { return u.mSp; }); return s ? Math.round(sum(a, function (u) { return u[k] * u.mSp; }) / s * 10) / 10 : null; };
+      return { w: w, nUpt: U.length, nThi: hiW.length,
+        hi: sc ? sc[T.hi] : wavg('hi'), hiSrc: sc ? 'scope' : 'rata-rata tertimbang mSp', grade: sc ? sc[T.ghi] : grade(wavg('hi')),
+        hiPrev: scp ? scp[T.hi] : null, ci: sc ? sc[T.ci] : wavg('ci'), mi: sc ? sc[T.mi] : wavg('mi'), mat: sc ? sc[T.mat] : wavg('mat'), kons: sc ? sc[T.kons] : wavg('kons'), geo: sc ? sc[T.geo] : wavg('geo'),
+        mSp: sc ? sc[T.msp] : sum(hiW, function (u) { return u.mSp; }),
+        comps: sc ? COMP.map(function (c) { return { k: c[0], label: c[1], v: sc[T[c[0]]] }; }).filter(function (c) { return c.v != null; }).sort(function (a, b) { return a.v - b.v; }) : [],
+        low: hiW.filter(function (u) { return u.hi < 70; }), worst: hiW.slice().sort(function (a, b) { return a.hi - b.hi; })[0] || null,
+        g: gStat(gm), g6: gStat(g6), unmapped: gm.filter(function (r) { return !r._resor; }).length,
+        wkp: wkpStat(wk.filter(function (x) { return x[W.w] === w; })), wd: gStat(wd.filter(function (r) { return r.wilayah === w; })),
+        top: U.slice().sort(function (a, b) { return b.g6.menit - a.g6.menit || (a.hi || 999) - (b.hi || 999); }) };
+    });
+    var kinds = {}; jr.filter(function (r) { return r.ym === ym; }).forEach(function (r) { var k = r._jr; kinds[k] = kinds[k] || { k: k, label: JR_LABEL[k], n: 0, menit: 0 }; kinds[k].n++; kinds[k].menit += r.menit; });
+    var all = jr.filter(function (r) { return r.ym === ym; });
+    return { ym: ym, thiYm: tym, thiPrevYm: pym, win: win, first: first, resor: resor, regions: regs, medG6: medG6,
+      g: gStat(all), g6: gStat(jr), kinds: Object.keys(kinds).map(function (k) { return kinds[k]; }).sort(function (a, b) { return b.menit - a.menit; }),
+      mapped: all.filter(function (r) { return r._resor; }).length, list: all.sort(function (a, b) { return b.menit - a.menit; }),
+      wkp: wkpStat(wk), wkp6: wkpStat(wk6), wd: gStat(wd), wdList: wd.sort(function (a, b) { return b.menit - a.menit; }),
+      stats: K.stats || {}, label: WKP_LABEL };
+  }
+
+  /** Analisis sarana: RHI bulan ym (atau bulan RHI terakhir ≤ ym) × gangguan sarana per nomor lokomotif. */
+  function sarana(recs, K, ref, ym, regions) {
+    var X = prep(K); if (!X || !X.rhiYms.length) return null;
+    var rym = X.rhiYms.filter(function (y) { return y <= ym; }).pop() || X.rhiYms[X.rhiYms.length - 1];
+    var inReg = function (w) { return !regions || !regions.length || regions.indexOf(w) >= 0; };
+    var y0 = ym.slice(0, 4) + '-01', m3 = ymShift(ym, -2);
+    var byUnit = {};
+    recs.forEach(function (r) {
+      if (r.kelas !== 'sarana' || !r.ym || r.ym > ym || r.ym < y0) return;
+      (r.sarana || []).forEach(function (no) { (byUnit[no] = byUnit[no] || []).push(r); });
+    });
+    var units = (X.rhi[rym] || []).map(function (h) {
+      var f = ref && ref.fleet ? ref.fleet[h[H.no]] : null, d = f && ref.depot ? ref.depot[f.depoId] : null;
+      var L = byUnit[h[H.no]] || [], Lm = L.filter(function (r) { return r.ym === ym; }), L3 = L.filter(function (r) { return r.ym >= m3; });
+      var kinds = {}; Lm.forEach(function (r) { var k = String(r.sub || '').replace(/^Lokomotif\s*-\s*/i, '').replace(/^Gangguan\s+/i, '') || 'Tidak tercatat'; kinds[k] = (kinds[k] || 0) + r.menit; });
+      return { no: h[H.no], tipe: h[H.tipe], depo: d ? d.name || d.raw : (f ? f.depo : ''), depoId: f ? f.depoId : '', w: d ? d.region : '', age: f ? f.age : null,
+        days: h[H.days], hi: h[H.hi], hiMean: h[H.hiMean], hiMin: h[H.hiMin], st: h[H.st], dH: h[H.dH], dM: h[H.dM], dD: h[H.dD],
+        rams: h[H.rams], rel: h[H.rel], mtb: h[H.mtb], av: h[H.av], mi: h[H.mi], ci: h[H.ci], on: h[H.on], pt: h[H.pt], tp: h[H.tp], req: h[H.req], okReq: h[H.ok],
+        g: gStat(Lm), g3: gStat(L3), gYtd: gStat(L), gList: Lm.sort(function (a, b) { return b.menit - a.menit; }),
+        kinds: Object.keys(kinds).map(function (k) { return { k: k, menit: kinds[k] }; }).sort(function (a, b) { return b.menit - a.menit; }) };
+    }).filter(function (u) { return inReg(u.w); });
+    function grp(list) {
+      var o = { units: list.length, H: 0, M: 0, D: 0, withG: 0, gN: 0, gMenit: 0, hiMean: null };
+      list.forEach(function (u) { if (u.st === 'HEALTHY') o.H++; else if (u.st === 'MONITOR') o.M++; else if (u.st === 'DECLINING') o.D++; if (u.g.n) o.withG++; o.gN += u.g.n; o.gMenit += u.g.menit; });
+      var hs = list.filter(function (u) { return u.hi != null; }); o.hiMean = hs.length ? Math.round(sum(hs, function (u) { return u.hi; }) / hs.length * 10) / 10 : null;
+      o.rate = o.units ? Math.round(o.gN / o.units * 1000) / 10 : 0;     // kejadian per 100 unit
+      return o;
+    }
+    var byStatus = {}; ['HEALTHY', 'MONITOR', 'DECLINING'].forEach(function (s) { byStatus[s] = grp(units.filter(function (u) { return u.st === s; })); });
+    var depIds = {}; units.forEach(function (u) { depIds[u.depoId || u.depo] = 1; });
+    var depots = Object.keys(depIds).map(function (id) {
+      var U = units.filter(function (u) { return (u.depoId || u.depo) === id; }), g = grp(U);
+      g.id = id; g.name = U[0].depo; g.w = U[0].w; g.tipe = {}; U.forEach(function (u) { g.tipe[u.tipe] = (g.tipe[u.tipe] || 0) + 1; });
+      g.worst = U.slice().sort(function (a, b) { return a.hi - b.hi; })[0]; g.list = U; return g;
+    }).sort(function (a, b) { return REG_ORDER.indexOf(a.w) - REG_ORDER.indexOf(b.w) || b.units - a.units; });
+    var regs = REG_ORDER.filter(inReg).map(function (w) { var g = grp(units.filter(function (u) { return u.w === w; })); g.w = w; g.depots = depots.filter(function (d) { return d.w === w; }); return g; }).filter(function (g) { return g.units; });
+    // Gangguan lokomotif bulan ini yang unitnya TIDAK ada di RHI (cakupan data)
+    var lokM = recs.filter(function (r) { return r.kelas === 'sarana' && r.ym === ym && /lok/i.test(r.jenis || r.sub || '') && inReg(r.wilayah); });
+    var inRhi = {}; units.forEach(function (u) { inRhi[u.no] = 1; });
+    var cover = { lok: lokM.length, matched: lokM.filter(function (r) { return (r.sarana || []).some(function (n) { return inRhi[n]; }); }).length, noUnit: lokM.filter(function (r) { return !(r.sarana || []).length; }).length };
+    var medHi = med(units.map(function (u) { return u.hi; }).filter(function (v) { return v != null; }));
+    units.forEach(function (u) { u.quad = u.hi == null ? '' : u.hi < 85 && u.g.n ? 'Prioritas' : u.hi < 85 ? 'Pantau' : u.g.n ? 'Gangguan acak' : 'Sehat'; });
+    return { ym: ym, rhiYm: rym, units: units, depots: depots, regions: regs, byStatus: byStatus, all: grp(units), cover: cover, medHi: medHi,
+      tipe: (function () { var o = {}; units.forEach(function (u) { var t = o[u.tipe] = o[u.tipe] || { tipe: u.tipe, list: [] }; t.list.push(u); }); return Object.keys(o).sort().map(function (k) { var g = grp(o[k].list); g.tipe = k; return g; }); })() };
+  }
+
+  /* =====================================================================================================
+   *  v3.7 — definisi laporan "THI × WKP × gangguan prasarana" dan "RHI × gangguan sarana" (sama untuk dashboard & unduhan)
+   * ===================================================================================================== */
+  // Komponen THI kandidat "komponen terendah" (label seperti pada laporan)
+  var COMP2 = [['rel', 'Mat. Rel dan Sambungan Las (30%)'], ['pelat', 'Mat. Sambungan Pelat (20%)'], ['penambat', 'Mat. Penambat (15%)'], ['wesel', 'Mat. Wesel (15%)'],
+    ['balas', 'Mat. Balas/Plinth (10%)'], ['bantalan', 'Mat. Bantalan (10%)'], ['badan', 'Kons. Badan Jalan dan Lereng (50%)'], ['drainase', 'Kons. Drainase (30%)'],
+    ['lingk', 'Kons. Lingkungan (20%)'], ['geo', 'Geometri'], ['mi', 'Maint. idx']];
+  var WKP_JR2 = { rel: 1, wesel: 1, bantalan: 1, geometri: 1 };          // WKP jalan rel = rel/las, wesel, bantalan/penambat, geometri (MTT/KPJR/listring)
+  var RE_JRW = /^jalan rel\b|track wesel|rel patah|rel spaten|goyangan|wesel/i;  // gangguan prasarana kelompok jalan rel & wesel
+  var RE_SIN = /^(persinyalan|komunikasi)\s*-/i;                          // kelompok persinyalan & komunikasi
+  function prasKind(r) { var s = String(r.sub || ''); return RE_JRW.test(s) ? 'jr' : RE_SIN.test(s) ? 'sin' : 'lain'; }
+  /** Resor (UPT JR) kejadian: stasiun → resornya; petak → resor stasiun pertama (sesuai penulisan lokasi), bila tidak dikenal stasiun kedua.
+   *  all = semua resor yang dilalui petak (untuk penampilan lokasi di batas dua resor). */
+  // Penyelarasan petak di batas resor dengan laporan acuan Oktober 2026 (lokasi dicantumkan eksplisit pada tabel UPT laporan tsb.)
+  var PJ_OVR = { 'LR-SD': '4.2', 'SD-LR': '4.2', 'KPS-SRJ': '8.2', 'SRJ-KPS': '8.2', 'TGR-SGJ': '9.8', 'SGJ-TGR': '9.8', 'PBR-PBM': 'III.8', 'PBM-PBR': 'III.8' };
+  function resor2(r, K) {
+    var st = K.resor.st, pj = K.resor.pj, c = String(r.lokCode || '').toUpperCase();
+    if (r.lokType === 'petak' && PJ_OVR[c]) return { id: PJ_OVR[c], all: [PJ_OVR[c]] };
+    if (r.lokType === 'stasiun') return st[c] ? { id: st[c], all: [st[c]] } : { id: '', all: [] };
+    if (r.lokType === 'petak') {
+      var p = c.split('-'), a = st[p[0]], b = st[p[1]], e = pj[c] || pj[(p[1] || '') + '-' + (p[0] || '')];
+      var id = a || b || (e ? e[0] : ''), all = [a, b].filter(function (x, i, A) { return x && A.indexOf(x) === i; });
+      if (!all.length && id) all = [id];
+      return { id: id, all: all };
+    }
+    return { id: '', all: [] };
+  }
+  function wkp2(rows) {
+    var o = { n: 0, over: 0, lebih: 0, andil: 0 };
+    rows.forEach(function (x) { var p = x[W.prog], q = x[W.real]; o.n++; if (p != null && q != null && q > p) { o.over++; o.lebih += q - p; } o.andil += x[W.andil] || 0; });
+    return o;
+  }
+  function spearman(xs, ys) {
+    function rk(a) { var s = a.map(function (v, i) { return [v, i]; }).sort(function (p, q) { return p[0] - q[0]; }), r = new Array(a.length), i = 0;
+      while (i < s.length) { var j = i; while (j + 1 < s.length && s[j + 1][0] === s[i][0]) j++; for (var k = i; k <= j; k++) r[s[k][1]] = (i + j) / 2 + 1; i = j + 1; } return r; }
+    var a = rk(xs), b = rk(ys), n = a.length; if (n < 3) return null;
+    var ma = sum(a) / n, mb = sum(b) / n, num = 0, da = 0, db = 0;
+    for (var i = 0; i < n; i++) { num += (a[i] - ma) * (b[i] - mb); da += (a[i] - ma) * (a[i] - ma); db += (b[i] - mb) * (b[i] - mb); }
+    return da && db ? num / Math.sqrt(da * db) : null;
+  }
+  function topLok(list) {
+    var o = {}; list.forEach(function (r) { var k = r.lokasi || '(lokasi tidak tercatat)'; o[k] = o[k] || { lokasi: k, n: 0, menit: 0 }; o[k].n++; o[k].menit += r.menit; });
+    return Object.keys(o).map(function (k) { return o[k]; }).sort(function (a, b) { return b.n - a.n || b.menit - a.menit; })[0] || null;
+  }
+
+  /** Prasarana: THI per UPT JR & wilayah (bulan THI ≤ ym), gangguan kelas prasarana dan WKP jalan rel, bulan laporan & jendela data THI (mis. Mei–Okt). */
+  function pras(recs, K, ym, regions) {
+    var X = prep(K); if (!X || !X.thiYms.length) return null;
+    var tym = X.thiYms.filter(function (y) { return y <= ym; }).pop() || X.thiYms[X.thiYms.length - 1], first = X.thiYms[0];
+    var inReg = function (w) { return !regions || !regions.length || regions.indexOf(w) >= 0; };
+    var G6 = recs.filter(function (r) { return r.kelas === 'prasarana' && r.ym >= first && r.ym <= ym; });
+    G6.forEach(function (r) { var q = resor2(r, K); r._resor = q.id; r._resorAll = q.all; r._pk = prasKind(r); });
+    var WK6 = X.wkp.filter(function (x) { var y = x[W.d].slice(0, 7); return y >= first && y <= ym && WKP_JR2[x[W.grp]]; });
+    var cur = X.thi[tym] || {}, fst = X.thi[first] || {};
+    function comp(t) { if (!t) return null; var c = COMP2.map(function (k) { return { k: k[0], label: k[1], v: t[T[k[0]]] }; }).filter(function (k) { return k.v != null; }).sort(function (a, b) { return a.v - b.v; }); return c[0] || null; }
+    function gs(L) { return { n: L.length, menit: Math.round(sum(L, function (r) { return r.menit; })), jr: L.filter(function (r) { return r._pk === 'jr'; }).length, sin: L.filter(function (r) { return r._pk === 'sin'; }).length }; }
+    var ids = Object.keys(X.meta).filter(function (id) { return cur[id] || fst[id]; }).sort(function (a, b) { return idOrder(a) - idOrder(b); });
+    var upts = ids.map(function (id) {
+      var t = cur[id], f = fst[id], m = X.meta[id];
+      var g6 = G6.filter(function (r) { return r._resor === id; }), gm = g6.filter(function (r) { return r.ym === ym; });
+      var w6 = WK6.filter(function (x) { return x[W.id] === id; });
+      return { id: id, w: regOfId(id), code: String((t && t[T.unit]) || m.unit || '').replace(/^UPT JR\s+\S+\s*/i, '').trim(), unit: (t && t[T.unit]) || m.unit || ('UPT JR ' + id),
+        hi: t ? t[T.hi] : null, grade: t ? (t[T.ghi] || grade(t[T.hi])) : '', hiFirst: f ? f[T.hi] : null, dhi: t && f && f[T.hi] != null ? Math.round((t[T.hi] - f[T.hi]) * 10) / 10 : null,
+        hist: X.thiYms.filter(function (y) { return y <= tym; }).map(function (y) { var r = X.thi[y] && X.thi[y][id]; return r ? r[T.hi] : null; }),
+        geo: t ? t[T.geo] : null, wesel: t ? t[T.wesel] : null, rel: t ? t[T.rel] : null, low: comp(t),
+        g: gs(gm), g6: gs(g6), g6List: g6.sort(function (a, b) { return b.menit - a.menit; }), topLok: topLok(g6),
+        wkp: wkp2(w6.filter(function (x) { return x[W.d].slice(0, 7) === ym; })), wkp6: wkp2(w6) };
+    });
+    var withHi = upts.filter(function (u) { return u.hi != null; }), medHi = Math.round(med(withHi.map(function (u) { return u.hi; })) * 10) / 10;
+    upts.forEach(function (u) {
+      var low = u.hi != null && u.hi < medHi;
+      u.pri = u.hi == null ? '' : low && u.g6.n >= 2 ? 'P1' : low && u.wkp6.over >= 5 ? 'P2' : low ? 'P3' : u.g6.n >= 2 ? 'P4' : '';
+    });
+    var PO = { P1: 0, P2: 1, P3: 2, P4: 3, '': 4 };
+    function priSort(a, b) { return PO[a.pri] - PO[b.pri] || b.g6.n - a.g6.n || (a.hi == null ? 999 : a.hi) - (b.hi == null ? 999 : b.hi); }
+    var regs = REG_ORDER.filter(inReg).map(function (w) {
+      var U = upts.filter(function (u) { return u.w === w; }), sc = (X.scope[tym] || {})[w], sf = (X.scope[first] || {})[w];
+      var g6 = G6.filter(function (r) { return r.wilayah === w; }), gm = g6.filter(function (r) { return r.ym === ym; });
+      var w6 = WK6.filter(function (x) { return x[W.w] === w; });
+      return { w: w, nUpt: U.filter(function (u) { return u.hi != null; }).length, upts: U, ord: U.slice().sort(priSort),
+        hi: sc ? sc[T.hi] : null, grade: sc ? sc[T.ghi] : '', hiFirst: sf ? sf[T.hi] : null, dhi: sc && sf ? Math.round((sc[T.hi] - sf[T.hi]) * 10) / 10 : null,
+        hist: X.thiYms.filter(function (y) { return y <= tym; }).map(function (y) { var r = (X.scope[y] || {})[w]; return r ? r[T.hi] : null; }),
+        ci: sc ? sc[T.ci] : null, mi: sc ? sc[T.mi] : null, mat: sc ? sc[T.mat] : null, kons: sc ? sc[T.kons] : null, geo: sc ? sc[T.geo] : null,
+        low70: U.filter(function (u) { return u.hi != null && u.hi < 70; }), worst: U.filter(function (u) { return u.hi != null; }).sort(function (a, b) { return a.hi - b.hi; })[0] || null,
+        g: gs(gm), g6: gs(g6), unmapped6: g6.filter(function (r) { return !r._resor; }).length,
+        wkp: wkp2(w6.filter(function (x) { return x[W.d].slice(0, 7) === ym; })), wkp6: wkp2(w6),
+        p1: U.filter(function (u) { return u.pri === 'P1'; }).sort(priSort), drop5: U.filter(function (u) { return u.dhi != null && u.dhi < -5; }) };
+    });
+    var all = withHi.filter(function (u) { return inReg(u.w); });
+    return { ym: ym, thiYm: tym, first: first, medHi: medHi, upts: upts.filter(function (u) { return inReg(u.w); }), regions: regs, priSort: priSort,
+      rho: spearman(withHi.map(function (u) { return u.hi; }), withHi.map(function (u) { return u.g6.n; })),
+      cnt: { P1: all.filter(function (u) { return u.pri === 'P1'; }).length, P2: all.filter(function (u) { return u.pri === 'P2'; }).length, P3: all.filter(function (u) { return u.pri === 'P3'; }).length, P4: all.filter(function (u) { return u.pri === 'P4'; }).length },
+      events: G6.filter(function (r) { return r.ym === ym && inReg(r.wilayah); }).sort(function (a, b) { return b.menit - a.menit; }),
+      thiOf: function (id) { return upts.filter(function (u) { return u.id === id; })[0] || null; } };
+  }
+
+  /** Sarana: RHI lokomotif harian bulan terakhir × gangguan kelas sarana bernomor lokomotif (kolom Nomor sarana). Depo = master Data Sarana. */
+  function sar(recs, K, ref, ym, regions) {
+    var D = K && K.rhiDay; if (!D || !D.u) return null;
+    var inReg = function (w) { return !regions || !regions.length || regions.indexOf(w) >= 0; };
+    var nd = D.n, last = D.ym + '-' + (nd < 10 ? '0' : '') + nd, fleet = (ref && ref.fleet) || {}, depot = (ref && ref.depot) || {};
+    function unitOf(no) {
+      var a = D.u[no]; if (!a) return null;
+      var hi = String(a[0]).split(',').map(function (v) { return v === '' ? null : Number(v) / 100; }), st = String(a[1]), rams = String(a[2]).split(','), rel = String(a[3]).split(','), mi = String(a[4]).split(',').map(function (v) { return v === '' ? null : Number(v) / 10; });
+      var f = fleet[no] || {}, dp = f.depoId && depot[f.depoId] ? depot[f.depoId] : null;
+      var li = nd - 1; while (li > 0 && hi[li] == null) li--;
+      var y = f.since ? Number(String(f.since).slice(0, 4)) : null, mo = f.since ? Number(String(f.since).slice(5, 7)) || 1 : null;
+      return { no: no, tipe: f.tipe || no.slice(0, 5), hiD: hi, stD: st, ramsD: rams, relD: rel, miD: mi, pt: a[5] || [],
+        hi: hi[li], st: { H: 'HEALTHY', M: 'MONITOR', D: 'DECLINING' }[st.charAt(li)] || '', rel: rel[li] === '' ? null : Number(rel[li]), mi: mi[li], rams: rams[li] === '' ? null : Number(rams[li]),
+        depoId: f.depoId || '', depo: dp ? dp.code || dp.raw : (f.depo || ''), depoName: dp ? (dp.stName || dp.label || dp.raw) : (f.depo || ''), w: dp ? dp.region : '',
+        age: y ? Math.round(((Date.UTC(+last.slice(0, 4), +last.slice(5, 7) - 1, +last.slice(8, 10)) - Date.UTC(y, mo - 1, 1)) / (365.25 * 864e5)) * 10) / 10 : null,
+        nDecl: (st.match(/D/g) || []).length };
+    }
+    var U = {}; Object.keys(D.u).forEach(function (no) { U[no] = unitOf(no); });
+    var RG = D.range || null, ST = { H: 'HEALTHY', M: 'MONITOR', D: 'DECLINING' };
+    function dayIdx(a, b) { return Math.round((Date.UTC(+b.slice(0, 4), +b.slice(5, 7) - 1, +b.slice(8, 10)) - Date.UTC(+a.slice(0, 4), +a.slice(5, 7) - 1, +a.slice(8, 10))) / 864e5); }
+    /** RHI unit pada tanggal d. Bila tanggal di luar data: memakai RHI terakhir ≤ d (asOf = tanggal RHI yang dipakai). */
+    function at(u, d) {
+      d = String(d || ''); if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) return null;
+      var i = Number(d.slice(8, 10)) - 1;
+      if (d.slice(0, 7) === D.ym && i >= 0 && i < nd && u.hiD[i] != null) {
+        var pt = u.pt.filter(function (p) { return p[0] <= i + 1; }).pop() || u.pt[0] || [];
+        return { hi: u.hiD[i], st: ST[u.stD.charAt(i)] || '', rams: u.ramsD[i] === '' ? null : Number(u.ramsD[i]), pt: pt[1] || '', tp: pt[2] || '', asOf: d };
+      }
+      if (RG && RG.u[u.no] && d >= RG.from) {
+        var hs = String(RG.u[u.no][0]).split(','), ss = String(RG.u[u.no][1]), j = Math.min(dayIdx(RG.from, d), RG.n - 1);
+        while (j >= 0 && hs[j] === '') j--;
+        if (j < 0) return null;
+        var ad = new Date(Date.UTC(+RG.from.slice(0, 4), +RG.from.slice(5, 7) - 1, +RG.from.slice(8, 10)) + j * 864e5).toISOString().slice(0, 10);
+        return { hi: Number(hs[j]) / 100, st: ST[ss.charAt(j)] || '', rams: null, pt: '', tp: '', asOf: ad, fallback: ad !== d };
+      }
+      return null;
+    }
+    // unit kejadian = nomor pertama kolom Nomor sarana (bukan hasil tebakan dari uraian) yang terdaftar di RHI
+    function unitNo(r) { if (!String(r.saranaRaw || '').trim()) return null; var no = (r.sarana || [])[0]; return no && U[no] ? no : null; }
+    var mon = D.ym;
+    var thiFirst = K.thi && K.thi.length ? K.thi.map(function (r) { return r[T.ym]; }).sort()[0] : mon;   // jendela sama dengan THI (mis. Mei–Okt)
+    var E = [], E6 = [], miss = [];
+    recs.forEach(function (r) {
+      if (r.kelas !== 'sarana' || !r.ym || r.ym > ym) return;
+      var no = unitNo(r);
+      if (r.ym === ym && !no && /lok/i.test(r.jenis || '')) miss.push(r);
+      if (!no) return;
+      var e = { r: r, no: no, u: U[no] };
+      if (r.ym >= thiFirst && r.ym <= ym) E6.push(e);
+      if (r.ym === ym) { e.at = at(U[no], r.date); E.push(e); }
+    });
+    var units = Object.keys(U).map(function (k) { return U[k]; }).filter(function (u) { return inReg(u.w); });
+    var inU = {}; units.forEach(function (u) { inU[u.no] = 1; });
+    E = E.filter(function (e) { return inU[e.no] && inReg(e.r.wilayah) || (regions && regions.length ? inU[e.no] : true); });
+    function g(L) { return { n: L.length, menit: Math.round(sum(L, function (e) { return e.r.menit; })) }; }
+    units.forEach(function (u) { u.gOkt = g(E.filter(function (e) { return e.no === u.no; })); u.g6 = g(E6.filter(function (e) { return e.no === u.no; })); u.g6List = E6.filter(function (e) { return e.no === u.no; }).map(function (e) { return e.r; }); });
+    function grp(L) {
+      var o = { units: L.length, H: 0, M: 0, D: 0, gOkt: { n: 0, menit: 0 }, g6: 0 };
+      L.forEach(function (u) { o[u.st ? u.st.charAt(0) : 'x'] = (o[u.st ? u.st.charAt(0) : 'x'] || 0) + 1; o.gOkt.n += u.gOkt.n; o.gOkt.menit += u.gOkt.menit; o.g6 += u.g6.n; });
+      var h = L.filter(function (u) { return u.hi != null; }), r = L.filter(function (u) { return u.rel != null; }), a = L.filter(function (u) { return u.age != null; });
+      o.hiMean = h.length ? Math.round(sum(h, function (u) { return u.hi; }) / h.length * 10) / 10 : null;
+      o.relMean = r.length ? Math.round(sum(r, function (u) { return u.rel; }) / r.length * 10) / 10 : null;
+      o.ageMed = a.length ? Math.round(med(a.map(function (u) { return u.age; })) * 10) / 10 : null;
+      o.rate6 = o.units ? Math.round(o.g6 / o.units * 1000) / 10 : 0;
+      o.withOkt = L.filter(function (u) { return u.gOkt.n; }).length;
+      return o;
+    }
+    var hari = { HEALTHY: 0, MONITOR: 0, DECLINING: 0 }, totH = 0;
+    units.forEach(function (u) { for (var i = 0; i < u.stD.length; i++) { var s = { H: 'HEALTHY', M: 'MONITOR', D: 'DECLINING' }[u.stD.charAt(i)]; if (s) { hari[s]++; totH++; } } });
+    var atSt = { HEALTHY: 0, MONITOR: 0, DECLINING: 0 }; E.forEach(function (e) { if (e.at && atSt[e.at.st] != null) atSt[e.at.st]++; });
+    var tipes = {}; units.forEach(function (u) { (tipes[u.tipe] = tipes[u.tipe] || []).push(u); });
+    var deps = {}; units.forEach(function (u) { var k = u.depoId || u.depo || '–'; (deps[k] = deps[k] || []).push(u); });
+    var byStatus = {}; ['HEALTHY', 'MONITOR', 'DECLINING'].forEach(function (s) { byStatus[s] = grp(units.filter(function (u) { return u.st === s; })); });
+    return { ym: ym, rhiYm: D.ym, lastDay: last, nDays: nd, stale: ym > D.ym, asOf: last, units: units, U: U, E: E.sort(function (a, b) { return b.r.menit - a.r.menit; }), E6: E6, miss: miss, first: thiFirst,
+      all: grp(units), byStatus: byStatus, hari: hari, totHari: totH, atSt: atSt,
+      hiAtMean: E.length ? Math.round(sum(E.filter(function (e) { return e.at && e.at.hi != null; }), function (e) { return e.at.hi; }) / Math.max(1, E.filter(function (e) { return e.at && e.at.hi != null; }).length) * 10) / 10 : null,
+      tipe: Object.keys(tipes).sort().map(function (k) { var o = grp(tipes[k]); o.tipe = k; return o; }),
+      depots: Object.keys(deps).map(function (k) { var L = deps[k], o = grp(L); o.id = k; o.code = L[0].depo; o.name = L[0].depoName; o.w = L[0].w; return o; })
+        .sort(function (a, b) { return (REG_ORDER.indexOf(a.w) < 0 ? 99 : REG_ORDER.indexOf(a.w)) - (REG_ORDER.indexOf(b.w) < 0 ? 99 : REG_ORDER.indexOf(b.w)) || b.units - a.units; }),
+      at: at, unitOf: function (no) { return U[no] || null; } };
+  }
+
+  root.KAIK = { prep: prep, prasarana: prasarana, sarana: sarana, resorOf: resorOf, jrGroup: jrGroup, isWkpDelay: isWkpDelay, grade: grade, regOfId: regOfId,
+    pras: pras, sar: sar, prasKind: prasKind, resor2: resor2, COMP2: COMP2,
+    REG_ORDER: REG_ORDER, COMP: COMP, JR_LABEL: JR_LABEL, WKP_LABEL: WKP_LABEL };
+})(typeof window !== 'undefined' ? window : this);
+</script>

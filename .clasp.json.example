@@ -1,0 +1,24 @@
+{
+  "scriptId": "1NDtUtwUB8ys8MhSkvuv2-k-RgbpzmUSBFCDbOkeRAk5T9P0IQ-7NwoTy",
+  "rootDir": "src",
+  "filePushOrder": [
+    "src/00_Config.gs",
+    "src/01_Domain.gs",
+    "src/02_Transform.gs",
+    "src/03_Store.gs",
+    "src/04_Etl.gs",
+    "src/06_Api.gs",
+    "src/07_Main.gs",
+    "src/08_Setup.gs",
+    "src/09_Ref.gs",
+    "src/10_Seed.gs",
+    "src/11_SeedJadwal.gs",
+    "src/12_SeedRujukan.gs",
+    "src/13_AsetLaporan.gs",
+    "src/14_SeedResor.gs",
+    "src/15_Kondisi.gs",
+    "src/16_Pendapatan.gs",
+    "src/17_SeedDuksar.gs",
+    "src/18_SeedPeta.gs"
+  ]
+}

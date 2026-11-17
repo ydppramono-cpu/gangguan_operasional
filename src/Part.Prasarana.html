@@ -1,0 +1,74 @@
+<!-- Part.Prasarana — tab "Prasarana" di halaman Wilayah & koridor: THI × WKP × gangguan prasarana (Daop/Divre → UPT JR → petak).
+     Definisi sama dengan unduhan PPT/PDF (KAIK.pras). -->
+<div x-data="vKondisi" x-init="tab = 'pra'">
+    <template x-if="!$store.app.refReady"><div class="card"><div class="card-b"><div class="skel" style="height:260px"></div></div></div></template>
+    <template x-if="$store.app.refReady && !ok">
+      <div class="card"><div class="card-b"><p class="note">Data THI/RHI/WKP belum tersedia di snapshot. Pemilik app menjalankan <code>syncNow()</code> setelah tab THI, RHI, dan WKP terisi di spreadsheet sumber.<span x-show="err" x-text="' Galat: ' + err"></span></p></div></div>
+    </template>
+    <template x-if="$store.app.refReady && ok && P">
+        
+          <div>
+            <div class="kpis">
+              <div class="kpi"><span x-text="'UPT JR prioritas (P1) · median THI ' + KAI.fmt.d1(P.medHi)"></span><b class="bad-t" x-text="P.cnt.P1 + ' UPT'"></b><em x-text="'P2 ' + P.cnt.P2 + ' · P3 ' + P.cnt.P3 + ' · P4 ' + P.cnt.P4"></em></div>
+              <div class="kpi"><span x-text="'UPT JR dengan THI ' + KAI.fmt.mon(P.thiYm) + ' < 70'"></span><b x-text="lowN + ' / ' + uptHi.length"></b><em>Cukup/Waspada/Kritis</em></div>
+              <div class="kpi"><span x-text="'Gangguan prasarana · ' + R.label"></span><b x-text="tot.g.n + ' · ' + KAI.fmt.n(tot.g.menit) + '′'"></b><em x-text="win + ': ' + tot.g6.n + ' kej. (JR&wesel ' + tot.g6.jr + ' · persinyalan ' + tot.g6.sin + ')'"></em></div>
+              <div class="kpi"><span x-text="'WKP jalan rel · ' + R.label"></span><b x-text="KAI.fmt.n(tot.wkp.n) + ' keg · ' + tot.wkp.over + ' >prog'"></b><em x-text="'lebih ' + KAI.fmt.n(tot.wkp.lebih) + '′ · andil KA ' + KAI.fmt.n(tot.wkp.andil) + '′'"></em></div>
+            </div>
+            <div class="grid g-2 mt">
+              <div class="card">
+                <div class="card-h"><div><h3 x-text="byUpt ? 'THI × gangguan prasarana × WKP per UPT · ' + scopeLabel : 'THI × gangguan prasarana × WKP per Daop/Divre'"></h3><p x-text="'Batang = gangguan prasarana & WKP JR melebihi program ' + win + ' (sumbu kiri) · garis = THI ' + KAI.fmt.mon(P.thiYm) + ' (sumbu kanan)'"></p></div></div>
+                <div class="card-b fill"><div class="chart tall" x-chart="comboPra()"></div></div>
+              </div>
+              <div class="card">
+                <div class="card-h"><div><h3>Kuadran UPT JR (P1–P4)</h3><p x-text="'X = THI ' + KAI.fmt.mon(P.thiYm) + ' · Y = gangguan prasarana ' + win + ' · garis: median THI ' + KAI.fmt.d1(P.medHi) + ' & ≥2 kejadian'"></p></div></div>
+                <div class="card-b fill"><div class="chart tall" x-chart="quadPra()"></div></div>
+              </div>
+            </div>
+            <div class="card mt" x-show="!byUpt">
+              <div class="card-h"><div><h3>Per Daop/Divre</h3><p x-text="'THI (Ringkasan Bulanan) · gangguan prasarana ' + R.label + ' · WKP jalan rel ' + R.label"></p></div></div>
+              <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Wilayah</th><th class="num">UPT</th><th class="num" x-text="'THI ' + KAI.fmt.mon(P.first) + '→' + KAI.fmt.mon(P.thiYm)"></th><th>Grade</th><th class="num">UPT &lt;70</th><th class="num">Gangguan pras. (n·mnt)</th><th class="num" x-text="win + ' (JR/sin)'"></th><th class="num">WKP JR</th><th class="num">&gt;program</th><th class="num">Lebih (mnt)</th><th class="num">Andil KA (mnt)</th><th class="num" x-text="'>prog ' + win"></th></tr></thead><tbody>
+                <template x-for="x in P.regions" :key="x.w"><tr>
+                  <td><b x-text="x.w"></b></td><td class="num" x-text="x.nUpt"></td><td class="num" x-text="KAI.fmt.d1(x.hiFirst) + '→' + KAI.fmt.d1(x.hi)"></td><td :style="'color:#' + gc(x.grade)" x-text="x.grade"></td>
+                  <td class="num" :class="x.low70.length && 'bad-t'" x-text="x.low70.length"></td><td class="num" x-text="x.g.n + ' · ' + KAI.fmt.n(x.g.menit)"></td><td class="num" x-text="x.g6.n + ' (' + x.g6.jr + '/' + x.g6.sin + ')'"></td>
+                  <td class="num" x-text="KAI.fmt.n(x.wkp.n)"></td><td class="num"><b x-text="x.wkp.over"></b></td><td class="num" x-text="KAI.fmt.n(x.wkp.lebih)"></td><td class="num" x-text="KAI.fmt.n(x.wkp.andil)"></td><td class="num" x-text="x.wkp6.over"></td>
+                </tr></template>
+              </tbody></table></div>
+            </div>
+            <div class="card mt">
+              <div class="card-h"><div><h3>UPT Resor JR: kondisi, gangguan & WKP</h3><p>Urut prioritas (P1 → P4) · klik judul kolom untuk mengurutkan</p></div><div class="spacer"></div>
+                <select class="ctl sm" x-model="pri"><option value="">Semua prioritas</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option></select></div>
+              <div class="card-b tbl-wrap">
+                <table class="tbl"><thead><tr>
+                  <template x-for="c in uptCols" :key="c[0]"><th :class="c[2] && 'num'" class="click" @click="sortBy(c[0])" x-text="c[1]"></th></template>
+                </tr></thead><tbody>
+                  <template x-for="u in uptRows" :key="u.id"><tr>
+                    <td><b x-text="u.id + ' ' + u.code"></b></td><td x-text="u.w"></td>
+                    <td class="num"><b :style="'color:#' + gc(u.grade)" x-text="KAI.fmt.d1(u.hi)"></b> <small x-text="u.grade"></small></td><td class="num" :class="u.dhi < 0 ? 'bad-t' : 'good-t'" x-text="u.dhi == null ? '–' : (u.dhi > 0 ? '+' : '') + KAI.fmt.d1(u.dhi)"></td>
+                    <td x-text="u.low ? u.low.label + ' ' + KAI.fmt.d1(u.low.v) : '–'"></td>
+                    <td class="num" x-text="u.g6.n ? u.g6.n + ' · ' + KAI.fmt.n(u.g6.menit) + ' (JR ' + u.g6.jr + '/sin ' + u.g6.sin + ')' : '–'"></td>
+                    <td class="num" x-text="u.wkp6.n + ' · ' + u.wkp6.over + ' · ' + KAI.fmt.n(u.wkp6.lebih) + ' · ' + KAI.fmt.n(u.wkp6.andil)"></td>
+                    <td x-text="u.topLok ? u.topLok.lokasi + ' (' + u.topLok.n + 'x, ' + KAI.fmt.n(u.topLok.menit) + '′)' : '–'"></td>
+                    <td><span class="chip" :class="u.pri === 'P1' ? 'bad' : u.pri === 'P2' ? 'warn' : ''" x-text="u.pri || '—'"></span></td>
+                  </tr></template>
+                </tbody></table>
+              </div>
+              <p class="note" style="padding:0 14px 12px">P1 = THI di bawah median KAI & ≥2 gangguan prasarana; P2 = THI di bawah median & WKP jalan rel melebihi program ≥5 kali; P3 = THI di bawah median; P4 = THI ≥ median & ≥2 gangguan. Gangguan prasarana = semua kelas prasarana; JR&wesel vs persinyalan/komunikasi. Lokasi → resor: PETA WILAYAH + GAPEKA (petak di batas dua resor diberikan ke stasiun pertama). WKP jalan rel = rel/las, wesel, bantalan/penambat, geometri (MTT/KPJR/listring); tanggal = kolom "Tanggal terverifikasi"; melebihi = realisasi &gt; program; andil dari kolom "KA terimbas".</p>
+            </div>
+          </div>
+    </template>
+    <template x-if="$store.app.refReady && ok && petakAll">
+      <div class="card mt">
+        <div class="card-h"><div><h3 x-text="'Petak THI terendah · ' + KAI.fmt.mon(petakYm) + ' · ' + scopeLabel"></h3><p x-text="KAI.fmt.n(petakAll) + ' petak tercatat · urut THI terendah · Δ = perubahan dari bulan sebelumnya'"></p></div><div class="spacer"></div>
+          <input class="ctl sm" type="search" placeholder="Cari petak / UPT" x-model.debounce.250ms="pq" aria-label="Cari petak THI"></div>
+        <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Petak (THI)</th><th>UPT JR</th><th>Wilayah</th><th class="num">THI</th><th>Grade</th><th class="num">Δ</th><th class="num">Kondisi</th><th class="num">Material</th><th class="num">Konstruksi</th><th class="num">Geometri</th><th class="num">Perawatan</th><th class="num">Panjang (m)</th></tr></thead><tbody>
+          <template x-for="p in petak" :key="p.k"><tr>
+            <td><b x-text="p.unit"></b></td><td x-text="p.upt || '–'"></td><td x-text="p.w"></td><td class="num"><b :style="'color:#' + gc(p.g)" x-text="KAI.fmt.d1(p.hi)"></b></td><td x-text="p.g"></td>
+            <td class="num" :class="p.d < 0 ? 'bad-t' : p.d > 0 ? 'good-t' : ''" x-text="p.d == null ? '–' : (p.d > 0 ? '+' : '') + KAI.fmt.d1(p.d)"></td>
+            <td class="num" x-text="KAI.fmt.d1(p.ci)"></td><td class="num" x-text="KAI.fmt.d1(p.mat)"></td><td class="num" x-text="KAI.fmt.d1(p.kon)"></td><td class="num" x-text="KAI.fmt.d1(p.geo)"></td><td class="num" x-text="KAI.fmt.d1(p.mi)"></td><td class="num" x-text="KAI.fmt.n(p.msp)"></td>
+          </tr></template>
+        </tbody></table></div>
+        <p class="note" style="padding:0 14px 12px">Sumber: tab THI tingkat Petak (Kode UPT JR, ID petak THI, dasar pemetaan PETA WILAYAH). Ditampilkan 60 petak terendah sesuai filter wilayah; pakai pencarian untuk petak lain.</p>
+      </div>
+    </template>
+
+</div>

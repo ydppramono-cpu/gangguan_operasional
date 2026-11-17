@@ -1,0 +1,216 @@
+<!-- Part.UnitCard — kartu unit gaya "pemain" (atribut 1–20, form 6 bulan, riwayat gangguan, perawatan, dinasan) & kartu kekuatan depo.
+     Disisipkan di View.Profil untuk profil 'sarana' dan 'depo'. Mesin: KAIS (Js.Sarana). -->
+<template x-if="$store.app.params.type === 'sarana'">
+  <div x-data="vUnitCard" class="mt">
+    <template x-if="!u"><div class="callout">Unit ini bukan lokomotif, kereta, atau gerbong di Referensi Sarana SAP — kartu unit tidak tersedia (KRL/KRD belum dihitung).</div></template>
+    <template x-if="u">
+      <div class="ucard">
+        <div class="uc-id">
+          <div class="uc-kind" x-text="u.kind + ' · ' + (u.cls || '')"></div>
+          <div class="uc-no" x-text="KAI.fmt.unit(u.no)"></div>
+          <div class="uc-chips">
+            <span class="st" :class="stCls(u.status)" x-text="u.status + (u.hiSrc === 'RHI' ? '' : ' · turunan')"></span>
+            <span class="chip" :class="u.inBY ? 'warn' : u.duk ? 'good' : ''" x-text="u.inBY ? 'Di Balai Yasa' : u.duk ? 'Siap guna GAPEKA · ' + u.duk.depo : 'Tidak tercantum di GAPEKA 2025'"></span>
+            <span class="chip bad" x-show="u.age > ageWarn" x-text="'Usia > ' + ageWarn + ' th'"></span>
+          </div>
+          <dl class="uc-facts">
+            <div><dt>Depo (SAP)</dt><dd><button class="link-btn" @click="$store.app.open('depo', u.depoId)" x-text="u.depoLabel"></button></dd></div>
+            <div><dt>Wilayah</dt><dd x-text="u.region || KAI.NIL"></dd></div>
+            <div><dt>Mulai dinas</dt><dd x-text="u.since ? KAI.fmt.mon(u.since) : KAI.NIL"></dd></div>
+            <div><dt>Usia</dt><dd x-text="KAI.fmt.age(u.age)"></dd></div>
+            <div><dt>Pabrikan</dt><dd x-text="u.manuf || KAI.NIL"></dd></div>
+            <div><dt>Model</dt><dd x-text="u.model || KAI.NIL"></dd></div>
+            <div><dt>Kapasitas</dt><dd x-text="u.kap || KAI.NIL"></dd></div>
+            <div><dt>Kecepatan maks</dt><dd x-text="u.spd ? u.spd + ' km/jam' : KAI.NIL"></dd></div>
+            <div x-show="u.bk"><dt>Berat kosong</dt><dd x-text="KAI.fmt.d1(u.bk) + ' ton'"></dd></div>
+          </dl>
+        </div>
+        <div class="uc-attrs">
+          <div class="uc-h">Atribut <small>skala 1–20</small></div>
+          <template x-for="a in u.attrs" :key="a[0]">
+            <div class="attr" :title="a[0] + ': ' + (a[1] == null ? 'tidak ada data' : a[1] + ' dari 20')">
+              <span class="attr-l" x-text="a[0]"></span>
+              <span class="attr-bar"><i :style="'width:' + (a[1] || 0) * 5 + '%'" :class="attrCls(a[1])"></i></span>
+              <b class="attr-v" :class="attrCls(a[1])" x-text="a[1] == null ? '–' : a[1]"></b>
+            </div>
+          </template>
+          <p class="note">Kesehatan = healthy index RHI bila ada; selain itu skor turunan (usia, keandalan 12 bulan, kesiapan GAPEKA). Indikator internal.</p>
+        </div>
+        <div class="uc-side">
+          <div class="uc-ring" :style="'--v:' + u.overall" :class="ringCls(u.overall)"><b x-text="u.overall"></b><small>rating</small></div>
+          <div class="uc-h mt-s">Form 6 bulan</div>
+          <div class="form-row">
+            <template x-for="m in u.form" :key="m.ym"><span class="form-chip" :class="m.n === 0 ? 'f0' : m.n === 1 ? 'f1' : 'f2'" :title="KAI.fmt.mon(m.ym) + ': ' + m.n + ' gangguan · ' + KAI.fmt.n(m.menit) + ' menit'"><b x-text="m.n"></b><small x-text="KAI.fmt.monOnly(m.ym)"></small></span></template>
+          </div>
+          <dl class="uc-facts mt-s">
+            <div><dt>Gangguan 12 bln</dt><dd x-text="u.n12 + ' · ' + KAI.fmt.n(u.m12) + ' mnt'"></dd></div>
+            <div><dt>Seluruh data (unit utama)</dt><dd x-text="u.nAll + ' · ' + KAI.fmt.n(u.mAll) + ' mnt'"></dd></div>
+            <div><dt>Peringkat di depo</dt><dd x-text="rankTxt"></dd></div>
+          </dl>
+        </div>
+      </div>
+    </template>
+    <template x-if="u">
+      <div class="card mt">
+        <div class="card-h"><div><h3>Riwayat unit</h3><p>Gangguan (Gangguan_Induk) · perawatan (RHI) · dinasan (proksi Buku Dukungan Sarana GAPEKA 2025)</p></div><div class="spacer"></div>
+          <div class="seg sm" role="group" aria-label="Riwayat"><button :aria-pressed="ht === 'g'" @click="ht = 'g'" x-text="'Gangguan (' + u.nAll + ')'"></button><button :aria-pressed="ht === 'p'" @click="ht = 'p'">Perawatan</button><button :aria-pressed="ht === 'd'" @click="ht = 'd'">Dinasan</button><button :aria-pressed="ht === 'r'" @click="ht = 'r'" x-show="u.rhi">Tren RHI</button></div></div>
+        <div class="card-b">
+          <div x-show="ht === 'g'" class="tbl-wrap"><table class="tbl"><thead><tr><th>Tanggal</th><th>Gangguan</th><th>Wilayah</th><th>Lokasi</th><th>KA</th><th class="num">Menit</th></tr></thead><tbody>
+            <template x-for="r in u.events.slice(0, 60)" :key="r.id"><tr class="click" @click="$store.app.openEvent(r.id)"><td x-text="KAI.fmt.date(r)"></td><td x-text="String(r.sub || r.judul).replace(/^[^-]+-\s*/, '')"></td><td x-text="r.wilayah"></td><td x-text="r.lokasi || KAI.NIL"></td><td x-text="r.ka ? r.ka + (r.kaNama ? ' ' + r.kaNama : '') : KAI.NIL"></td><td class="num"><b x-text="KAI.fmt.n(r.menit)"></b></td></tr></template>
+          </tbody></table><div class="empty" x-show="!u.events.length">Belum ada gangguan tercatat untuk unit ini — rekam jejak bersih.</div></div>
+          <div x-show="ht === 'p'">
+            <template x-if="u.rhi">
+              <div><dl class="facts2"><div><dt>Perawatan terakhir</dt><dd x-text="u.rhi.pt || KAI.NIL"></dd></div><div><dt>Tanggal</dt><dd x-text="u.rhi.tp || KAI.NIL"></dd></div><div><dt>Permintaan perawatan terpenuhi</dt><dd x-text="u.rhi.req != null ? KAI.fmt.n(u.rhi.ok) + ' / ' + KAI.fmt.n(u.rhi.req) : KAI.NIL"></dd></div><div><dt>Data RHI per</dt><dd x-text="u.rhi.asOf || KAI.NIL"></dd></div></dl>
+                <table class="tbl mt-s"><thead><tr><th>Tercatat di RHI</th><th>Jenis perawatan terakhir</th><th>Tanggal perawatan</th></tr></thead><tbody>
+                  <template x-for="p in u.rhi.ptHist" :key="p.day + p.jenis"><tr><td x-text="p.day"></td><td x-text="p.jenis"></td><td x-text="p.tgl"></td></tr></template></tbody></table>
+                <p class="note">Riwayat = perubahan "perawatan terakhir" pada data RHI harian bulan terakhir. Riwayat perawatan lengkap butuh data dari sistem perawatan (SAP PM).</p></div>
+            </template>
+            <template x-if="!u.rhi"><p class="note">Riwayat perawatan belum tersedia untuk <span x-text="u.kind.toLowerCase()"></span> — RHI (yang memuat perawatan terakhir) saat ini hanya lokomotif.</p></template>
+          </div>
+          <div x-show="ht === 'd'">
+            <p class="note" x-text="dinasNote"></p>
+            <div class="ka-chips"><template x-for="k in dinasKa" :key="k.no"><button class="chip" :class="k.hit && 'warn'" @click="$store.app.open('ka', k.no)" :title="k.hit ? 'KA ini tercatat pada gangguan unit' : 'KA yang dilayani depo'" x-text="k.no + (k.nama ? ' ' + k.nama : '')"></button></template></div>
+            <div class="empty" x-show="!dinasKa.length">Tidak ada data dinasan untuk depo unit ini di Buku Dukungan Sarana.</div>
+          </div>
+          <div x-show="ht === 'r'"><template x-if="u.rhi"><div class="chart" x-chart="rhiChart()"></div></template></div>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>
+
+<template x-if="$store.app.params.type === 'depo'">
+  <div x-data="vDepoCard" class="mt">
+    <template x-for="d in kinds" :key="d.kind">
+      <div class="dcard">
+        <div class="dc-head">
+          <div><div class="uc-kind" x-text="'Kekuatan depo · ' + d.kind"></div><h3 x-text="d.d.label"></h3>
+            <p class="note" x-text="(d.d.rank ? 'Peringkat ' + d.d.rank + ' dari ' + d.total + ' depo ' + d.kind.toLowerCase() : 'Tanpa peringkat (< 10 unit)') + ' · median jaringan ' + KAI.fmt.d1(d.medRate) + ' gangguan/100 unit'"></p></div>
+          <div class="uc-ring" :style="'--v:' + d.d.strength" :class="ringCls(d.d.strength)"><b x-text="d.d.strength"></b><small>kekuatan</small></div>
+        </div>
+        <div class="dc-grid">
+          <div class="uc-attrs">
+            <template x-for="a in d.parts" :key="a[0]"><div class="attr"><span class="attr-l" x-text="a[0]"></span><span class="attr-bar"><i :style="'width:' + (a[1] || 0) + '%'" :class="attrCls((a[1] || 0) / 5)"></i></span><b class="attr-v" x-text="a[1] == null ? '–' : Math.round(a[1])"></b></div></template>
+          </div>
+          <dl class="uc-facts">
+            <div><dt>Unit SAP</dt><dd x-text="KAI.fmt.n(d.d.n)"></dd></div><div><dt>Siap guna GAPEKA</dt><dd x-text="KAI.fmt.n(d.d.sg)"></dd></div>
+            <div><dt>Median usia</dt><dd x-text="KAI.fmt.age(d.d.ageMed)"></dd></div><div><dt x-text="'> ' + ageWarn + ' tahun'"></dt><dd x-text="KAI.fmt.n(d.d.old)"></dd></div>
+            <div><dt x-text="d.kind === 'Lokomotif' ? 'RHI rata-rata' : 'Skor turunan'"></dt><dd x-text="KAI.fmt.d1(d.d.health)"></dd></div><div><dt x-text="d.kind === 'Lokomotif' ? 'H / M / D' : 'Baik / Pantau / Prioritas'"></dt><dd x-text="d.d.H + ' / ' + d.d.M + ' / ' + d.d.Dc"></dd></div>
+            <div><dt>Gangguan 12 bln</dt><dd x-text="d.d.n12 + ' · ' + KAI.fmt.n(d.d.m12) + ' mnt'"></dd></div><div><dt>Per 100 unit</dt><dd x-text="KAI.fmt.d1(d.d.rate)"></dd></div>
+          </dl>
+          <dl class="uc-facts" x-show="d.d.dinas">
+            <div><dt>Dinasan lok (SO)</dt><dd x-text="d.d.dinas ? KAI.fmt.n(d.d.dinas.so) : ''"></dd></div><div><dt>Untuk perbaikan</dt><dd x-text="d.d.dinas ? KAI.fmt.n(d.d.dinas.perbaikan) : ''"></dd></div>
+            <div><dt>Siap guna (Duksar)</dt><dd x-text="d.d.dinas ? KAI.fmt.n(d.d.dinas.sg) : ''"></dd></div><div><dt>Km per lok per hari</dt><dd x-text="d.d.dinas ? KAI.fmt.n(d.d.dinas.kmHari) : ''"></dd></div>
+            <div><dt>Jam dinas efektif / operasi</dt><dd x-text="d.d.dinas ? d.d.dinas.jamEff + ' / ' + d.d.dinas.jamOpr + ' jam' : ''"></dd></div><div><dt>KA dilayani dinasan</dt><dd x-text="d.d.dinas ? String(d.d.dinas.ka).split(' ').filter(Boolean).length : ''"></dd></div>
+          </dl>
+        </div>
+        <div class="dc-squad">
+          <div class="uc-h">Komposisi armada</div>
+          <div class="squad"><template x-for="c in d.cls" :key="c[0]"><span class="sq" :title="c[0] + ': ' + c[1] + ' unit'"><b x-text="c[1]"></b><small x-text="c[0]"></small></span></template></div>
+          <div class="uc-h mt-s" x-show="d.d.top.length">Unit terberat 12 bulan</div>
+          <div class="ka-chips"><template x-for="x in d.d.top" :key="x.no"><button class="chip warn" @click="$store.app.openUnit(x.no)" x-text="KAI.fmt.unit(x.no) + ' · ' + x.n12 + '× · ' + KAI.fmt.n(x.m12) + ' mnt'"></button></template></div>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>
+
+
+        <div class="grid g-4 mt">
+          <div class="card kpi"><div class="lbl" x-text="'Kejadian · ' + R.P.short"></div><div class="val num" x-text="KAI.fmt.n(M.k.n)"></div>
+            <div class="deltas"><span class="delta" :class="KAI.delta(M.k.n, M.kPrev.n).cls" x-text="'MoM ' + KAI.delta(M.k.n, M.kPrev.n).text"></span><span class="delta" :class="KAI.delta(M.k.n, M.kYoy.n).cls" x-text="'YoY ' + KAI.delta(M.k.n, M.kYoy.n).text"></span></div></div>
+          <div class="card kpi" style="--kpi-c:var(--kai-orange)"><div class="lbl" x-text="'Kelambatan · ' + R.P.short"></div><div class="val num"><span x-text="KAI.fmt.n(M.k.menit)"></span><small>menit</small></div>
+            <div class="deltas"><span class="delta" :class="KAI.delta(M.k.menit, M.kPrev.menit).cls" x-text="'MoM ' + KAI.delta(M.k.menit, M.kPrev.menit).text"></span><span class="delta" :class="KAI.delta(M.k.menit, M.kYoy.menit).cls" x-text="'YoY ' + KAI.delta(M.k.menit, M.kYoy.menit).text"></span></div></div>
+          <div class="card kpi" style="--kpi-c:var(--c-sarana)"><div class="lbl" x-text="'YTD · ' + R.ytdP.short"></div><div class="val num" x-text="KAI.fmt.n(M.kYtd.n)"></div><div class="note" x-text="KAI.fmt.n(M.kYtd.menit) + ' menit · ' + KAI.delta(M.kYtd.menit, M.kYtdPrev.menit).text + ' vs YTD tahun lalu'"></div></div>
+          <div class="card kpi" style="--kpi-c:var(--c-prasarana)"><div class="lbl" x-text="'Seluruh data' + M.scopeNote"></div><div class="val num" x-text="KAI.fmt.n(M.all.length)"></div><div class="note" x-text="KAI.fmt.n(KAIA.sum(M.all, function (r) { return r.menit; })) + ' menit · ' + (M.all.length ? 'terakhir ' + KAI.fmt.date(M.prof.latest[0]) : 'belum ada kejadian')"></div></div>
+        </div>
+
+        <div class="card mt">
+          <div class="card-h"><div><h3>Temuan &amp; tindakan</h3><p x-text="basis === '12' ? 'Basis: 12 bulan s.d. ' + KAI.fmt.day(KAIA.endOf(R.P)) + ' vs 12 bulan sebelumnya' : 'Basis: ' + R.label + ' vs ' + R.prevLabel"></p></div>
+            <div class="spacer"></div><div class="seg"><button :aria-pressed="basis === '12'" @click="basis = '12'">12 bulan</button><button :aria-pressed="basis === 'p'" @click="basis = 'p'">Periode aktif</button></div></div>
+          <div class="card-b" x-data="{ IBhead: false, get IB() { return M.IB; } }"><?!= include('Part.Insight'); ?>
+</div>
+        </div>
+
+        <div class="tabs mt" role="tablist">
+          <template x-for="t in M.tabs" :key="t.id"><button role="tab" :aria-selected="tab === t.id" @click="tab = t.id" x-text="t.label"></button></template>
+        </div>
+
+        <!-- Riwayat gangguan (semua jenis) -->
+        <div x-show="tab === 'riwayat'">
+          <div class="grid g-2">
+            <div class="card"><div class="card-h"><div><h3>Gangguan per bulan</h3><p>24 bulan terakhir · batang = kejadian, garis = menit</p></div></div>
+              <div class="card-b fill"><div class="chart short" x-chart="tab === 'riwayat' ? KAIChart.monthly(M.months) : null"></div></div></div>
+            <div class="card"><div class="card-h"><div><h3>Pola jam kejadian</h3><p x-text="KAI.fmt.n(M.prof.hour.known) + ' kejadian berjam tercatat (seluruh data)'"></p></div></div>
+              <div class="card-b fill"><div class="chart short" x-chart="tab === 'riwayat' ? KAIChart.hourBar(M.prof.hour) : null"></div></div></div>
+          </div>
+          <div class="grid g-2-1 mt">
+            <div class="card"><div class="card-h"><div><h3>Riwayat gangguan</h3><p>Terbaru di atas · klik untuk detail kejadian</p></div>
+              <div class="spacer"></div><div class="seg"><button :aria-pressed="hist === 'all'" @click="hist = 'all'">Semua</button><button :aria-pressed="hist === 'p'" @click="hist = 'p'" x-text="R.P.short"></button></div>
+              <button class="btn sm" @click="exp()">Excel</button></div>
+              <div class="card-b"><div x-table="histTable" @row-click="$store.app.openEvent($event.detail.id)"></div></div></div>
+            <div class="card"><div class="card-h"><div><h3>Jenis gangguan teratas</h3><p>Seluruh data · menurut menit</p></div></div>
+              <div class="card-b"><table class="tbl"><tbody><template x-for="t in M.prof.top" :key="t.label"><tr class="click" @click="$store.app.go('telusuri', { ids: t.ids, label: M.title + ' · ' + t.label, period: 'all' })"><td x-text="t.label"></td><td class="num" x-text="t.n + '×'"></td><td class="num"><b x-text="KAI.fmt.n(t.menit)"></b></td></tr></template></tbody></table>
+                <div class="empty" x-show="!M.prof.top.length">Belum ada kejadian.</div></div></div>
+          </div>
+        </div>
+
+        <!-- Jadwal KA di stasiun / KA melintas petak / KA di wilayah -->
+        <div x-show="tab === 'jadwal'">
+          <div class="grid g-2-1">
+            <div class="card">
+              <div class="card-h"><div><h3 x-text="M.sched.title"></h3><p x-text="M.sched.sub"></p></div>
+                <div class="spacer"></div>
+                <div class="seg" x-show="M.sched.roles"><button :aria-pressed="role === ''" @click="role = ''">Semua</button><button :aria-pressed="role === 'berangkat'" @click="role = 'berangkat'">Berangkat</button><button :aria-pressed="role === 'datang'" @click="role = 'datang'">Datang</button><button :aria-pressed="role === 'berhenti'" @click="role = 'berhenti'">Berhenti</button><button :aria-pressed="role === 'langsung'" @click="role = 'langsung'">Langsung</button></div>
+                <label class="note" style="display:flex;gap:6px;align-items:center"><input type="checkbox" x-model="regOnly"> Reguler saja</label>
+                <button class="btn sm" @click="expSched()">Excel</button>
+              </div>
+              <div class="card-b"><div x-table="schedTable" @row-click="$store.app.open('ka', $event.detail.no)"></div></div>
+              <div class="card-f" x-text="M.sched.note"></div>
+            </div>
+            <div class="card">
+              <div class="card-h"><div><h3>KA per jam</h3><p>Pasti = Buku Daftar Waktu GAPEKA 2025 · perkiraan = KA tanpa Daftar Waktu</p></div></div>
+              <div class="card-b fill"><div class="chart" x-chart="tab === 'jadwal' ? KAIChart.passHist(schedHist.exact, schedHist.est) : null"></div></div>
+              <div class="card-b statgrid" style="padding-top:0">
+                <template x-for="s in M.sched.stats" :key="s[0]"><div><span x-text="s[0]"></span><b x-text="KAI.fmt.n(s[1])"></b></div></template>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- JPL -->
+        <div x-show="tab === 'jpl'">
+          <div class="card">
+            <div class="card-h"><div><h3 x-text="'JPL · ' + M.jplRows.length + ' titik'"></h3><p>Daftar program keselamatan (M_JPL) dan titik dari laporan kejadian · alamat = kab/kota, provinsi</p></div>
+              <div class="spacer"></div><button class="btn sm" @click="expJpl()">Excel</button></div>
+            <div class="card-b"><div x-table="jplTable" @row-click="$event.detail.jplId ? $store.app.open('jpl', $event.detail.jplId) : ($event.detail.ids.length && $store.app.go('telusuri', { ids: $event.detail.ids, label: $event.detail.titik, period: 'all' }))"></div></div>
+          </div>
+        </div>
+
+        <!-- Jaringan: petak sekitar / stasiun & petak wilayah / petak dalam lintas -->
+        <div x-show="tab === 'jaringan'">
+          <div class="card">
+            <div class="card-h"><div><h3 x-text="M.net.title"></h3><p x-text="M.net.sub"></p></div></div>
+            <div class="card-b"><div x-table="netTable" @row-click="$event.detail.segKey ? $store.app.open('petak', $event.detail.segKey) : $store.app.open('stasiun', $event.detail.code)"></div></div>
+          </div>
+        </div>
+
+        <!-- Daftar tabular generik: rute KA, petak/depo/KA wilayah, sarana & KA depo -->
+        <template x-for="x in M.lists" :key="x.id">
+          <div x-show="tab === x.id">
+            <div class="card">
+              <div class="card-h"><div><h3 x-text="x.title"></h3><p x-text="x.sub"></p></div>
+                <button class="btn sm" @click="expList(x)"><svg class="i"><use href="#i-download"/></svg>Excel</button></div>
+              <div class="card-b"><div x-table="tab === x.id ? listSpec(x) : null" @row-click="x.open && x.open($event.detail, $store.app)"></div></div>
+              <div class="card-f" x-show="x.note" x-text="x.note"></div>
+            </div>
+          </div>
+        </template>
+
+        <!-- Sarana: komponen -->
+        <div x-show="tab === 'komponen'">
+          <div class="card"><div class="card-h"><div><h3>Kelompok komponen & selang antar-gangguan</h3><p x-text="M.gapText"></p></div></div>
+            <div class="card-b"><table class="tbl"><thead><tr><th>Komponen</th><th class="num">Kej.</th><th class="num">Menit</th><th>Terakhir</th></tr></thead><tbody>
+              <template x-for="c in M.comps" :key="c.label"><tr><td x-text="c.label"></td><td class="num" x-text="c.n"></td><td class="num" x-text="KAI.fmt.n(c.menit)"></td><td x-text="c.last"></td></tr></template>
+            </tbody></table></div></div>
+        </div>

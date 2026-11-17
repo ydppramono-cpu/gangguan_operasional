@@ -1,0 +1,53 @@
+<!-- View.Landing — halaman depan sederhana; tombol masuk tidak dikunci. Data mulai dimuat di latar belakang. -->
+<template x-if="$store.app.phase === 'landing' || (!$store.app.entered && $store.app.phase === 'error')">
+  <div class="landing">
+    <header class="landing-top">
+      <div class="brand" style="padding:0">
+        <img class="landing-logo" :src="KAI_LOGO.dark" alt="PT Kereta Api Indonesia (Persero)">
+        <div><div class="brand-name">Dashboard Gangguan Operasional</div><div class="brand-sub">PT Kereta Api Indonesia (Persero)</div></div>
+      </div>
+      <span class="data-chip" x-show="$store.app.meta">
+        <span class="dot" :class="$store.app.status && !$store.app.status.ok ? 'bad' : ''"></span>
+        <span x-text="'Data s.d. ' + KAI.fmt.month($store.app.meta && $store.app.meta.lastYm) + ' · diperbarui ' + KAI.fmt.time($store.app.meta && $store.app.meta.builtAt)"></span>
+      </span>
+    </header>
+    <main class="landing-main">
+      <section class="landing-hero">
+        <p class="eyebrow">Gangguan · Perlintasan · Sarana · Jadwal KA</p>
+        <h1>Lihat gangguan operasional, <b>telusuri penyebabnya</b>, dan ambil tindakan.</h1>
+        <p class="lead">Ringkasan eksekutif, perbandingan MoM/YoY/YTD, analisis per jam, profil stasiun, petak jalan, Daop/Divre, JPL, dan unit sarana — dihitung dengan definisi yang sama dengan laporan bulanan.</p>
+        <div class="landing-cta">
+          <button class="btn primary xl" @click="$store.app.enter()" :aria-busy="!$store.app.coreReady">
+            <span x-text="$store.app.coreReady ? 'Masuk ke dashboard' : 'Masuk ke dashboard'"></span><svg class="i"><use href="#i-arrow"/></svg>
+          </button>
+          <span class="note" x-show="!$store.app.coreReady && !$store.app.error">Menyiapkan data…</span>
+          <span class="note" style="color:var(--bad)" x-show="$store.app.error" x-text="$store.app.error"></span>
+        </div>
+      </section>
+      <section class="landing-grid">
+        <div class="lcard"><svg class="i"><use href="#i-trend"/></svg><b>Periode fleksibel</b><span>Bulan, rentang hari, sampai rentang jam. Pembanding MoM, YoY, dan YTD.</span></div>
+        <div class="lcard"><svg class="i"><use href="#i-search"/></svg><b>Cari apa saja</b><span>Nomor sarana, stasiun, petak jalan, Daop/Divre, nomor KA, atau JPL.</span></div>
+        <div class="lcard"><svg class="i"><use href="#i-cross"/></svg><b>Perlintasan & JPL</b><span>1.404 titik program keselamatan + inventaris titik kejadian perlintasan.</span></div>
+        <div class="lcard"><svg class="i"><use href="#i-train"/></svg><b>Sarana & usia armada</b><span>Jenis, depo, usia, dan peringatan unit &gt; 30 tahun.</span></div>
+        <div class="lcard"><svg class="i"><use href="#i-bulb"/></svg><b>Insight & rekomendasi</b><span>Dipicu angka nyata, dengan rujukan riset perkeretaapian.</span></div>
+        <div class="lcard"><svg class="i"><use href="#i-download"/></svg><b>Unduh</b><span>CSV, Excel, PowerPoint, dan PDF mengikuti filter aktif.</span></div>
+      </section>
+    </main>
+    <footer class="landing-foot note">Data internal KAI. Isi dashboard mengikuti sumber <i>Gangguan_Induk</i>, GAPEKA 2025, Referensi Sarana, dan daftar JPL program keselamatan.</footer>
+  </div>
+</template>
+
+    <!-- Bukan <template>: skrip di dalam halaman harus dieksekusi saat dimuat. -->
+    <div x-show="$store.app.phase === 'ready' || $store.app.phase === 'error'">
+      <?!= include('View.Shell'); ?>
+
+    </div>
+    <template x-if="$store.app.phase === 'loading'">
+      <div class="loading-screen" aria-busy="true">
+        <div class="loading-brand"><img :src="KAI_LOGO.color" alt="KAI" height="40"><span>Memuat data gangguan…</span></div>
+        <div class="skel" style="height:64px"></div>
+        <div class="grid g-4 mt"><div class="skel" style="height:118px"></div><div class="skel" style="height:118px"></div><div class="skel" style="height:118px"></div><div class="skel" style="height:118px"></div></div>
+        <div class="grid g-2 mt"><div class="skel" style="height:320px"></div><div class="skel" style="height:320px"></div></div>
+      </div>
+    </template>
+    <div class="toast" role="status" x-show="$store.app.toast" x-transition.opacity :class="$store.app.toast && $store.app.toast.bad ? 'bad' : ''" x-text="$store.app.toast && $store.app.toast.msg"></div>

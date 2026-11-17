@@ -1,0 +1,69 @@
+<!-- View.Wilayah — lokasi paling sering & paling lama per Daop/Divre, komposisi kelas, peringkat lintas. -->
+<template x-if="$store.app.route === 'wilayah' && $store.app.R">
+  <section class="view" x-data="vWilayah">
+    <div class="tabs" role="tablist" aria-label="Wilayah & koridor">
+      <button role="tab" :aria-selected="$store.app.vtab.wilayah === 'peringkat'" @click="$store.app.vtab.wilayah = 'peringkat'">Peringkat wilayah & koridor</button>
+      <button role="tab" :aria-selected="$store.app.vtab.wilayah === 'prasarana'" @click="$store.app.vtab.wilayah = 'prasarana'">Kondisi prasarana · THI × WKP × gangguan</button>
+      <button role="tab" :aria-selected="$store.app.vtab.wilayah === 'rute'" @click="$store.app.vtab.wilayah = 'rute'">Rute jalur · koridor KA penumpang & barang</button>
+    </div>
+    <p class="note story" x-show="$store.app.vtab.wilayah === 'peringkat'">Alur baca: <b>di mana</b> gangguan paling sering & paling lama → <b>lintas/koridor</b> mana yang paling terdampak → buka tab <b>Kondisi prasarana</b> untuk melihat <b>mengapa</b> (THI rendah, WKP melebihi program) dan <b>prioritas</b> UPT JR.</p>
+    <template x-if="$store.app.vtab.wilayah === 'prasarana'"><div><?!= include('Part.Prasarana'); ?>
+</div></template>
+    <template x-if="$store.app.vtab.wilayah === 'rute'"><div><?!= include('Part.Rute'); ?>
+</div></template>
+    <div x-show="$store.app.vtab.wilayah === 'peringkat'">
+    <div class="grid g-2-1">
+      <div class="card">
+        <div class="card-h"><div><h3 x-text="'Lokasi paling sering dan paling lama per wilayah · ' + R.label"></h3>
+          <p>Lokasi = petak jalan bila tercatat, selain itu stasiun · klik nama wilayah untuk profil lengkap, klik lokasi untuk profil lokasi</p></div></div>
+        <div class="card-b tbl-wrap" style="max-height:none">
+          <table class="tbl" data-pg="20">
+            <thead><tr><th>Wilayah</th><th>Lokasi paling sering</th><th class="num">Frek</th><th>Lokasi kelambatan terbesar</th><th class="num">Menit</th><th class="num">Total wilayah</th></tr></thead>
+            <tbody>
+              <template x-for="r in R.regions" :key="r.wilayah">
+                <tr>
+                  <td><button class="link-btn" @click="$store.app.open('wilayah', r.wilayah)" x-text="r.wilayah"></button></td>
+                  <td><button class="link-btn plain" x-show="r.freq" @click="openLoc(r.freq)" x-text="r.freq && r.freq.lokasi"></button><span class="nil" x-show="!r.freq" x-text="r.n ? 'Lokasi tidak tercatat' : 'Tidak ada kejadian — periksa kelengkapan input'"></span></td>
+                  <td class="num" x-text="r.freq ? r.freq.n + 'x' : '0x'"></td>
+                  <td><button class="link-btn plain" x-show="r.worst" @click="openLoc(r.worst)" x-text="r.worst && r.worst.lokasi"></button><span class="nil" x-show="!r.worst" x-text="r.n ? 'Lokasi tidak tercatat' : 'Tidak ada kejadian'"></span></td>
+                  <td class="num" x-text="r.worst ? KAI.fmt.n(r.worst.menit) : '0'"></td>
+                  <td class="num bar-cell"><div class="b" :style="'width:' + (maxMenit ? r.menit / maxMenit * 100 : 0) + '%'"></div><span x-text="KAI.fmt.n(r.menit) + ' mnt · ' + r.n + ' kej.'"></span></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3>Komposisi kelas per wilayah</h3><p>Menit bertumpuk · klik untuk profil wilayah</p></div></div>
+        <div class="card-b fill"><div class="chart tall" x-chart="KAIChart.stackClass(R.regions.slice().sort(function (a, b) { return b.menit - a.menit; }).map(function (r) { return { label: r.wilayah, cls: r.cls }; }), 'menit')" @chart-click="$store.app.open('wilayah', $event.detail.name)"></div></div>
+      </div>
+    </div>
+
+    <div class="card mt">
+      <div class="card-h"><div><h3>Lintas dengan kelambatan terbesar</h3><p>Lintas dari GAPEKA 2025 (LIST PETAK JALAN) · hanya kejadian di petak · klik untuk profil lintas</p></div></div>
+      <div class="card-b">
+        <table class="tbl"><thead><tr><th>Lintas</th><th>Wilayah</th><th class="num">Kej.</th><th class="num">Menit</th></tr></thead><tbody>
+          <template x-for="l in R.lintas" :key="l.lintas"><tr class="click" @click="$store.app.open('lintas', l.lintas)"><td x-text="l.lintas"></td><td x-text="l.wilayah"></td><td class="num" x-text="l.n"></td><td class="num"><b x-text="KAI.fmt.n(l.menit)"></b></td></tr></template>
+        </tbody></table>
+      </div>
+    </div>
+    </div>
+  </section>
+</template>
+<script>
+document.addEventListener('alpine:init', function () {
+  Alpine.data('vWilayah', function () {
+    return {
+      get R() { return this.$store.app.R; },
+      get maxMenit() { return Math.max.apply(null, this.R.regions.map(function (r) { return r.menit; }).concat([0])); },
+      openLoc: function (l) {
+        var app = this.$store.app, Ref = KAI.data.ref;
+        if (l.segKey && Ref && Ref.seg[l.segKey]) return app.open('petak', l.segKey);
+        if (l.stCode && Ref && Ref.st[l.stCode]) return app.open('stasiun', l.stCode);
+        app.go('telusuri', { ids: l.ids, label: l.lokasi, period: 'all' });
+      }
+    };
+  });
+});
+</script>

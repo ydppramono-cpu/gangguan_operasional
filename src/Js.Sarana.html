@@ -1,0 +1,130 @@
+<script>
+/**
+ * Js.Sarana — mesin armada per jenis (Lokomotif · Kereta · Gerbong): unit, depo, Balai Yasa, kesehatan × gangguan, kekuatan depo.
+ *
+ * Sumber: Referensi Sarana SAP (unit, depo, usia, spesifikasi) · Buku Dukungan Sarana GAPEKA 2025 (status SIAP GUNA & depo induk GAPEKA,
+ * dinasan lok) · RHI lokomotif harian (tab RHI) · Gangguan_Induk (kelas sarana, nomor sarana pertama).
+ *
+ * Skor (0–100). Semua komposit = INDIKATOR INTERNAL, bukan RHI resmi:
+ *   Keandalan  = 100 − min(100, 15 × kejadian 12 bln + menit 12 bln ÷ 20)
+ *   Usia       = 100 − 2,2 × max(0, usia − 5 th)            (5 th = 100 · ±50 th ≈ 0)
+ *   Kesiapan   = 100 tercantum SIAP GUNA GAPEKA · 60 tidak tercantum · 30 sedang di Balai Yasa
+ *   Kesehatan  = RHI (healthy index) bila ada; selain itu skor turunan = 0,35 usia + 0,45 keandalan + 0,20 kesiapan
+ *   Atribut 1–20 (gaya Football Manager) = skor ÷ 5, dibulatkan, minimum 1.
+ *   Kekuatan depo = 0,35 kesehatan rata-rata + 0,30 keandalan (gangguan per 100 unit vs median jaringan) + 0,20 armada muda (% ≤ 30 th) + 0,15 kesiapan GAPEKA.
+ */
+(function (root) {
+  var KINDS = ['Lokomotif', 'Kereta', 'Gerbong'];
+  var BY_NAME = { BYMRI: 'Balai Yasa Manggarai', BYSGU: 'Balai Yasa Surabaya Gubeng', BYYK: 'Balai Yasa Yogyakarta', BYLT: 'Balai Yasa Lahat', BYTG: 'Balai Yasa Tegal' };
+  function clamp(v) { return Math.max(0, Math.min(100, v)); }
+  function sum(a, f) { var t = 0; for (var i = 0; i < a.length; i++) t += f ? f(a[i]) : a[i]; return t; }
+  function median(a) { if (!a.length) return null; var s = a.slice().sort(function (x, y) { return x - y; }), h = s.length >> 1; return s.length % 2 ? s[h] : (s[h - 1] + s[h]) / 2; }
+  function mean(a) { return a.length ? sum(a) / a.length : null; }
+  function attr(v) { return v == null ? null : Math.max(1, Math.min(20, Math.round(v / 5))); }
+  function band(v) { return v == null ? '' : v >= 85 ? 'HEALTHY' : v >= 70 ? 'MONITOR' : 'DECLINING'; }
+  /** Kelas skor turunan (bukan istilah RHI agar tidak dikira status resmi). */
+  function dband(v) { return v == null ? '' : v >= 80 ? 'Baik' : v >= 60 ? 'Pantau' : 'Prioritas'; }
+  function ymShift(ym, n) { var y = +ym.slice(0, 4), m = +ym.slice(5, 7) - 1 + n; y += Math.floor(m / 12); m = ((m % 12) + 12) % 12; return y + '-' + (m < 9 ? '0' : '') + (m + 1); }
+
+  /** Jenis sarana suatu kejadian: master unit → awalan Subgangguan → kolom Jenis sarana → jenis KA (rangkaian). */
+  function kindOfEvent(r, R) {
+    if (r.kelas !== 'sarana') return null;
+    var f = r.sarana && r.sarana[0] && R.fleet[r.sarana[0]]; if (f) return f.kind;
+    var s = String(r.sub || '').toLowerCase(), j = String(r.jenis || '').toLowerCase();
+    if (/^lokomotif\b/.test(s) || j === 'lokomotif') return 'Lokomotif';
+    if (/^gerbong\b|roda gerbong/.test(s) || j === 'gerbong') return 'Gerbong';
+    if (/^kereta\b/.test(s) || j === 'kereta') return 'Kereta';
+    if (j === 'rangkaian') return r.kaJenis === 'BARANG' ? 'Gerbong' : r.kaJenis === 'PENUMPANG' ? 'Kereta' : null;
+    if (/^(krl|kci)\b/.test(s) || j === 'krl') return 'KRL';
+    if (/^krd\b/.test(s) || j === 'krd') return 'KRD';
+    if (/^pembangkit\b/.test(s) || j === 'pembangkit') return 'Pembangkit';
+    return null;
+  }
+
+  /** RHI terakhir per lokomotif (tab RHI): healthy index, status, RAMS, reliability, maintenance index, perawatan, tren bulanan. */
+  function rhiIndex(K) {
+    var out = {}; if (!K) return out;
+    (K.rhi || []).forEach(function (r) { var o = out[r[0]] = out[r[0]] || { trend: [] }; o.trend.push({ ym: r[2], hi: r[4], hiAvg: r[5], st: r[7] }); });
+    var D = K.rhiDay;
+    Object.keys(out).forEach(function (no) {
+      var o = out[no], last = (K.rhi || []).filter(function (r) { return r[0] === no; }).sort(function (a, b) { return a[2] < b[2] ? -1 : 1; }).pop();
+      if (last) { o.hi = last[4]; o.st = last[7]; o.rams = last[11]; o.rel = last[12]; o.mtb = last[13]; o.av = last[14]; o.mi = last[15]; o.pt = last[18]; o.tp = last[19]; o.asOf = last[22]; o.req = last[20]; o.ok = last[21]; }
+      var a = D && D.u && D.u[no];
+      o.ptHist = a && a[5] ? a[5].map(function (p) { return { day: D.ym + '-' + (p[0] < 10 ? '0' : '') + p[0], jenis: p[1], tgl: p[2] }; }) : [];
+    });
+    return out;
+  }
+
+  function build(R, recs, endDay, cfg) {
+    var end = endDay, endYm = end.slice(0, 7), from12 = new Date(Date.parse(end + 'T00:00:00Z') - 364 * 864e5).toISOString().slice(0, 10);
+    var K = R.kondisi && !R.kondisi.error ? R.kondisi : null, RH = rhiIndex(K);
+    var dk = R.dukUnit || {}, ageWarn = (cfg && cfg.ageWarn) || 30;
+    // kejadian sarana per unit (nomor sarana pertama)
+    var byU = {}, evKind = {};
+    recs.forEach(function (r) { var k = kindOfEvent(r, R); if (!k) return; evKind[r.id] = k; var u = r.sarana && r.sarana[0]; if (u) (byU[u] = byU[u] || []).push(r); });
+    var U = {}, list = [];
+    (R.fleetList || []).forEach(function (f) {
+      if (KINDS.indexOf(f.kind) < 0) return;
+      var dp = R.depot[f.depoId] || {}, raw = String(dp.raw || f.depo || '').toUpperCase(), inBY = /^BY/.test(raw.replace(/\s/g, '')), duk = dk[f.no] || null;
+      var byCode = raw.replace(/\s/g, ''), ageBad = f.age != null && f.age > 80;   // usia > 80 th = tanggal mulai dinas SAP perlu diperiksa
+      var age = ageBad ? null : f.age;
+      var ev = (byU[f.no] || []).slice().sort(function (a, b) { return KAIA.sortKey(b).localeCompare(KAIA.sortKey(a)); });
+      var e12 = ev.filter(function (r) { return r.date && r.date >= from12 && r.date <= end; }), n12 = e12.length, m12 = sum(e12, function (r) { return r.menit; });
+      var sRel = clamp(100 - Math.min(100, 15 * n12 + m12 / 20)), sAge = age == null ? null : clamp(100 - 2.2 * Math.max(0, age - 5)), sRdy = inBY ? 30 : duk ? 100 : 60;
+      var rh = RH[f.no] || null, der = Math.round((0.35 * (sAge == null ? 60 : sAge) + 0.45 * sRel + 0.2 * sRdy) * 10) / 10;
+      var hi = rh && rh.hi != null ? rh.hi : null;
+      var form = []; for (var i = 5; i >= 0; i--) { var ym = ymShift(endYm, -i), c = ev.filter(function (r) { return r.ym === ym; }); form.push({ ym: ym, n: c.length, menit: sum(c, function (r) { return r.menit; }) }); }
+      var u = { no: f.no, kind: f.kind, cls: f.cls, depoId: f.depoId, depo: dp.code || dp.raw || f.depo, depoLabel: inBY && BY_NAME[byCode] ? BY_NAME[byCode] + ' (' + byCode + ')' : dp.label || f.depo, region: dp.region || '', age: age, ageRaw: f.age, ageBad: ageBad, since: f.since, manuf: f.manuf, kap: f.kap, spd: f.spd, bk: f.bk, model: f.model,
+        duk: duk, inBY: inBY, events: ev, n12: n12, m12: m12, nAll: ev.length, mAll: sum(ev, function (r) { return r.menit; }), last: ev[0] || null, form: form,
+        rhi: rh, hi: hi, hiSrc: hi != null ? 'RHI' : 'turunan', health: hi != null ? hi : der, derived: der, status: hi != null ? (rh.st || band(hi)) : dband(der),
+        s: { rel: sRel, age: sAge, rdy: sRdy } };
+      u.attrs = [['Kesehatan' + (hi != null ? ' (RHI)' : ' (turunan)'), attr(u.health)], ['Keandalan', attr(sRel)], ['Usia', attr(sAge)], ['Kesiapan GAPEKA', attr(sRdy)]];
+      if (rh) u.attrs = u.attrs.concat([['RAMS', attr(rh.rams)], ['Maintenance index', attr(rh.mi)]]);
+      u.overall = Math.round(mean(u.attrs.map(function (a) { return a[1]; }).filter(function (v) { return v != null; })) * 5);
+      U[f.no] = u; list.push(u);
+    });
+    // ---- depo ----
+    var D = {};
+    list.forEach(function (u) {
+      var d = D[u.depoId] = D[u.depoId] || { id: u.depoId, code: u.depo, label: u.depoLabel, region: u.region, kind: {}, units: [] };
+      d.units.push(u); (d.kind[u.kind] = d.kind[u.kind] || []).push(u);
+    });
+    function agg(L) {
+      var ages = L.map(function (u) { return u.age; }).filter(function (a) { return a != null; }), hs = L.map(function (u) { return u.health; }).filter(function (v) { return v != null; });
+      var rhis = L.filter(function (u) { return u.hi != null; }), n12 = sum(L, function (u) { return u.n12; }), m12 = sum(L, function (u) { return u.m12; });
+      return { n: L.length, sg: L.filter(function (u) { return u.duk; }).length, by: L.filter(function (u) { return u.inBY; }).length, ageMed: median(ages), old: ages.filter(function (a) { return a > ageWarn; }).length,
+        health: hs.length ? Math.round(mean(hs) * 10) / 10 : null, rhiN: rhis.length, rhiMean: rhis.length ? Math.round(mean(rhis.map(function (u) { return u.hi; })) * 10) / 10 : null,
+        H: L.filter(function (u) { return u.status === 'HEALTHY' || u.status === 'Baik'; }).length, M: L.filter(function (u) { return u.status === 'MONITOR' || u.status === 'Pantau'; }).length, Dc: L.filter(function (u) { return u.status === 'DECLINING' || u.status === 'Prioritas'; }).length,
+        n12: n12, m12: m12, rate: L.length ? n12 / L.length * 100 : 0, hit: L.filter(function (u) { return u.n12; }).length };
+    }
+    var byKind = {};
+    KINDS.forEach(function (k) {
+      var L = list.filter(function (u) { return u.kind === k; }), A = agg(L);
+      var deps = Object.keys(D).map(function (id) { var x = D[id], l = x.kind[k] || []; if (!l.length) return null; var a = agg(l); a.id = id; a.code = x.code; a.label = x.label; a.region = x.region; a.list = l; return a; }).filter(Boolean);
+      var medRate = median(deps.map(function (d) { return d.rate; })) || 0;
+      deps.forEach(function (d) {
+        var rel = clamp(100 - (medRate ? (d.rate / Math.max(medRate, 1)) * 50 : d.rate * 5)), young = d.n ? 100 * (1 - d.old / d.n) : 0, rdy = d.n ? Math.min(100, d.sg / d.n * 100) : 0;
+        d.strength = Math.round(0.35 * (d.health == null ? 60 : d.health) + 0.30 * rel + 0.20 * young + 0.15 * rdy);
+        d.parts = { kesehatan: d.health, keandalan: Math.round(rel), muda: Math.round(young), siap: Math.round(rdy) };
+        d.top = d.list.filter(function (u) { return u.n12; }).sort(function (a, b) { return b.m12 - a.m12; }).slice(0, 3);
+        d.dinas = k === 'Lokomotif' && R.duksar && R.duksar.lok ? R.duksar.lok[d.code] || null : null;
+        d.gapekaSG = R.duksar && R.duksar.units && R.duksar.units[k] && R.duksar.units[k][d.code] ? String(R.duksar.units[k][d.code]).split(' ').length : null;
+      });
+      // Peringkat hanya untuk depo dengan ≥ 10 unit (depo kecil/tak tercatat tetap ditampilkan tanpa peringkat).
+      deps.sort(function (a, b) { return (b.n >= 10) - (a.n >= 10) || b.strength - a.strength; }).forEach(function (d, i) { d.rank = d.n >= 10 ? i + 1 : null; });
+      // Balai Yasa: unit SAP yang berada di BY + kapasitas perbaikan GAPEKA (lok: SG − SO)
+      var BY = L.filter(function (u) { return u.inBY; });
+      byKind[k] = { kind: k, units: L, all: A, depots: deps, medRate: medRate, by: BY, withRhi: L.filter(function (u) { return u.hi != null; }).length };
+    });
+    return { U: U, list: list, byKind: byKind, evKind: evKind, end: end, from12: from12, kindOfEvent: function (r) { return evKind[r.id] || kindOfEvent(r, R); },
+      depotOf: function (id) { var x = D[id]; if (!x) return null; var out = { id: id, code: x.code, label: x.label, region: x.region, kinds: {} }; KINDS.forEach(function (k) { var d = (byKind[k].depots || []).filter(function (y) { return y.id === id; })[0]; if (d) out.kinds[k] = d; }); return out; } };
+  }
+
+  /** Ringkasan per jenis untuk daftar kejadian L (periode aktif): unit terganggu, komponen, jenis berulang. */
+  function periodOf(S, L, kind) {
+    var E = L.filter(function (r) { return S.kindOfEvent(r) === kind; });
+    return { E: E, n: E.length, menit: sum(E, function (r) { return r.menit; }), units: KAIA.unitsOf(E), kinds: KAIA.repeatKindsOf(E, 2), noUnit: E.filter(function (r) { return !r.sarana || !r.sarana[0]; }).length };
+  }
+  root.KAIS = { build: build, periodOf: periodOf, kindOfEvent: kindOfEvent, KINDS: KINDS, attr: attr, band: band, dband: dband };
+})(typeof window !== 'undefined' ? window : this);
+</script>

@@ -1,0 +1,417 @@
+<script>
+/**
+ * Js.Ref — data referensi (GAPEKA 2025, M_JPL, M_JADWAL, Referensi Sarana) dan turunannya:
+ *  - jaringan stasiun–petak (graf) dan inferensi rute tiap KA dari "Lintas" + "Jarak" GAPEKA;
+ *  - jam KA di tiap stasiun/petak: PASTI bila ada di M_JADWAL atau stasiun asal/tujuan, selain itu PERKIRAAN
+ *    (interpolasi linier menurut km antara jam berangkat dan jam datang; tidak memuat waktu berhenti);
+ *  - JPL → petak, kaitan kejadian perlintasan → JPL, inventaris titik perlintasan;
+ *  - armada: jenis, depo, usia;
+ *  - indeks pencarian.
+ * Fungsi murni (tanpa DOM) agar bisa diuji di Node.
+ */
+(function (root) {
+  var tc = function (x) { return root.KAI && root.KAI.tc ? root.KAI.tc(x) : x; };
+  function norm(s) { return String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function toMin(hhmm) { var m = /^(\d{1,2}):(\d{2})$/.exec(hhmm || ''); return m ? +m[1] * 60 + +m[2] : null; }
+  function fmtMin(v) { if (v == null) return ''; v = ((Math.round(v) % 1440) + 1440) % 1440; return pad(Math.floor(v / 60)) + ':' + pad(v % 60); }
+  function round5(v) { return v == null ? null : Math.round(v / 5) * 5; }
+  function regionOrder(w) { var m = /^(Daop|Divre) (\d+)/.exec(w || ''); return m ? (m[1] === 'Daop' ? 0 : 100) + Number(m[2]) : 999; }
+
+  /* ---------- Graf & jalur terpendek ---------- */
+  function Heap() { this.a = []; }
+  Heap.prototype.push = function (d, v) { var a = this.a; a.push([d, v]); var i = a.length - 1; while (i > 0) { var p = (i - 1) >> 1; if (a[p][0] <= a[i][0]) break; var t = a[p]; a[p] = a[i]; a[i] = t; i = p; } };
+  Heap.prototype.pop = function () { var a = this.a, top = a[0], last = a.pop(); if (a.length) { a[0] = last; var i = 0; for (;;) { var l = 2 * i + 1, r = l + 1, m = i; if (l < a.length && a[l][0] < a[m][0]) m = l; if (r < a.length && a[r][0] < a[m][0]) m = r; if (m === i) break; var t = a[m]; a[m] = a[i]; a[i] = t; i = m; } } return top; };
+  function dijkstra(adj, src) {
+    var dist = {}, prev = {}, h = new Heap(); dist[src] = 0; h.push(0, src);
+    while (h.a.length) {
+      var x = h.pop(), d = x[0], u = x[1]; if (d > dist[u]) continue;
+      var e = adj[u] || [];
+      for (var i = 0; i < e.length; i++) { var v = e[i].to, nd = d + e[i].km; if (dist[v] == null || nd < dist[v]) { dist[v] = nd; prev[v] = u; h.push(nd, v); } }
+    }
+    return { dist: dist, prev: prev };
+  }
+  function pathTo(sp, src, dst) { if (sp.dist[dst] == null) return null; var p = [dst]; while (p[p.length - 1] !== src) { p.push(sp.prev[p[p.length - 1]]); if (p.length > 5000) return null; } return p.reverse(); }
+
+  function build(raw, opts) {
+    opts = opts || {};
+    var R = { depot: {}, st: {}, stList: [], seg: {}, segList: [], adj: {}, nameIdx: {}, ka: {}, kaList: [], jpl: [], fleet: {}, fleetList: [],
+      regions: {}, lintas: {}, today: opts.today || new Date().toISOString().slice(0, 10), counts: raw.counts || {} };
+
+    (raw.st || []).forEach(function (r) {
+      var s = { code: r[0], name: tc(r[1]), region: r[2], status: r[3] ? r[3].charAt(0).toUpperCase() + r[3].slice(1) : '', deg: 0 };
+      R.st[s.code] = s; R.stList.push(s);
+      R.nameIdx[norm(s.name)] = s.code; if (!R.nameIdx[norm(s.code)]) R.nameIdx[norm(s.code)] = s.code;
+    });
+    (raw.pj || []).forEach(function (r) {
+      var a = r[0], b = r[1], key = [a, b].sort().join('-');
+      if (R.seg[key]) return;
+      var g = { key: key, a: a, b: b, km: r[2], lintas: r[3], region: r[4], track: r[5] };
+      R.seg[key] = g; R.segList.push(g);
+      if (g.km != null) {
+        (R.adj[a] = R.adj[a] || []).push({ to: b, km: g.km, key: key });
+        (R.adj[b] = R.adj[b] || []).push({ to: a, km: g.km, key: key });
+      }
+      [a, b].forEach(function (c) { if (!R.st[c]) { R.st[c] = { code: c, name: c, region: g.region, status: '', deg: 0 }; R.stList.push(R.st[c]); } R.st[c].deg++; });
+      if (g.lintas) { var L = R.lintas[g.lintas] = R.lintas[g.lintas] || { name: g.lintas, region: g.region, segs: [], km: 0 }; L.segs.push(key); L.km += g.km || 0; }
+    });
+    R.stList.forEach(function (s) { if (s.region) (R.regions[s.region] = R.regions[s.region] || { name: s.region, st: [], segs: [] }).st.push(s.code); });
+    R.segList.forEach(function (g) { if (g.region) (R.regions[g.region] = R.regions[g.region] || { name: g.region, st: [], segs: [] }).segs.push(g.key); });
+
+    (raw.ka || []).forEach(function (r) {
+      var codes = String(r[4] || '').split('-').filter(Boolean);
+      var k = { no: r[0], nama: tc(r[1]), kelas: tc(r[2]), jenis: r[3], lintas: r[4], codes: codes, o: codes[0] || '', d: codes[codes.length - 1] || '',
+        jarak: r[5], ber: r[6], dat: r[7], layanan: tc(r[8]), regtamb: r[9], sf: r[10], kap: r[11], klas: tc(r[12]), jenisKa: r[13] || '' };
+      k.reg = !k.jenisKa || k.jenisKa === 'REG';
+      R.ka[norm(k.no)] = k; R.kaList.push(k);
+    });
+    // Nomor gabungan LIST KA ("92-93") → tiap nomor perjalanan menunjuk induknya.
+    R.kaLeg = {};
+    R.kaList.forEach(function (k) { var parts = String(k.no).split('-'); if (parts.length > 1) parts.forEach(function (x) { if (!R.kaLeg[norm(x)]) R.kaLeg[norm(x)] = k; }); });
+    // Buku Daftar Waktu GAPEKA 2025 (tab M_JADWAL): jam PASTI per stasiun, status berhenti/langsung.
+    R.tt = {}; R.ttList = [];
+    (raw.jadwal || []).forEach(function (r) {
+      var stops = String(r[4] || '').split('\n').filter(Boolean).map(function (l) {
+        var a = l.split('|'); return { code: a[0], dat: toMin(a[1]), ber: toMin(a[2]), ket: a[3] || 'H', cat: a[4] || '' };
+      });
+      if (stops.length < 2) return;
+      var T = { no: r[0], nama: tc(r[1]), rel: r[2], src: r[3], stops: stops };
+      R.tt[norm(T.no)] = T; R.ttList.push(T);
+    });
+    R.ops = {};
+    (raw.ops || []).forEach(function (r) { (R.ops[r[0]] = R.ops[r[0]] || []).push({ jenis: r[1], buka: r[2], tutup: r[3], src: r[4] }); });
+    // Pustaka rujukan eksternal (tab M_RUJUKAN) — dipakai laporan PPT/PDF untuk konteks media & kajian ilmiah.
+    R.ruj = (raw.ruj || []).map(function (r) {
+      return { id: r[0], jenis: r[1] || 'Media', apa: r[2], url: r[3], tanggal: r[4], wilayah: String(r[5] || '').split(/\s*[,;]\s*/).filter(Boolean),
+        topik: String(r[6] || '').split(/\s*[,;]\s*/).filter(Boolean), fakta: r[7], implikasi: r[8], verif: r[9] };
+    });
+
+    (raw.jpl || []).forEach(function (r) {
+      var j = { id: 'J' + r[0], noUrut: r[0], antara: tc(r[1]), antaraRaw: r[1], no: r[2], kmText: r[3], km: r[4], prov: tc(r[5]), kab: tc(r[6]), kat: tc(r[7]), lebar: r[8],
+        status: r[9], penjaga: r[10], region: r[11], p190: !!r[12], segKey: '', a: '', b: '' };
+      var parts = j.antaraRaw.split(/\s*-\s*/);
+      if (parts.length === 2) {
+        var a = stationOf(R, parts[0]), b = stationOf(R, parts[1]);
+        if (a && b) { j.a = a; j.b = b; var key = [a, b].sort().join('-'); j.segKey = R.seg[key] ? key : ''; j.pairKey = key; }
+      }
+      j.jaga = /TIDAK DIJAGA/.test(j.status) ? 'tidak dijaga' : /DIJAGA/.test(j.status) ? 'dijaga'
+        : /^(TAK TERJAGA|TIDAK TERJAGA|TIDAK DIJAGA|TIADA|RESMI TAK TERJAGA|RESMI TIDAK TERJAGA)/.test(j.penjaga) ? 'tidak dijaga'
+        : /SWADAYA|DISHUB|PEMDA|RELAWAN|DIJAGA|SWASTA|TERJAGA|^ADA$/.test(j.penjaga) ? 'dijaga' : 'tidak tercatat';
+      j.registered = /^REGISTER/.test(j.status);
+      j.statusTxt = tc(j.status); j.penjagaTxt = tc(j.penjaga);
+      R.jpl.push(j);
+    });
+
+    var ref = new Date(R.today + 'T00:00:00Z').getTime();
+    (raw.fleet || []).forEach(function (r) {
+      var f = { no: r[0], kind: r[1], cls: r[2], depo: r[3], since: r[4], manuf: r[5], kap: r[6] || '', spd: r[7] || null, bk: r[8] || null, model: r[9] || '', age: null };
+      if (f.since) f.age = Math.floor((ref - Date.UTC(+f.since.slice(0, 4), +f.since.slice(5, 7) - 1, 15)) / (365.25 * 864e5) * 10) / 10;
+      f.depoId = depotOf(R, f.depo).id; R.depot[f.depoId].units.push(f);
+      R.fleet[f.no] = f; R.fleetList.push(f);
+    });
+    // Depo induk rangkaian (Buku Dukungan Sarana) → nomor KA yang dilayani.
+    (raw.depo || []).forEach(function (r) {
+      var code = r[1], d = null;
+      Object.keys(R.depot).forEach(function (id) { var x = R.depot[id]; if (!d && x.code === code && x.type === 'Kereta') d = x; });
+      if (!d) { d = R.depot['DUK:' + code] = { id: 'DUK:' + code, raw: r[0], type: 'Depo induk rangkaian', code: code, units: [], ka: [] }; finishDepot(R, d, tc(r[0])); }
+      d.ka = d.ka.concat(String(r[3] || '').split(/\s*,\s*/).filter(Boolean)); d.duksar = r[0]; d.src = r[4];
+    });
+    R.depotList = Object.keys(R.depot).map(function (k) { return R.depot[k]; }).sort(function (a, b) { return regionOrder(a.region) - regionOrder(b.region) || b.units.length - a.units.length; });
+    R.depotList.forEach(function (d) { if (d.region) { var W = R.regions[d.region] = R.regions[d.region] || { name: d.region, st: [], segs: [] }; (W.depots = W.depots || []).push(d.id); } });
+    R.kaDepot = {}; R.depotList.forEach(function (d) { d.ka.forEach(function (n) { R.kaDepot[norm(n)] = d; }); });
+    R.kondisi = raw.kondisi || null;
+    // Buku Dukungan Sarana GAPEKA: status SIAP GUNA per unit + depo induk GAPEKA, dinasan lok per depo.
+    R.duksar = raw.duksar || null; R.dukUnit = {};
+    if (R.duksar && R.duksar.units) Object.keys(R.duksar.units).forEach(function (k) { var o = R.duksar.units[k]; Object.keys(o).forEach(function (c) { String(o[c]).split(' ').forEach(function (no) { if (no) R.dukUnit[no] = { kind: k, depo: c }; }); }); });
+    R.pend = raw.pend || null;
+    R.peta = raw.peta || null;
+    R._routes = null;
+    return R;
+  }
+
+  var DEPO_TYPE = { LOK: 'Lokomotif', KRT: 'Kereta', GRB: 'Gerbong', KRL: 'KRL', LRT: 'LRT' };
+  /** Depo dari dipo_name SAP ("DEPO GRB SIG", "DP LOK CPN") → { id, type, code, region }. Kode = token terakhir = kode stasiun lokasi depo. */
+  function depotOf(R, name) {
+    var raw = String(name || '').trim() || 'Tidak tercatat', id = norm(raw) || 'NA';
+    if (R.depot[id]) return R.depot[id];
+    var m = /^(?:DEPO|DP|DIPO)\s+(LOK|KRT|GRB|KRL|LRT)\s+(.+)$/i.exec(raw), d = { id: id, raw: raw, type: m ? DEPO_TYPE[m[1].toUpperCase()] : 'Lainnya', code: m ? m[2].trim().toUpperCase() : '', units: [], ka: [] };
+    R.depot[id] = d; finishDepot(R, d, null);
+    return d;
+  }
+  function finishDepot(R, d, label) {
+    var st = R.st[d.code];
+    d.region = st ? st.region : '';
+    d.stName = st ? st.name : '';
+    d.label = label ? 'Depo ' + label + (d.code ? ' (' + d.code + ')' : '') : d.type !== 'Lainnya' ? 'Depo ' + d.type + ' ' + (st ? st.name + ' (' + d.code + ')' : tc(d.code)) : tc(d.raw);
+  }
+
+  /** Nama/kode stasiun di teks bebas (mis. "LEMAHABANG", "KDG", "TANAH ABANG") → kode. */
+  function stationOf(R, txt) {
+    var k = norm(txt); if (!k) return '';
+    if (R.st[k]) return k;
+    if (R.nameIdx[k]) return R.nameIdx[k];
+    return fuzzyStation(R, k);
+  }
+  /** Ejaan berbeda ("KEDUNGGEDE" vs "Kedunggedeh", "BASOETTA" vs "Bandara Soekarno Hatta"): awalan unik atau beda ≤ 2 huruf. */
+  function lev(a, b) {
+    if (Math.abs(a.length - b.length) > 2) return 9;
+    var d = []; for (var i = 0; i <= a.length; i++) { d[i] = [i]; } for (var j = 1; j <= b.length; j++) d[0][j] = j;
+    for (i = 1; i <= a.length; i++) for (j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    return d[a.length][b.length];
+  }
+  function fuzzyStation(R, k) {
+    if (k.length < 5) return '';
+    var memo = R._fz = R._fz || {}; if (memo[k] != null) return memo[k];
+    var names = Object.keys(R.nameIdx), pre = names.filter(function (n) { return n.length >= 5 && (n.indexOf(k) === 0 || k.indexOf(n) === 0); });
+    var hit = '';
+    if (pre.length === 1) hit = R.nameIdx[pre[0]];
+    else {
+      var best = null, tie = false;
+      names.forEach(function (n) { if (n.length < 5) return; var d = lev(k, n); if (d <= 2 && (!best || d < best.d)) { best = { n: n, d: d }; tie = false; } else if (best && d === best.d) tie = true; });
+      if (best && !tie) hit = R.nameIdx[best.n];
+    }
+    return (memo[k] = hit);
+  }
+
+  /* ---------- Rute KA ---------- */
+  function routeFor(R, k) {
+    if (!k.codes.length || k.codes.some(function (c) { return !R.adj[c]; })) return { ok: false, reason: 'Kode stasiun di "Lintas" tidak ada di jaringan petak GAPEKA' };
+    var cache = R._spCache = R._spCache || {};
+    function sp(src) { return cache[src] || (cache[src] = dijkstra(R.adj, src)); }
+    var path = [k.codes[0]];
+    for (var i = 1; i < k.codes.length; i++) {
+      var p = pathTo(sp(k.codes[i - 1]), k.codes[i - 1], k.codes[i]);
+      if (!p) return { ok: false, reason: 'Tidak ada jalur di graf antara ' + k.codes[i - 1] + ' dan ' + k.codes[i] };
+      path = path.concat(p.slice(1));
+    }
+    var len = plen(R, path), method = 'terpendek';
+    var err = k.jarak ? Math.abs(len - k.jarak) / k.jarak : null;
+    // Jalur terpendek tidak cocok dengan jarak GAPEKA (mis. KA lintas selatan): cari satu titik antara yang cocok.
+    if (err != null && err > 0.015 && k.codes.length === 2) {
+      var o = k.codes[0], d = k.codes[1], A = sp(o), B = sp(d), best = null;
+      Object.keys(A.dist).forEach(function (w) {
+        if (w === o || w === d || B.dist[w] == null) return;
+        var L = A.dist[w] + B.dist[w], e = Math.abs(L - k.jarak) / k.jarak;
+        if (!best || e < best.e) best = { w: w, e: e, L: L };
+      });
+      if (best && best.e < err) {
+        var p1 = pathTo(A, o, best.w), p2 = pathTo(B, d, best.w);
+        var cand = p1.concat(p2.reverse().slice(1)), seen = {}, simple = true;
+        cand.forEach(function (c) { if (seen[c]) simple = false; seen[c] = 1; });
+        if (simple) { path = cand; len = plen(R, path); err = Math.abs(len - k.jarak) / k.jarak; method = 'melalui ' + (R.st[best.w] ? R.st[best.w].name : best.w); }
+      }
+    }
+    var cum = [0]; for (var j = 1; j < path.length; j++) cum.push(cum[j - 1] + segKm(R, path[j - 1], path[j]));
+    var quality = err == null ? 'tanpa-jarak' : err <= 0.02 ? 'cocok' : err <= 0.05 ? 'mendekati' : 'tidak-pasti';
+    return { ok: quality !== 'tidak-pasti', path: path, cum: cum, len: len, err: err, quality: quality, method: method };
+  }
+  function segKm(R, a, b) { var g = R.seg[[a, b].sort().join('-')]; return g && g.km != null ? g.km : 0; }
+  function plen(R, p) { var t = 0; for (var i = 1; i < p.length; i++) t += segKm(R, p[i - 1], p[i]); return t; }
+
+  var KET = { A: 'Berangkat (asal)', Z: 'Datang (tujuan)', H: 'Berhenti', L: 'Langsung', S: 'Berhenti sebentar' };
+  var ROLE = { A: 'berangkat', Z: 'datang', H: 'berhenti', L: 'langsung', S: 'berhenti' };
+
+  /** Jam di tiap stasiun pada rute hasil inferensi (KA tanpa Daftar Waktu): asal/tujuan pasti, antara = perkiraan. */
+  function timesFor(R, k, rt) {
+    var out = {}, t0 = toMin(k.ber), t1 = toMin(k.dat);
+    if (!rt || !rt.path || t0 == null || t1 == null) return out;
+    var dur = t1 - t0; if (dur <= 0) dur += 1440;
+    rt.path.forEach(function (c, i) {
+      var f = rt.len ? rt.cum[i] / rt.len : 0, t = t0 + dur * f;
+      if (i === 0) out[c] = { dat: null, ber: t0, t: t0, est: false, ket: 'Berangkat (asal)', role: 'berangkat' };
+      else if (i === rt.path.length - 1) out[c] = { dat: t1, ber: null, t: t1, est: false, ket: 'Datang (tujuan)', role: 'datang' };
+      else out[c] = { dat: null, ber: null, t: round5(t), est: true, ket: 'Perkiraan rute', role: 'lintas' };
+    });
+    return out;
+  }
+
+  /** Jarak antar dua stasiun berurutan di Daftar Waktu (petak langsung, atau jalur terpendek bila ada stasiun yang tidak tercantum). */
+  function hopKm(R, a, b) {
+    var g = R.seg[[a, b].sort().join('-')]; if (g && g.km != null) return g.km;
+    if (!R.adj[a] || !R.adj[b]) return 0;
+    var cache = R._spCache = R._spCache || {}, sp = cache[a] || (cache[a] = dijkstra(R.adj, a));
+    return sp.dist[b] != null && sp.dist[b] < 60 ? sp.dist[b] : 0;
+  }
+
+  /** Perjalanan dari Daftar Waktu: jam pasti; stasiun "Ls -" (langsung tanpa jam) diisi interpolasi antar jam pasti terdekat. */
+  function tripFromTimetable(R, T) {
+    var parent = R.ka[norm(T.no)] || R.kaLeg[norm(T.no)] || null, direct = !!R.ka[norm(T.no)];
+    var path = T.stops.map(function (x) { return x.code; }), cum = [0];
+    for (var i = 1; i < path.length; i++) cum.push(cum[i - 1] + hopKm(R, path[i - 1], path[i]));
+    var tAbs = [], day = 0, prev = null;
+    T.stops.forEach(function (x) {   // menit absolut (melewati tengah malam)
+      var v = x.ber != null ? x.ber : x.dat; if (v == null) { tAbs.push(null); return; }
+      var a = (x.dat != null ? x.dat : v) + day * 1440; if (prev != null && a < prev - 60) { day++; a += 1440; }
+      var b = v + day * 1440; if (b < a) b += 1440;
+      tAbs.push(b); prev = b;
+    });
+    var times = {};
+    T.stops.forEach(function (x, j) {
+      var t = tAbs[j], est = false;
+      if (t == null) {
+        var lo = j - 1, hi = j + 1; while (lo >= 0 && tAbs[lo] == null) lo--; while (hi < tAbs.length && tAbs[hi] == null) hi++;
+        if (lo >= 0 && hi < tAbs.length) { var span = cum[hi] - cum[lo]; t = tAbs[lo] + (tAbs[hi] - tAbs[lo]) * (span ? (cum[j] - cum[lo]) / span : 0.5); est = true; }
+      }
+      times[x.code] = { dat: x.dat, ber: x.ber, t: t, est: est, ket: KET[x.ket] || x.ket, role: ROLE[x.ket] || 'berhenti', cat: x.cat };
+    });
+    var k = { no: T.no, nama: parent ? parent.nama : T.nama.replace(/\b\w/g, function (c) { return c.toUpperCase(); }), kelas: parent ? parent.kelas : T.src.replace(/^DW /, ''),
+      jenis: parent ? parent.jenis : (/barang/i.test(T.src) || /batu ?bara|baratarahan|babaranjang|cargo|kargo|semen|bbm|ketel|peti|parcel|pupuk|klinker/i.test(T.nama) ? 'BARANG' : 'PENUMPANG'),
+      lintas: T.rel, codes: [path[0], path[path.length - 1]], o: path[0], d: path[path.length - 1], jarak: direct && parent ? parent.jarak : Math.round(cum[cum.length - 1] * 1000) / 1000,
+      ber: fmtMin(T.stops[0].ber), dat: fmtMin(T.stops[T.stops.length - 1].dat), layanan: parent ? parent.layanan : '', sf: parent ? parent.sf : '', kap: parent ? parent.kap : '',
+      klas: parent ? parent.klas : '', jenisKa: parent && direct ? parent.jenisKa : (/F$/.test(T.no) ? 'FAK' : 'REG'), parent: parent, tt: T, src: T.src };
+    k.reg = !k.jenisKa || k.jenisKa === 'REG';
+    k.route = { ok: true, path: path, cum: cum, len: cum[cum.length - 1], err: null, quality: 'jadwal', method: 'Daftar Waktu GAPEKA 2025' };
+    k.times = times;
+    return k;
+  }
+
+  /** Semua perjalanan: Daftar Waktu (pasti) + LIST KA tanpa Daftar Waktu (rute & jam perkiraan). Lalu indeks per petak & stasiun. */
+  function ensureRoutes(R) {
+    if (R._routes) return R._routes;
+    var t = Date.now(), segPass = {}, stPass = {}, stats = { tt: 0, ok: 0, approx: 0, bad: 0, none: 0 }, keyCache = {}, trips = [];
+    R.trip = {};
+    R.ttList.forEach(function (T) { var k = tripFromTimetable(R, T); trips.push(k); R.trip[norm(k.no)] = k; stats.tt++; });
+    R.kaList.forEach(function (k) {
+      var legs = String(k.no).split('-');
+      if (R.tt[norm(k.no)] || (legs.length > 1 && legs.every(function (x) { return R.tt[norm(x)]; }))) {
+        k.route = { ok: true, quality: 'jadwal', legs: legs.filter(function (x) { return R.tt[norm(x)]; }) };
+        return;
+      }
+      var ck = k.lintas + '|' + k.jarak, rt = keyCache[ck] || (keyCache[ck] = routeFor(R, k));
+      k.route = rt;
+      if (!rt.path) { stats.none++; return; }
+      if (rt.quality === 'tidak-pasti') stats.bad++; else if (rt.quality === 'mendekati') stats.approx++; else stats.ok++;
+      if (!rt.ok) return;
+      k.times = timesFor(R, k, rt);
+      trips.push(k); R.trip[norm(k.no)] = k;
+    });
+    trips.forEach(function (k) {
+      var rt = k.route, tm = k.times;
+      rt.path.forEach(function (c, i) {
+        var x = tm[c] || {};
+        (stPass[c] = stPass[c] || []).push({ ka: k, role: x.role || 'lintas', t: x.t != null ? ((x.t % 1440) + 1440) % 1440 : null, dat: x.dat, ber: x.ber, est: !!x.est, ket: x.ket || '', cat: x.cat || '' });
+        if (i > 0) {
+          var a = rt.path[i - 1], key = [a, c].sort().join('-'), xa = tm[a] || {};
+          (segPass[key] = segPass[key] || []).push({ ka: k, from: a, to: c, tFrom: xa.t != null ? ((xa.t % 1440) + 1440) % 1440 : null, tTo: x.t != null ? ((x.t % 1440) + 1440) % 1440 : null, est: !!(xa.est || x.est) });
+        }
+      });
+    });
+    Object.keys(stPass).forEach(function (c) { stPass[c].sort(function (a, b) { return (a.t == null ? 9999 : a.t) - (b.t == null ? 9999 : b.t); }); });
+    Object.keys(segPass).forEach(function (s) { segPass[s].sort(function (a, b) { return (a.tFrom == null ? 9999 : a.tFrom) - (b.tFrom == null ? 9999 : b.tFrom); }); });
+    R.trips = trips;
+    R._routes = { segPass: segPass, stPass: stPass, stats: stats, trips: trips.length, ms: Date.now() - t };
+    return R._routes;
+  }
+
+  /** Data KA untuk profil: LIST KA (+ perjalanan Daftar Waktu-nya) atau perjalanan yang hanya ada di Daftar Waktu. */
+  function kaInfo(R, no) {
+    ensureRoutes(R);
+    var n = norm(no), k = R.ka[n] || R.kaLeg[n] || null, legs = [];
+    if (k) String(k.no).split('-').forEach(function (x) { if (R.trip[norm(x)] && R.trip[norm(x)].tt) legs.push(R.trip[norm(x)]); });
+    if (!legs.length && R.trip[n] && R.trip[n].tt) legs.push(R.trip[n]);
+    if (!k && !legs.length) return null;
+    return { base: k || legs[0], legs: legs, inferred: !legs.length && k && R.trip[n] ? R.trip[n] : null };
+  }
+
+  /* ---------- Perlintasan: kaitan kejadian ↔ JPL dan inventaris titik ---------- */
+  function crossingInventory(R, recs, cfg) {
+    var bySeg = {}, out = {}, maxKm = (cfg && cfg.jplKm) || 0.5;
+    R.jpl.forEach(function (j) { if (j.pairKey) (bySeg[j.pairKey] = bySeg[j.pairKey] || []).push(j); });
+    function point(key, base) { return out[key] || (out[key] = Object.assign({ key: key, recs: [], n: 0, menit: 0, last: '', types: {} }, base)); }
+    var linked = 0, total = 0;
+    recs.forEach(function (r) {
+      if (!r.cross) return;
+      total++;
+      var seg = r.segKey, j = null, cands = seg ? bySeg[seg] || [] : [];
+      if (cands.length && r.jpl) j = cands.filter(function (x) { return norm(x.no) === norm(r.jpl); })[0] || null;
+      if (!j && cands.length && r.kmv != null) {
+        var best = null; cands.forEach(function (x) { if (x.km == null) return; var d = Math.abs(x.km - r.kmv); if (d <= maxKm && (!best || d < best.d)) best = { j: x, d: d }; });
+        if (best) j = best.j;
+      }
+      var p;
+      if (j) { linked++; p = point(j.id, { jpl: j, segKey: j.segKey || seg, label: 'JPL ' + (j.no || '–') + ' · ' + (j.antara || ''), region: j.region, km: j.km }); }
+      else if (seg && r.jpl) p = point(seg + '#' + norm(r.jpl), { jpl: null, segKey: seg, label: 'JPL ' + r.jpl + ' · ' + r.lokasi, region: r.wilayah, km: r.kmv, noJpl: r.jpl });
+      else if (seg && r.kmv != null) { var b = Math.round(r.kmv * 10) / 10; p = point(seg + '@' + b, { jpl: null, segKey: seg, label: r.lokasi + ' · KM ' + String(b).replace('.', ','), region: r.wilayah, km: b }); }
+      else if (r.lokasi) p = point('L:' + r.lokasi, { jpl: null, segKey: seg, label: r.lokasi + ' (titik tidak tercatat)', region: r.wilayah, km: null });
+      else return;
+      p.recs.push(r); p.n++; p.menit += r.menit; p.types[r.cross] = (p.types[r.cross] || 0) + 1;
+      var sk = r.date || r.ym; if (sk > p.last) p.last = sk;
+    });
+    var list = Object.keys(out).map(function (k) { return out[k]; });
+    return { points: list, linked: linked, total: total };
+  }
+
+  /** Perjalanan KA reguler (Jenis KA = REG) per hari yang melewati petak, dari rute terverifikasi. */
+  function trafficOnSeg(R, key) { var rt = ensureRoutes(R); return (rt.segPass[key] || []).filter(function (x) { return x.ka.reg; }).length; }
+  function opsOf(R, code) { return R.ops[code] || []; }
+
+  /* ---------- Armada ---------- */
+  function fleetSummary(R, cfg) {
+    var warn = (cfg && cfg.ageWarn) || 30, kinds = {}, depos = {}, bands = ['<10', '10–19', '20–29', '30–39', '≥40', 'Tidak diketahui'];
+    function band(a) { return a == null ? 'Tidak diketahui' : a < 10 ? '<10' : a < 20 ? '10–19' : a < 30 ? '20–29' : a < 40 ? '30–39' : '≥40'; }
+    R.fleetList.forEach(function (f) {
+      var K = kinds[f.kind] = kinds[f.kind] || { kind: f.kind, n: 0, old: 0, ages: [], bands: {} };
+      K.n++; if (f.age != null) K.ages.push(f.age); if (f.age != null && f.age > warn) K.old++;
+      var b = band(f.age); K.bands[b] = (K.bands[b] || 0) + 1;
+      var D = depos[f.depoId] = depos[f.depoId] || { id: f.depoId, depo: R.depot[f.depoId].label, region: R.depot[f.depoId].region, n: 0, old: 0, kinds: {}, ages: [] };
+      D.n++; D.kinds[f.kind] = (D.kinds[f.kind] || 0) + 1; if (f.age != null) D.ages.push(f.age); if (f.age != null && f.age > warn) D.old++;
+    });
+    function med(a) { if (!a.length) return null; var s = a.slice().sort(function (x, y) { return x - y; }), h = s.length >> 1; return s.length % 2 ? s[h] : (s[h - 1] + s[h]) / 2; }
+    var kl = Object.keys(kinds).map(function (k) { var x = kinds[k]; x.medAge = med(x.ages); delete x.ages; return x; }).sort(function (a, b) { return b.n - a.n; });
+    var dl = Object.keys(depos).map(function (k) { var x = depos[k]; x.medAge = med(x.ages); delete x.ages; return x; }).sort(function (a, b) { return b.n - a.n; });
+    return { kinds: kl, depos: dl, bands: bands, band: band, warn: warn, total: R.fleetList.length, old: R.fleetList.filter(function (f) { return f.age != null && f.age > warn; }).length };
+  }
+
+  /* ---------- Pencarian ---------- */
+  function searchIndex(R, unitsSeen) {
+    var E = [];
+    R.stList.forEach(function (s) { E.push({ type: 'stasiun', id: s.code, label: s.name + ' (' + s.code + ')', sub: 'Stasiun · ' + (s.region || '–') + (s.status ? ' · ' + s.status : ''), k: norm(s.code) + ' ' + norm(s.name), code: norm(s.code), nm: norm(s.name) }); });
+    R.segList.forEach(function (g) {
+      var A = R.st[g.a], B = R.st[g.b];
+      E.push({ type: 'petak', id: g.key, label: (A ? A.name : g.a) + ' – ' + (B ? B.name : g.b), sub: 'Petak ' + g.a + '–' + g.b + ' · ' + (g.lintas || '') + ' · ' + (g.region || ''),
+        k: norm(g.a + g.b) + ' ' + norm(g.b + g.a) + ' ' + norm((A ? A.name : '') + (B ? B.name : '')) + ' ' + norm((B ? B.name : '') + (A ? A.name : '')), code: norm(g.a + '-' + g.b) });
+    });
+    Object.keys(R.regions).forEach(function (w) {
+      var m = /^(Daop|Divre) (\d+)$/.exec(w); if (!m) return;
+      E.push({ type: 'wilayah', id: w, label: w, sub: 'Wilayah · ' + R.regions[w].st.length + ' stasiun · ' + R.regions[w].segs.length + ' petak', k: norm(w) + ' ' + norm(m[1] + ' ' + ['', 'I', 'II', 'III', 'IV'][+m[2]] || ''), code: norm(w) });
+    });
+    Object.keys(R.lintas).forEach(function (n) { E.push({ type: 'lintas', id: n, label: 'Lintas ' + n, sub: 'Lintas · ' + R.lintas[n].segs.length + ' petak · ' + (R.lintas[n].region || ''), k: norm(n), code: norm(n) }); });
+    R.ttList.forEach(function (T) { if (R.ka[norm(T.no)] || R.kaLeg[norm(T.no)]) return; E.push({ type: 'ka', id: T.no, label: 'KA ' + T.no + ' ' + T.nama, sub: 'Kereta api · ' + T.rel + ' · ' + T.src, k: 'KA' + norm(T.no) + ' ' + norm(T.no) + ' ' + norm(T.nama), code: norm(T.no) }); });
+    R.kaList.forEach(function (k) { E.push({ type: 'ka', id: k.no, label: 'KA ' + k.no + ' ' + k.nama, sub: 'Kereta api · ' + k.lintas + ' · ' + (k.ber || '') + '–' + (k.dat || ''), k: 'KA' + norm(k.no) + ' ' + norm(k.no) + ' ' + norm(k.nama), code: norm(k.no) }); });
+    R.jpl.forEach(function (j) { E.push({ type: 'jpl', id: j.id, label: 'JPL ' + (j.no || '–') + ' · ' + (j.antara || 'petak tidak tercantum'), sub: 'JPL · KM ' + j.kmText + ' · ' + j.kab + ', ' + j.prov, k: 'JPL' + norm(j.no) + ' ' + norm(j.antara) + ' ' + norm(j.kab), code: 'JPL' + norm(j.no) }); });
+    R.depotList.forEach(function (d) {
+      if (!d.units.length && !d.ka.length) return;
+      E.push({ type: 'depo', id: d.id, label: d.label, sub: 'Depo · ' + d.type + ' · ' + (d.region || 'wilayah tidak terpetakan') + ' · ' + d.units.length + ' sarana' + (d.ka.length ? ' · ' + d.ka.length + ' KA' : ''),
+        k: 'DEPO ' + norm(d.raw) + ' ' + norm(d.label) + ' ' + norm(d.code) + ' ' + norm(d.stName), code: 'DEPO' + norm(d.code) });
+    });
+    var seenF = {};
+    R.fleetList.forEach(function (f) { seenF[f.no] = 1; E.push({ type: 'sarana', id: f.no, label: f.no, sub: f.kind + ' · ' + f.cls + ' · ' + R.depot[f.depoId].label + (f.age != null ? ' · ' + Math.floor(f.age) + ' th' : ''), k: norm(f.no), code: norm(f.no) }); });
+    Object.keys(unitsSeen || {}).forEach(function (u) { if (!seenF[u]) E.push({ type: 'sarana', id: u, label: u, sub: 'Sarana · tidak ada di Referensi Sarana', k: norm(u), code: norm(u) }); });
+    return E;
+  }
+  var TYPE_ORDER = { sarana: 0, stasiun: 1, petak: 2, wilayah: 3, depo: 4, lintas: 5, ka: 6, jpl: 7 };
+  function search(E, q, limit) {
+    var t = String(q || '').trim(); if (t.length < 2 && !/^\d$/.test(t)) return [];
+    var nq = norm(t), toks = t.toUpperCase().split(/[\s,]+/).map(norm).filter(Boolean);
+    if (/^(DAOP|DIVRE)\s*\d+$/i.test(t)) nq = norm(t.replace(/\s+/, ' '));
+    var res = [];
+    for (var i = 0; i < E.length; i++) {
+      var e = E[i], s = 0;
+      if (e.code === nq) s = 100;
+      else if (e.nm && e.nm === nq) s = 95;
+      else if (e.code.indexOf(nq) === 0) s = 60;
+      else if (e.k.indexOf(nq) >= 0) s = 40;
+      else if (toks.length > 1 && toks.every(function (x) { return e.k.indexOf(x) >= 0; })) s = 25;
+      if (!s) continue;
+      s -= Math.min(15, e.label.length / 10);
+      res.push({ e: e, s: s });
+    }
+    res.sort(function (a, b) { return b.s - a.s || TYPE_ORDER[a.e.type] - TYPE_ORDER[b.e.type]; });
+    return res.slice(0, limit || 30).map(function (x) { return x.e; });
+  }
+
+  root.KAIRef = { build: build, norm: norm, toMin: toMin, fmtMin: fmtMin, stationOf: stationOf, routeFor: routeFor, ensureRoutes: ensureRoutes,
+    timesFor: timesFor, kaInfo: kaInfo, opsOf: opsOf, KET: KET, crossingInventory: crossingInventory, trafficOnSeg: trafficOnSeg, fleetSummary: fleetSummary, searchIndex: searchIndex,
+    search: search, regionOrder: regionOrder };
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>

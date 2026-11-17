@@ -1,0 +1,366 @@
+<script>
+/**
+ * Js.App — status aplikasi (Alpine store): landing, pemuatan data, navigasi + riwayat (tombol kembali),
+ * filter periode (bulan / rentang hari + jam), pencarian global, dan model laporan bersama.
+ * Data kejadian disimpan di KAI.data (tidak reaktif, agar cepat); yang reaktif hanya filter, rute, & versi data.
+ */
+KAI.data = { all: [], byId: {}, narr: {}, units: {}, ref: null, search: null };
+KAI.ROUTES = [
+  { id: 'ringkasan', title: 'Ringkasan eksekutif', icon: 'i-home', group: 'Laporan' },
+  { id: 'tren', title: 'Tren, jam & matriks', icon: 'i-trend', group: 'Laporan' },
+  { id: 'perlintasan', title: 'Perlintasan & JPL', icon: 'i-cross', group: 'Laporan' },
+  { id: 'wilayah', title: 'Wilayah & koridor', icon: 'i-map', group: 'Laporan' },
+  { id: 'sarana', title: 'Sarana & armada', icon: 'i-train', group: 'Laporan' },
+  { id: 'eksposur', title: 'Pendapatan terekspos', icon: 'i-coin', group: 'Laporan' },
+  { id: 'telusuri', title: 'Telusuri kejadian', icon: 'i-list', group: 'Analisis' },
+  { id: 'cari', title: 'Cari & profil', icon: 'i-search', group: 'Analisis' },
+  { id: 'unduh', title: 'Unduh', icon: 'i-download', group: 'Analisis' },
+  { id: 'metodologi', title: 'Metodologi & sumber', icon: 'i-info', group: 'Analisis' }
+];
+KAI.HIDDEN_ROUTES = { profil: 'Profil', kejadian: 'Detail kejadian' };
+
+(function () {
+  var memo = { key: '', val: null }, scopeMemo = { key: '', val: null }, invMemo = { key: '', val: null };
+
+  function scoped(st) {
+    var k = st.ver + '|' + st.f.wilayah.join(',') + '|' + st.f.kelas.join(',');
+    if (scopeMemo.key !== k) scopeMemo = { key: k, val: KAIA.scope(KAI.data.all, { wilayah: st.f.wilayah, kelas: st.f.kelas }) };
+    return scopeMemo.val;
+  }
+
+  function periodOf(f) {
+    var h0 = Number(f.h0), h1 = Number(f.h1);
+    return f.mode === 'range' && f.from && f.to ? KAIA.pRange(f.from, f.to, h0, h1) : KAIA.pMonth(f.ym, h0, h1);
+  }
+
+  /** Inventaris titik perlintasan untuk sekumpulan kejadian (butuh data referensi). */
+  function inventory(recs, cfg, key) {
+    var R = KAI.data.ref; if (!R) return null;
+    if (invMemo.key !== key) invMemo = { key: key, val: KAIRef.crossingInventory(R, recs, cfg) };
+    return invMemo.val;
+  }
+
+  /** Model laporan untuk filter aktif — dipakai semua halaman dan ekspor. */
+  function buildReport(st) {
+    var cfg = st.config, P = periodOf(st.f), R = { cfg: cfg, P: P };
+    KAIA.setOpt({ imbas: st.f.imbas !== false });
+    var recs = scoped(st);
+    R.prevP = KAIA.prevOf(P); R.yoyP = KAIA.yoyOf(P); R.ytdP = KAIA.ytdOf(P);
+    R.cmpP = st.f.cmp === 'yoy' ? R.yoyP : R.prevP;
+    R.label = P.label; R.prevLabel = R.prevP.label; R.yoyLabel = R.yoyP.label; R.cmpLabel = R.cmpP.label;
+    R.ym = KAIA.endOf(P).slice(0, 7); R.prevYm = KAIA.ymShift(R.ym, -1); R.yoyYm = KAIA.ymShift(R.ym, -12); // untuk label bulan
+    var L = KAIA.sel(recs, P), Lp = KAIA.sel(recs, R.prevP), Ly = KAIA.sel(recs, R.yoyP), Lc = st.f.cmp === 'yoy' ? Ly : Lp;
+    R.L = L; R.excluded = KAIA.excluded(recs, P);
+    R.kpi = KAIA.kpiOf(L, cfg); R.kpiPrev = KAIA.kpiOf(Lp, cfg); R.kpiYoy = KAIA.kpiOf(Ly, cfg); R.kpiCmp = KAIA.kpiOf(Lc, cfg);
+    R.cls = KAIA.byClassOf(L); R.clsPrev = KAIA.byClassOf(Lp); R.clsCmp = KAIA.byClassOf(Lc);
+    R.cmp = KAIA.compare(recs, P, cfg);
+    var end = R.ym, from = KAIA.ymShift(end, -11);
+    if (st.months.length && from < st.months[0]) from = st.months[0];
+    R.trend = KAIA.trend(recs, from, end, P);
+    R.daily = KAIA.lengthDays(P) <= 93 ? KAIA.daily(recs, P) : null;
+    R.hour = KAIA.hourly(L);
+    R.mat = KAIA.matrixOf(L); R.matPrev = KAIA.matrixOf(Lc);
+    var xs = R.mat.points.concat(R.matPrev.points);
+    R.matAxis = { xMax: Math.ceil(Math.max.apply(null, xs.map(function (p) { return p.n; }).concat([10])) * 1.15),
+      yMax: Math.ceil(Math.max.apply(null, xs.map(function (p) { return p.menit; }).concat([100])) * 1.2) };
+    R.top = {}; KAIA.CLASSES.forEach(function (c) { R.top[c] = KAIA.topOf(L, c, cfg, 3); });
+    R.topAll = KAIA.topOf(L, null, cfg, 5);
+    R.crossPeriods = [{ label: R.yoyP.short, P: R.yoyP }, { label: R.prevP.short, P: R.prevP }, { label: P.short, P: P }];
+    R.cross = KAIA.crossingTable(recs, R.crossPeriods, cfg);
+    R.crossDetail = KAIA.crossingDetailOf(L);
+    R.crossYtd = KAIA.crossingDetail(recs, R.ytdP);
+    R.regions = KAIA.regionsOf(L, st.f.wilayah);
+    R.lintas = KAIA.lintasRankOf(L).slice(0, 12);
+    R.p3 = KAIA.lastN(P, 3); R.range3 = R.p3.yms;
+    R.repeatUnits = KAIA.repeatUnits(recs, R.p3, P, 2);
+    R.repeatKinds = KAIA.repeatKindsOf(L, 4);
+    R.unitsMonth = KAIA.unitsOf(L); R.unitsPrev = KAIA.unitsOf(Lp); R.unitsYtd = KAIA.units(recs, R.ytdP);
+    R.comp = KAIA.components(recs, P, R.prevP, R.ytdP, cfg);
+    R.avgSarana = KAIA.avgSaranaByMonth(recs, R.trend.yms, P);
+    R.expo = KAIA.exposure(recs, P, cfg); R.expoYtd = KAIA.exposure(recs, R.ytdP, cfg);
+    var kelasOf = st.refReady ? function (no) { var Rf = KAI.data.ref, n = KAIRef.norm(no), k = Rf.ka[n] || Rf.kaLeg[n] || (/^\d+[A-Z]$/.test(n) ? Rf.ka[n.slice(0, -1)] : null) || (Rf.trip && Rf.trip[n]); return k ? k.kelas : ''; } : null;
+    R.expoD = KAIA.exposureDetail(L, cfg, kelasOf);
+    R.expoCmp = { prev: KAIA.exposureDetail(Lp, cfg).tot, yoy: KAIA.exposureDetail(Ly, cfg).tot, ytd: KAIA.exposureDetail(KAIA.sel(recs, R.ytdP), cfg).tot, ytdPrev: KAIA.exposureDetail(KAIA.sel(recs, R.cmp.ytdPrevP), cfg).tot };
+    R.expoM = KAIA.exposureMonthly(recs, R.trend.yms, cfg, P);
+    R.partial = st.meta && P.kind === 'month' && R.ym === st.meta.lastYm && isCurrentMonth(R.ym, st.meta.builtAt);
+    R.scopeLabel = scopeLabel(st);
+    R.inv = st.refReady ? inventory(L, cfg, st.ver + '|' + st.f.wilayah + st.f.kelas + JSON.stringify(P)) : null;
+    R.insight = KAIInsight.analyze({ L: L, Lprev: Lp, Lyoy: Ly, prevLabel: R.prevLabel, yoyLabel: R.yoyLabel, cfg: cfg,
+      R: st.refReady ? KAI.data.ref : null, inv: R.inv, kind: 'global' });
+    R.highlightsText = highlightText(L, R, st);
+    return R;
+  }
+
+  function isCurrentMonth(ym, ms) {
+    var d = new Date(ms || Date.now());
+    return ym === d.toLocaleString('sv-SE', { timeZone: 'Asia/Jakarta' }).slice(0, 7);
+  }
+  function scopeLabel(st) {
+    var p = [];
+    if (st.f.wilayah.length) p.push(st.f.wilayah.length > 3 ? st.f.wilayah.length + ' wilayah' : st.f.wilayah.join(', '));
+    if (st.f.kelas.length && st.f.kelas.length < 4) p.push(st.f.kelas.map(function (k) { return KAIChart.CLASS_LABEL[k]; }).join(', '));
+    return p.join(' · ');
+  }
+
+  function highlightText(L, R, st) {
+    var f = KAI.fmt, out = [];
+    var dn = KAIA.pct(R.kpi.n, R.kpiCmp.n), dm = KAIA.pct(R.kpi.menit, R.kpiCmp.menit);
+    if (R.kpi.n) out.push(R.label + (dm > 0 ? ' memburuk' : ' membaik') + ' dibanding ' + R.cmpLabel + ': kejadian ' + f.pct(dn) + ', kelambatan ' + f.pct(dm) + ' (' + f.n(R.kpi.menit) + ' menit dari ' + f.n(R.kpi.n) + ' kejadian).');
+    var moves = KAIA.CLASSES.map(function (c) { return { c: c, d: R.cls[c].menit - R.clsCmp[c].menit }; }).sort(function (a, b) { return Math.abs(b.d) - Math.abs(a.d); });
+    if (moves[0] && moves[0].d) { var c = moves[0].c; out.push('Kelambatan kelas ' + KAIChart.CLASS_LABEL[c].toLowerCase() + (moves[0].d > 0 ? ' naik ' : ' turun ') + f.n(Math.abs(moves[0].d)) + ' menit (' + f.n(R.clsCmp[c].menit) + ' → ' + f.n(R.cls[c].menit) + ').'); }
+    var big = L.slice().sort(function (a, b) { return b.menit - a.menit; })[0];
+    if (big && R.kpi.menit) out.push('Kejadian tunggal terbesar: ' + (big.judul || big.sub) + (big.lokasi ? ' di ' + big.lokasi : '') + ' (' + big.wilayah + '), ' + f.n(big.menit) + ' menit = ' + f.d1(big.menit / R.kpi.menit * 100) + '% kelambatan periode ini.');
+    out.push('Perlintasan sebidang: ' + f.n(R.kpi.crossN) + ' kejadian, ' + f.n(R.kpi.crossMenit) + ' menit (' + f.pct(KAIA.pct(R.kpi.crossMenit, R.kpiCmp.crossMenit)) + ' vs ' + R.cmpLabel + ').');
+    return out;
+  }
+
+  function routeTitle(r) { var x = KAI.ROUTES.filter(function (q) { return q.id === r; })[0]; return x ? x.title : KAI.HIDDEN_ROUTES[r] || ''; }
+
+  document.addEventListener('alpine:init', function () {
+    KAIChart.register(Alpine);
+    KAITable.register(Alpine);
+    document.addEventListener('DOMContentLoaded', function () { KAITable.autoPager(); });
+    if (document.readyState !== 'loading') setTimeout(KAITable.autoPager, 0);
+
+    Alpine.store('app', {
+      phase: 'landing', entered: false, error: '', meta: null, status: null, config: null,
+      ver: 0, coreReady: false, narrReady: false, refReady: false,
+      route: 'ringkasan', params: {}, vtab: { wilayah: 'peringkat', sarana: 'ringkasan', fleet: 'lok' }, stack: [], months: [], dates: { min: '', max: '' }, wilayahList: [],
+      f: { mode: 'month', ym: '', from: '', to: '', h0: 0, h1: 23, cmp: 'prev', wilayah: [], kelas: [], imbas: true },
+      tel: { q: '', period: 'p', kelas: '', cross: '', ids: null, label: '' },
+      notif: { has: false, open: false, items: [], log: [], summary: '', timer: null },
+      busy: false, toast: null, sidebarOpen: false, sidebarMini: false, wilayahOpen: false, periodOpen: false,
+      sq: '', sres: [], sopen: false, sidx: 0,
+
+      init: function () {
+        var self = this, saveF = KAI.store.get('filters3');
+        if (saveF) { ['cmp', 'wilayah', 'kelas', 'h0', 'h1'].forEach(function (k) { if (saveF[k] != null) self.f[k] = saveF[k]; }); }
+        this.sidebarMini = !!KAI.store.get('mini');
+        var start = function (params) {
+          params = params || {};
+          // Menu lama "Kondisi prasarana & sarana" digabung: ?page=kondisi → Wilayah & koridor (tab Prasarana) atau Sarana & armada (tab RHI, ?t=sar).
+          if (params.page === 'kondisi') { if (params.t === 'sar' || params.tab === 'sar') { params.page = 'sarana'; self.vtab.sarana = 'rhi'; } else { params.page = 'wilayah'; self.vtab.wilayah = 'prasarana'; } params.t = ''; }
+          if (params.tab && /^(peringkat|prasarana|rute|gangguan|rhi|armada|ringkasan|kesehatan|depo|unit)$/.test(params.tab)) { if (params.page === 'wilayah') self.vtab.wilayah = params.tab; if (params.page === 'sarana') self.vtab.sarana = params.tab; }
+          if (params.fleet && /^(lok|ker|ger)$/.test(params.fleet)) self.vtab.fleet = params.fleet;
+          if (params.page && (KAI.ROUTES.some(function (r) { return r.id === params.page; }) || KAI.HIDDEN_ROUTES[params.page])) {
+            self.route = params.page; self.params = params.t ? { type: params.t, id: params.id } : params.id ? { id: params.id } : {};
+            self.entered = true;  // tautan langsung melewati landing
+          }
+          if (params.ym) self._wantYm = params.ym;
+          self.load();
+        };
+        if (window.google && google.script && google.script.url) google.script.url.getLocation(function (loc) { start(loc.parameter); });
+        else start({});
+        if (window.google && google.script && google.script.history) {
+          google.script.history.setChangeHandler(function (e) { var s = e.state; if (s && s.route) { self.route = s.route; self.params = s.params || {}; self.stack.pop(); } });
+        }
+      },
+
+      enter: function () {
+        var self = this; self.entered = true;
+        if (self.error && !self.coreReady) { self.phase = 'error'; return; }
+        if (self.coreReady) KAI.transition(function () { self.phase = 'ready'; }); else self.phase = 'loading';
+      },
+      home: function () { this.entered = false; this.phase = 'landing'; this.stack = []; },
+
+      load: function () {
+        var self = this, t0 = performance.now();
+        if (self.entered) self.phase = 'loading';
+        return KAI.api('apiBootstrap').then(function (r) {
+          self.meta = r.meta; self.status = r.status; self.config = r.config;
+          self.loadRef();
+          return KAI.gunzipJson(r.core);
+        }).then(function (core) {
+          var all = KAIA.prepare(core.fields, core.rows), byId = {};
+          all.forEach(function (x) { byId[x.id] = x; });
+          KAI.data.all = all; KAI.data.byId = byId; KAI.data.units = core.units || {};
+          self.months = KAIA.months(all); self.dates = KAIA.dateRange(all);
+          var w = {}; all.forEach(function (x) { if (x.wilayah) w[x.wilayah] = 1; });
+          self.wilayahList = Object.keys(w).filter(function (x) { return /^(Daop|Divre) \d+$/.test(x); }).sort(function (a, b) { return KAIA.regionOrder(a) - KAIA.regionOrder(b); });
+          self.f.wilayah = self.f.wilayah.filter(function (x) { return w[x]; });
+          self.f.ym = self.defaultYm();
+          self.f.to = KAIA.endOf(KAIA.pMonth(self.f.ym)); if (self.f.to > self.dates.max) self.f.to = self.dates.max;
+          self.f.from = KAIA.addDays(self.f.to, -6);
+          self.ver++; self.coreReady = true;
+          if (self.entered) self.phase = 'ready';
+          console.info('[KAI] data siap dalam ' + Math.round(performance.now() - t0) + ' ms · ' + all.length + ' kejadian');
+          self.startPolling();
+          self.loadNarratives();
+        }).catch(function (e) { self.fail(e); });
+      },
+
+      loadRef: function () {
+        var self = this, v = self.meta && self.meta.version;
+        KAI.api('apiRef', v).then(function (r) { return KAI.gunzipJson(r.ref); }).then(function (raw) {
+          var today = new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Jakarta' }).slice(0, 10);
+          var R = KAIRef.build(raw, { today: today });
+          KAI.data.ref = R;
+          // Pendapatan terekspos: rate bulanan dari Passenger/Freight + GAPEKA (bulan berjalan memakai rate acuan).
+          try { KAI.data.rar = R.pend && !R.pend.error ? KAIP.build(R, R.pend, today.slice(0, 7)) : null; } catch (er) { KAI.data.rar = null; console.warn('[KAI] mesin pendapatan', er); }
+          KAIA.setRar(KAI.data.rar && KAI.data.rar.ok ? KAI.data.rar.rarOf : null);
+          var wait = function () {
+            if (!self.coreReady) return setTimeout(wait, 60);
+            KAI.data.search = KAIRef.searchIndex(R, KAI.data.units);
+            self.refReady = true; self.ver++;
+          };
+          wait();
+        }).catch(function (e) { self.say('Data referensi (stasiun, petak, KA, JPL, armada) belum termuat: ' + e.message, true); });
+      },
+
+      loadNarratives: function () {
+        var self = this, v = self.meta && self.meta.version;
+        KAI.api('apiNarratives', v).then(function (r) { return KAI.gunzipJson(r.narr); })
+          .then(function (n) { KAI.data.narr = n; self.narrReady = true; })
+          .catch(function (e) { self.say('Uraian kejadian belum termuat: ' + e.message, true); });
+      },
+
+      /* ---------- Notifikasi pembaruan data (lonceng) ---------- */
+      startPolling: function () {
+        var self = this; if (self.notif.timer) return;
+        self.notif.timer = setInterval(function () { if (!document.hidden) self.checkUpdates(); }, 5 * 60 * 1000);
+        document.addEventListener('visibilitychange', function () { if (!document.hidden) self.checkUpdates(); });
+        setTimeout(function () { self.checkUpdates(); }, 4000);
+      },
+      checkUpdates: function () {
+        var self = this, mine = self.meta && self.meta.version; if (!mine) return;
+        KAI.api('apiStatus').then(function (r) {
+          if (r.status) self.status = r.status;
+          var log = (r.changelog || []).map(function (x) { return Object.assign({}, x, { isNew: x.version > mine }); });
+          self.notif.log = log;
+          var fresh = r.version && r.version !== mine && r.schemaOk !== false;
+          var news = log.filter(function (x) { return x.isNew; });
+          if (fresh && !self.notif.has && !self.notif.open) self.say('Data gangguan baru tersedia — klik ikon lonceng untuk memuat.');
+          self.notif.has = !!fresh; self.notif.items = news.length ? news : (fresh ? [{ version: r.version }] : []);
+          var dn = KAIA.sum(news, function (x) { return x.dRows || 0; }), dm = KAIA.sum(news, function (x) { return x.dMenit || 0; });
+          self.notif.summary = fresh ? (news.length ? (dn >= 0 ? '+' : '') + KAI.fmt.n(dn) + ' kejadian, ' + (dm >= 0 ? '+' : '') + KAI.fmt.n(dm) + ' menit sejak data Anda dimuat.' : 'Snapshot baru telah terbit.') : '';
+        }).catch(function () { /* diam: polling diulang berikutnya */ });
+      },
+      /** Muat snapshot terbaru tanpa memuat ulang halaman; periode & filter yang dipilih dipertahankan. */
+      applyUpdate: function () {
+        var self = this, keep = JSON.parse(JSON.stringify(self.f));
+        self._wantYm = keep.ym; self.notif.open = false; self.busy = true;
+        self.coreReady = false; self.refReady = false; self.narrReady = false;
+        self.load().then(function () {
+          ['mode', 'from', 'to', 'h0', 'h1', 'cmp', 'kelas', 'imbas'].forEach(function (k) { if (keep[k] !== undefined) self.f[k] = keep[k]; });
+          self.notif.has = false; self.notif.items = []; self.busy = false; self.say('Data diperbarui ke snapshot ' + (self.meta && self.meta.version) + '.');
+          self.checkUpdates();
+        });
+      },
+
+      fail: function (e) { this.phase = this.entered ? 'error' : this.phase; this.error = (e && e.message) || String(e); },
+
+      defaultYm: function () {
+        if (this._wantYm && this.months.indexOf(this._wantYm) >= 0) return this._wantYm;
+        var last = this.months[this.months.length - 1];
+        if (last && isCurrentMonth(last, this.meta && this.meta.builtAt) && this.months.length > 1) return this.months[this.months.length - 2];
+        return last || '';
+      },
+
+      /** Model laporan (dihitung sekali per kombinasi filter & versi data). */
+      get R() {
+        if (!this.config || !this.f.ym || !this.coreReady) return null;
+        var k = this.ver + '|' + this.refReady + '|' + JSON.stringify(this.f);
+        if (memo.key !== k) memo = { key: k, val: buildReport(this) };
+        return memo.val;
+      },
+      get P() { return periodOf(this.f); },
+      scoped: function () { void this.ver; void this.f.wilayah.length; void this.f.kelas.length; return scoped(this); },
+
+      /* ---------- Navigasi + riwayat ---------- */
+      go: function (route, params, opts) {
+        if (route === 'kondisi') { var sarTab = params && params.tab === 'sar'; route = sarTab ? 'sarana' : 'wilayah'; params = { tab: sarTab ? 'rhi' : 'prasarana' }; }
+        if (params && params.tab && (route === 'wilayah' || route === 'sarana')) { this.vtab[route] = params.tab; params = {}; }
+        var self = this;
+        self.sidebarOpen = false; self.sopen = false;
+        if (route === 'telusuri' && params) { self.tel = Object.assign({ q: '', period: 'p', kelas: '', cross: '', ids: null, label: '' }, params); params = {}; }
+        var same = route === self.route && JSON.stringify(params || {}) === JSON.stringify(self.params || {});
+        if (same) return;
+        if (!(opts && opts.replace)) { self.stack.push({ route: self.route, params: self.params, y: window.scrollY }); if (self.stack.length > 50) self.stack.shift(); }
+        KAI.transition(function () { self.route = route; self.params = params || {}; window.scrollTo(0, 0); });
+        if (window.google && google.script && google.script.history) {
+          var q = { page: route }; if (params && params.type) { q.t = params.type; q.id = params.id; } else if (params && params.id) q.id = params.id;
+          google.script.history.push({ route: route, params: params || {} }, q);
+        }
+      },
+      back: function () {
+        var self = this, prev = self.stack.pop();
+        if (!prev) { if (self.route !== 'ringkasan') { KAI.transition(function () { self.route = 'ringkasan'; self.params = {}; }); } else self.home(); return; }
+        KAI.transition(function () { self.route = prev.route; self.params = prev.params || {}; });
+        setTimeout(function () { window.scrollTo(0, prev.y || 0); }, 30);
+      },
+      canBack: function () { return this.stack.length > 0 || this.route !== 'ringkasan'; },
+      open: function (type, id) { if (type === 'kejadian') return this.go('kejadian', { id: id }); this.go('profil', { type: type, id: id }); },
+      openEvent: function (id) { this.go('kejadian', { id: id }); },
+      openUnit: function (unit) { this.open('sarana', unit); },
+      /** Buka profil lokasi kejadian (petak/stasiun) bila dikenali. */
+      openLoc: function (r) {
+        if (r.segKey && KAI.data.ref && KAI.data.ref.seg[r.segKey]) return this.open('petak', r.segKey);
+        if (r.stCode && KAI.data.ref && KAI.data.ref.st[r.stCode]) return this.open('stasiun', r.stCode);
+        this.go('telusuri', { q: r.lokasi });
+      },
+
+      /* ---------- Filter ---------- */
+      setF: function (patch) {
+        var self = this;
+        KAI.transition(function () { Object.assign(self.f, patch); });
+        KAI.store.set('filters3', { cmp: self.f.cmp, wilayah: self.f.wilayah, kelas: self.f.kelas, h0: self.f.h0, h1: self.f.h1 });
+      },
+      preset: function (id) {
+        var max = this.dates.max, lastFull = this.defaultYm();
+        if (id === 'bulan') return this.setF({ mode: 'month', ym: lastFull });
+        if (id === '7') return this.setF({ mode: 'range', from: KAIA.addDays(max, -6), to: max });
+        if (id === '30') return this.setF({ mode: 'range', from: KAIA.addDays(max, -29), to: max });
+        if (id === 'ytd') return this.setF({ mode: 'range', from: max.slice(0, 4) + '-01-01', to: max });
+        if (id === '12') return this.setF({ mode: 'range', from: KAIA.addDays(KAIA.ymShift(max.slice(0, 7), -11) + '-01', 0), to: max });
+      },
+      setHours: function (h0, h1) { this.setF({ h0: Number(h0), h1: Number(h1) }); },
+      toggleKelas: function (k) {
+        var cur = this.f.kelas.length ? this.f.kelas.slice() : KAIA.CLASSES.slice(), i = cur.indexOf(k);
+        if (i >= 0) cur.splice(i, 1); else cur.push(k);
+        if (!cur.length || cur.length === 4) cur = [];
+        this.setF({ kelas: cur });
+      },
+      kelasOn: function (k) { return !this.f.kelas.length || this.f.kelas.indexOf(k) >= 0; },
+      toggleWilayah: function (w) {
+        var cur = this.f.wilayah.slice(), i = cur.indexOf(w);
+        if (i >= 0) cur.splice(i, 1); else cur.push(w);
+        this.setF({ wilayah: cur });
+      },
+      resetFilters: function () { this.setF({ mode: 'month', ym: this.defaultYm(), h0: 0, h1: 23, wilayah: [], kelas: [] }); },
+
+      /* ---------- Pencarian global ---------- */
+      doSearch: function () {
+        var q = this.sq.trim();
+        if (!KAI.data.search) { this.sres = []; this.sopen = !!q; return; }
+        var hits = KAIRef.search(KAI.data.search, q, 24);
+        // Kejadian berdasarkan kunci/kode laporan
+        if (q.length >= 4) {
+          var nq = q.toUpperCase(), ev = KAI.data.all.filter(function (r) { return r.id.toUpperCase() === nq || (r.kode && String(r.kode).toUpperCase() === nq); }).slice(0, 3);
+          ev.forEach(function (r) { hits.unshift({ type: 'kejadian', id: r.id, label: r.judul || r.sub, sub: 'Kejadian · ' + KAI.fmt.date(r) + ' · ' + r.wilayah }); });
+        }
+        this.sres = hits; this.sidx = 0; this.sopen = !!q;
+      },
+      pick: function (e) {
+        if (!e) { if (this.sq.trim()) { this.go('cari', { q: this.sq.trim() }); } return; }
+        this.sopen = false; this.sq = '';
+        if (e.type === 'lintas') return this.go('profil', { type: 'lintas', id: e.id });
+        this.open(e.type, e.id);
+      },
+      skey: function (ev) {
+        if (ev.key === 'ArrowDown') { this.sidx = Math.min(this.sres.length - 1, this.sidx + 1); ev.preventDefault(); }
+        else if (ev.key === 'ArrowUp') { this.sidx = Math.max(0, this.sidx - 1); ev.preventDefault(); }
+        else if (ev.key === 'Enter') { this.pick(this.sres[this.sidx]); ev.preventDefault(); }
+        else if (ev.key === 'Escape') { this.sopen = false; }
+      },
+
+      say: function (msg, bad) { var self = this; self.toast = { msg: msg, bad: !!bad }; clearTimeout(self._tt); self._tt = setTimeout(function () { self.toast = null; }, 4600); },
+      routeTitle: function () {
+        if (this.route === 'profil') return KAI.profileTitle ? KAI.profileTitle(this.params) : 'Profil';
+        return routeTitle(this.route);
+      },
+      classLabel: function (k) { return KAIChart.CLASS_LABEL[k] || k; },
+      toggleMini: function () { this.sidebarMini = !this.sidebarMini; KAI.store.set('mini', this.sidebarMini); setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 260); }
+    });
+  });
+})();
+</script>

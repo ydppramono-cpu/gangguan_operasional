@@ -1,0 +1,49 @@
+"""Bangun paket tempel-manual dari src/ untuk yang tidak memakai clasp.
+
+Hasil di <folder_keluaran> (bawaan: dist/):
+  Code.gs          gabungan modul .gs sesuai tools/module_order.json
+  SeedJadwal.gs, AsetLaporan.gs, SeedPeta.gs   seed besar (berkas terpisah)
+  Index.html       SATU berkas: semua include parsial sudah digabung
+  appsscript.json  manifest
+
+Pakai: python3 tools/pack.py [folder_keluaran]
+"""
+import json
+import os
+import shutil
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from html_include import expand  # noqa: E402
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC = os.path.join(ROOT, 'src')
+SEPARATE = [('11_SeedJadwal.gs', 'SeedJadwal.gs'), ('13_AsetLaporan.gs', 'AsetLaporan.gs'),
+            ('18_SeedPeta.gs', 'SeedPeta.gs'), ('appsscript.json', 'appsscript.json')]
+
+
+def read(name):
+    with open(os.path.join(SRC, name), encoding='utf-8') as fh:
+        return fh.read()
+
+
+def main():
+    out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'dist')
+    os.makedirs(out, exist_ok=True)
+    with open(os.path.join(ROOT, 'tools', 'module_order.json'), encoding='utf-8') as fh:
+        order = json.load(fh)
+    version = read('00_Config.gs').split("APP_VERSION: '")[1].split("'")[0]
+    header = ('/**\n * KAI Dashboard Gangguan Operasional v%s — gabungan %d modul dari repo gangguan_operasional/src '
+              '(tools/pack.py).\n * Wajib bersama SeedJadwal.gs, AsetLaporan.gs dan SeedPeta.gs.\n */\n') % (version, len(order))
+    body = ''.join('\n// ===== MODUL %s =====\n%s' % (m, read(m)) for m in order)
+    with open(os.path.join(out, 'Code.gs'), 'w', encoding='utf-8') as fh:
+        fh.write(header + body)
+    with open(os.path.join(out, 'Index.html'), 'w', encoding='utf-8') as fh:
+        fh.write(expand(SRC, 'Index'))
+    for src_name, dst_name in SEPARATE:
+        shutil.copy(os.path.join(SRC, src_name), os.path.join(out, dst_name))
+    print('paket v%s -> %s %s' % (version, out, sorted(os.listdir(out))))
+
+
+if __name__ == '__main__':
+    main()

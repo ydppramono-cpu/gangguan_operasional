@@ -1,0 +1,86 @@
+<script>
+/**
+ * Js.Export — unduhan CSV, Excel, PPT, PDF. Semua dibuat di browser (tanpa kuota server).
+ * Pustaka Excel/PPT/PDF dimuat dari CDN hanya saat tombol unduh ditekan.
+ */
+window.KAIExport = (function () {
+  var LIB = {
+    xlsx: 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',
+    pptx: 'https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js',
+    jspdf: 'https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js',
+    autotable: 'https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js'
+  };
+
+  function stamp(meta) { return 'Data s.d. ' + KAI.fmt.month(meta.lastYm) + ' · snapshot ' + meta.version + ' · aturan ' + meta.rule; }
+  function fileBase(name) { return 'KAI_' + name.replace(/[^A-Za-z0-9_-]+/g, '_'); }
+
+  function download(blob, filename) {
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  }
+
+  /** CSV UTF-8 + BOM (Excel membaca huruf dengan benar), pemisah ; agar cocok dengan Excel lokal Indonesia. */
+  function csv(rows, columns, name) {
+    function q(v) { v = v == null ? '' : String(v); return /[";\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+    var lines = [columns.map(function (c) { return q(c.title); }).join(';')];
+    rows.forEach(function (r) { lines.push(columns.map(function (c) { return q(typeof c.get === 'function' ? c.get(r) : r[c.field]); }).join(';')); });
+    download(new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' }), fileBase(name) + '.csv');
+  }
+
+  /** Excel multi-sheet. sheets: [{name, columns, rows}] */
+  function xlsx(sheets, name, meta) {
+    return KAI.loadScript(LIB.xlsx).then(function () {
+      var wb = XLSX.utils.book_new();
+      sheets.forEach(function (s) {
+        var aoa = [s.columns.map(function (c) { return c.title; })];
+        s.rows.forEach(function (r) { aoa.push(s.columns.map(function (c) { var v = typeof c.get === 'function' ? c.get(r) : r[c.field]; return v == null ? '' : v; })); });
+        var ws = XLSX.utils.aoa_to_sheet(aoa);
+        ws['!cols'] = s.columns.map(function (c) { return { wch: c.wch || Math.max(10, Math.min(60, String(c.title).length + 4)) }; });
+        XLSX.utils.book_append_sheet(wb, ws, s.name.slice(0, 31));
+      });
+      var info = XLSX.utils.aoa_to_sheet([['Sumber', 'KAI | Basis Data Gangguan dan Hambatan — Gangguan_Induk'], ['Keterangan', stamp(meta)],
+        ['Metrik', 'Frekuensi = jumlah kejadian; kelambatan = Total Andil Kelka (menit)'], ['Dibuat', new Date().toLocaleString('id-ID')]]);
+      XLSX.utils.book_append_sheet(wb, info, 'Keterangan');
+      XLSX.writeFile(wb, fileBase(name) + '.xlsx');
+    });
+  }
+
+  /**
+   * PPT & PDF dari model halaman yang sama (Js.Report): isi, urutan, dan posisi identik; grafik PPT = grafik PowerPoint asli (bisa diedit).
+   * ctx = { R, meta, recs, ref, narr, wilayah, opts }. Gambar templat (sampul, daftar isi, penutup, lampiran, logo) diambil dari server sekali saja.
+   */
+  var assetsP = null;
+  function assets() {
+    if (!assetsP) assetsP = KAI.api('apiReportAssets').then(function (r) { return typeof r.assets === 'string' ? JSON.parse(r.assets) : (r.assets || {}); })
+      .catch(function (e) { assetsP = null; console.warn('Aset templat laporan tidak termuat, memakai warna polos: ' + e.message); return {}; });
+    return assetsP;
+  }
+  function reportName(model, R) { return fileBase('Laporan_Gangguan_' + (model.mode === 'wilayah' ? String((model.slides[0] || {}).chip || '').split(' · ')[0] + '_' : '') + R.P.short); }
+  function pptx(ctx) {
+    return Promise.all([KAI.loadScript(LIB.pptx), assets()]).then(function (x) { var m = KAIReport.build(ctx); return KAIReport.pptx(m, reportName(m, ctx.R), x[1]).then(function () { return m; }); });
+  }
+  function pdf(ctx) {
+    return Promise.all([KAI.loadScript(LIB.jspdf).then(function () { return KAI.loadScript(LIB.autotable); }), assets()])
+      .then(function (x) { var m = KAIReport.build(ctx); KAIReport.pdf(m, reportName(m, ctx.R), x[1]); return m; });
+  }
+
+  function eventColumns() {
+    return [{ title: 'Kunci asal', field: 'id' }, { title: 'Kode laporan', field: 'kode' }, { title: 'Bulan', field: 'ym' }, { title: 'Tanggal', get: function (r) { return r.date || ''; } },
+      { title: 'Hari', get: function (r) { return r.dow >= 0 ? KAIA.DOW[r.dow] : ''; } }, { title: 'Jam mulai', get: function (r) { return r.hm >= 0 ? KAI.fmt.hm(r.hm) : ''; } },
+      { title: 'Wilayah', field: 'wilayah' }, { title: 'Kelas', get: function (r) { return KAIChart.CLASS_LABEL[r.kelas]; } }, { title: 'Kategori sumber', field: 'kategori' },
+      { title: 'Subgangguan', field: 'sub' }, { title: 'Judul', field: 'judul' }, { title: 'Lokasi', field: 'lokasi' }, { title: 'Kode lokasi', field: 'lokCode' }, { title: 'Lintas', field: 'lintas' },
+      { title: 'KM', field: 'km' }, { title: 'No JPL (dari laporan)', get: function (r) { return r.jpl || (r.cross ? '' : 'Bukan perlintasan'); } }, { title: 'No KA', field: 'ka' }, { title: 'Nama KA', field: 'kaNama' }, { title: 'Jenis KA', field: 'kaJenis' },
+      { title: 'Sarana', get: function (r) { return r.sarana.join(', '); } }, { title: 'Jenis sarana', field: 'jenis' }, { title: 'Komponen', get: function (r) { return r.kelas !== 'sarana' ? 'Bukan kelas sarana' : r.komp; } },
+      { title: 'Jenis perlintasan', get: function (r) { return r.cross || 'Bukan perlintasan'; } }, { title: 'Total Andil Kelka (menit)', field: 'menit' }, { title: 'Penyebab terlapor', field: 'penyebab' },
+      { title: 'Uraian', field: 'uraian', wch: 80 }, { title: 'Tindak lanjut', field: 'tindak', wch: 60 }, { title: 'Sumber', field: 'sumber' }, { title: 'Catatan kualitas', get: function (r) { return r.q || 'Tanpa temuan'; } },
+      { title: 'Isian diturunkan dari uraian', get: function (r) { var k = Object.keys(r.drvSet || {}); return k.length ? k.map(function (x) { return KAI.DRV_LABEL[x] || x; }).join(', ') : 'Tidak ada'; } }]
+      .map(function (c) {   // tidak ada sel kosong: isian yang tidak tercatat di sumber ditulis "Tidak tercatat"
+        var get = c.get || function (r) { return r[c.field]; };
+        return Object.assign({}, c, { field: undefined, get: function (r) { var v = get(r); return v == null || v === '' ? KAI.NIL : v; } });
+      });
+  }
+
+  return { csv: csv, xlsx: xlsx, pptx: pptx, pdf: pdf, eventColumns: eventColumns, LIB: LIB };
+})();
+</script>

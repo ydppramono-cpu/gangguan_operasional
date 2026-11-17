@@ -1,0 +1,386 @@
+<script>
+/**
+ * Js.Rute — mesin tab "Rute jalur" (Wilayah & koridor). Fungsi murni, diuji di Node.
+ *
+ * KORIDOR  = rangkaian stasiun jangkar (daftar CORR di bawah) yang disambung dengan jalur terpendek graf LIST PETAK JALAN GAPEKA 2025.
+ * KA LEWAT = perjalanan GAPEKA (Daftar Waktu = jam pasti; LIST KA tanpa Daftar Waktu = jam perkiraan) yang melewati ≥ 1 petak koridor.
+ * PENDAPATAN (tab Passenger & Freight, apa adanya — tanpa skor produktivitas):
+ *   penuh   = Σ pendapatan KA yang melewati koridor (KA lintas panjang terhitung di beberapa koridor);
+ *   alokasi = Σ pendapatan × (km KA di koridor ÷ km rute KA). KA barang: per Nama KA, km digabung atas semua perjalanan bernama sama.
+ * JENDELA KOSONG per petak = 24 jam dikurangi waktu tempuh petak tiap perjalanan harian (REG/PLB) ± penyangga (cfg.buf menit).
+ *   Petak ganda: juga per arah (WKP satu sepur, KA lain lewat sepur sebelah).
+ * PROFIL = data terbukti saja: LIST PETAK (km, ganda/tunggal, Daop/Divre), UPT Resor JR (SEED_RESOR), THI tingkat petak, JPL,
+ *   OSM (jembatan, terowongan, elektrifikasi, vmax — hanya petak yang panjang OSM-nya cocok ±25%), elevasi stasiun (bila ada),
+ *   kejadian alam & keamanan dari Gangguan_Induk. Yang tidak ada sumbernya ditulis "belum ada data".
+ */
+(function (root) {
+  'use strict';
+  function norm(s) { return String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
+  function sum(a, f) { var t = 0; for (var i = 0; i < a.length; i++) t += f ? (f(a[i]) || 0) : (a[i] || 0); return t; }
+  function hm(t) { var m = /^(\d{1,2})[:.](\d{2})$/.exec(String(t || '').trim()); return m ? (+m[1] % 24) * 60 + +m[2] : null; }
+  function fmt(v) { v = ((Math.round(v) % 1440) + 1440) % 1440; var h = Math.floor(v / 60), m = v % 60; return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m; }
+  function ymShift(ym, k) { var y = +ym.slice(0, 4), m = +ym.slice(5, 7) - 1 + k; y += Math.floor(m / 12); m = ((m % 12) + 12) % 12; return y + '-' + (m < 9 ? '0' : '') + (m + 1); }
+  /** Kategori perjalanan: P = KA penumpang (antarkota/lokal), K = KRL Commuter Line, B = KA barang, D = KA dinas/lok. */
+  function cat(k) { var j = String(k.jenis || '').toUpperCase(); if (j === 'BARANG') return 'B'; if (j === 'DINAS') return 'D'; if (/COMMUTER LINE/i.test(k.kelas || '') || /KRL/i.test(k.src || '')) return 'K'; return 'P'; }
+  function daily(k) { var j = String(k.jenisKa || '').toUpperCase(); return !j || j === 'REG' || j === 'PLB'; }
+
+  /** Koridor jangkar. Urutan = arah baca diagram (barat → timur / utara → selatan). Jalur antar jangkar = terpendek di graf GAPEKA. */
+  var CORR = [
+    { id: 'utara', name: 'Lintas utara Jawa', sub: 'Jakarta Kota – Cirebon – Semarang – Surabaya Pasarturi', anchors: ['JAKK', 'KMO', 'PSE', 'JNG', 'BKS', 'CKP', 'CN', 'TG', 'PK', 'SMT', 'BBG', 'GBN', 'CU', 'BJ', 'BBT', 'SBI'] },
+    { id: 'selatan', name: 'Lintas selatan Jawa', sub: 'Jatinegara – Cirebon – Purwokerto – Yogyakarta – Surabaya Gubeng', anchors: ['JNG', 'BKS', 'CKP', 'CN', 'CNP', 'PPK', 'PWT', 'KYA', 'KTA', 'YK', 'SLO', 'MN', 'KTS', 'JG', 'MR', 'WO', 'SGU'] },
+    { id: 'priangan', name: 'Lintas Priangan', sub: 'Cikampek – Bandung – Tasikmalaya – Banjar – Kroya', anchors: ['CKP', 'PWK', 'PDL', 'BD', 'KAC', 'CB', 'TSM', 'BJR', 'KYA'] },
+    { id: 'semsol', name: 'Semarang – Solo', sub: 'Semarang Tawang – Brumbung – Gundih – Solo Balapan', anchors: ['SMT', 'BBG', 'GD', 'SLO'] },
+    { id: 'merak', name: 'Lintas Merak', sub: 'Tanah Abang – Rangkasbitung – Merak', anchors: ['THB', 'RK', 'MER'] },
+    { id: 'sukabumi', name: 'Bogor – Sukabumi – Padalarang', sub: 'Bogor – Sukabumi – Cianjur – Padalarang', anchors: ['BOO', 'SI', 'CJ', 'PDL'] },
+    { id: 'malang', name: 'Lingkar Kediri – Malang', sub: 'Kertosono – Kediri – Blitar – Malang – Bangil', anchors: ['KTS', 'KD', 'TA', 'BL', 'ML', 'BG'] },
+    { id: 'timur', name: 'Lintas timur Jawa', sub: 'Surabaya Gubeng – Bangil – Probolinggo – Jember – Ketapang', anchors: ['SGU', 'WO', 'SDA', 'BG', 'PS', 'PB', 'JR', 'KLT', 'KTG'] },
+    { id: 'cilacap', name: 'Kroya – Cilacap', sub: 'Kroya – Maos – Cilacap', anchors: ['KYA', 'MA', 'CP'] },
+    { id: 'sumut', name: 'Lintas Sumatera Utara', sub: 'Besitang – Medan – Tebing Tinggi – Kisaran – Rantauprapat', anchors: ['BSG', 'MDN', 'TBI', 'KIS', 'RAP'] },
+    { id: 'sumbar', name: 'Lintas Sumatera Barat', sub: 'Indarung – Padang – Lubuk Alung – Naras', anchors: ['IDA', 'PD', 'LA', 'PMN', 'NRS'] },
+    { id: 'sumsel', name: 'Lintas Sumatera Selatan', sub: 'Kertapati – Prabumulih – Muara Enim – Lahat – Lubuk Linggau', anchors: ['KPT', 'PBM', 'ME', 'LT', 'LLG'] },
+    { id: 'babaranjang', name: 'Lintas Babaranjang', sub: 'Tanjungenim Baru – Prabumulih – Baturaja – Tanjungkarang – Tarahan', anchors: ['TMB', 'ME', 'PBM', 'BTA', 'KB', 'TNK', 'THN'] }
+  ];
+  /** Riset publik terverifikasi (diakses 13 Nov 2026). Hanya fakta yang tertulis di sumber; selisih antar-sumber ditulis apa adanya. */
+  var FACTS = {
+    selatan: [
+      { t: 'Terowongan Notog (Purwokerto–Kroya): terowongan lama beroperasi 1 Juli 1916; terowongan baru jalur ganda 476 m dibuka 2019 (dibangun 2016–2018) di sebelah terowongan lama.', src: 'Wikipedia — Notog railway tunnel', url: 'https://en.wikipedia.org/wiki/Notog_railway_tunnel' },
+      { t: 'Terowongan Kebasen (Purwokerto–Kroya): terowongan lama 79 m; terowongan baru 2020 dua bagian, 109 m (BH 1464A) dan 183 m (BH 1464B).', src: 'Wikipedia — Kebasen railway tunnel', url: 'https://en.wikipedia.org/wiki/Kebasen_railway_tunnel' }
+    ],
+    priangan: [
+      { t: 'Terowongan Sasaksaat (antara Sasaksaat–Maswati, km 143+144): dibangun 1902–1903, aktif; panjang tercatat 949 m (teks) / 959 m (kotak info) di sumber yang sama.', src: 'Wikipedia — Sasaksaat railway tunnel', url: 'https://en.wikipedia.org/wiki/Sasaksaat_railway_tunnel' },
+      { t: 'Jembatan Cikubang (Cipatat, Bandung Barat): panjang 300 m, tinggi 80 m di atas Sungai Cikubang, dibuka 1906 (dibangun sejak 1903).', src: 'Wikipedia — Cikubang railway bridge (salinan arsip)', url: 'https://wiki.krisyotam.com/content/wikipedia_en_all_nopic_2026-03/Cikubang_railway_bridge' }
+    ],
+    sukabumi: [
+      { t: 'Petak Cipatat–Padalarang (±17 km) tidak aktif sejak 2013. Pemprov Jabar & Ditjen Perkeretaapian menyiapkan reaktivasi lewat rute baru (rencana: terowongan ±300 m dan dua jembatan ±50 m) karena rute lama via Tagog Apu berkontur ekstrem & rawan longsor. Belum ada target tanggal.', src: 'CNBC Indonesia, 31 Jan 2026', url: 'https://www.cnbcindonesia.com/news/20260131132831-4-706958/reaktivasi-jalur-ka-cipatat-padalarang-pakai-jalur-baru-ini-rutenya' }
+    ]
+  };
+  var SEC = [['orang', 'Tertemper orang', /tertemper orang/i], ['batu', 'Pelemparan batu', /pelemparan batu|lempar/i], ['vandal', 'Vandalisme, demo & tawuran', /vandalisme|demonstrasi|tawuran|unjuk rasa/i], ['curi', 'Pencurian', /pencurian|curi/i]];
+  var NAT = [['banjir', 'Banjir', /banjir/i], ['tanah', 'Longsor, amblesan & gogosan', /longsor|amblesan|amblas|gogosan/i], ['pohon', 'Pohon tumbang & angin', /pohon|angin/i], ['petir', 'Petir', /petir/i],
+    ['gempa', 'Gempa', /gempa/i], ['selip', 'Roda selip saat hujan', /selip/i]];
+  var JR = [['wesel', /wesel/i], ['track', /track merah|track petak|track di emplasemen|track wesel|^persinyalan.*track/i], ['jembatan', /jembatan/i],
+    ['jr', /jalan rel|rel patah|rel spaten|rel retak|goyang|kecrotan|kpjr|\bmtt\b|geometri|bantalan|balas|amblas/i]];
+  var JR_LABEL = { jr: 'Jalan rel', wesel: 'Wesel', track: 'Track (sirkuit)', jembatan: 'Jembatan' };
+  function jrOf(r) { if (r.kelas !== 'prasarana') return ''; var s = String(r.sub || r.judul || ''); for (var i = 0; i < JR.length; i++) if (JR[i][1].test(s)) return JR[i][0]; return 'lain'; }
+  function grpOf(list, r) { var s = String(r.sub || r.judul || ''); if (/imbas/i.test(s)) return ''; for (var i = 0; i < list.length; i++) if (list[i][2].test(s)) return list[i][0]; return ''; }
+
+  /* ---------------- indeks pendapatan & perjalanan (sekali per data) ---------------- */
+  var memoIdx = { k: null, v: null };
+  function index(R) {
+    if (memoIdx.k === R) return memoIdx.v;
+    KAIRef.ensureRoutes(R);
+    var X = { pass: {}, frei: {}, yms: {}, byName: {}, tripsOfNo: {} };
+    var P = R.pend || {};
+    (P.pass || []).forEach(function (r) { var n = norm(r[1]), o = X.pass[n] = X.pass[n] || { no: r[1], nama: r[2], kelas: r[3], m: {} }, q = o.m[r[0]] = o.m[r[0]] || { rev: 0, pax: 0 }; q.rev += +r[6] || 0; q.pax += +r[7] || 0; X.yms[r[0]] = 1; });
+    (P.frei || []).forEach(function (r) { var n = norm(r[1]); if (!n) return; var o = X.frei[n] = X.frei[n] || { nama: r[1], kom: {}, m: {} }, q = o.m[r[0]] = o.m[r[0]] || { rev: 0, ton: 0 }; q.rev += +r[4] || 0; q.ton += +r[5] || 0; o.kom[r[2] || 'Lainnya'] = (o.kom[r[2] || 'Lainnya'] || 0) + (+r[4] || 0); X.yms[r[0]] = 1; });
+    X.ymList = Object.keys(X.yms).sort();
+    (R.trips || []).forEach(function (k) { if (String(k.jenis).toUpperCase() === 'BARANG' && daily(k)) (X.byName[norm(k.nama)] = X.byName[norm(k.nama)] || []).push(k); });
+    memoIdx = { k: R, v: X };
+    return X;
+  }
+  /** Nomor KA Passenger → perjalanan GAPEKA (persis, nomor gabungan, nomor dasar varian). */
+  function tripsOfNo(R, no) {
+    var n = norm(no); if (R.trip && R.trip[n]) return [R.trip[n]];
+    var k = R.ka[n] || (R.kaLeg && R.kaLeg[n]) || null;
+    if (!k) { var m = /^(\d+)[A-Z]+$/.exec(n); if (m) k = R.ka[m[1]] || (R.kaLeg && R.kaLeg[m[1]]) || null; if (m && R.trip[m[1]]) return [R.trip[m[1]]]; }
+    if (!k) return [];
+    var out = []; String(k.no).split('-').forEach(function (x) { if (R.trip[norm(x)]) out.push(R.trip[norm(x)]); });
+    if (!out.length && R.trip[norm(k.no)]) out.push(R.trip[norm(k.no)]);
+    return out;
+  }
+
+  /* ---------------- jalur koridor ---------------- */
+  function pathOf(R, anchors) {
+    var ok = anchors.filter(function (c) { return R.adj[c]; });
+    if (ok.length < 2) return null;
+    var rt = KAIRef.routeFor(R, { codes: ok, jarak: null });
+    return rt && rt.path ? { path: rt.path, cum: rt.cum, len: rt.len, missing: anchors.filter(function (c) { return !R.adj[c]; }) } : null;
+  }
+  function segKey(a, b) { return [a, b].sort().join('-'); }
+
+  /** Interval okupansi petak per hari → jendela kosong (menit). intervals: [[a,b],...] dalam menit (b boleh > 1440). */
+  function gaps(intervals, buf, minGap) {
+    var I = [];
+    intervals.forEach(function (x) {
+      var a = x[0] - buf, b = x[1] + buf; if (b - a >= 1440) { I.push([0, 1440]); return; }
+      a = ((a % 1440) + 1440) % 1440; b = a + (x[1] - x[0]) + 2 * buf;
+      if (b <= 1440) I.push([a, b]); else { I.push([a, 1440]); I.push([0, b - 1440]); }
+    });
+    if (!I.length) return [{ a: 0, b: 1440, dur: 1440, all: true }];
+    I.sort(function (p, q) { return p[0] - q[0]; });
+    var M = [I[0].slice()];
+    for (var i = 1; i < I.length; i++) { var L = M[M.length - 1]; if (I[i][0] <= L[1]) L[1] = Math.max(L[1], I[i][1]); else M.push(I[i].slice()); }
+    var G = [];
+    for (var j = 0; j < M.length - 1; j++) G.push({ a: M[j][1], b: M[j + 1][0] });
+    var wrap = (1440 - M[M.length - 1][1]) + M[0][0]; if (wrap > 0) G.push({ a: M[M.length - 1][1], b: M[0][0] + 1440 });
+    G.forEach(function (g) { g.dur = g.b - g.a; });
+    return G.filter(function (g) { return g.dur >= (minGap || 1); }).sort(function (p, q) { return q.dur - p.dur; });
+  }
+  function nightScore(g) { var mid = ((g.a + g.dur / 2) % 1440); return mid >= 1260 || mid <= 300 ? 1 : 0; }   // 21:00–05:00
+
+  /* ---------------- bangun semua koridor (ringkas) ---------------- */
+  function build(R, recs, opts) {
+    opts = opts || {};
+    var X = index(R), rt = KAIRef.ensureRoutes(R), end = opts.end || (X.ymList[X.ymList.length - 1] || '') + '-28', endYm = end.slice(0, 7);
+    var yms = []; for (var i = 11; i >= 0; i--) yms.push(ymShift(endYm, -i));
+    var revYms = yms.filter(function (y) { return X.yms[y]; });
+    var from = yms[0];
+    var L = (recs || []).filter(function (r) { return r.ym && r.ym >= from && r.ym <= endYm; });
+    var list = CORR.map(function (c) { return corridor(R, X, rt, c, L, yms, revYms, opts); }).filter(Boolean);
+    return { list: list, by: list.reduce(function (o, c) { o[c.id] = c; return o; }, {}), yms: yms, revYms: revYms, from: from, to: endYm, L: L };
+  }
+
+  function corridor(R, X, rt, C, L, yms, revYms, opts) {
+    var p = pathOf(R, C.anchors); if (!p) return null;
+    var idx = {}, segs = [];
+    p.path.forEach(function (c, i) { idx[c] = i; });
+    for (var i = 1; i < p.path.length; i++) {
+      var a = p.path[i - 1], b = p.path[i], key = segKey(a, b), g = R.seg[key] || {};
+      segs.push({ i: i - 1, a: a, b: b, key: key, km: g.km || 0, km0: p.cum[i - 1], km1: p.cum[i], track: g.track || '', region: g.region || (R.st[a] || {}).region || '', lintas: g.lintas || '' });
+    }
+    var segSet = {}; segs.forEach(function (s) { segSet[s.key] = s; });
+    /* KA lewat */
+    var trips = {};
+    segs.forEach(function (s) {
+      (rt.segPass[s.key] || []).forEach(function (x) {
+        var k = x.ka, id = norm(k.no), T = trips[id] = trips[id] || { k: k, kmOn: 0, segs: 0, daily: daily(k), est: false };
+        T.kmOn += s.km; T.segs++; if (x.est) T.est = true;
+      });
+    });
+    var tl = Object.keys(trips).map(function (k) { var T = trips[k]; T.kmTot = T.k.route && T.k.route.len || T.kmOn; T.share = T.kmTot ? Math.min(1, T.kmOn / T.kmTot) : 1; return T; });
+    tl.forEach(function (T) { T.cat = cat(T.k); });
+    var pnpTrips = tl.filter(function (T) { return T.cat === 'P'; }), brgTrips = tl.filter(function (T) { return T.cat === 'B'; });
+    /* Pendapatan penumpang per nomor KA Passenger */
+    var tripById = {}; tl.forEach(function (T) { tripById[norm(T.k.no)] = T; });
+    var mon = {}; yms.forEach(function (y) { mon[y] = { revP: 0, revPf: 0, pax: 0, paxF: 0, revB: 0, revBf: 0, ton: 0, tonF: 0 }; });
+    var kaRows = {};
+    Object.keys(X.pass).forEach(function (n) {
+      var o = X.pass[n], ts = tripsOfNo(R, o.no); if (!ts.length) return;
+      var on = sum(ts, function (t) { var T = tripById[norm(t.no)]; return T ? T.kmOn : 0; }); if (!on) return;
+      var tot = sum(ts, function (t) { return t.route && t.route.len || 0; }) || on, share = Math.min(1, on / tot);
+      var row = kaRows['P' + n] = { id: 'P' + n, jenis: 'PENUMPANG', no: o.no, nama: o.nama, kelas: o.kelas, kmOn: on, kmTot: tot, share: share, rev: 0, revA: 0, pax: 0, paxA: 0, m: {} , kap: (ts[0].kap || (ts[0].parent || {}).kap || null), rel: ts[0].lintas || '' };
+      yms.forEach(function (y) { var q = o.m[y]; if (!q) return; mon[y].revPf += q.rev; mon[y].revP += q.rev * share; mon[y].paxF += q.pax; mon[y].pax += q.pax * share; row.rev += q.rev; row.revA += q.rev * share; row.pax += q.pax; row.paxA += q.pax * share; row.m[y] = q; });
+    });
+    /* Pendapatan barang per Nama KA */
+    var names = {}; brgTrips.forEach(function (T) { (names[norm(T.k.nama)] = names[norm(T.k.nama)] || []).push(T); });
+    Object.keys(names).forEach(function (n) {
+      var o = X.frei[n], all = X.byName[n] || [], on = sum(names[n], function (T) { return T.daily ? T.kmOn : 0; }), tot = sum(all, function (k) { return k.route && k.route.len || 0; });
+      var share = tot ? Math.min(1, on / tot) : 0;
+      var row = kaRows['B' + n] = { id: 'B' + n, jenis: 'BARANG', no: names[n].map(function (T) { return T.k.no; }).slice(0, 6).join(', ') + (names[n].length > 6 ? ', …' : ''), nama: names[n][0].k.nama, kelas: 'Barang', kmOn: on, kmTot: tot, share: share,
+        trips: names[n].filter(function (T) { return T.daily; }).length, rev: 0, revA: 0, ton: 0, tonA: 0, m: {}, kom: o ? o.kom : {}, noRev: !o };
+      if (!o) return;
+      yms.forEach(function (y) { var q = o.m[y]; if (!q) return; mon[y].revBf += q.rev; mon[y].revB += q.rev * share; mon[y].tonF += q.ton; mon[y].ton += q.ton * share; row.rev += q.rev; row.revA += q.rev * share; row.ton += q.ton; row.tonA += q.ton * share; row.m[y] = q; });
+    });
+    var rows = Object.keys(kaRows).map(function (k) { return kaRows[k]; });
+    /* Wilayah dilewati (pita) */
+    var bands = []; segs.forEach(function (s) { var B = bands[bands.length - 1]; if (B && B.region === s.region) { B.km1 = s.km1; B.n++; } else bands.push({ region: s.region, km0: s.km0, km1: s.km1, n: 1 }); });
+    var regs = {}; bands.forEach(function (b) { regs[b.region] = (regs[b.region] || 0) + (b.km1 - b.km0); });
+    var kmG = sum(segs, function (s) { return /GANDA/i.test(s.track) ? s.km : 0; });
+    /* Gangguan, WKP, keamanan, alam per petak / stasiun */
+    var stSet = {}; p.path.forEach(function (c) { stSet[c] = 1; });
+    var ev = L.filter(function (r) { return (r.segKey && segSet[r.segKey]) || (r.stCode && stSet[r.stCode]); });
+    var tot = { n: ev.length, menit: sum(ev, function (r) { return r.menit; }) };
+    var ys = function (y) { return { ym: y, revP: mon[y].revP, revPf: mon[y].revPf, pax: mon[y].pax, revB: mon[y].revB, revBf: mon[y].revBf, ton: mon[y].ton }; };
+    var revA = sum(revYms, function (y) { return mon[y].revP + mon[y].revB; }), revF = sum(revYms, function (y) { return mon[y].revPf + mon[y].revBf; });
+    return {
+      id: C.id, name: C.name, sub: C.sub, anchors: C.anchors, missing: p.missing, path: p.path, cum: p.cum, len: p.len, segs: segs, idx: idx, segSet: segSet,
+      bands: bands, regions: Object.keys(regs).map(function (k) { return { region: k, km: regs[k] }; }), kmGanda: kmG, kmTunggal: p.len - kmG,
+      trips: tl, nPnp: pnpTrips.filter(function (T) { return T.daily; }).length, nBrg: brgTrips.filter(function (T) { return T.daily; }).length, nEst: tl.filter(function (T) { return T.est; }).length,
+      nKrl: tl.filter(function (T) { return T.cat === 'K' && T.daily; }).length, nDinas: tl.filter(function (T) { return T.cat === 'D' && T.daily; }).length, nDaily: tl.filter(function (T) { return T.daily; }).length,
+      rows: rows, mon: yms.map(ys), revA: revA, revF: revF,
+      revPA: sum(revYms, function (y) { return mon[y].revP; }), revBA: sum(revYms, function (y) { return mon[y].revB; }),
+      paxA: sum(revYms, function (y) { return mon[y].pax; }), tonA: sum(revYms, function (y) { return mon[y].ton; }),
+      ev: ev, g: tot, gPras: ev.filter(function (r) { return r.kelas === 'prasarana'; }).length,
+      gSec: ev.filter(function (r) { return grpOf(SEC, r); }).length, gNat: ev.filter(function (r) { return grpOf(NAT, r); }).length
+    };
+  }
+
+  /* ---------------- rincian satu koridor ---------------- */
+  function detail(R, C, opts) {
+    opts = opts || {};
+    var K = R.kondisi || {}, rt = KAIRef.ensureRoutes(R), buf = opts.buf != null ? opts.buf : 5, minGap = opts.minGap || 60, peta = R.peta || null;
+    var S = C.segs.map(function (s) {
+      var x = { key: s.key, a: s.a, b: s.b, km: s.km, km0: s.km0, km1: s.km1, track: s.track, region: s.region, lintas: s.lintas,
+        nmA: (R.st[s.a] || {}).name || s.a, nmB: (R.st[s.b] || {}).name || s.b,
+        g: [], wk: [], jpl: (R.jpl || []).filter(function (j) { return j.segKey === s.key; }).length, sec: {}, nat: {}, thi: null, osm: null, resor: '' };
+      var pass = (rt.segPass[s.key] || []).filter(function (e) { return daily(e.ka) && e.tFrom != null && e.tTo != null; });
+      x.nTrip = pass.length; x.nPnp = pass.filter(function (e) { return cat(e.ka) === 'P'; }).length; x.nBrg = pass.filter(function (e) { return cat(e.ka) === 'B'; }).length; x.nKrl = pass.filter(function (e) { return cat(e.ka) === 'K'; }).length; x.nDinas = x.nTrip - x.nPnp - x.nBrg - x.nKrl;
+      function iv(e) { var a = e.tFrom, b = e.tTo; if (b < a) b += 1440; if (b - a > 360) b = a + 15; return [a, b]; }
+      x.gapAll = gaps(pass.map(iv), buf, 1);
+      if (/GANDA/i.test(s.track)) {
+        x.gapUp = gaps(pass.filter(function (e) { return e.from === s.a; }).map(iv), buf, 1);
+        x.gapDn = gaps(pass.filter(function (e) { return e.from === s.b; }).map(iv), buf, 1);
+      }
+      x.best = x.gapAll[0] || null; x.bestNight = x.gapAll.filter(nightScore)[0] || null;
+      x.free = sum(x.gapAll, function (g) { return g.dur; });
+      if (peta && peta.pk) { var o = peta.pk[s.a + '-' + s.b] || peta.pk[s.b + '-' + s.a]; if (o && o[1]) x.osm = { km: o[0], br: o[2], brM: o[3], tn: o[4], tnM: o[5], el: o[6], vmax: o[7], nm: o[8] >= 0 ? peta.nm[o[8]] : null }; }
+      if (K.resor && K.resor.pj) { var rr = K.resor.pj[s.a + '-' + s.b] || K.resor.pj[s.b + '-' + s.a]; if (rr) x.resor = rr[0]; }
+      return x;
+    });
+    var byKey = {}; S.forEach(function (x) { byKey[x.key] = x; });
+    /* stasiun */
+    var ST = C.path.map(function (c, i) {
+      var s = R.st[c] || { name: c }, pt = peta && peta.st ? peta.st[c] : null;
+      return { code: c, name: s.name || c, region: s.region || '', km: C.cum[i], i: i, anchor: C.anchors.indexOf(c) >= 0, lat: pt ? pt[0] : null, lon: pt ? pt[1] : null, z: pt ? pt[2] : null, src: pt ? pt[3] : null,
+        resor: K.resor && K.resor.st ? K.resor.st[c] || '' : '', g: [], wk: [], sec: {}, nat: {} };
+    });
+    var stBy = {}; ST.forEach(function (x) { stBy[x.code] = x; });
+    /* kejadian */
+    C.ev.forEach(function (r) {
+      var T = r.segKey && byKey[r.segKey] ? byKey[r.segKey] : stBy[r.stCode]; if (!T) return;
+      if (r.kelas === 'prasarana') T.g.push(r);
+      var sg = grpOf(SEC, r); if (sg) T.sec[sg] = (T.sec[sg] || 0) + 1;
+      var ng = grpOf(NAT, r); if (ng) T.nat[ng] = (T.nat[ng] || 0) + 1;
+    });
+    /* WKP (13 bulan dari tab WKP) */
+    var wkRows = (K.wkp || []), wkN = 0, wkFrom = '', wkTo = '';
+    wkRows.forEach(function (w) {
+      var loc = w[11] || '', tg = [];
+      if (!loc) return;
+      if (/^st:/.test(loc)) { if (stBy[loc.slice(3)]) tg.push(stBy[loc.slice(3)]); }
+      else if (loc.indexOf('~') > 0) {
+        var ab = loc.split('~'), ia = C.idx[ab[0]], ib = C.idx[ab[1]];
+        if (ia != null && ib != null && Math.abs(ia - ib) <= 12) { var lo = Math.min(ia, ib), hi = Math.max(ia, ib); for (var q = lo; q < hi; q++) tg.push(S[q]); }
+      } else if (byKey[loc]) tg.push(byKey[loc]);
+      if (!tg.length) return;
+      wkN++; if (!wkFrom || w[0] < wkFrom) wkFrom = w[0]; if (!wkTo || w[0] > wkTo) wkTo = w[0];
+      tg.forEach(function (T) { T.wk.push(w); });
+    });
+    /* THI tingkat petak: bulan terakhir per petak, indeks terendah antar-sepur */
+    var thiYm = '';
+    (K.thiPetak || []).forEach(function (t) {
+      var m = /^([A-Z0-9]+)-([A-Z0-9]+)\s+(HU|HI|TG|J\d*|[A-Z]{1,3})?$/.exec(String(t[3] || '').toUpperCase()); if (!m) return;
+      var k = segKey(m[1], m[2]), x = byKey[k]; if (!x || t[4] == null) return;
+      if (!x.thi || t[1] > x.thi.ym || (t[1] === x.thi.ym && t[4] < x.thi.hi)) x.thi = { ym: t[1], hi: t[4], grade: t[5], mat: t[8], kon: t[9], geo: t[10], unit: t[3], upt: t[2] };
+      if (t[1] > thiYm) thiYm = t[1];
+    });
+    S.forEach(function (x) {
+      x.gN = x.g.length; x.gM = sum(x.g, function (r) { return r.menit; });
+      x.gJr = {}; x.g.forEach(function (r) { var j = jrOf(r); x.gJr[j] = (x.gJr[j] || 0) + 1; });
+      x.wkN = x.wk.length; x.wkM = sum(x.wk, function (w) { return w[6] || 0; });
+      x.wkJR = x.wk.filter(function (w) { return /^(rel|wesel|bantalan|geometri|badan)$/.test(w[2]); }).length;
+      // WKP yang programnya bentrok jadwal: jam program (mulai–akhir) memotong lintasan KA terjadwal pada petak tunggal
+      // WKP petak tunggal (lokasi tepat petak ini) yang jam programnya dilalui ≥ 2 KA terjadwal → kandidat geser jadwal
+      x.wkClash = 0; x.wkProg = 0;
+      var passT = (rt.segPass[x.key] || []).filter(function (e) { return daily(e.ka) && e.tFrom != null; }).map(function (e) { return e.tFrom; });
+      if (!/GANDA/i.test(x.track)) x.wk.forEach(function (w) {
+        if (w[11] !== x.key) return;
+        var a = hm(w[9]), b = hm(w[10]); if (a == null || b == null) return; if (b <= a) b += 1440; if (b - a > 720) return;
+        x.wkProg++;
+        var n = passT.filter(function (t) { return (t >= a && t <= b) || (t + 1440 >= a && t + 1440 <= b); }).length;
+        if (n >= 2) x.wkClash++;
+      });
+      x.secN = sum(Object.keys(x.sec), function (k) { return x.sec[k]; }); x.natN = sum(Object.keys(x.nat), function (k) { return x.nat[k]; });
+      x.flag = flagOf(x);
+    });
+    ST.forEach(function (x) { x.gN = x.g.length; x.gM = sum(x.g, function (r) { return r.menit; }); x.wkN = x.wk.length; x.secN = sum(Object.keys(x.sec), function (k) { return x.sec[k]; }); x.natN = sum(Object.keys(x.nat), function (k) { return x.nat[k]; }); });
+    /* landai rata-rata antar stasiun berelevasi */
+    var zs = ST.filter(function (x) { return x.z != null; }), grades = [];
+    for (var j = 1; j < zs.length; j++) { var dk = zs[j].km - zs[j - 1].km; if (dk > 0.3) grades.push({ a: zs[j - 1].code, b: zs[j].code, km0: zs[j - 1].km, km1: zs[j].km, dz: zs[j].z - zs[j - 1].z, permil: (zs[j].z - zs[j - 1].z) / dk }); }
+    var osmOk = S.filter(function (x) { return x.osm; });
+    var prof = {
+      km: C.len, kmGanda: C.kmGanda, kmTunggal: C.kmTunggal, nSt: ST.length, nPetak: S.length,
+      resor: uniq(S.map(function (x) { return x.resor; }).concat(ST.map(function (x) { return x.resor; })).filter(Boolean)),
+      jpl: sum(S, function (x) { return x.jpl; }),
+      osmCov: S.length ? sum(osmOk, function (x) { return x.km; }) / Math.max(0.001, C.len) : 0, osmN: osmOk.length,
+      br: sum(osmOk, function (x) { return x.osm.br; }), brM: sum(osmOk, function (x) { return x.osm.brM; }),
+      tn: sum(osmOk, function (x) { return x.osm.tn; }), tnM: sum(osmOk, function (x) { return x.osm.tnM; }),
+      elKm: sum(osmOk, function (x) { return x.osm.el / 100 * x.km; }), vmax: Math.max.apply(null, osmOk.map(function (x) { return x.osm.vmax || 0; }).concat([0])),
+      zN: zs.length, zMin: zs.length ? Math.min.apply(null, zs.map(function (x) { return x.z; })) : null, zMax: zs.length ? Math.max.apply(null, zs.map(function (x) { return x.z; })) : null,
+      steep: grades.slice().sort(function (p, q) { return Math.abs(q.permil) - Math.abs(p.permil); }).slice(0, 5), grades: grades,
+      thiYm: thiYm, thiN: S.filter(function (x) { return x.thi; }).length, thiLow: S.filter(function (x) { return x.thi && x.thi.hi < 70; }).length,
+      thiMed: med(S.filter(function (x) { return x.thi; }).map(function (x) { return x.thi.hi; })),
+      sec: tally(S.concat(ST), 'sec', SEC), nat: tally(S.concat(ST), 'nat', NAT), wkN: wkN, wkFrom: wkFrom, wkTo: wkTo,
+      names: uniq(osmOk.map(function (x) { return x.osm.nm && x.osm.nm[0] ? x.osm.nm : null; }).filter(Boolean).map(function (n) { return n.join('|'); })).map(function (s) { var a = s.split('|'); return { name: a[0], wiki: a[1], wd: a[2] }; })
+    };
+    return { C: C, S: S, ST: ST, prof: prof, recs: recommend(C, S, prof), buf: buf, minGap: minGap };
+  }
+  function uniq(a) { var s = {}, o = []; a.forEach(function (x) { if (!s[x]) { s[x] = 1; o.push(x); } }); return o; }
+  function med(a) { if (!a.length) return null; var b = a.slice().sort(function (x, y) { return x - y; }), k = b.length >> 1; return b.length % 2 ? b[k] : (b[k - 1] + b[k]) / 2; }
+  function tally(T, f, list) { return list.map(function (g) { return { k: g[0], label: g[1], n: sum(T, function (x) { return x[f][g[0]] || 0; }), top: T.filter(function (x) { return x[f][g[0]]; }).sort(function (p, q) { return q[f][g[0]] - p[f][g[0]]; }).slice(0, 3).map(function (x) { return { label: x.code ? x.name : x.nmA + ' – ' + x.nmB, n: x[f][g[0]] }; }) }; }).filter(function (x) { return x.n; }); }
+
+  /** Status petak: P1 = gangguan prasarana ≥ 2 & (THI < 70 atau WKP JR ≤ 1); P2 = gangguan ≥ 1 & WKP JR = 0; P3 = THI < 70 tanpa gangguan. */
+  function flagOf(x) {
+    var low = x.thi && x.thi.hi < 70;
+    if (x.gN >= 2 && (low || x.wkJR <= 1)) return 'P1';
+    if (x.gN >= 1 && x.wkJR === 0) return 'P2';
+    if (low) return 'P3';
+    return '';
+  }
+
+  /** Rekomendasi berbasis data (tanpa angka karangan): WKP pada jendela kosong terpanjang untuk petak prioritas; pendapatan; keamanan; alam. */
+  function recommend(C, S, prof) {
+    var out = [];
+    function win(g) { return fmt(g.a) + '–' + fmt(g.b) + ' (' + Math.round(g.dur) + ' mnt)'; }
+    S.filter(function (x) { return x.flag === 'P1' || x.flag === 'P2'; }).sort(function (a, b) { return b.gM - a.gM || b.gN - a.gN; }).slice(0, 8).forEach(function (x) {
+      var ganda = /GANDA/i.test(x.track), full = (x.gapAll || []).filter(function (g) { return g.dur >= 60; }), n = full.filter(nightScore)[0] || full[0];
+      var up = (x.gapUp || []).filter(function (g) { return g.dur >= 60; }), dn = (x.gapDn || []).filter(function (g) { return g.dur >= 60; });
+      var u1 = up.filter(nightScore)[0] || up[0], d1 = dn.filter(nightScore)[0] || dn[0];
+      var where = n ? 'tutup petak ' + win(n) : ganda && (u1 || d1) ? 'satu sepur (KA lain lewat sepur sebelah): sepur arah ' + x.a + '→' + x.b + ' ' + (u1 ? win(u1) : 'tidak ada jendela ≥ 60 mnt') + ', sepur arah ' + x.b + '→' + x.a + ' ' + (d1 ? win(d1) : 'tidak ada jendela ≥ 60 mnt')
+        : 'tidak ada jendela kosong ≥ 60 mnt di GAPEKA' + (x.best ? ' (terpanjang ' + win(x.best) + ')' : '') + ' — perlu rekayasa pola operasi';
+      var jr = Object.keys(x.gJr).sort(function (p, q) { return x.gJr[q] - x.gJr[p]; })[0];
+      var job = jr === 'wesel' ? 'perawatan wesel' : jr === 'track' ? 'pemeriksaan sirkuit track & isolasi rel' : jr === 'jembatan' ? 'pemeriksaan jembatan' : 'jalan rel (geometri, bantalan/penambat, las)';
+      var used = x.wk.map(function (w) { return hm(w[9]); }).filter(function (v) { return v != null; }), uMed = used.length ? med(used) : null;
+      var why = x.gN + ' gangguan prasarana (' + Math.round(x.gM) + ' mnt, 12 bln)' + (x.thi ? ' · THI ' + x.thi.hi + ' ' + (x.thi.grade || '') + ' (' + x.thi.ym + ')' : ' · THI petak tidak tersedia') + ' · WKP jalan rel ' + x.wkJR + 'x (13 bln)' + (uMed != null ? ', median mulai program ' + fmt(uMed) : '');
+      var on = /^tidak/.test(where) ? '; ' + where : ' pada ' + where;
+      var act = x.wkJR >= 12 ? 'WKP sudah rutin (' + x.wkJR + 'x) namun gangguan & kondisi belum membaik → evaluasi mutu pekerjaan dan beralih ke perbaikan permanen (' + job + ', penggantian komponen)' + on + '.'
+        : 'Tambah WKP ' + job + on + '.';
+      out.push({ kind: 'wkp', pri: x.flag, key: x.key, title: x.nmA + ' – ' + x.nmB + ' (' + x.key + ')', why: why, act: act });
+    });
+    var clash = S.filter(function (x) { return x.wkClash >= 3; }).sort(function (a, b) { return b.wkClash - a.wkClash; }).slice(0, 4);
+    clash.forEach(function (x) { out.push({ kind: 'jadwal', pri: 'P2', key: x.key, title: x.nmA + ' – ' + x.nmB, why: x.wkClash + ' dari ' + x.wkProg + ' program WKP di petak tunggal ini (13 bln) jam programnya dilalui ≥ 2 KA terjadwal GAPEKA', act: 'Geser program WKP ke ' + (x.best ? fmt(x.best.a) + '–' + fmt(x.best.b) : 'jendela yang dibuka lewat rekayasa pola operasi') + ' agar tidak memotong lintasan KA terjadwal.' }); });
+    var sec = prof.sec.slice().sort(function (a, b) { return b.n - a.n; })[0];
+    if (sec) out.push({ kind: 'keamanan', pri: 'P2', title: sec.label + ' — ' + sec.n + ' kejadian 12 bln', why: 'Titik terbanyak: ' + sec.top.map(function (t) { return t.label + ' (' + t.n + ')'; }).join(', '),
+      act: sec.k === 'orang' ? 'Sterilisasi jalur & pagar pembatas di titik terbanyak, patroli bersama Polsuska/aparat setempat, sosialisasi warga.' : sec.k === 'batu' ? 'Patroli & CCTV pada titik terbanyak, edukasi sekolah sekitar, laporkan ke Polsuska; prioritaskan kaca film/lapis pengaman pada rangkaian lintas ini.' : 'Koordinasi pengamanan dengan aparat & pemda di titik terbanyak; pengawasan aset (kabel, komponen) rawan.' });
+    var nat = prof.nat.slice().sort(function (a, b) { return b.n - a.n; })[0];
+    if (nat) out.push({ kind: 'alam', pri: 'P2', title: nat.label + ' — ' + nat.n + ' kejadian 12 bln', why: 'Titik terbanyak: ' + nat.top.map(function (t) { return t.label + ' (' + t.n + ')'; }).join(', '),
+      act: nat.k === 'banjir' ? 'Perkuat drainase & peninggian badan jalan pada titik banjir berulang; pasang sensor muka air dan SOP batas operasi saat hujan lebat.' : nat.k === 'tanah' ? 'Survei geoteknik lereng/badan jalan, pasang dinding penahan/bronjong, inspeksi setelah hujan lebat.' : nat.k === 'pohon' ? 'Pemangkasan vegetasi ruang bebas jalur secara terjadwal sebelum musim hujan.' : nat.k === 'selip' ? 'Tinjau pasir/sanding lokomotif & batas tonase di tanjakan pada lintas ini.' : 'Perkuat proteksi petir/pentanahan peralatan sinyal pada titik terdampak.' });
+    return out;
+  }
+
+  /* ---------------- Marey (grafik perjalanan) ---------------- */
+  function marey(R, C, opts) {
+    opts = opts || {};
+    var out = [];
+    C.trips.forEach(function (T) {
+      if (opts.daily !== false && !T.daily) return;
+      var k = T.k, path = k.route && k.route.path || [], tm = k.times || {}, runs = [], cur = [];
+      for (var i = 0; i < path.length; i++) {
+        var c = path[i], j = C.idx[c], x = tm[c];
+        if (j == null || !x || x.t == null) { if (cur.length > 1) runs.push(cur); cur = []; continue; }
+        if (cur.length && (x.t < cur[cur.length - 1][0] || x.t - cur[cur.length - 1][0] > 240)) { if (cur.length > 1) runs.push(cur); cur = []; }   // lompatan jam / rute berbalik → potong
+        cur.push([x.t, C.cum[j]]);
+      }
+      if (cur.length > 1) runs.push(cur);
+      runs.forEach(function (r) {
+        var base = Math.floor(r[0][0] / 1440) * 1440, pts = r.map(function (p) { return [p[0] - base, p[1]]; });
+        var o = { no: k.no, nama: k.nama, jenis: T.cat || cat(k), est: T.est, pts: pts };
+        out.push(o);
+        if (pts[pts.length - 1][0] > 1440) out.push({ no: o.no, nama: o.nama, jenis: o.jenis, est: o.est, pts: pts.map(function (p) { return [p[0] - 1440, p[1]]; }), wrap: true });
+      });
+    });
+    return out;
+  }
+
+  /* ---------------- geometri peta (untuk ECharts, tanpa ubin) ---------------- */
+  function decode(a) { var o = [], x = a[0], y = a[1]; o.push([x / 1e4, y / 1e4]); for (var i = 2; i < a.length; i += 2) { x += a[i]; y += a[i + 1]; o.push([x / 1e4, y / 1e4]); } return o; }
+  var memoGeo = { k: null, v: null };
+  function network(peta) {
+    if (!peta) return null; if (memoGeo.k === peta) return memoGeo.v;
+    var v = { el: [], ne: [] };
+    (peta.ln || []).forEach(function (l) { (l[0] ? v.el : v.ne).push(decode(l[2])); });
+    memoGeo = { k: peta, v: v }; return v;
+  }
+  function corridorGeo(R, C) {
+    var peta = R.peta; if (!peta) return { lines: [], gap: [] };
+    var lines = [], gap = [];
+    C.segs.forEach(function (s) {
+      var g = peta.pg && (peta.pg[s.a + '-' + s.b] || peta.pg[s.b + '-' + s.a]);
+      if (g) lines.push({ key: s.key, coords: decode(g) });
+      else { var A = peta.st[s.a], B = peta.st[s.b]; if (A && B) gap.push({ key: s.key, coords: [[A[1], A[0]], [B[1], B[0]]] }); }
+    });
+    return { lines: lines, gap: gap };
+  }
+
+  root.KAIRoute = { FACTS: FACTS, cat: cat, CORR: CORR, SEC: SEC, NAT: NAT, JR_LABEL: JR_LABEL, build: build, detail: detail, marey: marey, gaps: gaps, network: network, corridorGeo: corridorGeo, decode: decode, fmt: fmt, index: index, tripsOfNo: tripsOfNo };
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>

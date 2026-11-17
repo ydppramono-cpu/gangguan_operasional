@@ -1,0 +1,164 @@
+<script>
+/**
+ * Js.Core — utilitas bersama: format angka Indonesia, panggilan server, gunzip, pemuat pustaka, penyimpanan.
+ */
+window.KAI = window.KAI || {};
+(function (K) {
+  var nf0 = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 });
+  var nf1 = new Intl.NumberFormat('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  var MONTHS = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+  K.fmt = {
+    n: function (v) { return v == null || isNaN(v) ? '–' : nf0.format(Math.round(v)); },
+    d1: function (v) { return v == null || isNaN(v) ? '–' : nf1.format(v); },
+    pct: function (v) { return v == null || !isFinite(v) ? '–' : (v > 0 ? '+' : v < 0 ? '−' : '') + nf1.format(Math.abs(v * 100)) + '%'; },
+    signed: function (v) { return v == null || isNaN(v) ? '–' : (v > 0 ? '+' : v < 0 ? '−' : '') + nf0.format(Math.abs(Math.round(v))); },
+    rp: function (v) {
+      if (v == null || isNaN(v)) return '–';
+      if (Math.abs(v) >= 1e9) return 'Rp ' + nf1.format(v / 1e9) + ' miliar';
+      if (Math.abs(v) >= 1e6) return 'Rp ' + nf1.format(v / 1e6) + ' juta';
+      return 'Rp ' + nf0.format(v);
+    },
+    month: function (ym) { if (!ym) return '–'; return MONTHS[Number(ym.slice(5, 7)) - 1] + ' ' + ym.slice(0, 4); },
+    mon: function (ym) { if (!ym) return '–'; return MON[Number(ym.slice(5, 7)) - 1] + ' ' + ym.slice(2, 4); },
+    monOnly: function (ym) { return ym ? MON[Number(ym.slice(5, 7)) - 1] : ''; },
+    dateTime: function (r) { return K.fmt.date(r) + (r.hm >= 0 ? ' · ' + K.fmt.hm(r.hm) : ''); },
+    date: function (r) { return r.ym ? (r.d ? (r.d < 10 ? '0' : '') + r.d + ' ' : '') + MON[Number(r.ym.slice(5, 7)) - 1] + ' ' + r.ym.slice(0, 4) : 'Tanggal tidak valid'; },
+    time: function (ms) { return ms ? new Date(ms).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta' }) : '–'; },
+    day: function (iso) { if (!iso) return '–'; return +iso.slice(8, 10) + ' ' + MON[Number(iso.slice(5, 7)) - 1] + ' ' + iso.slice(0, 4); },
+    hm: function (min) { if (min == null || min < 0) return ''; var h = Math.floor(min / 60) % 24, m = Math.round(min % 60); return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m; },
+    km: function (v) { if (v == null || v === '') return ''; var k = Math.floor(v), m = Math.round((v - k) * 1000); return k + '+' + (m < 100 ? (m < 10 ? '00' : '0') : '') + m; },
+    age: function (a) { return a == null ? '–' : nf1.format(a) + ' th'; },
+    unit: function (no) { var m = /^(CC|BB|D)(\d{3})(\d{2})(\d{2,3})$/.exec(no || ''); return m ? m[1] + ' ' + m[2] + ' ' + m[3] + ' ' + m[4] : (no || ''); }
+  };
+
+  /** Panggil fungsi server; mengembalikan Promise. Di luar GAS (uji) memakai window.__mockServer. */
+  K.api = function (fn) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return new Promise(function (resolve, reject) {
+      var run = (window.google && google.script && google.script.run) ? google.script.run : window.__mockServer;
+      if (!run) return reject(new Error('Server tidak tersedia.'));
+      run.withSuccessHandler(function (res) {
+        if (res && res.ok === false) { var e = new Error(res.error || 'Gagal'); e.auth = !!res.auth; e.stale = !!res.stale; reject(e); }
+        else resolve(res);
+      }).withFailureHandler(function (err) { reject(err instanceof Error ? err : new Error(String(err))); })[fn].apply(null, args);
+    });
+  };
+
+  /** base64(gzip(JSON)) → objek, memakai DecompressionStream bawaan browser. */
+  K.gunzipJson = function (b64) {
+    var bin = atob(b64), bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    if (!('DecompressionStream' in window)) return Promise.reject(new Error('Browser terlalu lama. Gunakan Chrome, Edge, Safari, atau Firefox versi terbaru.'));
+    var stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    return new Response(stream).text().then(JSON.parse);
+  };
+
+  /** Muat pustaka dari CDN sekali saja (dipakai untuk pustaka ekspor). */
+  var loaded = {};
+  /** Muat pustaka saat dibutuhkan (ekspor); bila jsDelivr diblokir, coba unpkg dengan versi yang sama. */
+  K.loadScript = function (url) {
+    if (loaded[url]) return loaded[url];
+    var urls = [url]; if (/cdn\.jsdelivr\.net\/npm\//.test(url)) urls.push(url.replace('cdn.jsdelivr.net/npm/', 'unpkg.com/'));
+    loaded[url] = new Promise(function (resolve, reject) {
+      (function attempt(i) {
+        var s = document.createElement('script'); s.src = urls[i]; s.async = true;
+        s.onload = resolve;
+        s.onerror = function () { s.remove(); if (i + 1 < urls.length) return attempt(i + 1); delete loaded[url]; reject(new Error('Gagal memuat pustaka ' + url.split('/')[4] + ' — jaringan mungkin memblokir cdn.jsdelivr.net dan unpkg.com.')); };
+        document.head.appendChild(s);
+      })(0);
+    });
+    return loaded[url];
+  };
+
+  /** Penyimpanan sesi yang aman (bisa gagal di mode privat). */
+  K.store = {
+    get: function (k) { try { return JSON.parse(localStorage.getItem('kai2:' + k)); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem('kai2:' + k, JSON.stringify(v)); } catch (e) { } },
+    del: function (k) { try { localStorage.removeItem('kai2:' + k); } catch (e) { } }
+  };
+
+  /** Ganti tampilan dengan View Transitions bila tersedia. */
+  K.transition = function (fn) {
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (document.startViewTransition && !reduce) return document.startViewTransition(fn);
+    fn();
+  };
+
+  /** Angka berjalan untuk KPI (hanya sekali per nilai). */
+  K.countUp = function (el, to, format) {
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var from = Number(el.dataset.v || 0); el.dataset.v = to;
+    if (reduce || from === to || !isFinite(to)) { el.textContent = format(to); return; }
+    var t0 = performance.now(), dur = 520;
+    function step(t) {
+      var p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = format(from + (to - from) * e);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  };
+
+  /** Chip perubahan; naik = memburuk (merah) untuk metrik gangguan. */
+  K.delta = function (cur, prev, smallBase) {
+    if (prev == null || !isFinite(prev)) return { cls: 'flat', text: '–' };
+    if (!prev) return { cls: cur ? 'up' : 'flat', text: cur ? 'baru' : '0' };
+    var p = (cur - prev) / prev, arrow = p > 0.0005 ? '▲' : p < -0.0005 ? '▼' : '■';
+    return { cls: p > 0.0005 ? 'up' : p < -0.0005 ? 'down' : 'flat', text: arrow + ' ' + K.fmt.pct(p) + (smallBase && prev < smallBase ? ' · basis kecil' : '') };
+  };
+
+  /**
+   * Penyeragaman huruf (regex): teks yang SELURUHNYA KAPITAL atau seluruhnya kecil diubah ke Huruf Judul,
+   * singkatan & kode tetap kapital (KA, KRL, JPL, CC 206, SBI-GMR). Teks yang sudah campuran hanya dirapikan
+   * untuk singkatan baku ("Ka 39" → "KA 39"). Daop/Divre selalu "Daop 1"/"Divre III".
+   */
+  var ACR = ('KA KRL KRD KRDE KRDI LRT MRT JPL PLB KLB CL PT KAI BMKG PPKA PPKP PAP PK OP SAP AC EWS GPS LAA JJ STL SAR VDU SF KM TD ' +
+    'CC BB UPT KUPT BBM CPO BHP DT PJL PLR KS KKA NKKA TSO TSGO SO SG MTT YIA BIM KNM BST DKI DIY RS SPBU SD SMP SMA TNI POLRI PLN PDAM ' +
+    'ATR BPN II III IV VI VII VIII IX XI PPCW KKBW KKW GGW ZZOW PKPKW GD GB GK GT WKP RCA MTTR MTBF EMU DMU PSO KCI KAI LTE GSM-R ' +
+    'JAK SM SB MN TNK PG TPK KPU JR ML SBI GMR PSE BD YK SLO SMT SGU CN PWT LPN JAKK MRI THB DU BOO TNG BKS CKR RK MER').split(' ');
+  var ACRS = {}; ACR.forEach(function (a) { ACRS[a] = 1; });
+  var LOW = { di: 1, ke: 1, dan: 1, yang: 1, dari: 1, pada: 1, untuk: 1, oleh: 1, atau: 1, dengan: 1, antara: 1, akibat: 1, karena: 1, sebagai: 1, the: 1, of: 1 };
+  function tcWord(w, i, prevSep, nextSep) {
+    var U = w.toUpperCase();
+    if (/^(DAOP|DIVRE)$/.test(U)) return U === 'DAOP' ? 'Daop' : 'Divre';
+    if (ACRS[U]) return U;
+    if (/\d/.test(w)) return U;                                  // CC206, 2K1, K3
+    if (w.length >= 2 && !/[AIUEO]/i.test(w)) return U;           // GRB, KRT, KKBW, PNP
+    if ((prevSep === '-' || nextSep === '-') && w.length <= 5 && w === U) return U; // kode stasiun pada relasi "SBI-GMR"
+    var l = w.toLowerCase();
+    if (i > 0 && LOW[l]) return l;
+    return l.charAt(0).toUpperCase() + l.slice(1);
+  }
+  /** Huruf pertama kapital, sisanya tetap (untuk label status: "tidak dijaga" → "Tidak dijaga"). */
+  /** Isian kosong tidak pernah ditampilkan kosong: tulis apa adanya bahwa sumber tidak mencatatnya. */
+  K.NIL = 'Tidak tercatat';
+  K.v = function (x) { return x == null || x === '' || x === '–' || (Array.isArray(x) && !x.length) ? K.NIL : x; };
+  K.DRV_LABEL = { ka: 'Nomor KA', jam: 'Jam mulai', lokasi: 'Lokasi', sarana: 'Nomor sarana', km: 'KM', penyebab: 'Penyebab', depo: 'Depo', wilayah: 'Wilayah', kelas: 'Kelas' };
+  K.DRV_TIP = 'Diturunkan otomatis dari judul/uraian laporan karena kolom sumbernya kosong';
+  K.cap = function (s) { s = String(s == null ? '' : s); return s.charAt(0).toUpperCase() + s.slice(1); };
+  K.tc = function (s) {
+    if (s == null) return s; s = String(s); if (!s.trim()) return s;
+    var letters = s.replace(/[^A-Za-z]/g, ''); if (letters.length < 2) return s;
+    var up = letters.replace(/[^A-Z]/g, '').length / letters.length;
+    if (up <= 0.04) {              // seluruhnya huruf kecil → huruf kalimat + singkatan baku
+      var t = s.charAt(0).toUpperCase() + s.slice(1);
+      return t.replace(/\b(ka|krl|krd|jpl|plb|klb|lrt|bmkg|daop|divre)\b/gi, function (m) { var u = m.toUpperCase(); return u === 'DAOP' ? 'Daop' : u === 'DIVRE' ? 'Divre' : u; });
+    }
+    if (up < 0.8) {                // sudah campuran: rapikan singkatan baku saja
+      return s.replace(/\b(Ka|ka|Krl|krl|Krd|krd|Jpl|jpl|Plb|plb|Klb|klb|Bmkg|Lrt)\b(?=[\s\d.,:;)]|$)/g, function (m) { return m.toUpperCase(); })
+        .replace(/\b(DAOP|daop)\b/g, 'Daop').replace(/\b(DIVRE|divre)\b/g, 'Divre');
+    }
+    var parts = s.split(/(\s+|[-/(),.:;+&])/), out = [], wi = 0;
+    for (var i = 0; i < parts.length; i++) {
+      var w = parts[i];
+      if (!w || !/[A-Za-z]/.test(w)) { out.push(w); continue; }
+      out.push(tcWord(w, wi++, (parts[i - 1] || '').trim(), (parts[i + 1] || '').trim()));
+    }
+    return out.join('');
+  };
+
+  K.debounce = function (fn, ms) { var t; return function () { var a = arguments, s = this; clearTimeout(t); t = setTimeout(function () { fn.apply(s, a); }, ms); }; };
+  K.classColor = function (k) { return { operasional: '#0F766E', sarana: '#275BC0', alam: '#B45309', prasarana: '#64748B', belum: '#9AA3B2' }[k] || '#5B6475'; };
+})(window.KAI);
+</script>

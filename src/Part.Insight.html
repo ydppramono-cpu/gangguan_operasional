@@ -1,0 +1,70 @@
+<!-- Part.Insight — "Temuan → Tindakan". Setiap baris memasangkan temuan (dengan sumber data/grafiknya) dan rekomendasi yang dipicunya.
+     Temuan tanpa tindakan khusus tampil sebagai "Konteks". Dipakai di dalam elemen yang punya getter IB (hasil KAIInsight.analyze). -->
+<div class="ib2" x-data="{ openLit: null, allP: false, allC: false }">
+  <div class="ib2-h" x-show="typeof IBhead === 'undefined' || IBhead">
+    <svg class="i"><use href="#i-bulb"/></svg>
+    <div><h3>Temuan &amp; tindakan</h3><p>Setiap tindakan dipasangkan dengan temuan pemicunya dan sumber datanya. Klik sumber untuk membuka grafik/tabelnya.</p></div>
+    <div class="spacer"></div>
+    <div class="ib2-leg"><span class="t-bad">Perlu tindakan</span><span class="t-warn">Waspada</span><span class="t-info">Informasi</span><span class="t-good">Membaik</span></div>
+  </div>
+
+  <div class="empty" x-show="IB && !IB.findings.length">Tidak ada kejadian pada pilihan ini.</div>
+
+  <!-- Pasangan temuan → tindakan -->
+  <div class="pairs" x-show="IB && IB.pairs.length">
+    <div class="pairs-h"><span>Temuan dari data</span><span></span><span>Tindakan yang disarankan</span></div>
+    <template x-for="p in (IB ? IB.pairs : []).slice(0, allP ? 30 : 4)" :key="p.id">
+      <article class="pair" :class="'t-' + p.tone">
+        <div class="pf">
+          <div class="pf-top">
+            <span class="pid" x-text="p.id"></span>
+            <button class="src" :class="!p.src.route && 'static'" :disabled="!p.src.route" @click="p.src.route && $store.app.go(p.src.route)" :title="p.src.route ? 'Buka sumber data' : 'Sumber data'">
+              <svg class="i"><use href="#i-chart"/></svg><span x-text="p.src.label"></span>
+            </button>
+          </div>
+          <div class="pf-m"><b x-text="p.metric"></b><span x-text="p.head"></span></div>
+          <p x-text="p.text"></p>
+          <button class="link-btn sm" x-show="p.ids && p.ids.length" @click="$store.app.go('telusuri', { ids: p.ids, label: p.id + ' · ' + p.head, period: 'all' })" x-text="'Lihat ' + (p.ids ? p.ids.length : 0) + ' kejadian →'"></button>
+        </div>
+        <div class="pa" aria-hidden="true"><svg class="i"><use href="#i-arrow"/></svg></div>
+        <div class="pr">
+          <div class="pr-top"><span class="pid r" x-text="p.rec.no"></span><span class="tag" x-text="p.rec.area"></span><span class="note" x-text="'dipicu ' + p.id"></span></div>
+          <b class="pr-title" x-text="p.rec.title"></b>
+          <ol class="pr-act"><template x-for="(a, i) in p.rec.actions" :key="i"><li x-text="a"></li></template></ol>
+          <div class="pr-lit" x-show="p.rec.lit.length">
+            <template x-for="id in p.rec.lit" :key="id">
+              <button class="lit-c" :class="openLit === p.id + id && 'on'" @click="openLit = openLit === p.id + id ? null : p.id + id" x-text="KAIInsight.LIT[id].cite"></button>
+            </template>
+          </div>
+          <template x-for="id in p.rec.lit" :key="'x' + id">
+            <div class="lit-x" x-show="openLit === p.id + id" x-transition.opacity>
+              <mark x-text="KAIInsight.LIT[id].inti"></mark>
+              <a :href="KAIInsight.LIT[id].url" target="_blank" rel="noopener" x-text="KAIInsight.LIT[id].title"></a>
+            </div>
+          </template>
+          <span class="note" x-show="!p.rec.lit.length">Praktik operasional (tanpa rujukan khusus).</span>
+        </div>
+      </article>
+    </template>
+    <button class="link-btn sm more" x-show="IB && IB.pairs.length > 4" @click="allP = !allP" x-text="allP ? 'Ringkas' : 'Tampilkan semua ' + IB.pairs.length + ' pasangan temuan → tindakan'"></button>
+  </div>
+  <div class="note pad" x-show="IB && IB.findings.length && !IB.pairs.length">Tidak ada temuan yang memicu tindakan pada pilihan ini.</div>
+
+  <!-- Konteks: temuan informatif tanpa tindakan khusus -->
+  <div class="ctx" x-show="IB && IB.context.length">
+    <div class="ctx-h">Konteks lain <span class="note">(tidak memicu tindakan khusus)</span></div>
+    <div class="ctx-grid">
+      <template x-for="c in (IB ? IB.context : []).slice(0, allC ? 30 : 6)" :key="c.id">
+        <div class="ctx-c" :class="'t-' + c.tone">
+          <div class="pf-top">
+            <span class="pid" x-text="c.id"></span>
+            <button class="src" :class="!c.src.route && 'static'" :disabled="!c.src.route" @click="c.src.route && $store.app.go(c.src.route)"><svg class="i"><use href="#i-chart"/></svg><span x-text="c.src.label"></span></button>
+          </div>
+          <div class="pf-m"><b x-text="c.metric"></b><span x-text="c.head"></span></div>
+          <p :title="c.text" x-text="c.text"></p>
+        </div>
+      </template>
+    </div>
+    <button class="link-btn sm more" x-show="IB && IB.context.length > 6" @click="allC = !allC" x-text="allC ? 'Ringkas' : 'Semua konteks (' + IB.context.length + ')'"></button>
+  </div>
+</div>

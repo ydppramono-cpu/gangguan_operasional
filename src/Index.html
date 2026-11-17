@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gangguan Operasional · KAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3.1/dist/css/tabulator.min.css" rel="stylesheet"
+    onerror="this.onerror=null;this.href='https://unpkg.com/tabulator-tables@6.3.1/dist/css/tabulator.min.css'">
+  <?!= include('Css.Tokens'); ?>
+
+  <?!= include('Css.App'); ?>
+
+  <!-- Pustaka inti (versi dikunci) dimuat berurutan setelah halaman siap, Alpine terakhir.
+       Tiap pustaka punya CDN cadangan: bila jaringan kantor memblokir satu CDN, CDN berikutnya dicoba. -->
+  <script>
+  (function () {
+    var LIBS = [
+      ['https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js', 'https://unpkg.com/echarts@5.6.0/dist/echarts.min.js', 'https://cdnjs.cloudflare.com/ajax/libs/echarts/5.6.0/echarts.min.js'],
+      ['https://cdn.jsdelivr.net/npm/tabulator-tables@6.3.1/dist/js/tabulator.min.js', 'https://unpkg.com/tabulator-tables@6.3.1/dist/js/tabulator.min.js', 'https://cdnjs.cloudflare.com/ajax/libs/tabulator/6.3.1/js/tabulator.min.js'],
+      ['https://cdn.jsdelivr.net/npm/alpinejs@3.17.4/dist/cdn.min.js', 'https://unpkg.com/alpinejs@3.17.4/dist/cdn.min.js']
+    ];
+    function one(urls, i, done, fail) {
+      if (i >= urls.length) return fail(urls[0]);
+      var s = document.createElement('script'); s.src = urls[i];
+      s.onload = done; s.onerror = function () { s.remove(); one(urls, i + 1, done, fail); };
+      document.head.appendChild(s);
+    }
+    function next(k) {
+      if (k >= LIBS.length) return;
+      one(LIBS[k], 0, function () { next(k + 1); }, function (u) {
+        var b = document.getElementById('lib-fail'); if (b) { b.style.display = 'block'; b.querySelector('code').textContent = u.split('/')[4] || u; }
+      });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { next(0); }); else next(0);
+  })();
+  </script>
+</head>
+<body>
+  <div id="lib-fail" style="display:none;margin:40px auto;max-width:640px;padding:20px 24px;border:1px solid #F6C9C4;background:#FDECEA;color:#B42318;border-radius:12px;font:15px/1.5 Arial,sans-serif">
+    <b>Dashboard tidak dapat dimuat.</b><br>Pustaka tampilan (<code></code>) gagal diunduh dari cdn.jsdelivr.net, unpkg.com, maupun cdnjs.cloudflare.com.
+    Kemungkinan jaringan/proxy kantor memblokir situs tersebut. Coba jaringan lain (mis. data seluler) atau minta tim TI membuka akses ke ketiga alamat itu.
+  </div>
+  <?!= include('Ui.Icons'); ?>
+
+  <?!= include('Ui.Logo'); ?>
+
+  <?!= include('Js.Core'); ?>
+
+  <?!= include('Js.Analytics'); ?>
+
+  <?!= include('Js.Kondisi'); ?>
+
+  <?!= include('Js.Pendapatan'); ?>
+
+  <?!= include('Js.Sarana'); ?>
+
+  <?!= include('Js.Rute'); ?>
+
+  <?!= include('Js.Ref'); ?>
+
+  <?!= include('Js.Insight'); ?>
+
+  <?!= include('Js.Charts'); ?>
+
+  <?!= include('Js.Table'); ?>
+
+  <?!= include('Js.Export'); ?>
+
+  <?!= include('Js.Report'); ?>
+
+  <?!= include('Js.App'); ?>
+
+
+  <div x-data class="app" x-cloak :class="$store.app.sidebarMini && 'mini'">
+    <div class="progress" x-show="$store.app.phase === 'loading' || $store.app.busy"></div>
+    <?!= include('View.Landing'); ?>
+  </div>
+</body>
+</html>

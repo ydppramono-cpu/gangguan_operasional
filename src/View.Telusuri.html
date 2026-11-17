@@ -1,0 +1,65 @@
+<!-- View.Telusuri — daftar kejadian yang bisa dicari, difilter, diurutkan, dan diunduh. Status disimpan di store agar tombol Kembali memulihkannya. -->
+<template x-if="$store.app.route === 'telusuri' && $store.app.R">
+  <section class="view" x-data="vTelusuri">
+    <div class="card">
+      <div class="card-b toolbar">
+        <div class="searchbox">
+          <svg class="i"><use href="#i-search"/></svg>
+          <input class="ctl" type="search" placeholder="Cari KA, nomor sarana, lokasi, JPL, kata di uraian…" x-model.debounce.250ms="T.q" aria-label="Cari kejadian">
+        </div>
+        <div class="seg" role="group" aria-label="Periode">
+          <button :aria-pressed="T.period === 'p'" @click="T.period = 'p'" x-text="R.P.short"></button>
+          <button :aria-pressed="T.period === 'ytd'" @click="T.period = 'ytd'" x-text="'YTD'"></button>
+          <button :aria-pressed="T.period === 'all'" @click="T.period = 'all'">Semua</button>
+        </div>
+        <select class="ctl" x-model="T.kelas" aria-label="Kelas"><option value="">Semua kelas</option><template x-for="k in KAIA.CLASSES" :key="k"><option :value="k" x-text="$store.app.classLabel(k).split(',')[0]"></option></template></select>
+        <select class="ctl" x-model="T.cross" aria-label="Perlintasan"><option value="">Semua jenis</option><option value="*">Semua perlintasan</option><template x-for="c in $store.app.config.crossing" :key="c.id"><option :value="c.id" x-text="c.label"></option></template></select>
+        <button class="btn sm" @click="exp('csv')"><svg class="i"><use href="#i-download"/></svg>CSV</button>
+        <button class="btn sm" @click="exp('xlsx')"><svg class="i"><use href="#i-download"/></svg>Excel</button>
+      </div>
+      <div class="card-f" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+        <span><b class="num" x-text="KAI.fmt.n(rows.length)"></b> kejadian · <b class="num" x-text="KAI.fmt.n(KAIA.sum(rows, function (r) { return r.menit; }))"></b> menit</span>
+        <span class="note" x-text="T.period === 'p' ? '· ' + R.label : T.period === 'ytd' ? '· ' + R.ytdP.label : '· seluruh data' + (KAIA.hoursOn(R.P) ? ' (jam ' + R.P.h0 + '–' + R.P.h1 + ')' : '')"></span>
+        <button class="chip" x-show="T.ids" @click="T.ids = null; T.label = ''" title="Hapus pilihan"><span x-text="T.label || (T.ids && T.ids.length + ' kejadian terpilih')"></span><svg class="i" style="width:14px;height:14px"><use href="#i-x"/></svg></button>
+        <span class="note" x-show="T.q && !$store.app.narrReady">Uraian masih dimuat; pencarian sementara hanya di judul, lokasi, KA, dan sarana.</span>
+      </div>
+    </div>
+    <div class="card mt"><div class="card-b"><div x-table="table" @row-click="$store.app.openEvent($event.detail.id)"></div></div></div>
+  </section>
+</template>
+<script>
+document.addEventListener('alpine:init', function () {
+  Alpine.data('vTelusuri', function () {
+    return {
+      get R() { return this.$store.app.R; },
+      get T() { return this.$store.app.tel; },
+      get rows() {
+        var app = this.$store.app, T = this.T, R = this.R, N = KAI.data.narr, narrOk = app.narrReady;
+        var base = app.scoped();
+        if (T.period === 'p') base = R.L;
+        else if (T.period === 'ytd') base = KAIA.sel(base, R.ytdP);
+        else if (KAIA.hoursOn(R.P)) base = base.filter(function (r) { return r.hr >= 0 && (R.P.h0 <= R.P.h1 ? r.hr >= R.P.h0 && r.hr <= R.P.h1 : r.hr >= R.P.h0 || r.hr <= R.P.h1); });
+        if (T.ids) { var s = {}; T.ids.forEach(function (i) { s[i] = 1; }); base = (T.period === 'all' ? KAI.data.all : base).filter(function (r) { return s[r.id]; }); }
+        if (T.kelas) base = base.filter(function (r) { return r.kelas === T.kelas; });
+        if (T.cross) base = base.filter(function (r) { return T.cross === '*' ? !!r.cross : r.cross === T.cross; });
+        var terms = String(T.q || '').toLowerCase().split(/\s+/).filter(Boolean);
+        if (terms.length) base = base.filter(function (r) {
+          var hay = [r.judul, r.sub, r.lokasi, r.lokCode, r.ka, r.kaNama, r.sarana.join(' '), r.saranaRaw, r.wilayah, r.id, r.penyebab, r.jpl ? 'jpl ' + r.jpl : ''].join(' ').toLowerCase();
+          if (narrOk && N[r.id]) hay += ' ' + N[r.id].join(' ').toLowerCase();
+          return terms.every(function (t) { return hay.indexOf(t) >= 0; });
+        });
+        return KAITable.eventRows(base);
+      },
+      get table() { return { id: 'kejadian', data: this.rows, columns: KAITable.eventCols(), pageSize: 25, initialSort: [{ column: 'waktu', dir: 'desc' }], empty: 'Tidak ada kejadian untuk filter ini.' }; },
+      exp: function (kind) {
+        var app = this.$store.app, N = KAI.data.narr, rows = this.rows.map(function (x) { var r = KAI.data.byId[x.id]; return Object.assign({}, r, { tgl: x.waktu, uraian: (N[r.id] || [])[0] || '', tindak: (N[r.id] || [])[1] || '' }); });
+        var cols = KAIExport.eventColumns();
+        var name = 'Kejadian_' + (this.T.period === 'p' ? this.R.P.short : this.T.period === 'ytd' ? 'YTD_' + this.R.ytdP.short : 'semua');
+        if (!app.narrReady) app.say('Uraian belum termuat; kolom uraian akan kosong.', true);
+        if (kind === 'csv') KAIExport.csv(rows, cols, name);
+        else { app.busy = true; KAIExport.xlsx([{ name: 'Kejadian', columns: cols, rows: rows }], name, app.meta).catch(function (e) { app.say(e.message, true); }).finally(function () { app.busy = false; }); }
+      }
+    };
+  });
+});
+</script>

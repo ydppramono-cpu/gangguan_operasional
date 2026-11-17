@@ -1,0 +1,172 @@
+<script>
+/**
+ * Js.Table — pembungkus Tabulator untuk SEMUA tabel data:
+ * tinggi baris seragam 36 px, teks satu baris (elipsis + tooltip), paginasi lokal 10/25/50/100,
+ * penghitung "Menampilkan x–y dari z baris".
+ * Pakai: <div x-table="spec" @row-click="buka($event.detail)"></div>
+ * spec = { id, data, columns, height, initialSort, pageSize (0 = tanpa paginasi), index, empty }
+ */
+window.KAITable = (function () {
+  var registry = {};
+  var LANG = { id: { pagination: { first: '«', first_title: 'Halaman pertama', last: '»', last_title: 'Halaman terakhir', prev: '‹', prev_title: 'Sebelumnya',
+    next: '›', next_title: 'Berikutnya', all: 'Semua', page_size: 'Baris', page_title: 'Halaman',
+    counter: { showing: 'Menampilkan', of: 'dari', rows: 'baris', pages: 'halaman' } }, data: { loading: 'Memuat…', error: 'Gagal' } } };
+
+  function counter(pageSize, currentRow, currentPage, totalRows) {
+    if (!totalRows) return 'Tidak ada data';
+    var to = Math.min(currentRow + pageSize - 1, totalRows);
+    return 'Menampilkan ' + KAI.fmt.n(currentRow) + '–' + KAI.fmt.n(to) + ' dari ' + KAI.fmt.n(totalRows) + ' baris';
+  }
+
+  function register(Alpine) {
+    Alpine.directive('table', function (el, d, u) {
+      var get = u.evaluateLater(d.expression), t = null, lastCols = null, built = false, pending = null, lastW = 0;
+      // Tabel di tab/elemen tersembunyi diukur ulang saat terlihat.
+      var ro = new ResizeObserver(function () { var w = el.clientWidth; if (t && built && w && Math.abs(w - lastW) > 2) { lastW = w; try { t.redraw(true); } catch (e) { } } });
+      ro.observe(el);
+      // Navigasi pada event "click" asli (bukan rowClick Tabulator yang terpicu saat mouseup) agar klik tidak "tembus" ke halaman berikutnya.
+      el.addEventListener('click', function (ev) {
+        var rowEl = ev.target.closest && ev.target.closest('.tabulator-row'); if (!rowEl || !t) return;
+        var row = t.getRows().filter(function (r) { return r.getElement() === rowEl; })[0];
+        if (row) el.dispatchEvent(new CustomEvent('row-click', { detail: row.getData(), bubbles: true }));
+      });
+      u.effect(function () {
+        get(function (spec) {
+          if (!spec || !window.Tabulator) return;
+          var ps = spec.pageSize === 0 ? 0 : (spec.pageSize || 25);
+          var colsKey = JSON.stringify(spec.columns.map(function (c) { return c.field + (c.title || ''); })) + '|' + ps;
+          if (!t || colsKey !== lastCols) {
+            if (t) t.destroy();
+            built = false; pending = null;
+            el.classList.toggle('no-pager', !ps);
+            t = new Tabulator(el, {
+              data: spec.data, columns: spec.columns.map(function (c) { return Object.assign({ tooltip: true }, c.hozAlign === 'right' && !c.sorter ? { sorter: 'number', headerHozAlign: 'right' } : {}, !c.formatter ? { formatter: cellFmt } : {}, c); }),
+              layout: 'fitColumns', height: spec.height || false, rowHeight: 36,
+              placeholder: spec.empty || 'Tidak ada data untuk filter ini.', selectableRows: false, index: spec.index || 'id',
+              initialSort: spec.initialSort || [], columnDefaults: { headerTooltip: true, resizable: true, vertAlign: 'middle' },
+              pagination: !!ps, paginationMode: 'local', paginationSize: ps || 25, paginationSizeSelector: [10, 25, 50, 100],
+              paginationButtonCount: 5, paginationCounter: counter, locale: 'id', langs: LANG,
+              renderVertical: ps ? 'basic' : 'virtual', renderVerticalBuffer: 300
+            });
+            t.on('tableBuilt', function () { built = true; if (pending) { t.replaceData(pending); pending = null; } });
+            lastCols = colsKey;
+            if (spec.id) registry[spec.id] = t;
+          } else if (built) {
+            t.replaceData(spec.data);
+          } else {
+            pending = spec.data;
+          }
+        });
+      });
+      u.cleanup(function () { ro.disconnect(); if (t) t.destroy(); });
+    });
+  }
+
+  /** Baris yang sedang tampil (setelah urut/filter, semua halaman) — dipakai ekspor. */
+  function rows(id) { var t = registry[id]; return t ? t.getData('active') : []; }
+
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var badgeKelas = function (c) { var d = c.getData(); return '<span class="badge k" style="--c:' + KAI.classColor(d.kelas) + '"' + (d._d && d._d.kelas ? ' title="Kelas ditentukan dari judul karena Kategori & Subgangguan kosong"' : '') + '>' + esc(c.getValue()) + (d._d && d._d.kelas ? ' *' : '') + '</span>'; };
+  var menitFmt = function (c) { return '<b>' + KAI.fmt.n(c.getValue()) + '</b>'; };
+  var fmtNum = function (cell) { return KAI.fmt.n(cell.getValue()); };
+  var CLASS_SHORT = { operasional: 'Operasional', sarana: 'Sarana', alam: 'Alam', prasarana: 'Prasarana', belum: 'Belum lengkap' };
+
+  /**
+   * Kolom baku daftar kejadian — SAMA di semua halaman (Telusuri, Ringkasan, Perlintasan, Eksposur, profil):
+   * Waktu · Wilayah · Kelas · Kejadian · Lokasi · KA · Sarana · Menit [+ kolom tambahan]
+   */
+  var FIELD_DRV = { ka: 'ka', lokasi: 'lokasi', sarana: 'sarana', wilayah: 'wilayah', kelasLabel: 'kelas' };
+  /** Sel teks: kosong → "Tidak tercatat" (abu-abu miring); hasil turunan → garis bawah titik + tooltip. */
+  function cellFmt(c) {
+    var v = c.getValue(), d = c.getData(), f = c.getField();
+    if (v == null || v === '' || v === '–') return '<span class="nil">' + KAI.NIL + '</span>';
+    return d._d && FIELD_DRV[f] && d._d[FIELD_DRV[f]] ? '<span class="drv" title="' + KAI.DRV_TIP + '">' + esc(v) + '</span>' : esc(v);
+  }
+  function waktuFmt(c) {
+    var d = c.getData(), r = d._r;
+    if (!r) return esc(c.getValue());
+    if (!r.date) return '<span class="nil">Tanggal ' + KAI.NIL.toLowerCase() + '</span>';
+    if (r.hm < 0) return esc(KAI.fmt.date(r)) + ' <span class="nil" title="Jam mulai tidak tercatat di laporan">· tanpa jam</span>';
+    return esc(KAI.fmt.date(r)) + ' · ' + (r.drvSet && r.drvSet.jam ? '<span class="drv" title="' + KAI.DRV_TIP + '">' + KAI.fmt.hm(r.hm) + '</span>' : KAI.fmt.hm(r.hm));
+  }
+  function eventRows(list, extra) {
+    return list.map(function (r) {
+      var o = { id: r.id, _r: r, _d: r.drvSet || {}, waktu: KAI.fmt.dateTime(r), sk: KAIA.sortKey(r), wilayah: r.wilayah || '', kelas: r.kelas, kelasLabel: CLASS_SHORT[r.kelas] || r.kelas,
+        kejadian: r.judul || r.sub || '', lokasi: (r.lokasi || '') + (r.lokasi && r.cross && r.jpl ? ' · JPL ' + r.jpl : ''),
+        ka: r.ka ? r.ka + (r.kaNama ? ' ' + r.kaNama : '') : '',
+        sarana: r.sarana && r.sarana.length ? r.sarana.map(KAI.fmt.unit).join(', ') : '', menit: r.menit };
+      return extra ? Object.assign(o, extra(r)) : o;
+    });
+  }
+  function eventCols(opts) {
+    opts = opts || {};
+    var c = [
+      { title: 'Waktu', field: 'waktu', width: 168, formatter: waktuFmt, sorter: function (a, b, ra, rb) { return ra.getData().sk.localeCompare(rb.getData().sk); } },
+      { title: 'Wilayah', field: 'wilayah', width: 92, formatter: cellFmt },
+      { title: 'Kelas', field: 'kelasLabel', width: 118, formatter: badgeKelas },
+      { title: 'Kejadian', field: 'kejadian', minWidth: 200, formatter: cellFmt },
+      { title: 'Lokasi', field: 'lokasi', minWidth: 150, formatter: cellFmt },
+      { title: 'KA', field: 'ka', width: 160, formatter: cellFmt },
+      { title: 'Sarana', field: 'sarana', width: 128, formatter: cellFmt },
+      { title: 'Menit', field: 'menit', hozAlign: 'right', headerHozAlign: 'right', width: 82, formatter: menitFmt, sorter: 'number' }
+    ];
+    if (opts.hide) c = c.filter(function (x) { return opts.hide.indexOf(x.field) < 0; });
+    return c.concat(opts.extra || []);
+  }
+  /** Spesifikasi lengkap tabel kejadian. */
+  function eventSpec(id, list, opts) {
+    opts = opts || {};
+    return { id: id, data: eventRows(list, opts.extraRow), columns: eventCols(opts), pageSize: opts.pageSize || 10,
+      initialSort: opts.sort || [{ column: 'waktu', dir: 'desc' }], empty: 'Tidak ada kejadian untuk filter ini.' };
+  }
+
+  /**
+   * Paginasi otomatis untuk tabel ringkas <table class="tbl"> (yang dirender Alpine x-for).
+   * Ukuran halaman: atribut data-pg (bawaan 10). Kelas "nopg" = tanpa paginasi/penghitung (mis. tabel perbandingan berbaris tetap).
+   * Baris "total" selalu tampil. Penghitung: "Menampilkan x–y dari z baris".
+   */
+  function pagerFor(tb) {
+    if (tb._pg) return tb._pg;
+    var host = tb.parentElement && tb.parentElement.classList.contains('tbl-wrap') ? tb.parentElement : tb;
+    var foot = document.createElement('div'); foot.className = 'pg';
+    host.insertAdjacentElement('afterend', foot);
+    var st = { page: 0, foot: foot, sig: '' };
+    foot.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b || b.disabled) return;
+      st.page += +b.dataset.d; render(tb, true);
+    });
+    tb._pg = st;
+    var mo = new MutationObserver(function () { render(tb, false); });
+    mo.observe(tb, { childList: true, subtree: true });
+    st.mo = mo;
+    return st;
+  }
+  function render(tb, keepPage) {
+    var st = pagerFor(tb), size = +tb.dataset.pg || 10;
+    var body = tb.tBodies[0]; if (!body) return;
+    var rowsEl = [].filter.call(body.rows, function (r) { return !r.classList.contains('total'); });
+    var n = rowsEl.length, pages = Math.max(1, Math.ceil(n / size));
+    var sig = n + ':' + (rowsEl[0] ? rowsEl[0].textContent.slice(0, 40) : '');
+    if (!keepPage && sig !== st.sig) st.page = 0;
+    st.sig = sig;
+    st.page = Math.max(0, Math.min(st.page, pages - 1));
+    st.mo.disconnect();
+    rowsEl.forEach(function (r, i) { r.classList.toggle('pg-hide', Math.floor(i / size) !== st.page); });
+    var from = n ? st.page * size + 1 : 0, to = Math.min(n, (st.page + 1) * size);
+    var txt = !n ? 'Tidak ada data' : (pages > 1 ? 'Menampilkan ' + KAI.fmt.n(from) + '–' + KAI.fmt.n(to) + ' dari ' + KAI.fmt.n(n) + ' baris' : 'Menampilkan ' + KAI.fmt.n(n) + ' baris');
+    st.foot.innerHTML = '<span>' + txt + '</span>' + (pages > 1 ? '<span class="pg-b"><button data-d="-1"' + (st.page ? '' : ' disabled') + ' aria-label="Sebelumnya">‹</button><span>' +
+      (st.page + 1) + ' / ' + pages + '</span><button data-d="1"' + (st.page < pages - 1 ? '' : ' disabled') + ' aria-label="Berikutnya">›</button></span>' : '');
+    st.mo.observe(tb, { childList: true, subtree: true });
+  }
+  function scan(rootEl) {
+    (rootEl || document).querySelectorAll('table.tbl:not(.nopg)').forEach(function (tb) { if (!tb._pg) render(tb, false); });
+  }
+  function autoPager() {
+    var t = null;
+    new MutationObserver(function () { if (t) return; t = setTimeout(function () { t = null; scan(); }, 120); }).observe(document.body, { childList: true, subtree: true });
+    scan();
+  }
+
+  return { cellFmt: cellFmt, register: register, rows: rows, autoPager: autoPager, fmtNum: fmtNum, menitFmt: menitFmt, esc: esc, eventRows: eventRows, eventCols: eventCols, eventSpec: eventSpec };
+})();
+</script>

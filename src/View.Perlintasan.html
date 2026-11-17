@@ -1,0 +1,167 @@
+<!-- View.Perlintasan — kejadian di perlintasan sebidang + inventaris JPL (1.404 titik program) dan titik kejadian. -->
+<template x-if="$store.app.route === 'perlintasan' && $store.app.R">
+  <section class="view" x-data="vCross">
+    <div class="grid g-2-1">
+      <div class="card">
+        <div class="card-h"><div><h3>Kejadian perlintasan sebidang</h3><p>Frekuensi dan total kelambatan per jenis · YoY, MoM, periode aktif · klik baris untuk menelusuri</p></div></div>
+        <div class="card-b tbl-wrap" style="max-height:none">
+          <table class="tbl">
+            <thead>
+              <tr><th rowspan="2">Jenis kejadian</th><template x-for="p in R.crossPeriods" :key="p.label"><th class="num" colspan="2" x-text="p.label"></th></template></tr>
+              <tr><template x-for="p in R.crossPeriods" :key="p.label + 'h'"><th class="num" colspan="2" style="font-weight:500;text-transform:none">frek · menit</th></template></tr>
+            </thead>
+            <tbody>
+              <template x-for="r in R.cross.rows" :key="r.id">
+                <tr class="click" @click="$store.app.go('telusuri', { cross: r.id })">
+                  <td x-text="r.label"></td>
+                  <template x-for="(c, i) in r.cells" :key="i"><td class="num" colspan="2"><span x-text="c.n + 'x'"></span> · <b x-text="KAI.fmt.n(c.menit)"></b></td></template>
+                </tr>
+              </template>
+              <tr class="total"><td x-text="R.cross.total.label"></td>
+                <template x-for="(c, i) in R.cross.total.cells" :key="i"><td class="num" colspan="2" x-text="c.n + 'x · ' + KAI.fmt.n(c.menit)"></td></template></tr>
+              <tr class="muted"><td x-text="R.cross.other.label"></td>
+                <template x-for="(c, i) in R.cross.other.cells" :key="i"><td class="num" colspan="2" x-text="c.n + 'x · ' + KAI.fmt.n(c.menit)"></td></template></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3>Inventaris JPL</h3><p>Daftar 1.404 titik program keselamatan (tab M_JPL) + titik dari laporan kejadian</p></div></div>
+        <div class="card-b">
+          <template x-if="!$store.app.refReady"><div class="skel" style="height:180px"></div></template>
+          <template x-if="$store.app.refReady && S">
+            <div class="statgrid">
+              <div><span>JPL program</span><b x-text="KAI.fmt.n(S.master)"></b></div>
+              <div><span>Prioritas 190</span><b x-text="KAI.fmt.n(S.p190)"></b></div>
+              <div><span>Tidak dijaga</span><b class="bad-t" x-text="KAI.fmt.n(S.unguarded)"></b></div>
+              <div><span>Terpetakan ke petak</span><b x-text="KAI.fmt.d1(S.mapped / S.master * 100) + '%'"></b></div>
+              <div><span>Kejadian tertaut JPL</span><b x-text="KAI.fmt.n(S.linked) + ' / ' + KAI.fmt.n(S.total)"></b></div>
+              <div><span>Titik berulang (12 bln)</span><b class="bad-t" x-text="KAI.fmt.n(S.repeat12)"></b></div>
+            </div>
+          </template>
+          <p class="note" style="margin:10px 0 0">Kejadian ditautkan ke JPL bila petaknya sama dan nomor JPL disebut di laporan, atau selisih KM ≤ <span x-text="String(R.cfg.jplKm).replace('.', ',')"></span> km. Daftar 1.404 bukan seluruh JPL nasional — titik di luar daftar tetap diinventaris dari laporan.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt">
+      <div class="card-h"><div><h3>Titik perlintasan & JPL</h3><p x-text="'Kolom “Periode” mengikuti ' + R.label + '; “12 bln” = 12 bulan s.d. akhir periode · klik baris untuk profil JPL/petak'"></p></div>
+        <div class="spacer"></div>
+        <div class="seg"><button :aria-pressed="mode === 'titik'" @click="mode = 'titik'">Titik kejadian</button><button :aria-pressed="mode === 'master'" @click="mode = 'master'">JPL program</button><button :aria-pressed="mode === 'p190'" @click="mode = 'p190'">190 prioritas</button></div>
+        <select class="ctl sm" x-model="jaga" aria-label="Status jaga"><option value="">Semua status</option><option value="tidak dijaga">Tidak dijaga</option><option value="dijaga">Dijaga</option><option value="tidak tercatat">Tidak tercatat</option></select>
+        <button class="btn sm" @click="exp('csv')">CSV</button><button class="btn sm" @click="exp('xlsx')">Excel</button>
+      </div>
+      <div class="card-b">
+        <template x-if="!$store.app.refReady"><div class="skel" style="height:300px"></div></template>
+        <div x-show="$store.app.refReady" x-table="table" @row-click="openRow($event.detail)"></div>
+      </div>
+    </div>
+
+    <div class="grid g-3 mt">
+      <div class="card">
+        <div class="card-h"><div><h3>Lokasi berulang</h3><p x-text="'Perlintasan & temperan, ≥2 kejadian · ' + R.label"></p></div></div>
+        <div class="card-b">
+          <table class="tbl"><tbody>
+            <template x-for="x in R.crossDetail.repeat" :key="x.lokasi + x.wilayah">
+              <tr class="click" @click="x.segKey ? $store.app.open('petak', x.segKey) : $store.app.go('telusuri', { ids: x.ids, label: x.lokasi, period: 'all' })"><td><b x-text="x.lokasi"></b><div class="note" x-text="x.wilayah"></div></td><td class="num" x-text="x.n + ' kej. · ' + KAI.fmt.n(x.menit) + ' mnt'"></td></tr>
+            </template>
+          </tbody></table>
+          <div class="empty" x-show="!R.crossDetail.repeat.length">Tidak ada lokasi berulang pada periode ini.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3>Wilayah terbanyak</h3><p>Perlintasan & temperan · periode aktif · klik untuk profil wilayah</p></div></div>
+        <div class="card-b fill"><div class="chart short" x-chart="KAIChart.barH(R.crossDetail.regions.map(function (r) { return { label: r.wilayah, value: r.n }; }), 'kejadian', '#F06A25', 'Wilayah')" @chart-click="$store.app.open('wilayah', $event.detail.name)"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3>Lokasi berulang sepanjang tahun</h3><p x-text="R.ytdP.label + ' · ≥2 kejadian'"></p></div></div>
+        <div class="card-b">
+          <table class="tbl"><tbody>
+            <template x-for="x in R.crossYtd.repeat" :key="x.lokasi + x.wilayah">
+              <tr class="click" @click="x.segKey ? $store.app.open('petak', x.segKey) : $store.app.go('telusuri', { ids: x.ids, label: x.lokasi + ' (YTD)', period: 'all' })"><td><b x-text="x.lokasi"></b><div class="note" x-text="x.wilayah"></div></td><td class="num" x-text="x.n + ' kej. · ' + KAI.fmt.n(x.menit) + ' mnt'"></td></tr>
+            </template>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt">
+      <div class="card-h"><div><h3>Kejadian perlintasan terlama</h3><p x-text="'Diurutkan menurut menit · ' + R.label + ' · klik baris untuk detail'"></p></div></div>
+      <div class="card-b"><div x-table="KAITable.eventSpec('cross-heavy', R.crossDetail.heavy, { sort: [{ column: 'menit', dir: 'desc' }] })" @row-click="$store.app.openEvent($event.detail.id)"></div></div>
+    </div>
+  </section>
+</template>
+<script>
+document.addEventListener('alpine:init', function () {
+  var memo = { k: '', v: null };
+  Alpine.data('vCross', function () {
+    return {
+      mode: 'titik', jaga: '',
+      get R() { return this.$store.app.R; },
+      /** Semua titik (seluruh periode, mengikuti filter wilayah) + hitung per periode. */
+      get model() {
+        var app = this.$store.app; if (!app.refReady) return null;
+        var R = this.R, k = app.ver + '|' + app.f.wilayah.join(',') + '|' + app.f.kelas.join(',') + '|' + JSON.stringify(R.P);
+        if (memo.k === k) return memo.v;
+        var Ref = KAI.data.ref, recs = app.scoped(), inv = KAIRef.crossingInventory(Ref, recs, R.cfg);
+        var inP = KAIA.matcher(R.P), end = KAIA.endOf(R.P), p12 = KAIA.pRange(KAIA.addDays(end, -364), end), in12 = KAIA.matcher(p12);
+        KAIRef.ensureRoutes(Ref);
+        function traffic(seg) { return seg ? KAIRef.trafficOnSeg(Ref, seg) : null; }
+        var rows = inv.points.map(function (p) {
+          var j = p.jpl;
+          return { key: p.key, jplId: j ? j.id : '', segKey: p.segKey || '', titik: p.label, wilayah: p.region || '', alamat: j ? j.kab + ', ' + j.prov : '',
+            km: j ? j.kmText : (p.km != null ? KAI.fmt.km(p.km) : ''), jaga: j ? j.jaga : 'tidak tercatat', p190: j && j.p190 ? 'Ya' : '', lebar: j ? j.lebar : '',
+            ka: traffic(p.segKey), nP: p.recs.filter(inP).length, n12: p.recs.filter(in12).length, n: p.n, menit: p.menit, last: p.last, ids: p.recs.map(function (r) { return r.id; }), src: j ? 'JPL program' : 'Laporan' };
+        });
+        var byJ = {}; rows.forEach(function (r) { if (r.jplId) byJ[r.jplId] = r; });
+        var master = Ref.jpl.filter(function (j) { return !app.f.wilayah.length || app.f.wilayah.indexOf(j.region) >= 0; }).map(function (j) {
+          return byJ[j.id] || { key: j.id, jplId: j.id, segKey: j.segKey, titik: 'JPL ' + (j.no || '–') + ' · ' + (j.antara || 'petak tidak tercantum'), wilayah: j.region, alamat: j.kab + ', ' + j.prov,
+            km: j.kmText, jaga: j.jaga, p190: j.p190 ? 'Ya' : '', lebar: j.lebar, ka: traffic(j.segKey), nP: 0, n12: 0, n: 0, menit: 0, last: '', ids: [], src: 'JPL program' };
+        });
+        var S = { master: master.length, p190: master.filter(function (r) { return r.p190; }).length, unguarded: master.filter(function (r) { return r.jaga === 'tidak dijaga'; }).length,
+          mapped: Ref.jpl.filter(function (j) { return j.pairKey && (!app.f.wilayah.length || app.f.wilayah.indexOf(j.region) >= 0); }).length,
+          linked: inv.linked, total: inv.total, repeat12: rows.filter(function (r) { return r.n12 >= 2; }).length };
+        memo = { k: k, v: { rows: rows, master: master, S: S } };
+        return memo.v;
+      },
+      get S() { return this.model && this.model.S; },
+      get rows() {
+        var m = this.model; if (!m) return [];
+        var list = this.mode === 'titik' ? m.rows : this.mode === 'p190' ? m.master.filter(function (r) { return r.p190; }) : m.master, j = this.jaga;
+        if (j) list = list.filter(function (r) { return r.jaga === j; });
+        return list;
+      },
+      get table() {
+        var cols = [
+          { title: 'Titik', field: 'titik', minWidth: 230, formatter: function (c) { var d = c.getData(); return '<b>' + c.getValue() + '</b>' + (d.p190 ? ' <span class="badge k" style="background:#F06A25">190</span>' : ''); } },
+          { title: 'Wilayah', field: 'wilayah', width: 90 },
+          { title: 'Alamat', field: 'alamat', minWidth: 180 },
+          { title: 'KM', field: 'km', width: 100 },
+          { title: 'Jaga', field: 'jaga', width: 118, formatter: function (c) { var v = c.getValue(); return '<span class="badge ' + (v === 'tidak dijaga' ? 'bad' : v === 'dijaga' ? 'good' : '') + '">' + KAI.cap(v) + '</span>'; } },
+          { title: 'KA/hari', field: 'ka', hozAlign: 'right', width: 88, headerTooltip: 'Perjalanan KA per hari yang melewati petak (rute GAPEKA 2025)' },
+          { title: 'Periode', field: 'nP', hozAlign: 'right', width: 86 },
+          { title: '12 bln', field: 'n12', hozAlign: 'right', width: 80, formatter: function (c) { var v = c.getValue(); return v >= 2 ? '<b style="color:var(--bad)">' + v + '</b>' : v; } },
+          { title: 'Semua', field: 'n', hozAlign: 'right', width: 80 },
+          { title: 'Menit', field: 'menit', hozAlign: 'right', width: 86, formatter: function (c) { return KAI.fmt.n(c.getValue()); } },
+          { title: 'Terakhir', field: 'last', width: 104 }
+        ];
+        return { id: 'jpl', index: 'key', data: this.rows, columns: cols, pageSize: 25, initialSort: [{ column: 'n', dir: 'desc' }, { column: 'n12', dir: 'desc' }] };
+      },
+      openRow: function (d) {
+        var app = this.$store.app;
+        if (d.jplId) return app.open('jpl', d.jplId);
+        if (d.segKey) return app.open('petak', d.segKey);
+        if (d.ids && d.ids.length) app.go('telusuri', { ids: d.ids, label: d.titik, period: 'all' });
+      },
+      exp: function (kind) {
+        var cols = [{ title: 'Titik', field: 'titik' }, { title: 'Sumber', field: 'src' }, { title: 'Wilayah', field: 'wilayah' }, { title: 'Alamat', field: 'alamat' }, { title: 'KM', field: 'km' },
+          { title: 'Status jaga', field: 'jaga' }, { title: 'Prioritas 190', field: 'p190' }, { title: 'Lebar (m)', field: 'lebar' }, { title: 'KA/hari', field: 'ka' },
+          { title: 'Kejadian periode', field: 'nP' }, { title: 'Kejadian 12 bln', field: 'n12' }, { title: 'Kejadian semua', field: 'n' }, { title: 'Menit semua', field: 'menit' }, { title: 'Terakhir', field: 'last' }];
+        var name = 'Inventaris_JPL_' + this.mode;
+        if (kind === 'csv') KAIExport.csv(this.rows, cols, name);
+        else KAIExport.xlsx([{ name: 'Inventaris JPL', columns: cols, rows: this.rows }], name, this.$store.app.meta).catch(function (e) { Alpine.store('app').say(e.message, true); });
+      }
+    };
+  });
+});
+</script>

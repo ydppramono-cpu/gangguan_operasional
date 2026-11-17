@@ -1,0 +1,458 @@
+<script>
+/**
+ * Js.Charts — pembungkus Apache ECharts.
+ * Pakai di HTML: <div class="chart" x-chart="opsiGrafik()" @chart-click="..."></div>
+ * Opsi dihitung ulang otomatis saat filter berubah (reaktif lewat Alpine effect).
+ */
+window.KAIChart = (function () {
+  var C = { op: '#0F766E', sarana: '#275BC0', alam: '#B45309', pras: '#64748B', navy: '#252271', orange: '#F06A25', grid: '#E8ECF3', axis: '#5B6475', ink: '#17223B' };
+  var FONT = 'Inter, Arial, sans-serif';
+  var registered = false;
+  function theme() {
+    if (registered || !window.echarts) return; registered = true;
+    echarts.registerTheme('kai', {
+      color: [C.op, C.sarana, C.alam, C.pras, C.navy, C.orange],
+      textStyle: { fontFamily: FONT, color: C.ink },
+      animationDuration: 450, animationDurationUpdate: 320, animationEasing: 'cubicOut', animationEasingUpdate: 'cubicOut',
+      categoryAxis: { axisLine: { lineStyle: { color: '#C9D1DE' } }, axisTick: { show: false }, axisLabel: { color: C.axis }, splitLine: { show: false } },
+      valueAxis: { axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: C.axis }, splitLine: { lineStyle: { color: C.grid } } },
+      legend: { textStyle: { color: C.axis }, icon: 'circle', itemWidth: 9, itemHeight: 9 },
+      tooltip: { backgroundColor: '#fff', borderColor: '#D8DEEA', textStyle: { color: C.ink, fontSize: 12.5 }, extraCssText: 'box-shadow:0 8px 24px rgba(23,34,59,.14);border-radius:10px;' }
+    });
+  }
+  var REDUCE = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function k(v) { return v >= 1000 ? KAI.fmt.d1(v / 1000) + 'k' : KAI.fmt.n(v); }
+  var CLASS_LABEL = { operasional: 'Operasional, pelayanan & keamanan', sarana: 'Sarana', alam: 'Alam', prasarana: 'Prasarana', belum: 'Data belum lengkap' };
+
+  /** Grafik garis per kelas. metric: 'n' | 'menit'. Pencilan diberi anotasi, tidak dibuang. */
+  function trend(model, metric) {
+    var all = [], series = [];
+    KAIA.CLASSES.forEach(function (c) { all = all.concat(model.series[c][metric]); });
+    var sorted = all.slice().sort(function (a, b) { return b - a; }), cap = null, outliers = [];
+    if (metric === 'menit' && sorted[0] > 3 * (sorted[1] || 1) && sorted[1] > 0) cap = Math.ceil(sorted[1] * 1.25 / 1000) * 1000;
+    KAIA.CLASSES.forEach(function (c) {
+      var data = model.series[c][metric];
+      var s = { name: CLASS_LABEL[c], type: 'line', smooth: false, symbol: 'circle', symbolSize: 7, data: data, color: KAI.classColor(c),
+        lineStyle: { width: 2.5 }, emphasis: { focus: 'series' }, clip: true, kelas: c };
+      if (cap) {
+        var pts = [];
+        data.forEach(function (v, i) { if (v > cap) { pts.push({ coord: [i, cap], value: v }); outliers.push(CLASS_LABEL[c] + ' ' + KAI.fmt.mon(model.yms[i]) + ': ' + KAI.fmt.n(v) + ' mnt'); } });
+
+      }
+      series.push(s);
+    });
+    return {
+      grid: { left: 52, right: 28, top: outliers.length ? 58 : 40, bottom: 32 },
+      legend: { top: 0, left: 0 },
+      tooltip: { trigger: 'axis', valueFormatter: function (v) { return KAI.fmt.n(v) + (metric === 'menit' ? ' mnt' : ' kej.'); } },
+      xAxis: { type: 'category', data: model.yms.map(KAI.fmt.mon), boundaryGap: false },
+      yAxis: { type: 'value', max: cap || null, axisLabel: { formatter: k } },
+      series: series, animation: !REDUCE,
+      graphic: outliers.length ? [{ type: 'text', right: 28, top: 30, style: { text: '↑ Di luar skala: ' + outliers.join(' · '), fill: '#B54708', font: '12px ' + FONT } }] : []
+    };
+  }
+
+  /** Matriks frekuensi × kelambatan (bubble), garis putus = median 4 kelas. */
+  function matrix(m, opts) {
+    opts = opts || {};
+    var maxMenit = Math.max.apply(null, m.points.map(function (p) { return p.menit; }).concat([1]));
+    var maxN = Math.max.apply(null, m.points.map(function (p) { return p.n; }).concat([1]));
+    var xMax = opts.xMax || Math.ceil(maxN * 1.15), yMax = opts.yMax || Math.ceil(maxMenit * 1.2);
+    return {
+      grid: { left: 64, right: 24, top: 24, bottom: 46 },
+      tooltip: { formatter: function (p) { var d = p.data; return '<b>' + CLASS_LABEL[d.kelas] + '</b><br>' + KAI.fmt.n(d.value[0]) + ' kejadian · ' + KAI.fmt.n(d.value[1]) + ' menit'; } },
+      xAxis: { type: 'value', name: 'Frekuensi (kejadian)', nameLocation: 'middle', nameGap: 28, min: 0, max: xMax, nameTextStyle: { color: C.axis } },
+      yAxis: { type: 'value', name: 'Total kelambatan (menit)', nameLocation: 'middle', nameGap: 48, min: 0, max: yMax, axisLabel: { formatter: k }, nameTextStyle: { color: C.axis } },
+      series: [{
+        type: 'scatter', animation: !REDUCE,
+        data: m.points.map(function (p) {
+          return { value: [p.n, p.menit], kelas: p.kelas, symbolSize: 16 + 54 * Math.sqrt(p.menit / maxMenit),
+            itemStyle: { color: KAI.classColor(p.kelas), opacity: .9, borderColor: '#fff', borderWidth: 1.5 },
+            label: { show: true, formatter: k(p.menit), color: '#fff', fontWeight: 600, fontSize: 11 } };
+        }),
+        markLine: { silent: true, symbol: 'none', lineStyle: { type: 'dashed', color: '#8C95A8' }, label: { color: C.axis, fontSize: 11 },
+          data: [{ xAxis: m.medN, label: { formatter: 'median ' + KAI.fmt.d1(m.medN) + ' kej.', position: 'end' } },
+                 { yAxis: m.medMenit, label: { formatter: 'median ' + KAI.fmt.n(m.medMenit) + ' mnt', position: 'insideEndTop' } }] },
+        markArea: { silent: true, itemStyle: { color: 'rgba(240,106,37,.07)' }, label: { color: '#B54708', fontSize: 11.5, position: 'insideTopRight' },
+          data: [[{ name: 'Sering · dampak tinggi', xAxis: m.medN, yAxis: m.medMenit }, { xAxis: xMax, yAxis: yMax }]] }
+      }]
+    };
+  }
+
+  /** Batang horizontal untuk peringkat. items: [{label, value, color?}] */
+  function barH(items, unit, color) {
+    var rev = items.slice().reverse();
+    return {
+      grid: { left: 8, right: 56, top: 6, bottom: 6, containLabel: true },
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return KAI.fmt.n(v) + ' ' + unit; } },
+      xAxis: { type: 'value', axisLabel: { formatter: k }, splitLine: { show: false } },
+      yAxis: { type: 'category', data: rev.map(function (i) { return i.label; }), axisLabel: { width: 190, overflow: 'truncate', color: C.ink } },
+      series: [{ type: 'bar', data: rev.map(function (i) { return { value: i.value, itemStyle: { color: i.color || color || C.navy, borderRadius: [0, 4, 4, 0] }, key: i.key }; }),
+        barMaxWidth: 18, label: { show: true, position: 'right', formatter: function (p) { return KAI.fmt.n(p.value); }, color: C.axis, fontSize: 11.5 } }],
+      animation: !REDUCE
+    };
+  }
+
+  /** Batang per bulan (mis. rerata durasi sarana); bulan acuan disorot. */
+  function barMonths(yms, values, focusYm, unit) {
+    return {
+      grid: { left: 40, right: 12, top: 20, bottom: 28 },
+      tooltip: { trigger: 'axis', valueFormatter: function (v) { return KAI.fmt.d1(v) + ' ' + unit; } },
+      xAxis: { type: 'category', data: yms.map(KAI.fmt.mon) },
+      yAxis: { type: 'value' },
+      series: [{ type: 'bar', barMaxWidth: 34, data: values.map(function (v, i) { return { value: Math.round(v * 10) / 10, itemStyle: { color: yms[i] === focusYm ? C.op : '#94A3B8', borderRadius: [4, 4, 0, 0] } }; }),
+        label: { show: true, position: 'top', fontSize: 11, color: C.axis, formatter: function (p) { return KAI.fmt.d1(p.value); } } }],
+      animation: !REDUCE
+    };
+  }
+
+  /** Seri harian bertumpuk per kelas (menit atau kejadian). */
+  function daily(model, metric) {
+    var days = model.days.map(function (d) { return +d.slice(8, 10) + '/' + (+d.slice(5, 7)); });
+    return {
+      grid: { left: 48, right: 16, top: 34, bottom: 28 }, legend: { top: 0, left: 0 },
+      tooltip: { trigger: 'axis', valueFormatter: function (v) { return KAI.fmt.n(v) + (metric === 'menit' ? ' mnt' : ' kej.'); } },
+      xAxis: { type: 'category', data: days, axisLabel: { hideOverlap: true } }, yAxis: { type: 'value', axisLabel: { formatter: k } },
+      series: KAIA.CLASSES.map(function (c) { return { name: CLASS_LABEL[c], type: 'bar', stack: 'k', data: model.series[c][metric], color: KAI.classColor(c), barMaxWidth: 22, kelas: c }; }),
+      animation: !REDUCE
+    };
+  }
+
+  /** Kejadian per jam (batang) + menit (garis). */
+  function hourBar(H) {
+    var hrs = []; for (var i = 0; i < 24; i++) hrs.push((i < 10 ? '0' : '') + i);
+    return {
+      grid: { left: 44, right: 50, top: 30, bottom: 26 }, legend: { top: 0, left: 'center' },
+      tooltip: { trigger: 'axis' },
+      xAxis: { type: 'category', data: hrs }, yAxis: [{ type: 'value', name: 'kej.', nameTextStyle: { color: C.axis } }, { type: 'value', name: 'menit', axisLabel: { formatter: k }, splitLine: { show: false }, nameTextStyle: { color: C.axis } }],
+      series: [{ name: 'Kejadian', type: 'bar', data: H.n, color: C.navy, barMaxWidth: 18, itemStyle: { borderRadius: [3, 3, 0, 0] } },
+        { name: 'Menit', type: 'line', yAxisIndex: 1, data: H.menit, color: C.orange, smooth: true, symbol: 'none', lineStyle: { width: 2 } }],
+      animation: !REDUCE
+    };
+  }
+
+  /** Peta panas hari × jam. */
+  function heat(H) {
+    var data = [], max = 1;
+    for (var d = 0; d < 7; d++) for (var h = 0; h < 24; h++) { data.push([h, d, H.heat[d][h]]); if (H.heat[d][h] > max) max = H.heat[d][h]; }
+    var hrs = []; for (var i = 0; i < 24; i++) hrs.push((i < 10 ? '0' : '') + i);
+    return {
+      grid: { left: 60, right: 16, top: 10, bottom: 50 },
+      tooltip: { formatter: function (p) { return KAIA.DOW[p.data[1]] + ' pukul ' + hrs[p.data[0]] + ':00 · <b>' + p.data[2] + '</b> kejadian'; } },
+      xAxis: { type: 'category', data: hrs, splitArea: { show: true } }, yAxis: { type: 'category', data: KAIA.DOW, inverse: true },
+      visualMap: { min: 0, max: max, calculable: false, orient: 'horizontal', left: 'center', bottom: 0, itemHeight: 120, itemWidth: 10,
+        inRange: { color: ['#F3F3FA', '#B9BCE3', '#6C6FC0', '#252271', '#F06A25'] }, textStyle: { color: C.axis, fontSize: 11 } },
+      series: [{ type: 'heatmap', data: data, label: { show: false }, emphasis: { itemStyle: { borderColor: '#fff', borderWidth: 1 } } }],
+      animation: !REDUCE
+    };
+  }
+
+  /** KA per jam di stasiun/petak (batang bertumpuk: pasti vs perkiraan). */
+  function passHist(exact, est) {
+    var hrs = []; for (var i = 0; i < 24; i++) hrs.push((i < 10 ? '0' : '') + i);
+    return {
+      grid: { left: 40, right: 12, top: 30, bottom: 26 }, legend: { top: 0, left: 'center' }, tooltip: { trigger: 'axis' },
+      xAxis: { type: 'category', data: hrs }, yAxis: { type: 'value', minInterval: 1 },
+      series: [{ name: 'Jam pasti (Daftar Waktu)', type: 'bar', stack: 'p', data: exact, color: C.navy, barMaxWidth: 18 },
+        { name: 'Perkiraan', type: 'bar', stack: 'p', data: est, color: '#9EA3D6', barMaxWidth: 18 }],
+      animation: !REDUCE
+    };
+  }
+
+  /** Armada per kelompok usia: jumlah unit (batang) + gangguan per 100 unit (garis). */
+  function ageBands(bands, units, rate) {
+    return {
+      grid: { left: 50, right: 56, top: 34, bottom: 28 }, legend: { top: 0, left: 'center' }, tooltip: { trigger: 'axis' },
+      xAxis: { type: 'category', data: bands.map(function (b) { return b + (b === 'Tidak diketahui' ? '' : ' th'); }), axisLabel: { interval: 0 } },
+      yAxis: [{ type: 'value', name: 'unit', axisLabel: { formatter: k }, nameTextStyle: { color: C.axis } }, { type: 'value', name: 'per 100 unit', splitLine: { show: false }, nameTextStyle: { color: C.axis } }],
+      series: [{ name: 'Unit', type: 'bar', data: units.map(function (v, i) { return { value: v, itemStyle: { color: /30|40/.test(bands[i]) ? C.orange : C.navy, borderRadius: [4, 4, 0, 0] } }; }), barMaxWidth: 46 },
+        { name: 'Gangguan per 100 unit (12 bln)', type: 'line', yAxisIndex: 1, data: rate.map(function (v) { return v == null ? null : Math.round(v * 10) / 10; }), color: C.sarana, symbolSize: 8, lineStyle: { width: 2.5 } }],
+      animation: !REDUCE
+    };
+  }
+
+  /** Batang horizontal bertumpuk per kelas (wilayah). rows: [{label, cls:{kelas:{menit}}}] */
+  function stackClass(rows, metric) {
+    var rev = rows.slice().reverse();
+    return {
+      grid: { left: 8, right: 30, top: 30, bottom: 6, containLabel: true }, legend: { top: 0, left: 0 },
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return KAI.fmt.n(v) + (metric === 'menit' ? ' mnt' : ' kej.'); } },
+      xAxis: { type: 'value', axisLabel: { formatter: k } }, yAxis: { type: 'category', data: rev.map(function (r) { return r.label; }) },
+      series: KAIA.CLASSES.map(function (c) { return { name: CLASS_LABEL[c], type: 'bar', stack: 's', color: KAI.classColor(c), barMaxWidth: 16, data: rev.map(function (r) { return r.cls[c][metric]; }) }; }),
+      animation: !REDUCE
+    };
+  }
+
+  /** Bulanan sederhana (kejadian & menit) untuk profil. */
+  function monthly(rows) {
+    return {
+      grid: { left: 44, right: 50, top: 30, bottom: 26 }, legend: { top: 0, left: 'center' }, tooltip: { trigger: 'axis' },
+      xAxis: { type: 'category', data: rows.map(function (r) { return KAI.fmt.mon(r.ym); }) },
+      yAxis: [{ type: 'value', minInterval: 1, name: 'kej.', nameTextStyle: { color: C.axis } }, { type: 'value', name: 'menit', axisLabel: { formatter: k }, splitLine: { show: false }, nameTextStyle: { color: C.axis } }],
+      series: [{ name: 'Kejadian', type: 'bar', data: rows.map(function (r) { return r.n; }), color: C.navy, barMaxWidth: 22, itemStyle: { borderRadius: [3, 3, 0, 0] } },
+        { name: 'Menit', type: 'line', yAxisIndex: 1, data: rows.map(function (r) { return r.menit; }), color: C.orange, symbolSize: 6 }],
+      animation: !REDUCE
+    };
+  }
+
+  /** Eksposur bulanan bertumpuk (penumpang, barang). */
+  function expoMonthly(m, focusYm) {
+    return {
+      grid: { left: 64, right: 16, top: 34, bottom: 28 }, legend: { top: 0, left: 'center' },
+      tooltip: { trigger: 'axis', valueFormatter: function (v) { return KAI.fmt.rp(v); } },
+      xAxis: { type: 'category', data: m.yms.map(KAI.fmt.mon) },
+      yAxis: { type: 'value', axisLabel: { formatter: function (v) { return v >= 1e9 ? KAI.fmt.d1(v / 1e9) + ' M' : v >= 1e6 ? KAI.fmt.n(v / 1e6) + ' jt' : KAI.fmt.n(v); } } },
+      series: [{ name: 'KA penumpang', type: 'bar', stack: 'e', data: m.p.map(function (v, i) { return { value: Math.round(v), itemStyle: { opacity: m.yms[i] === focusYm ? 1 : .75 } }; }), color: C.navy, barMaxWidth: 34 },
+        { name: 'KA barang', type: 'bar', stack: 'e', data: m.b.map(function (v, i) { return { value: Math.round(v), itemStyle: { opacity: m.yms[i] === focusYm ? 1 : .75 } }; }), color: C.orange, barMaxWidth: 34 }],
+      animation: !REDUCE
+    };
+  }
+
+  /* ---------- Nama sumbu (wajib di semua grafik) ---------- */
+  var NAME_STYLE = { color: C.axis, fontSize: 11.5, fontWeight: 600 };
+  function axes(o) { return { x: [].concat(o.xAxis || []), y: [].concat(o.yAxis || []) }; }
+  /** Tambah nama sumbu X/Y (dan Y kanan) serta ruang grid yang dibutuhkan. */
+  function named(o, xn, yn, y2n) {
+    var g = o.grid = o.grid || {}, A = axes(o), xa = A.x[0], ya = A.y[0];
+    o.__names = { x: xn, y: yn, y2: y2n };
+    if (xn && xa) {
+      if (xa.type === 'category' || !g.containLabel) { Object.assign(xa, { name: xn, nameLocation: 'middle', nameGap: 26, nameTextStyle: NAME_STYLE }); g.bottom = (g.bottom || 0) + 20; }
+      else { Object.assign(xa, { name: xn, nameLocation: 'middle', nameGap: 24, nameTextStyle: NAME_STYLE }); g.bottom = (g.bottom || 0) + 22; }
+    }
+    if (yn && ya) {
+      if (ya.type === 'category') {
+        Object.assign(ya, { name: yn, nameLocation: ya.inverse ? 'start' : 'end', nameGap: 8, nameTextStyle: Object.assign({ align: 'right', padding: [0, 6, 0, 0] }, NAME_STYLE) });
+        g.top = Math.max(g.top || 0, o.legend ? 44 : 26);
+      } else {
+        Object.assign(ya, { name: yn, nameLocation: 'middle', nameGap: 42, nameRotate: 90, nameTextStyle: NAME_STYLE });
+        g.left = Math.max((g.left || 0) + 16, 64);
+      }
+    }
+    if (y2n && A.y[1]) { Object.assign(A.y[1], { name: y2n, nameLocation: 'middle', nameGap: 40, nameRotate: -90, nameTextStyle: NAME_STYLE }); g.right = Math.max((g.right || 0) + 14, 62); }
+    // Standar legenda: di atas → kiri s.d. 150 px sebelum bilah alat, bergulir bila tidak muat (tidak pernah menimpa ikon); di bawah → lebar penuh.
+    if (o.legend) { o.legend.left = 0; o.legend.type = o.legend.type || 'scroll'; if (o.legend.bottom == null) { o.legend.right = 150; if (o.legend.top === 0 && g.top < 34) g.top = 34; } else { o.legend.right = 0; if (g.top < 34) g.top = 34; } }
+    if (!o.legend && g.top < 34) g.top = 34;   // ruang untuk bilah alat grafik
+    return o;
+  }
+  /** Standar untuk SEMUA grafik: angka Indonesia (koma desimal, titik ribuan) pada label data & tooltip; legenda tidak menimpa bilah alat. */
+  function standard(o) {
+    // Standar angka Indonesia (koma desimal, titik ribuan) untuk label data & tooltip yang belum diberi format.
+    var idn = function (v) { v = Array.isArray(v) ? v[v.length - 1] : v && typeof v === 'object' ? v.value : v; if (v == null || v === '' || isNaN(v)) return v == null ? '–' : v; return Math.abs(v % 1) > 0 ? KAI.fmt.d1(v) : KAI.fmt.n(v); };
+    (o.series || []).forEach(function (sr) { if (sr.label && sr.label.show && !sr.label.formatter) sr.label.formatter = function (p) { return idn(p.value); }; });
+    if (o.tooltip && !o.tooltip.formatter && !o.tooltip.valueFormatter) o.tooltip.valueFormatter = idn;
+    if (o.legend && !Array.isArray(o.legend)) { o.legend.type = o.legend.type || 'scroll'; if (o.legend.bottom == null && o.legend.right == null) o.legend.right = 150; }
+    // Sumbu nilai: angka Indonesia; ruang untuk nama sumbu vertikal (containLabel tidak menghitung nama sumbu).
+    var A = axes(o), g = o.grid && !Array.isArray(o.grid) ? o.grid : null;
+    A.x.concat(A.y).forEach(function (ax) { if (ax && ax.type === 'value') { ax.axisLabel = ax.axisLabel || {}; if (!ax.axisLabel.formatter) ax.axisLabel.formatter = function (v) { return Number(v).toLocaleString('id-ID', { maximumFractionDigits: 2 }); }; } });
+    if (g && A.y[0] && A.y[0].name && A.y[0].nameLocation === 'middle' && (g.left || 0) < 30) g.left = 30;
+    if (g && A.y[1] && A.y[1].name && A.y[1].nameLocation === 'middle' && (g.right || 0) < 40) g.right = 40;
+    return o;
+  }
+  /** Zoom: geser/zoom dengan Ctrl+roda atau tombol; slider bila kategori banyak. */
+  function withZoom(o) {
+    if (o.dataZoom || o.visualMap) return o;
+    var A = axes(o), xa = A.x[0], ya = A.y[0], base = { type: 'inside', zoomOnMouseWheel: 'ctrl', moveOnMouseWheel: false, moveOnMouseMove: true, filterMode: 'none' };
+    if (xa && xa.type === 'category') {
+      o.dataZoom = [Object.assign({ xAxisIndex: 0 }, base)];
+      if ((xa.data || []).length > 31) { o.dataZoom.push({ type: 'slider', xAxisIndex: 0, height: 16, bottom: 4, brushSelect: false, showDetail: false, borderColor: '#D8DEEA' }); o.grid.bottom = (o.grid.bottom || 0) + 24; }
+    } else if (ya && ya.type === 'category') o.dataZoom = [Object.assign({ yAxisIndex: 0 }, base)];
+    else o.dataZoom = [Object.assign({ xAxisIndex: 0 }, base), Object.assign({ yAxisIndex: 0 }, base)];
+    return o;
+  }
+
+  /* ---------- Pembacaan data otomatis (paragraf) untuk unduhan & tampilan besar ---------- */
+  function val(v) { return v == null ? null : typeof v === 'object' ? (Array.isArray(v) ? v : val(v.value)) : +v; }
+  function fmtV(v, unit) { return unit && /rp/i.test(unit) ? KAI.fmt.rp(v) : (Math.abs(v % 1) > 0 ? KAI.fmt.d1(v) : KAI.fmt.n(v)) + (unit ? ' ' + unit : ''); }
+  function unitOf(name) { var m = /\(([^)]+)\)/.exec(name || ''); return m ? m[1] : ''; }
+  function describe(o, title) {
+    if (!o || !o.series || !o.series.length) return 'Tidak ada data pada grafik ini.';
+    var A = axes(o), xa = A.x[0] || {}, ya = A.y[0] || {}, N = o.__names || {}, out = [];
+    var catAx = xa.type === 'category' ? xa : ya.type === 'category' ? ya : null, cats = catAx ? (catAx.data || []).map(String) : [];
+    var s0 = o.series[0];
+    out.push('Grafik "' + (title || 'tanpa judul') + '" menampilkan ' + (N.y || 'nilai').toLowerCase() + (N.x ? ' menurut ' + N.x.toLowerCase() : '') + (o.series.length > 1 ? ' dalam ' + o.series.length + ' seri' : '') + '.');
+    if (s0.type === 'scatter') {
+      var pts = s0.data.map(function (d) { return { k: CLASS_LABEL[d.kelas] || '', x: d.value[0], y: d.value[1] }; }).sort(function (a, b) { return b.y - a.y; });
+      out.push(pts.map(function (p) { return p.k + ': ' + KAI.fmt.n(p.x) + ' kejadian, ' + KAI.fmt.n(p.y) + ' menit'; }).join('; ') + '.');
+      if (pts[0]) out.push('Kelambatan terbesar ada pada kelas ' + pts[0].k.toLowerCase() + '. Gelembung di area oranye (di atas kedua median) adalah kelas yang sering terjadi sekaligus berdampak tinggi.');
+      return out.join(' ');
+    }
+    if (s0.type === 'heatmap') {
+      var mx = s0.data.slice().sort(function (a, b) { return b[2] - a[2]; })[0], tot = KAIA.sum(s0.data, function (d) { return d[2]; });
+      if (mx) out.push('Total ' + KAI.fmt.n(tot) + ' kejadian berjam tercatat. Sel terpadat: ' + (ya.data || [])[mx[1]] + ' pukul ' + (xa.data || [])[mx[0]] + ':00 (' + mx[2] + ' kejadian).');
+      return out.join(' ');
+    }
+    var stacked = o.series.some(function (s) { return s.stack; }), isTime = /bulan|tanggal|jam/i.test(N.x || '');
+    o.series.slice(0, 6).forEach(function (s, si) {
+      var ax = s.yAxisIndex ? A.y[s.yAxisIndex] : null, unit = unitOf(ax ? N.y2 : (catAx === ya ? N.x : N.y)) || '';
+      var vs = (s.data || []).map(val), idx = vs.map(function (v, i) { return i; }).filter(function (i) { return vs[i] != null && !isNaN(vs[i]); });
+      if (!idx.length) return;
+      var tot = KAIA.sum(idx, function (i) { return vs[i]; }), hi = idx.slice().sort(function (a, b) { return vs[b] - vs[a]; }), name = s.name || (N.y || 'Nilai');
+      var t = '«' + name + '»: ' + (s.type === 'line' && ax ? '' : 'total ' + fmtV(tot, unit) + ', ') + 'tertinggi ' + fmtV(vs[hi[0]], unit) + ' (' + cats[hi[0]] + ')';
+      if (hi.length > 2) t += ', terendah ' + fmtV(vs[hi[hi.length - 1]], unit) + ' (' + cats[hi[hi.length - 1]] + ')';
+      if (isTime && idx.length >= 2) {
+        var a = vs[idx[idx.length - 2]], b = vs[idx[idx.length - 1]];
+        t += '; titik terakhir ' + cats[idx[idx.length - 1]] + ' = ' + fmtV(b, unit) + (a ? ' (' + KAI.fmt.pct(KAIA.pct(b, a)) + ' dari ' + cats[idx[idx.length - 2]] + ')' : '');
+      }
+      out.push(t + '.');
+      if (si === 0 && !isTime && hi.length >= 3 && tot > 0) out.push('Tiga teratas (' + hi.slice(0, 3).map(function (i) { return cats[i]; }).join(', ') + ') = ' + KAI.fmt.d1(KAIA.sum(hi.slice(0, 3), function (i) { return vs[i]; }) / tot * 100) + '% dari total seri ini.');
+    });
+    if (stacked && cats.length) {
+      var sums = cats.map(function (c, i) { return KAIA.sum(o.series.filter(function (s) { return s.stack; }), function (s) { return val(s.data[i]) || 0; }); });
+      var im = sums.indexOf(Math.max.apply(null, sums));
+      out.push('Total gabungan tertinggi pada ' + cats[im] + ' (' + fmtV(sums[im], unitOf(catAx === ya ? N.x : N.y)) + ').');
+    }
+    if (o.series.length > 6) out.push('(' + (o.series.length - 6) + ' seri lain tidak diuraikan.)');
+    return out.join(' ');
+  }
+
+  /** Render opsi ke PNG (untuk ekspor PPT/PDF) tanpa animasi. */
+  function toImage(option, w, h, type) {
+    theme();
+    var div = document.createElement('div');
+    div.style.cssText = 'position:fixed;left:-10000px;top:0;width:' + w + 'px;height:' + h + 'px;';
+    document.body.appendChild(div);
+    var inst = echarts.init(div, 'kai', { renderer: 'canvas' });
+    var o = Object.assign({}, option, { animation: false, dataZoom: [] });
+    standard(o);
+    if (o.series) o.series = o.series.map(function (s) { return Object.assign({}, s, { animation: false }); });
+    inst.setOption(o);
+    var url = inst.getDataURL({ type: type || 'png', pixelRatio: 2, backgroundColor: '#fff' });
+    inst.dispose(); div.remove();
+    return url;
+  }
+
+  /* ---------- Unduhan PNG: judul + grafik + pembacaan data + jejak sumber ---------- */
+  function loadImg(src) { return new Promise(function (ok) { var im = new Image(); im.onload = function () { ok(im); }; im.onerror = function () { ok(null); }; im.src = src; }); }
+  function wrap(ctx, text, maxW) {
+    var words = String(text).split(/\s+/), lines = [], cur = '';
+    words.forEach(function (w) { var t = cur ? cur + ' ' + w : w; if (ctx.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t; });
+    if (cur) lines.push(cur); return lines;
+  }
+  function contextOf(el) {
+    var card = el.closest('.card'), h = card && card.querySelector('.card-h h3, .card-h h2'), p = card && card.querySelector('.card-h p');
+    var pn = document.querySelector('.periodnote');
+    return { title: (el.dataset.title || (h && h.textContent) || 'Grafik').trim(), sub: (p ? p.textContent.trim() : ''), period: pn ? pn.textContent.replace(/\s+/g, ' ').trim() : '' };
+  }
+  function download(inst, opt, info) {
+    var W = 1600, PAD = 48, chartH = 720, chartUrl = inst.getDataURL({ type: 'png', pixelRatio: 2, backgroundColor: '#fff' });
+    var text = describe(opt, info.title);
+    return Promise.all([loadImg(chartUrl), loadImg(window.KAI_LOGO ? KAI_LOGO.color : '')]).then(function (imgs) {
+      var cv = document.createElement('canvas'), ctx = cv.getContext('2d');
+      ctx.font = '22px Inter, Arial, sans-serif';
+      var lines = wrap(ctx, text, W - 2 * PAD), subLines = (info.sub ? wrap(ctx, info.sub, W - 2 * PAD - 220) : []).concat(info.period ? wrap(ctx, 'Filter: ' + info.period, W - 2 * PAD - 220) : []);
+      var H = PAD + 44 + subLines.length * 30 + 20 + chartH + 30 + 34 + lines.length * 32 + 30 + 40;
+      cv.width = W; cv.height = H;
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = '#F06A25'; ctx.fillRect(0, 0, W, 8);
+      var y = PAD + 12;
+      if (imgs[1]) { var lh = 64, lw = imgs[1].width / imgs[1].height * lh; ctx.drawImage(imgs[1], W - PAD - lw, PAD - 10, lw, lh); }
+      ctx.fillStyle = '#17223B'; ctx.font = '700 34px Inter, Arial, sans-serif'; ctx.fillText(info.title, PAD, y + 20); y += 44;
+      ctx.font = '22px Inter, Arial, sans-serif'; ctx.fillStyle = '#5B6475';
+      subLines.forEach(function (l) { ctx.fillText(l, PAD, y + 10); y += 30; });
+      y += 20;
+      if (imgs[0]) ctx.drawImage(imgs[0], PAD, y, W - 2 * PAD, chartH);
+      y += chartH + 30;
+      ctx.fillStyle = '#252271'; ctx.font = '700 24px Inter, Arial, sans-serif'; ctx.fillText('Pembacaan data', PAD, y); y += 34;
+      ctx.fillStyle = '#17223B'; ctx.font = '22px Inter, Arial, sans-serif';
+      lines.forEach(function (l) { ctx.fillText(l, PAD, y); y += 32; });
+      y += 18; ctx.fillStyle = '#E8ECF3'; ctx.fillRect(PAD, y - 18, W - 2 * PAD, 1);
+      ctx.fillStyle = '#5B6475'; ctx.font = '18px Inter, Arial, sans-serif';
+      ctx.fillText('Sumber: Gangguan_Induk · GAPEKA 2025 · Dashboard Gangguan Operasional PT KAI · diunduh ' + new Date().toLocaleString('id-ID'), PAD, y + 10);
+      var a = document.createElement('a'); a.href = cv.toDataURL('image/png');
+      a.download = 'Grafik_' + info.title.replace(/[^\w-]+/g, '_').replace(/_+/g, '_').slice(0, 60) + '.png';
+      document.body.appendChild(a); a.click(); a.remove();
+    });
+  }
+
+  function zoomBy(inst, f) {
+    var dz = (inst.getOption().dataZoom || [])[0]; if (!dz) return;
+    var s = dz.start == null ? 0 : dz.start, e = dz.end == null ? 100 : dz.end, c = (s + e) / 2, w = Math.max(5, Math.min(100, (e - s) * f));
+    var ns = Math.max(0, c - w / 2), ne = Math.min(100, ns + w); ns = Math.max(0, ne - w);
+    inst.dispatchAction({ type: 'dataZoom', start: ns, end: ne });
+  }
+  function ic(id) { return '<svg class="i"><use href="#' + id + '"/></svg>'; }
+
+  /** Tampilan besar (modal) dengan zoom & unduh. */
+  function enlarge(opt, info) {
+    theme();
+    var m = document.createElement('div'); m.className = 'cmodal'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true');
+    m.innerHTML = '<div class="cmodal-box"><div class="cmodal-h"><h3></h3><div class="cbar" style="margin:0">' +
+      '<button data-a="in" title="Perbesar (atau Ctrl + gulir)">' + ic('i-zin') + '</button><button data-a="out" title="Perkecil">' + ic('i-zout') + '</button>' +
+      '<button data-a="reset" title="Atur ulang zoom">' + ic('i-refresh') + '</button><button data-a="dl" title="Unduh PNG + pembacaan data">' + ic('i-download') + '</button>' +
+      '<button data-a="x" title="Tutup (Esc)">' + ic('i-x') + '</button></div></div><div class="cmodal-b"><div class="chart"></div><div class="narr"></div></div></div>';
+    document.body.appendChild(m);
+    m.querySelector('h3').textContent = info.title;
+    m.querySelector('.narr').textContent = describe(opt, info.title);
+    var inst = echarts.init(m.querySelector('.chart'), 'kai', { renderer: 'canvas' });
+    inst.setOption(opt);
+    function close() { inst.dispose(); m.remove(); document.removeEventListener('keydown', onKey); }
+    function onKey(e) { if (e.key === 'Escape') close(); }
+    document.addEventListener('keydown', onKey);
+    m.addEventListener('click', function (e) {
+      if (e.target === m) return close();
+      var b = e.target.closest('button[data-a]'); if (!b) return;
+      var a = b.dataset.a;
+      if (a === 'x') close(); else if (a === 'in') zoomBy(inst, .7); else if (a === 'out') zoomBy(inst, 1 / .7);
+      else if (a === 'reset') inst.dispatchAction({ type: 'dataZoom', start: 0, end: 100 }); else if (a === 'dl') download(inst, opt, info);
+    });
+    setTimeout(function () { inst.resize(); }, 30);
+  }
+
+  /** Direktif Alpine x-chart: grafik reaktif + bilah alat (perbesar, perkecil, atur ulang, layar besar, unduh). */
+  function register(Alpine) {
+    Alpine.directive('chart', function (el, d, u) {
+      var get = u.evaluateLater(d.expression), inst = null, ro = null, cur = null;
+      var bar = document.createElement('div'); bar.className = 'cbar no-print';
+      bar.innerHTML = '<button data-a="in" title="Perbesar (atau Ctrl + gulir pada grafik)" aria-label="Perbesar">' + ic('i-zin') + '</button>' +
+        '<button data-a="out" title="Perkecil" aria-label="Perkecil">' + ic('i-zout') + '</button>' +
+        '<button data-a="reset" title="Atur ulang zoom" aria-label="Atur ulang zoom">' + ic('i-refresh') + '</button>' +
+        '<button data-a="big" title="Tampilan besar" aria-label="Tampilan besar">' + ic('i-expand') + '</button>' +
+        '<button data-a="dl" title="Unduh PNG beserta pembacaan data" aria-label="Unduh grafik">' + ic('i-download') + '</button>';
+      el.parentNode.insertBefore(bar, el);
+      bar.addEventListener('click', function (e) {
+        var b = e.target.closest('button[data-a]'); if (!b || !inst || !cur) return;
+        var a = b.dataset.a;
+        if (a === 'in') zoomBy(inst, .7); else if (a === 'out') zoomBy(inst, 1 / .7);
+        else if (a === 'reset') inst.dispatchAction({ type: 'dataZoom', start: 0, end: 100 });
+        else if (a === 'big') enlarge(cur, contextOf(el)); else if (a === 'dl') download(inst, cur, contextOf(el));
+      });
+      u.effect(function () {
+        get(function (opt) {
+          if (!opt || !window.echarts) { bar.style.visibility = 'hidden'; return; }
+          bar.style.visibility = '';
+          theme(); standard(opt); withZoom(opt); cur = opt;
+          var zoomable = !!opt.dataZoom && opt.dataZoom.length;
+          [].forEach.call(bar.querySelectorAll('[data-a="in"],[data-a="out"],[data-a="reset"]'), function (b) { b.style.display = zoomable ? '' : 'none'; });
+          if (!inst) {
+            inst = echarts.init(el, 'kai', { renderer: 'canvas' });
+            ro = new ResizeObserver(function () { inst && inst.resize(); }); ro.observe(el);
+            inst.on('click', function (p) { el.dispatchEvent(new CustomEvent('chart-click', { detail: p, bubbles: true })); });
+            inst.setOption(opt);
+          } else {
+            inst.setOption(opt, { notMerge: true });
+          }
+        });
+      });
+      u.cleanup(function () { if (ro) ro.disconnect(); if (inst) inst.dispose(); bar.remove(); });
+    });
+  }
+
+  var NM = function (metric) { return metric === 'menit' ? 'Kelambatan (menit)' : 'Frekuensi (kejadian)'; };
+  return {
+    trend: function (m, metric) { return named(trend(m, metric), 'Bulan', NM(metric)); },
+    matrix: function (m, o) { var x = matrix(m, o); x.__names = { x: 'Frekuensi (kejadian)', y: 'Total kelambatan (menit)' }; return x; },
+    barH: function (items, unit, color, yName) { return named(barH(items, unit, color), 'Jumlah (' + unit + ')', yName || 'Kategori'); },
+    barMonths: function (yms, values, focus, unit) { return named(barMonths(yms, values, focus, unit), 'Bulan', 'Rata-rata per kejadian (' + unit + ')'); },
+    daily: function (m, metric) { return named(daily(m, metric), 'Tanggal', NM(metric)); },
+    hourBar: function (H) { return named(hourBar(H), 'Jam mulai', 'Kejadian (kejadian)', 'Kelambatan (menit)'); },
+    heat: function (H) { return named(heat(H), 'Jam mulai', 'Hari'); },
+    passHist: function (a, b) { return named(passHist(a, b), 'Jam', 'Perjalanan KA (KA)'); },
+    ageBands: function (b, u, r) { return named(ageBands(b, u, r), 'Kelompok usia', 'Jumlah (unit)', 'Gangguan per 100 unit'); },
+    stackClass: function (rows, metric) { return named(stackClass(rows, metric), NM(metric), 'Wilayah'); },
+    monthly: function (rows) { return named(monthly(rows), 'Bulan', 'Kejadian (kejadian)', 'Kelambatan (menit)'); },
+    expoMonthly: function (m, f) { return named(expoMonthly(m, f), 'Bulan', 'Eksposur (Rp)'); },
+    toImage: toImage, describe: describe, register: register, CLASS_LABEL: CLASS_LABEL
+  };
+})();
+</script>

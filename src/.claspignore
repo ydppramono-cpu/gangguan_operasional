@@ -1,0 +1,5 @@
+# clasp hanya mendorong isi src/
+**/**
+!appsscript.json
+!*.gs
+!*.html

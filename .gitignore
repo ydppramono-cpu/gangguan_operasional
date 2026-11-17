@@ -1,0 +1,16 @@
+# kredensial & konfigurasi lokal — JANGAN di-commit
+.clasp.json
+.clasprc.json
+*.key.json
+*service-account*.json
+.env
+# hasil build / sementara
+dist/
+__pycache__/
+*.pyc
+.DS_Store
+# data mentah besar disimpan di Drive, bukan Git
+data_raw/
+knowledge/sumber_teks/*.txt
+# dependensi Node (dipasang ulang dengan `npm ci`)
+node_modules/

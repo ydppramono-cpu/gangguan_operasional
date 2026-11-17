@@ -1,0 +1,701 @@
+{
+ "spreadsheets": {
+  "DB": {
+   "id": "1HmlF2DL4KeHGVSO87aQAKu86dbfrnZohkCA7SsaL3OM",
+   "nama": "KAI | Basis Data Gangguan dan Hambatan 2025–2026"
+  },
+  "GAPEKA25": {
+   "id": "15yHI4aO3abw5D-Hhfmrhf0lk3hGQdWF99DRmv7aOoKI",
+   "nama": "MASTER GAPEKA 2025"
+  },
+  "REF": {
+   "id": "1nQuug9iDE6AeK8ZMRyk1dBbK849GDvLiP8l88kPQ3I0",
+   "nama": "KAI_Referensi_Turunan (GAPEKA 2025, peta, Duksar, JPL, resor)"
+  }
+ },
+ "tables": [
+  {
+   "name": "gangguan_induk",
+   "ss": "DB",
+   "sheet": "Gangguan_Induk",
+   "skip": 1,
+   "desc": "SSOT kejadian gangguan & hambatan (dashboard)",
+   "headers": [
+    "Nomor sumber",
+    "Kode laporan",
+    "Tanggal kejadian",
+    "Hari",
+    "Bulan",
+    "Tahun",
+    "Kategori gangguan",
+    "Subgangguan",
+    "Jenis sarana",
+    "Nomor sarana",
+    "Wilayah kejadian",
+    "Depo induk",
+    "Wilayah depo",
+    "Judul gangguan",
+    "Kode jenis gangguan",
+    "Jam mulai",
+    "Stasiun",
+    "Petak jalan",
+    "Kilometer",
+    "Nomor sarana penolong",
+    "Keterangan kejadian",
+    "Nomor kereta api terkait",
+    "Total Andil Kelka (menit)",
+    "Sumber data",
+    "Tab asal",
+    "Baris asal",
+    "Kunci asal",
+    "SHA-256 sumber",
+    "Status kualitas",
+    "Alamat sumber",
+    "Penyebab terlapor",
+    "Tindak lanjut terlapor",
+    "Bukti ekstraksi",
+    "Status ekstraksi",
+    "Versi aturan ekstraksi"
+   ],
+   "num": [
+    "Total Andil Kelka (menit)",
+    "Tahun",
+    "Baris asal"
+   ],
+   "date": [
+    "Tanggal kejadian"
+   ],
+   "key": "Kunci asal"
+  },
+  {
+   "name": "hambatan_jasum",
+   "ss": "DB",
+   "sheet": "Hambatan_Jasum",
+   "skip": 1,
+   "desc": "Arsip impor REKAP HAMBATAN JASUM (hulu; dipetakan ke gangguan_induk)",
+   "headers": [
+    "Tanggal",
+    "Lokasi",
+    "Direktorat",
+    "Jenis hambatan",
+    "Kode",
+    "Mulai",
+    "Akhir",
+    "Durasi hambatan (menit)",
+    "Keterangan",
+    "Bulan asli",
+    "Kelompok kode",
+    "Kolom L asli",
+    "Sumber",
+    "Tab sumber",
+    "Baris sumber",
+    "Kunci jejak",
+    "SHA-256 baris asli",
+    "Status kualitas",
+    "Jenis catatan",
+    "KA terganggu (sumber)",
+    "Andil per KA (sumber, menit)"
+   ],
+   "num": [
+    "Durasi hambatan (menit)",
+    "Baris sumber"
+   ],
+   "date": [
+    "Tanggal"
+   ],
+   "key": "Kunci jejak"
+  },
+  {
+   "name": "passenger",
+   "ss": "DB",
+   "sheet": "Passenger",
+   "skip": 1,
+   "desc": "Pendapatan & volume penumpang per KA per bulan",
+   "headers": [
+    "Tanggal (Bulan)",
+    "Pendapatan (Rp)",
+    "Nomor KA",
+    "Nama KA",
+    "Kelas KA",
+    "Relasi (Awal-Akhir Naik)",
+    "Jumlah Penumpang",
+    "Realisasi Terisi EKO (Pnp)",
+    "Realisasi Terisi EKS (Pnp)",
+    "Realisasi Terisi BIS (Pnp)",
+    "% Porsi EKO",
+    "% Porsi EKS",
+    "% Porsi BIS",
+    "Jenis KA",
+    "Pendapatan EKO (Rp)",
+    "Pendapatan EKS (Rp)",
+    "Pendapatan BIS (Rp)"
+   ],
+   "num": [
+    "Pendapatan (Rp)",
+    "Jumlah Penumpang",
+    "Realisasi Terisi EKO (Pnp)",
+    "Realisasi Terisi EKS (Pnp)",
+    "Realisasi Terisi BIS (Pnp)",
+    "Pendapatan EKO (Rp)",
+    "Pendapatan EKS (Rp)",
+    "Pendapatan BIS (Rp)"
+   ],
+   "date": []
+  },
+  {
+   "name": "freight",
+   "ss": "DB",
+   "sheet": "Freight",
+   "skip": 1,
+   "desc": "Pendapatan & volume barang per Nama KA/komoditas per bulan",
+   "headers": [
+    "Tanggal (Bulan)",
+    "Pendapatan (Rp)",
+    "Nama KA",
+    "Komoditas",
+    "Komoditas Detail",
+    "Nama Mitra",
+    "Volume Real (Ton)",
+    "Relasi",
+    "Tarif Rata-rata (Rp/Ton)"
+   ],
+   "num": [
+    "Pendapatan (Rp)",
+    "Volume Real (Ton)",
+    "Tarif Rata-rata (Rp/Ton)"
+   ],
+   "date": []
+  },
+  {
+   "name": "thi",
+   "ss": "DB",
+   "sheet": "THI",
+   "skip": 1,
+   "desc": "Track Health Index per wilayah/resor/petak per bulan",
+   "headers": [
+    "Wilayah",
+    "Periode",
+    "Bulan",
+    "Tingkat",
+    "Unit",
+    "Healthy Index",
+    "Grade Healthy Index",
+    "Condition Index",
+    "Grade Condition",
+    "Material",
+    "Konstruksi",
+    "Geometri",
+    "Material - Rel dan Sambungan Las (30%)",
+    "Material - Sambungan Pelat (20%)",
+    "Material - Penambat (15%)",
+    "Material - Wesel (15%)",
+    "Material - Balas/Plinth (10%)",
+    "Material - Bantalan (10%)",
+    "Konstruksi - Badan Jalan dan Lereng (50%)",
+    "Konstruksi - Drainase (30%)",
+    "Konstruksi - Lingkungan (20%)",
+    "Maintenance Index",
+    "Grade Maintenance",
+    "Inspeksi Terjadwal",
+    "PPJ",
+    "MIR",
+    "Perawatan Korektif (WMR)",
+    "PPJ Program",
+    "PPJ Realisasi",
+    "MIR Program",
+    "MIR Realisasi",
+    "WMR Program",
+    "WMR Realisasi",
+    "Panjang Petak Jalan (mSp)",
+    "Jumlah Hektometer",
+    "Hm Tanpa Kasus Lengkap - Material",
+    "Hm Tanpa Kasus Lengkap - Konstruksi",
+    "Catatan",
+    "Berkas sumber",
+    "Tab sumber",
+    "Baris sumber",
+    "Kunci data",
+    "SHA-256 nilai sumber",
+    "Kode UPT JR",
+    "Unit resor (referensi THI)",
+    "QC (peta)",
+    "Kode jalur/jenis (sumber)",
+    "ID petak THI",
+    "Dasar pemetaan",
+    "Halaman PETA WILAYAH(1).pdf",
+    "Pembagi indeks sumber"
+   ],
+   "num": [
+    "Healthy Index",
+    "Condition Index",
+    "Material",
+    "Konstruksi",
+    "Geometri",
+    "Maintenance Index",
+    "Panjang Petak Jalan (mSp)"
+   ],
+   "date": [],
+   "key": "Kunci data"
+  },
+  {
+   "name": "rhi",
+   "ss": "DB",
+   "sheet": "RHI",
+   "skip": 1,
+   "desc": "Rolling stock Health Index harian per sarana",
+   "headers": [
+    "nomor_sarana",
+    "tipe_sarana",
+    "tgl_data",
+    "perawatan_terakhir",
+    "tgl_perawatan",
+    "reliability_index",
+    "maintainability_index",
+    "availability_index",
+    "rams_index",
+    "total_request_rows",
+    "total_terpenuhi",
+    "list_maintenance_realisasi",
+    "list_maintenance_seharusnya",
+    "spare_management_score",
+    "maintenance_completion_score",
+    "maintenance_index",
+    "umur_kereta",
+    "age_index",
+    "penalti_open",
+    "penalti_lengkap",
+    "real_condition_index",
+    "onsite_inspection_index",
+    "condition_index",
+    "healthy_index",
+    "healthy_status",
+    "Berkas sumber",
+    "Tab sumber",
+    "Baris sumber",
+    "Kunci sarana-tanggal",
+    "SHA-256 nilai sumber",
+    "Catatan pemeriksaan",
+    "healthy_index (pulih)",
+    "condition_index (pulih)",
+    "onsite_inspection_index (pulih)",
+    "maintenance_index (pulih)",
+    "umur_kereta (pulih; tahun)",
+    "age_index (pulih)",
+    "Pemeriksaan pemulihan",
+    "Catatan verifikasi rumus"
+   ],
+   "num": [
+    "rams_index",
+    "maintenance_index",
+    "healthy_index",
+    "condition_index",
+    "healthy_index (pulih)"
+   ],
+   "date": [
+    "tgl_data"
+   ],
+   "key": "Kunci sarana-tanggal"
+  },
+  {
+   "name": "wkp",
+   "ss": "DB",
+   "sheet": "WKP",
+   "skip": 1,
+   "desc": "Window time / WKP (program & realisasi) per wilayah",
+   "headers": [
+    "Nomor sumber",
+    "Tanggal",
+    "Wilayah",
+    "Jenis kegiatan",
+    "Program mulai",
+    "Program akhir",
+    "Program durasi (hari Excel)",
+    "Realisasi mulai",
+    "Realisasi akhir",
+    "Realisasi durasi (hari Excel)",
+    "Keterangan",
+    "KA terimbas - kolom L sumber",
+    "KA terimbas - kolom M sumber",
+    "Rumus waktu - nilai sumber",
+    "Sela perka - nilai sumber",
+    "Durasi dalam menit - nilai sumber",
+    "Berkas sumber",
+    "Tab sumber",
+    "Baris sumber",
+    "SHA-256 nilai sumber",
+    "Tanggal terverifikasi",
+    "Wilayah terverifikasi",
+    "Catatan penelusuran tanggal",
+    "Baris tab",
+    "Tanggal terkoreksi",
+    "Wilayah terkoreksi",
+    "Kode aturan",
+    "Kode aturan penelusuran"
+   ],
+   "num": [
+    "Durasi dalam menit - nilai sumber",
+    "Baris sumber"
+   ],
+   "date": [
+    "Tanggal",
+    "Tanggal terverifikasi",
+    "Tanggal terkoreksi"
+   ]
+  },
+  {
+   "name": "gapeka25_list_ka",
+   "ss": "GAPEKA25",
+   "sheet": "LIST KA",
+   "skip": 3,
+   "desc": "LIST KA GAPEKA 2025 (perjalanan, relasi, jadwal ringkas, susunan)",
+   "headers": [
+    "No KA",
+    "Jenis KA",
+    "Nama KA",
+    "Nama Identitas KA",
+    "Lintas",
+    "Jarak",
+    "Jarak (salinan)",
+    "Jam Ber",
+    "Jam Dat",
+    "WP",
+    "kol_k",
+    "Wilayah",
+    "Pnp/brg",
+    "Kelas KA",
+    "kol_o",
+    "Jenis Pelayanan",
+    "Klasifikasi KA",
+    "Kelas KA 2",
+    "Wilayah 2",
+    "kol_t",
+    "Komersial/PSO/Perintis",
+    "kol_v",
+    "Klasifikasi KA 2",
+    "kol_x",
+    "ber",
+    "kol_z",
+    "kol_aa",
+    "kol_ab",
+    "kol_ac",
+    "kol_ad",
+    "dat",
+    "kol_af",
+    "Ber",
+    "St. Ber",
+    "Daop/Divre ber",
+    "Dat",
+    "St. Dat",
+    "Daop/Divre dat",
+    "kol_am",
+    "SF",
+    "Kap TD",
+    "kol_ap",
+    "Detail KA",
+    "Reg/tamb",
+    "kol_as",
+    "Jenis Layanan (DJKA)",
+    "kol_au",
+    "kol_av"
+   ],
+   "num": [
+    "Jarak",
+    "Kap TD"
+   ],
+   "date": []
+  },
+  {
+   "name": "gapeka25_stasiun",
+   "ss": "GAPEKA25",
+   "sheet": "LIST STASIUN",
+   "skip": 1,
+   "desc": "Daftar stasiun GAPEKA 2025",
+   "headers": [
+    "ID Trainplan",
+    "Singkatan Stasiun",
+    "Nama Stasiun",
+    "Wilayah Operasi",
+    "Status"
+   ],
+   "num": [],
+   "date": []
+  },
+  {
+   "name": "gapeka25_petak",
+   "ss": "GAPEKA25",
+   "sheet": "LIST PETAK JALAN",
+   "skip": 1,
+   "desc": "Daftar petak jalan GAPEKA 2025",
+   "headers": [
+    "Daop/Divre",
+    "Lintas",
+    "Stasiun A",
+    "Stasiun B",
+    "Petak Jalan",
+    "Jarak",
+    "Ganda/Tunggal"
+   ],
+   "num": [
+    "Jarak"
+   ],
+   "date": []
+  },
+  {
+   "name": "ref_jadwal_dw_2025",
+   "ss": "REF",
+   "sheet": "jadwal_dw_2025",
+   "skip": 1,
+   "desc": "Buku Daftar Waktu GAPEKA 2025 (diekstrak per baris; seed 11_SeedJadwal.gs)",
+   "headers": [
+    "no_ka",
+    "nama_ka",
+    "relasi",
+    "urut",
+    "kode_stasiun",
+    "nama_stasiun",
+    "datang",
+    "berangkat",
+    "keterangan",
+    "catatan",
+    "sumber_buku"
+   ],
+   "num": [
+    "urut"
+   ],
+   "date": []
+  },
+  {
+   "name": "ref_ptdo_2025_stasiun_tutup",
+   "ss": "REF",
+   "sheet": "ptdo_2025_stasiun_tutup",
+   "skip": 1,
+   "desc": "PTDO GAPEKA 2025 Bab IV (seed 11_SeedJadwal.gs)",
+   "headers": [
+    "kode_stasiun",
+    "jenis",
+    "mulai",
+    "akhir"
+   ],
+   "num": [],
+   "date": []
+  },
+  {
+   "name": "ref_depo_ka_2025",
+   "ss": "REF",
+   "sheet": "depo_ka_2025",
+   "skip": 1,
+   "desc": "Duksar/PTDO GAPEKA 2025 (seed SEED_DEPO_KA)",
+   "headers": [
+    "depo",
+    "kode",
+    "jenis",
+    "daftar_ka",
+    "kol_5"
+   ],
+   "num": [],
+   "date": []
+  },
+  {
+   "name": "ref_jpl",
+   "ss": "REF",
+   "sheet": "jpl",
+   "skip": 1,
+   "desc": "Daftar 1.404 titik peningkatan keselamatan perlintasan sebidang (seed SEED_JPL)",
+   "headers": [
+    "no",
+    "petak",
+    "no_jpl",
+    "km",
+    "provinsi",
+    "kabupaten_kota",
+    "status_jalan",
+    "kolom_8",
+    "kolom_9",
+    "kolom_10",
+    "wilayah",
+    "kolom_12"
+   ],
+   "num": [],
+   "date": []
+  },
+  {
+   "name": "ref_resor_meta",
+   "ss": "REF",
+   "sheet": "resor_meta",
+   "skip": 1,
+   "desc": "PETA_WILAYAH 2026 (transkripsi 10 Nov 2026) (PETA_WILAYAH.pdf)",
+   "headers": [
+    "kode_resor",
+    "wilayah",
+    "nama",
+    "jumlah",
+    "km_awal",
+    "km_akhir",
+    "cakupan"
+   ],
+   "num": [],
+   "date": []
+  },
+  {
+   "name": "ref_resor_stasiun",
+   "ss": "REF",
+   "sheet": "resor_stasiun",
+   "skip": 1,
+   "desc": "PETA_WILAYAH 2026 (transkripsi 10 Nov 2026)",
+   "headers": [
+    "kode_stasiun",
+    "kode_resor"
+   ],
+   "num": [],
+   "date": []
+  },
+  {
+   "name": "ref_resor_petak",
+   "ss": "REF",
+   "sheet": "resor_petak",
+   "skip": 1,
+   "desc": "PETA_WILAYAH 2026 (transkripsi 10 Nov 2026)",
+   "headers": [
+    "petak",
+    "kode_resor",
+    "catatan"
+   ],
+   "num": [],
+   "date": []
+  },
+  {
+   "name": "ref_stasiun_koordinat",
+   "ss": "REF",
+   "sheet": "stasiun_koordinat",
+   "skip": 1,
+   "desc": "OSM via enwo02/train-tracker (rail tiles) — diunduh 13 Nov 2026 · © kontributor OpenStreetMap, ODbL 1.0",
+   "headers": [
+    "kode_stasiun",
+    "lat",
+    "lon",
+    "elevasi_m",
+    "sumber_koordinat"
+   ],
+   "num": [
+    "lat",
+    "lon",
+    "elevasi_m"
+   ],
+   "date": []
+  },
+  {
+   "name": "ref_petak_osm",
+   "ss": "REF",
+   "sheet": "petak_osm",
+   "skip": 1,
+   "desc": "© kontributor OpenStreetMap, ODbL 1.0",
+   "headers": [
+    "petak",
+    "km_osm",
+    "cocok_jarak_25pct",
+    "jumlah_jembatan",
+    "panjang_jembatan_m",
+    "jumlah_terowongan",
+    "panjang_terowongan_m",
+    "pct_elektrifikasi",
+    "vmax_osm_kmj",
+    "nama_lintas_osm",
+    "wikipedia"
+   ],
+   "num": [
+    "km_osm",
+    "jumlah_jembatan",
+    "panjang_jembatan_m",
+    "jumlah_terowongan",
+    "panjang_terowongan_m",
+    "pct_elektrifikasi",
+    "vmax_osm_kmj"
+   ],
+   "date": []
+  },
+  {
+   "name": "ref_duksar_unit_siap_guna",
+   "ss": "REF",
+   "sheet": "duksar_unit_siap_guna",
+   "skip": 1,
+   "desc": "Buku Dukungan Sarana (Duksar) GAPEKA 2025: Jawa (2 Jan 25), Sumbar (2 Jan 25), Sumsel (3 Jan 25), Sumut (2 Jan 25)",
+   "headers": [
+    "jenis",
+    "depo_induk",
+    "nomor_sarana"
+   ],
+   "num": [],
+   "date": []
+  },
+  {
+   "name": "ref_duksar_lok_depo",
+   "ss": "REF",
+   "sheet": "duksar_lok_depo",
+   "skip": 1,
+   "desc": "Buku Dukungan Sarana (Duksar) GAPEKA 2025: Jawa (2 Jan 25), Sumbar (2 Jan 25), Sumsel (3 Jan 25), Sumut (2 Jan 25)",
+   "headers": [
+    "depo",
+    "book",
+    "siap_operasi",
+    "perbaikan",
+    "siap_guna",
+    "km_per_hari",
+    "jam_efektif",
+    "jam_operasi",
+    "daftar_ka"
+   ],
+   "num": [
+    "book",
+    "siap_operasi",
+    "perbaikan",
+    "siap_guna",
+    "km_per_hari",
+    "jam_efektif",
+    "jam_operasi"
+   ],
+   "date": []
+  },
+  {
+   "name": "ref_rujukan",
+   "ss": "REF",
+   "sheet": "rujukan",
+   "skip": 1,
+   "desc": "Rujukan media & ilmiah terverifikasi (seed 12_SeedRujukan.gs)",
+   "headers": [
+    "ID",
+    "Jenis",
+    "Sitasi APA",
+    "URL",
+    "Tanggal terbit",
+    "Wilayah",
+    "Topik",
+    "Fakta kunci",
+    "Implikasi untuk operasi",
+    "Status verifikasi",
+    "Aktif"
+   ],
+   "num": [],
+   "date": []
+  },
+  {
+   "name": "ref_koreksi_data",
+   "ss": "REF",
+   "sheet": "koreksi_data",
+   "skip": 1,
+   "desc": "Log koreksi data berbukti (seed 12_SeedRujukan.gs)",
+   "headers": [
+    "Tanda isi",
+    "Kunci asal (saat dibuat)",
+    "Jenis koreksi",
+    "Nilai baru",
+    "Nilai asli",
+    "Bukti",
+    "Diusulkan oleh",
+    "Tanggal",
+    "Aktif"
+   ],
+   "num": [],
+   "date": []
+  }
+ ]
+}

@@ -1,0 +1,67 @@
+<!-- View.Cari — pencarian lengkap: sarana, stasiun, petak, Daop/Divre, lintas, KA, JPL, dan kata di uraian kejadian. -->
+<template x-if="$store.app.route === 'cari' && $store.app.R">
+  <section class="view" x-data="vCari">
+    <div class="card search-hero">
+      <div class="card-b">
+        <div class="searchbox xl">
+          <svg class="i"><use href="#i-search"/></svg>
+          <input class="ctl" type="search" x-ref="q" x-model.debounce.200ms="q" placeholder="Contoh: CC 206 13 49 · Bekasi · BKS-KRI · Daop 8 · Argo Bromo · JPL 124 · pohon tumbang" aria-label="Cari">
+        </div>
+        <div class="chips mt-s">
+          <template x-for="s in samples" :key="s"><button class="chip sm" @click="q = s" x-text="s"></button></template>
+        </div>
+      </div>
+    </div>
+    <template x-if="!$store.app.refReady"><div class="card mt"><div class="card-b"><div class="skel" style="height:200px"></div><p class="note">Data referensi sedang dimuat…</p></div></div></template>
+    <template x-if="$store.app.refReady && q.trim().length">
+      <div class="grid g-2 mt">
+        <div class="card">
+          <div class="card-h"><div><h3 x-text="hits.length + ' hasil entitas'"></h3><p>Klik untuk membuka profil (riwayat gangguan, jadwal KA, JPL, depo, insight)</p></div></div>
+          <div class="card-b scroll" style="max-height:640px">
+            <template x-for="g in groups" :key="g.type">
+              <div class="rgroup">
+                <div class="rgroup-h"><span class="gs-type" :data-t="g.type" x-text="g.title"></span><span class="note" x-text="g.items.length > 8 ? '8 dari ' + g.items.length + ' hasil' : g.items.length + ' hasil'"></span></div>
+                <template x-for="e in g.items.slice(0, 8)" :key="e.id">
+                  <button class="gs-item" @click="$store.app.pick(e)"><span class="gs-text"><b x-text="e.label"></b><small x-text="e.sub"></small></span><svg class="i"><use href="#i-arrow"/></svg></button>
+                </template>
+              </div>
+            </template>
+            <div class="empty" x-show="!hits.length">Tidak ada entitas yang cocok. Lihat hasil di uraian kejadian →</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><div><h3 x-text="KAI.fmt.n(events.length) + ' kejadian menyebut “' + q.trim() + '”'"></h3><p>Seluruh periode · judul, lokasi, KA, sarana, dan uraian</p></div>
+            <div class="spacer"></div><button class="btn sm" @click="$store.app.go('telusuri', { q: q.trim(), period: 'all' })">Telusuri<svg class="i"><use href="#i-arrow"/></svg></button></div>
+          <div class="card-b">
+            <div x-table="KAITable.eventSpec('cari-ev', events.slice(0, 500), { hide: ['sarana', 'kelasLabel'] })" @row-click="$store.app.openEvent($event.detail.id)"></div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </section>
+</template>
+<script>
+document.addEventListener('alpine:init', function () {
+  var TITLES = { sarana: 'Sarana', stasiun: 'Stasiun', petak: 'Petak jalan', wilayah: 'Daop / Divre', depo: 'Depo', lintas: 'Lintas', ka: 'Kereta api', jpl: 'JPL' };
+  Alpine.data('vCari', function () {
+    return {
+      q: '', samples: ['CC 206 13 49', 'Bekasi', 'Daop 8', 'Divre 1', 'Argo Bromo', 'JPL 124', 'Manggarai', 'Depo Cipinang', 'pohon tumbang'],
+      init: function () { this.q = (this.$store.app.params && this.$store.app.params.q) || ''; var self = this; this.$nextTick(function () { self.$refs.q && self.$refs.q.focus(); }); },
+      get hits() { void this.$store.app.refReady; return KAI.data.search ? KAIRef.search(KAI.data.search, this.q, 120) : []; },
+      get groups() {
+        var g = {}; this.hits.forEach(function (e) { (g[e.type] = g[e.type] || []).push(e); });
+        return Object.keys(TITLES).filter(function (t) { return g[t]; }).map(function (t) { return { type: t, title: TITLES[t], items: g[t] }; });
+      },
+      get events() {
+        var terms = this.q.toLowerCase().split(/\s+/).filter(Boolean), N = KAI.data.narr;
+        if (!terms.length) return [];
+        return KAI.data.all.filter(function (r) {
+          var hay = [r.judul, r.sub, r.lokasi, r.lokCode, r.ka, r.kaNama, r.sarana.join(' '), r.saranaRaw, r.wilayah, r.jpl ? 'jpl ' + r.jpl : ''].join(' ').toLowerCase();
+          if (N[r.id]) hay += ' ' + N[r.id].join(' ').toLowerCase();
+          return terms.every(function (t) { return hay.indexOf(t) >= 0; });
+        }).sort(function (a, b) { return KAIA.sortKey(b).localeCompare(KAIA.sortKey(a)); });
+      }
+    };
+  });
+});
+</script>

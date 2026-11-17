@@ -1,0 +1,106 @@
+<!-- View.Tren — tren bulanan & harian per kelas, pola jam & hari, matriks pembanding, dan Top 3 per kelas. -->
+<template x-if="$store.app.route === 'tren' && $store.app.R">
+  <section class="view" x-data="vTren">
+    <div class="grid g-2">
+      <div class="card">
+        <div class="card-h"><div><h3>Frekuensi gangguan per bulan</h3><p x-text="'Jumlah kejadian per kelas · ' + KAI.fmt.mon(R.trend.yms[0]) + '–' + KAI.fmt.mon(R.ym) + (KAIA.hoursOn(R.P) ? ' · jam terpilih' : '')"></p></div></div>
+        <div class="card-b fill"><div class="chart" x-chart="KAIChart.trend(R.trend, 'n')" @chart-click="drillMonth($event.detail)"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3>Total kelambatan per bulan</h3><p>Menit (Total Andil Kelka) per kelas · pencilan diberi tanda, tidak dibuang</p></div></div>
+        <div class="card-b fill"><div class="chart" x-chart="KAIChart.trend(R.trend, 'menit')" @chart-click="drillMonth($event.detail)"></div></div>
+      </div>
+    </div>
+
+    <div class="card mt" x-show="R.daily">
+      <div class="card-h"><div><h3 x-text="'Per hari · ' + R.label"></h3><p>Kelambatan bertumpuk per kelas · hanya kejadian dengan tanggal hari · klik batang untuk menelusuri hari itu</p></div>
+        <div class="spacer"></div><div class="seg"><button :aria-pressed="dm === 'menit'" @click="dm = 'menit'">Menit</button><button :aria-pressed="dm === 'n'" @click="dm = 'n'">Kejadian</button></div></div>
+      <div class="card-b"><div class="chart short" x-chart="R.daily ? KAIChart.daily(R.daily, dm) : null" @chart-click="drillDay($event.detail)"></div></div>
+    </div>
+
+    <div class="grid g-2 mt">
+      <div class="card">
+        <div class="card-h"><div><h3>Pola jam</h3><p x-text="KAI.fmt.n(R.hour.known) + ' dari ' + KAI.fmt.n(R.hour.total) + ' kejadian punya jam mulai terbaca · klik jam untuk memfilter'"></p></div></div>
+        <div class="card-b fill"><div class="chart" x-chart="KAIChart.hourBar(R.hour)" @chart-click="$store.app.setHours($event.detail.dataIndex, $event.detail.dataIndex); $store.app.say('Filter jam diubah ke ' + $event.detail.name + ':00–' + $event.detail.name + ':59. Klik &quot;Atur ulang&quot; untuk kembali.')"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3>Hari × jam</h3><p>Jumlah kejadian per hari dalam minggu dan jam · warna makin oranye = makin padat</p></div></div>
+        <div class="card-b fill"><div class="chart" x-chart="KAIChart.heat(R.hour)"></div></div>
+      </div>
+    </div>
+
+    <div class="grid g-4 mt">
+      <template x-for="k in KAIA.CLASSES" :key="k">
+        <div class="card kpi" :style="'--kpi-c:' + KAI.classColor(k)">
+          <div class="lbl" x-text="$store.app.classLabel(k)"></div>
+          <div style="display:flex;gap:18px;margin-top:6px">
+            <div><div class="note">Kejadian</div><div class="num kv-big" x-text="KAI.fmt.n(R.cls[k].n)"></div>
+              <span class="delta" :class="KAI.delta(R.cls[k].n, R.clsCmp[k].n, R.cfg.smallBase).cls" x-text="KAI.fmt.signed(R.cls[k].n - R.clsCmp[k].n) + (R.clsCmp[k].n < R.cfg.smallBase ? ' · basis kecil' : '')"></span></div>
+            <div><div class="note">Menit</div><div class="num kv-big" x-text="KAI.fmt.n(R.cls[k].menit)"></div>
+              <span class="delta" :class="KAI.delta(R.cls[k].menit, R.clsCmp[k].menit).cls" x-text="KAI.fmt.signed(R.cls[k].menit - R.clsCmp[k].menit)"></span></div>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <div class="grid g-2 mt">
+      <div class="card">
+        <div class="card-h"><div><h3 x-text="'Matriks ' + R.cmpLabel"></h3><p>Pembanding · skala sama dengan panel kanan</p></div></div>
+        <div class="card-b fill"><div class="chart tall" x-chart="KAIChart.matrix(R.matPrev, R.matAxis)"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3 x-text="'Matriks ' + R.label"></h3><p>Garis putus = median 4 kelas; median membagi tinggi/rendah secara relatif, bukan target kinerja</p></div></div>
+        <div class="card-b fill"><div class="chart tall" x-chart="KAIChart.matrix(R.mat, R.matAxis)" @chart-click="$store.app.go('telusuri', { kelas: $event.detail.data.kelas })"></div></div>
+      </div>
+    </div>
+
+    <div class="card mt" style="flex-direction:row;align-items:center;gap:12px;padding:10px 16px;flex-wrap:wrap">
+      <b style="font-size:14px">Top 3 jenis gangguan per kelas</b>
+      <span class="note">Varian "Imbas …" dan "Gangguan …" tanpa awalan aset digabung ke jenis induknya, sama seperti laporan bulanan.</span>
+      <span class="spacer"></span>
+      <div class="seg" role="group" aria-label="Penggabungan varian"><button :aria-pressed="$store.app.f.imbas !== false" @click="$store.app.setF({ imbas: true })">Gabung varian</button><button :aria-pressed="$store.app.f.imbas === false" @click="$store.app.setF({ imbas: false })">Pisah per subgangguan</button></div>
+    </div>
+    <div class="grid g-2 mt">
+      <template x-for="k in KAIA.CLASSES" :key="k">
+        <div class="card">
+          <div class="card-h"><div><h3 x-text="'Top 3 · ' + $store.app.classLabel(k)"></h3><p x-text="R.label + ' · diurutkan menurut menit'"></p></div></div>
+          <div class="card-b">
+            <table class="tbl">
+              <thead><tr><th>Jenis gangguan</th><th class="num">Kej.</th><th class="num">Menit</th><th class="num" x-text="'≥' + R.cfg.top + ' mnt'"></th></tr></thead>
+              <tbody>
+                <template x-for="t in R.top[k]" :key="t.label">
+                  <tr class="click" @click="$store.app.go('telusuri', { ids: t.ids, label: t.label, period: 'all' })">
+                    <td :title="t.variants > 1 ? t.variants + ' varian subgangguan digabung' : null"><span x-text="t.label"></span><span class="note" x-show="t.variants > 1" x-text="' · ' + t.variants + ' varian'"></span></td><td class="num" x-text="t.n"></td><td class="num"><b x-text="KAI.fmt.n(t.menit)"></b></td><td class="num" x-text="t.heavy"></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+            <div class="empty" x-show="!R.top[k].length">Tidak ada kejadian kelas ini.</div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </section>
+</template>
+<script>
+document.addEventListener('alpine:init', function () {
+  Alpine.data('vTren', function () {
+    return {
+      dm: 'menit',
+      get R() { return this.$store.app.R; },
+      drillMonth: function (p) {
+        var ym = this.R.trend.yms[p.dataIndex], kelas = p.seriesIndex != null ? KAIA.CLASSES[p.seriesIndex] : null;
+        if (!ym) return;
+        this.$store.app.setF({ mode: 'month', ym: ym, kelas: kelas ? [kelas] : [] });
+        this.$store.app.say('Filter diubah: periode ' + KAI.fmt.month(ym) + (kelas ? ', kelas ' + KAIChart.CLASS_LABEL[kelas].split(',')[0].toLowerCase() : '') + '. Klik "Atur ulang" di bilah filter untuk kembali.');
+      },
+      drillDay: function (p) {
+        var d = this.R.daily && this.R.daily.days[p.dataIndex];
+        if (!d) return;
+        this.$store.app.setF({ mode: 'range', from: d, to: d });
+        this.$store.app.say('Filter diubah: rentang 1 hari (' + KAI.fmt.day(d) + '). Klik "Atur ulang" di bilah filter untuk kembali.');
+      }
+    };
+  });
+});
+</script>

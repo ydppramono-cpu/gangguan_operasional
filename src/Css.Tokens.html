@@ -1,0 +1,52 @@
+<style>
+/* Css.Tokens — token desain. Ubah warna/ukuran di sini saja.
+   Sumber: Color Guide KAI (navy #252271, oranye #F06A25) + pola Stitch pada proyek lama. */
+:root {
+  --kai-navy: #252271;
+  --kai-navy-700: #2E2D78;
+  --kai-navy-600: #33327B;
+  --kai-navy-100: #E8E9F5;
+  --kai-navy-50: #F3F3FA;
+  --kai-orange: #F06A25;
+  --kai-orange-100: #FDEBDF;
+
+  --canvas: #F4F6FA;
+  --surface: #FFFFFF;
+  --surface-2: #F8F9FC;
+  --ink: #17223B;
+  --ink-2: #3A4458;
+  --muted: #5B6475;
+  --line: #D8DEEA;
+  --line-soft: #E8ECF3;
+
+  --good: #067647;   --good-bg: #E7F6EE;
+  --bad: #B42318;    --bad-bg: #FDECEA;
+  --warn: #B54708;   --warn-bg: #FFF4E5;
+  --focus: #2563EB;
+
+  /* Warna kelas — sama dengan CLASS_META di 00_Config.gs */
+  --c-operasional: #0F766E;
+  --c-sarana: #275BC0;
+  --c-alam: #B45309;
+  --c-prasarana: #64748B;
+  --c-belum: #9AA3B2;
+
+  --font: Inter, Arial, "Helvetica Neue", sans-serif;
+  --fs-xs: 11.5px; --fs-sm: 13px; --fs-md: 14px; --fs-lg: 17px; --fs-xl: 22px; --fs-h1: 24px;
+  --fs-kpi: clamp(24px, 1.9vw, 32px); --fs-head: clamp(17px, 1.35vw, 22px); --fs-h3: clamp(14.5px, 1vw, 16px); --fs-title: 17px;
+  --pad: clamp(14px, 1.6vw, 24px); --gap: clamp(12px, 1.1vw, 18px);
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px;
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px;
+  --shadow-1: 0 1px 2px rgba(23, 34, 59, .05);
+  --shadow-2: 0 12px 32px rgba(23, 34, 59, .16);
+  --sidebar-w: 228px; --sidebar-mini: 64px;
+  --topbar-h: 56px;
+
+  --dur-fast: 150ms; --dur: 220ms; --dur-slow: 420ms;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 0ms; --dur: 0ms; --dur-slow: 0ms; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+</style>

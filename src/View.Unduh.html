@@ -1,0 +1,135 @@
+<!-- View.Unduh — pusat unduhan: laporan (PPT/PDF) dan data (CSV/Excel). Semua mengikuti filter aktif. -->
+<template x-if="$store.app.route === 'unduh' && $store.app.R">
+  <section class="view" x-data="vUnduh">
+    <div class="headline">
+      <div style="flex:1"><h2 x-text="'Unduh untuk ' + R.label"></h2>
+        <p x-text="'Mengikuti filter aktif' + (R.scopeLabel ? ': ' + R.scopeLabel : ' (seluruh wilayah, semua kelas)') + '. Ubah periode/jam/wilayah di bilah filter sebelum mengunduh.'"></p></div>
+    </div>
+    <div class="grid g-2 mt">
+      <div class="card">
+        <div class="card-h"><div><h3>Laporan Executive Summary</h3>
+          <p x-text="$store.app.f.wilayah.length === 1 ? 'Laporan wilayah ' + $store.app.f.wilayah[0] + ': profil lintas, tren riwayat, periode setara, lokasi terberat, sarana, perlintasan, alam & kerawanan, konteks eksternal, rekomendasi, lampiran & daftar sumber.' : 'Laporan KAI: ringkasan eksekutif, MoM/YoY/YtD, top subgangguan, tren, matriks, perlintasan, peta wilayah, sarana, prasarana, eksposur, konteks eksternal, rekomendasi, lampiran.'"></p></div></div>
+        <div class="card-b">
+          <div class="form-row"><label class="lbl" for="rpt-scope">Cakupan laporan</label>
+            <select id="rpt-scope" class="inp" :value="scopeVal" @change="setScope($event.target.value)">
+              <option value="">Seluruh KAI (Jawa–Sumatera)</option>
+              <template x-for="w in $store.app.wilayahList" :key="w"><option :value="w" x-text="'Wilayah: ' + w" :selected="scopeVal === w"></option></template>
+              <option value="__multi" x-show="$store.app.f.wilayah.length > 1" :selected="scopeVal === '__multi'" x-text="'Filter aktif (' + $store.app.f.wilayah.length + ' wilayah)'"></option>
+            </select></div>
+          <div class="opts">
+            <label><input type="checkbox" x-model="opt.expo"> Eksposur pendapatan (indikatif)</label>
+            <label><input type="checkbox" x-model="opt.external"> Konteks eksternal: media &amp; kajian ilmiah (APA)</label>
+            <label><input type="checkbox" x-model="opt.extraViz"> Grafik analitik tambahan (pola jam/hari, Pareto &amp; distribusi durasi)</label>
+            <label><input type="checkbox" x-model="opt.appendix"> Lampiran data pendukung &amp; daftar sumber (APA)</label>
+          </div>
+          <label class="lbl mt" for="rpt-notes">Catatan / arahan analis (opsional, menjadi satu slide)</label>
+          <textarea id="rpt-notes" class="inp" rows="3" x-model="opt.notes" placeholder="Mis. arahan pimpinan, konteks rapat, atau tindak lanjut yang sudah berjalan."></textarea>
+          <details class="mt">
+            <summary><b x-text="'Rujukan tambahan (' + refs.length + ')'"></b> — berita/kajian yang ingin dikutip (catatan kaki &amp; daftar sumber APA)</summary>
+            <p class="note">Hanya masukkan sumber yang sudah Anda baca dari aslinya. Rujukan di sini tersimpan di peramban ini saja; agar dipakai semua pengguna, tambahkan baris ke tab <b>M_RUJUKAN</b> (Master tambahan).</p>
+            <template x-for="(r, i) in refs" :key="i">
+              <div class="refrow"><span x-text="'[' + (i + 1) + '] ' + r.apa"></span> <button class="btn sm" @click="delRef(i)">Hapus</button></div>
+            </template>
+            <div class="grid g-2 mt">
+              <input class="inp" placeholder="Sitasi APA* — Penulis/Media. (2026, 2 November). Judul. Nama media." x-model="draft.apa">
+              <input class="inp" placeholder="URL (https://…)" x-model="draft.url">
+              <input class="inp" placeholder="Tanggal terbit (yyyy-mm-dd)" x-model="draft.tanggal">
+              <input class="inp" placeholder="Wilayah (kosong = umum), mis. Daop 9" x-model="draft.wilayah">
+              <input class="inp" placeholder="Topik: perlintasan, banjir, longsor, sarana, rel, …" x-model="draft.topik">
+              <select class="inp" x-model="draft.jenis"><option>Media</option><option>Ilmiah</option><option>Pedoman</option><option>Resmi</option></select>
+            </div>
+            <textarea class="inp mt" rows="2" placeholder="Fakta kunci* yang dinyatakan sumber (dikutip apa adanya di laporan)" x-model="draft.fakta"></textarea>
+            <button class="btn sm mt" :disabled="!draft.apa || !draft.fakta" @click="addRef()">Tambah rujukan</button>
+          </details>
+          <div style="display:flex;gap:10px;flex-wrap:wrap" class="mt">
+            <button class="btn primary" :disabled="working" @click="run('pptx')"><svg class="i"><use href="#i-file"/></svg>PowerPoint (.pptx)</button>
+            <button class="btn" :disabled="working" @click="run('pdf')"><svg class="i"><use href="#i-file"/></svg>PDF</button>
+          </div>
+        </div>
+        <div class="card-f" x-text="'Dibuat di perangkat Anda dalam ±5–20 detik. PPT & PDF berisi halaman, urutan, dan posisi yang sama; grafik PPT dapat diedit (klik kanan → Edit Data). ' + (libCount ? libCount + ' rujukan terverifikasi tersedia.' : 'Pustaka rujukan (M_RUJUKAN) belum termuat.')"></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div><h3>Data</h3><p>Tabel yang sudah dinormalkan, termasuk uraian kejadian</p></div></div>
+        <div class="card-b">
+          <table class="tbl">
+            <tbody>
+              <template x-for="d in datasets" :key="d.id">
+                <tr><td><b x-text="d.title"></b><div class="note" x-text="d.desc"></div></td>
+                  <td class="num" style="white-space:nowrap"><button class="btn sm" :disabled="d.needRef && !$store.app.refReady" @click="data(d, 'csv')">CSV</button> <button class="btn sm" :disabled="d.needRef && !$store.app.refReady" @click="data(d, 'xlsx')">Excel</button></td></tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <p class="note mt">Eksposur pendapatan bersifat indikatif dan belum divalidasi Finance. Unduhan berisi uraian kejadian lengkap — perlakukan sebagai dokumen internal.</p>
+  </section>
+</template>
+<script>
+document.addEventListener('alpine:init', function () {
+  Alpine.data('vUnduh', function () {
+    return {
+      working: false,
+      get R() { return this.$store.app.R; },
+      get datasets() {
+        var R = this.R;
+        return [
+          { id: 'p', title: 'Kejadian ' + R.label, desc: 'Semua kejadian pada periode & jam aktif', P: R.P },
+          { id: 'ytd', title: 'Kejadian YTD (' + R.ytdP.label + ')', desc: '1 Januari s.d. akhir periode', P: R.ytdP },
+          { id: 'cross', title: 'Perlintasan sebidang YTD', desc: 'Hanya kejadian perlintasan', P: R.ytdP, cross: true },
+          { id: 'all', title: 'Seluruh kejadian', desc: 'Semua bulan yang tersedia', P: null },
+          { id: 'jpl', title: 'Master JPL (1.404 titik)', desc: 'Isi tab M_JPL + petak hasil pemetaan', needRef: true },
+          { id: 'fleet', title: 'Armada (Referensi Sarana)', desc: 'Jenis, depo, mulai dinas, usia, penanda > ' + R.cfg.ageWarn + ' th', needRef: true },
+          { id: 'ka', title: 'Daftar KA + rute terpetakan', desc: 'LIST KA GAPEKA 2025 + mutu inferensi rute', needRef: true }
+        ];
+      },
+      opt: (function () { var o = { expo: true, external: false, extraViz: false, appendix: true, notes: '' }; try { Object.assign(o, JSON.parse(localStorage.getItem('KAI_REPORT_OPT') || '{}')); } catch (e) { } return o; })(),
+      refs: (function () { try { return JSON.parse(localStorage.getItem('KAI_REPORT_REFS') || '[]'); } catch (e) { return []; } })(),
+      draft: { apa: '', url: '', tanggal: '', wilayah: '', topik: '', jenis: 'Media', fakta: '' },
+      get libCount() { var r = KAI.data && KAI.data.ref; return r && r.ruj ? r.ruj.length : 0; },
+      get scopeVal() { var w = this.$store.app.f.wilayah; return w.length === 1 ? w[0] : w.length > 1 ? '__multi' : ''; },
+      setScope: function (v) { if (v === '__multi') return; this.$store.app.f.wilayah = v ? [v] : []; },
+      saveRefs: function () { try { localStorage.setItem('KAI_REPORT_REFS', JSON.stringify(this.refs)); } catch (e) { } },
+      addRef: function () { this.refs.push(Object.assign({}, this.draft)); this.draft = { apa: '', url: '', tanggal: '', wilayah: '', topik: '', jenis: 'Media', fakta: '' }; this.saveRefs(); },
+      delRef: function (i) { this.refs.splice(i, 1); this.saveRefs(); },
+      run: function (kind) {
+        var self = this, app = this.$store.app; self.working = true; app.busy = true;
+        try { localStorage.setItem('KAI_REPORT_OPT', JSON.stringify(Object.assign({}, self.opt, { notes: '' }))); } catch (e) { }
+        if (!app.refReady) app.say('Data referensi belum termuat: profil wilayah & rujukan eksternal mungkin belum lengkap.', true);
+        app.say('Menyiapkan ' + (kind === 'pptx' ? 'PowerPoint' : 'PDF') + '…');
+        setTimeout(function () {
+          var ctx = { R: self.R, meta: Object.assign({ componentRule: app.config && app.config.componentRule }, app.meta), recs: app.scoped(), ref: KAI.data.ref, narr: KAI.data.narr || {},
+            wilayah: app.f.wilayah.slice(), opts: Object.assign({}, self.opt, { extraRefs: self.refs }) };
+          (kind === 'pptx' ? KAIExport.pptx(ctx) : KAIExport.pdf(ctx))
+            .then(function (m) { app.say('Berkas siap diunduh (' + m.slides.length + ' halaman, ' + m.sources.length + ' sumber).'); })
+            .catch(function (e) { console.error(e); app.say('Gagal membuat berkas: ' + e.message, true); })
+            .finally(function () { self.working = false; app.busy = false; });
+        }, 30);
+      },
+      data: function (d, kind) {
+        var app = this.$store.app, N = KAI.data.narr, Ref = KAI.data.ref, rows, cols, name = 'Data_' + d.id + '_' + this.R.P.short;
+        if (d.id === 'jpl') {
+          rows = Ref.jpl; cols = ['noUrut', 'antara', 'no', 'kmText', 'prov', 'kab', 'kat', 'lebar', 'status', 'penjaga', 'jaga', 'region', 'p190', 'segKey'].map(function (k) { return { title: k, field: k }; });
+        } else if (d.id === 'fleet') {
+          rows = Ref.fleetList.map(function (f) { return Object.assign({ tua: f.age != null && f.age > app.config.ageWarn ? 'Ya' : '' }, f); });
+          cols = ['no', 'kind', 'cls', 'depo', 'since', 'age', 'tua', 'manuf'].map(function (k) { return { title: k, field: k }; });
+        } else if (d.id === 'ka') {
+          KAIRef.ensureRoutes(Ref);
+          rows = Ref.kaList.map(function (k) { var r = k.route || {}; return { no: k.no, nama: k.nama, kelas: k.kelas, jenis: k.jenis, status: k.jenisKa, lintas: k.lintas, jarak: k.jarak, ber: k.ber, dat: k.dat,
+            ruteKm: r.len ? Math.round(r.len * 1000) / 1000 : '', mutu: r.quality || (r.reason || ''), stasiun: r.path ? r.path.join(' ') : '' }; });
+          cols = Object.keys(rows[0]).map(function (k) { return { title: k, field: k }; });
+        } else {
+          var recs = app.scoped();
+          if (d.P) recs = KAIA.sel(recs, d.P);
+          if (d.cross) recs = recs.filter(function (r) { return r.cross; });
+          rows = recs.map(function (r) { return Object.assign({}, r, { uraian: (N[r.id] || [])[0] || '', tindak: (N[r.id] || [])[1] || '' }); });
+          cols = KAIExport.eventColumns();
+          if (!app.narrReady) app.say('Uraian belum termuat; kolom uraian akan kosong. Coba lagi sebentar.', true);
+        }
+        if (kind === 'csv') KAIExport.csv(rows, cols, name);
+        else { app.busy = true; KAIExport.xlsx([{ name: d.title.slice(0, 30), columns: cols, rows: rows }], name, app.meta).catch(function (e) { app.say(e.message, true); }).finally(function () { app.busy = false; }); }
+      }
+    };
+  });
+});
+</script>
