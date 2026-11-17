@@ -1,0 +1,237 @@
+[
+{
+"lembar": "I-1",
+"wilayah": "Daop 1 Jakarta",
+"berkas": "Lembar Gapeka 2025 - Daop 1 Jakarta.pdf",
+"halaman": "I-1A s.d. I-1F (4 jam per halaman)",
+"lintas": [
+"DURI - TANGERANG",
+"BATUCEPER - BANDARA SOEKARNO HATTA",
+"TANAHABANG - KRENCENG - MERAK",
+"KRENCENG - ANYER KIDUL"
+],
+"berkas_sumbu": "Daop 1.1 Jak _ Gapeka 2026.pdf",
+"judul_sumber": "teks lembar GAPEKA 2025"
+},
+{
+"lembar": "I-2",
+"wilayah": "Daop 1 Jakarta",
+"berkas": "Lembar Gapeka 2025 - Daop 1 Jakarta.pdf",
+"halaman": "I-2A s.d. I-2F (4 jam per halaman)",
+"lintas": [
+"JAKK - TPK",
+"TPK - KMO",
+"JAKK - KMO - JNG",
+"JAKK - MRI - JNG",
+"JNG - BKS",
+"BKS - CKP"
+],
+"berkas_sumbu": "Daop 1.2 Jak _ Gapeka 2026.pdf",
+"judul_sumber": "teks lembar GAPEKA 2025"
+},
+{
+"lembar": "I-3",
+"wilayah": "Daop 1 Jakarta",
+"berkas": "Lembar Gapeka 2025 - Daop 1 Jakarta.pdf",
+"halaman": "I-3A s.d. I-3F (4 jam per halaman)",
+"lintas": [
+"KPB - DU - MRI",
+"JAKK - MRI - CTA - BOO",
+"BOP - CCR"
+],
+"berkas_sumbu": "Daop 1.3 Jak _ Gapeka 2026.pdf",
+"judul_sumber": "teks lembar GAPEKA 2025"
+},
+{
+"lembar": "II-1",
+"wilayah": "Daop 2 Bandung",
+"berkas": "Lembar Gapeka 2025 - Daop 2 Bandung.pdf",
+"halaman": "II-1A s.d. II-1C (8 jam per halaman)",
+"lintas": [
+"CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR",
+"ANDIR - CIROYOM - BANDUNG",
+"CIBATU - GARUT"
+],
+"berkas_sumbu": "Daop 2 Bd _ Gapeka 2026.pdf",
+"judul_sumber": "mengikuti judul GAPEKA 2026 (lembar 2025 tanpa lapisan teks judul)"
+},
+{
+"lembar": "II-2",
+"wilayah": "Daop 2 Bandung",
+"berkas": "Lembar Gapeka 2025 - Daop 2 Bandung.pdf",
+"halaman": "II-2 (24 jam)",
+"lintas": [
+"SUKABUMI - CIANJUR - PADALARANG"
+],
+"berkas_sumbu": "Daop 2 Bd _ Gapeka 2026.pdf",
+"judul_sumber": "teks lembar GAPEKA 2025"
+},
+{
+"lembar": "III",
+"wilayah": "Daop 3 Cirebon",
+"berkas": "Lembar Gapeka 2025 - Daop 3 Cirebon.pdf",
+"halaman": "IIIA s.d. IIIC (8 jam per halaman)",
+"lintas": [
+"CIKAMPEK - CIREBON PRUJAKAN - TEGAL",
+"CIREBON PRUJAKAN - PRUPUK"
+],
+"berkas_sumbu": "Daop 3 Cn _ Gapeka 2026.pdf",
+"judul_sumber": "teks lembar GAPEKA 2025"
+},
+{
+"lembar": "IV",
+"wilayah": "Daop 4 Semarang",
+"berkas": "Lembar Gapeka 2025 - Daop 4 Semarang.pdf",
+"halaman": "IV-A s.d. IV-C (8 jam per halaman)",
+"lintas": [
+"TEGAL - BRUMBUNG - CEPU",
+"BRUMBUNG - GUNDIH",
+"GAMBRINGAN - GUNDIH"
+],
+"berkas_sumbu": "Daop 4 Sm_Gapeka 2026.pdf",
+"judul_sumber": "teks lembar GAPEKA 2025"
+},
+{
+"lembar": "V",
+"wilayah": "Daop 5 Purwokerto",
+"berkas": "Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf",
+"halaman": "VA s.d. VC (8 jam per halaman)",
+"lintas": [
+"PRUPUK - KROYA - KUTOARJO",
+"BANJAR - MAOS - KROYA",
+"TEGAL - PRUPUK",
+"KARANGTALUN - GUMILIR",
+"CILACAP - MAOS",
+"KUTOARJO - PURWOREJO"
+],
+"berkas_sumbu": "Daop 5 Pwt _ Gapeka 2026.pdf",
+"judul_sumber": "teks lembar GAPEKA 2025"
+},
+{
+"lembar": "VI",
+"wilayah": "Daop 6 Yogyakarta",
+"berkas": "Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf",
+"halaman": "VI-A s.d. VI-C (8 jam per halaman)",
+"lintas": [
+"KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN",
+"YOGYAKARTA INT AIRPORT - KEDUNDANG",
+"GUNDIH - KADIPIRO - SOLOBALAPAN",
+"ADI SOEMARMO - KADIPIRO",
+"PURWOSARI - WONOGIRI"
+],
+"berkas_sumbu": "Daop 6 Yk _ Gapeka 2026.pdf",
+"judul_sumber": "mengikuti judul GAPEKA 2026 (lembar 2025 tanpa lapisan teks judul)"
+},
+{
+"lembar": "VII",
+"wilayah": "Daop 7 Madiun",
+"berkas": "Lembar Gapeka 2025 - Daop 7 Madiun.pdf",
+"halaman": "VIIA s.d. VIIC (8 jam per halaman)",
+"lintas": [
+"WK - MR",
+"KERTOSONO - WLINGI"
+],
+"berkas_sumbu": "Daop 7 Mn _ Gapeka 2026.pdf",
+"judul_sumber": "teks lembar GAPEKA 2025"
+},
+{
+"lembar": "VIII-1",
+"wilayah": "Daop 8 Surabaya",
+"berkas": "Lembar Gapeka 2025 - Daop 8 Surabaya.pdf",
+"halaman": "VIII-1A s.d. VIII-1C (8 jam per halaman)",
+"lintas": [
+"CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS",
+"GRESIK - KANDANGAN",
+"MOJOKERTO - TARIK - WONOKROMO - SURABAYAKOTA",
+"SURABAYA GUBENG - SIDOTOPO - BENTENG",
+"SIDOTOPO - SURABAYAKOTA",
+"SIDOTOPO - SURABAYAKOTA - SEGITIGAMESIGIT - KALIMAS",
+"SEGITIGAMESIGIT - SURABAYA PASARTURI"
+],
+"berkas_sumbu": "Daop 8.1 Sb _ Gapeka 2026.pdf",
+"judul_sumber": "teks lembar GAPEKA 2025"
+},
+{
+"lembar": "VIII-2",
+"wilayah": "Daop 8 Surabaya",
+"berkas": "Lembar Gapeka 2025 - Daop 8 Surabaya.pdf",
+"halaman": "VIII-2A s.d. VIII-2C (8 jam per halaman)",
+"lintas": [
+"WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO",
+"TARIK - TULANGAN - SIDOARJO"
+],
+"berkas_sumbu": "Daop 8.2 Sb _ Gapeka 2026.pdf",
+"judul_sumber": "mengikuti judul GAPEKA 2026 (lembar 2025 tanpa lapisan teks judul)"
+},
+{
+"lembar": "IX",
+"wilayah": "Daop 9 Jember",
+"berkas": "Lembar Gapeka 2025 - Daop 9 Jember.pdf",
+"halaman": "IXA s.d. IXB (12 jam per halaman)",
+"lintas": [
+"KETAPANG - KALISAT - BANGIL",
+"PANARUKAN - KALISAT"
+],
+"berkas_sumbu": "Daop 9 Jr _ Gapeka 2026.pdf",
+"judul_sumber": "teks lembar GAPEKA 2025"
+},
+{
+"lembar": "Divre I",
+"wilayah": "Divre I Sumatera Utara",
+"berkas": "Lembar Gapeka 2025 - DIVRE I SUMUT.pdf",
+"halaman": "1A s.d. 1C (8 jam per halaman)",
+"lintas": [
+"BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT",
+"MEDAN - BESITANG",
+"MEDAN - BANDAR KALIPAH",
+"ARASKABU - KUALANAMU",
+"TEBING TINGGI - SIANTAR",
+"BANDAR TINGGI - KUALA TANJUNG",
+"KISARAN - TANJUNG BALAI",
+"RANTAU PRAPAT BARU - PONDOK S5"
+],
+"berkas_sumbu": "Divre I MEDAN.pdf",
+"judul_sumber": "teks lembar GAPEKA 2025"
+},
+{
+"lembar": "Divre II",
+"wilayah": "Divre II Sumatera Barat",
+"berkas": "Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf",
+"halaman": "1A s.d. 1B (12 jam per halaman)",
+"lintas": [
+"PULAU AIE - PADANG",
+"INDARUNG - LUBUK ALUNG - NARAS",
+"DUKU - BANDARA INTERNASIONAL MINANGKABAU",
+"LUBUK ALUNG - SAWAHLUNTO"
+],
+"berkas_sumbu": "Divre II PADANG.pdf",
+"judul_sumber": "teks lembar GAPEKA 2025"
+},
+{
+"lembar": "Divre III",
+"wilayah": "Divre III Palembang",
+"berkas": "Lembar Gapeka 2025 - DIVRE III PG.pdf",
+"halaman": "1A s.d. 1C (8 jam per halaman)",
+"lintas": [
+"KERTAPATI - POS INDRALAYA - PRABUMULIH - PRABUMULIH BARU X6",
+"POS INDRALAYA - INDRALAYA",
+"PRABUMULIH - PRABUMULIH BARU X5",
+"PRABUMULIH BARU X6 - MUARAENIM - TANJUNGENIM BARU",
+"MUARAENIM - LUBUK LINGGAU"
+],
+"berkas_sumbu": "Divre III PALEMBANG.pdf",
+"judul_sumber": "teks lembar GAPEKA 2025"
+},
+{
+"lembar": "Divre IV",
+"wilayah": "Divre IV Tanjungkarang",
+"berkas": "Lembar Gapeka 2025 - DIVRE IV TNK.pdf",
+"halaman": "2A s.d. 2C (8 jam per halaman)",
+"lintas": [
+"PANJANG - KILOMETERTIGA",
+"TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6"
+],
+"berkas_sumbu": "Divre IV TAJUNGKARANG.pdf",
+"judul_sumber": "teks lembar GAPEKA 2025"
+}
+]

@@ -12,7 +12,7 @@ window.__API = %s;
     if (k==='withSuccessHandler') return function(f){ return mk(f, ff); };
     if (k==='withFailureHandler') return function(f){ return mk(sf, f); };
     if (k==='withUserObject') return function(){ return mk(sf, ff); };
-    return function(){ var r = window.__API[k]; window.__calls=(window.__calls||[]).concat([k]);
+    return function(){ var r = window.__API[k]; if (r && r.__byArg) r = r[arguments[0]]; window.__calls=(window.__calls||[]).concat([k]);
       setTimeout(function(){ if (r===undefined) { (ff||function(){})(new Error('mock: '+k+' tidak ada')); } else sf && sf(JSON.parse(JSON.stringify(r))); }, 20); };
   }}); }
   window.google = { script: { run: mk(null,null), url: { getLocation: function(cb){ setTimeout(function(){ cb({ parameter: par, parameters: {}, hash: '' }); }, 0); } },

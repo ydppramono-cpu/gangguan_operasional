@@ -49,13 +49,15 @@ def parse(path, wilayah):
             alias = []
             def row(code, no, lo):
                 x = lo
-                pat = re.compile(r'^\s*(' + re.escape(code) + r'|[A-Z][A-Z0-9]{1,5})\s+' + str(no) + r'\b')
+                # label baris boleh hilang (kode terbungkus ke baris lain, mis. "KWG" di bawah baris 7)
+                pat = re.compile(r'^\s*(?:(' + re.escape(code) + r'|[A-Z][A-Z0-9]{1,5})\s+)?' + str(no) + r'\s+\d{1,4},\d')   # sesudah nomor baris harus angka jarak (bukan baris indeks kolom "1 2 3")
                 while x < min(len(L), lo + 4 * n + 12) and not pat.match(S(x)): x += 1
                 if x < len(L) and x < lo + 4 * n + 12:
                     lab = pat.match(S(x)).group(1)
-                    if lab != code: alias.append((code, lab))
+                    # label lain hanya dianggap alias bila masih di blok matriks yang sama (belum melewati header O/D matriks lain)
+                    if lab and lab != code and not any('O/D' in S(t) for t in range(lo + 1, x)): alias.append((code, lab))
                 if x >= len(L) or x >= lo + 4 * n + 12: return None, x
-                v = [t for t in S(x).split()[len(code.split()) + 1:] if NUM.match(t)]
+                v = [t for t in S(x).split() if NUM.match(t)]   # label & nomor baris bukan angka berkoma -> tersaring
                 y = x + 1
                 while len(v) < n - 1 and re.match(r'^\s+[\d,\s]+$', S(y)) and S(y).strip():
                     v += [t for t in S(y).split() if NUM.match(t)]; y += 1

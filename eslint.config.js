@@ -47,7 +47,7 @@ const rules = {
 };
 
 module.exports = [
-  { ignores: ['node_modules/**', 'dist/**', 'src/1[0-9]_Seed*.gs', 'src/11_SeedJadwal.gs', 'src/13_AsetLaporan.gs', 'src/18_SeedPeta.gs', 'src/Ui.Logo.html'] },
+  { ignores: ['node_modules/**', 'dist/**', 'src/1[0-9]_Seed*.gs', 'src/2[0-9]_Seed*.gs', 'src/11_SeedJadwal.gs', 'src/13_AsetLaporan.gs', 'src/18_SeedPeta.gs', 'src/Ui.Logo.html'] },
   {
     files: ['src/**/*.gs', 'platform/**/*.gs'],
     languageOptions: { ecmaVersion: 2020, sourceType: 'script', globals: { ...GAS, ...serverGlobals, console: 'readonly' } },

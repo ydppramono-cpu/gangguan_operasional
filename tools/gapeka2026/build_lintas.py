@@ -1,4 +1,4 @@
-"""Definisi lintas Marey per judul lembar GAPEKA 2026.
+"""Definisi lintas Marey per judul lembar GAPEKA (2026; juga 2025 lewat masukan di folder kerja g25).
 1) Kerangka: rantai matriks "Jarak Antar Stasiun" (Buku Penomoran) antara titik-titik di judul lembar (jarak resmi).
 2) Pengisian: stasiun/halte yang tercetak di sumbu lembar di antara dua stasiun matriks disisipkan dengan jarak kolom
    "jarak stasiun ke stasiun" lembar, diskalakan agar total = jarak matriks (selisih dicatat).
@@ -6,7 +6,10 @@
 import re, json, heapq, collections
 def norm(s): return re.sub(r'[^a-z0-9]', '', s.lower())
 REG = {'Divre I': 'Sumut', 'Divre II': 'Sumbar', 'Divre III': 'Sumsel', 'Divre IV': 'Sumsel'}
+import os
 M = [m for m in json.load(open('jarak_lintas.json')) if m['valid']]
+# Opsional: hanya kode yang dilayani Daftar Waktu tahun itu yang boleh disisipkan dari sumbu lembar (mencegah halte tahun lain ikut tergambar).
+KODE_ADA = set(json.load(open('kode_ada.json'))) if os.path.exists('kode_ada.json') else None
 NK = {k: [tuple(x) for x in v] for k, v in json.load(open('nama_kode_multi.json')).items()}
 code2name = {}
 for k, v in NK.items():
@@ -24,6 +27,8 @@ ALIAS = {'cirebonprujakan': 'CNP', 'surabayapasarturi': 'SBI', 'surabayagubeng':
          'panjang': 'PJN', 'tarahan': 'THN', 'muarasatu': 'MSU', 'kutablang': 'KBL', 'sawahlunto': 'SWL', 'gambringan': 'GBN', 'brumbung': 'BBG',
          'karangtalun': 'KRL', 'gumilir': 'GM', 'purworejo': 'PWR', 'kertapati': 'KPT', 'siantar': 'SIR', 'besitang': 'BSG', 'belawan': 'BLW',
          'gresik': 'GS', 'panarukan': 'PN', 'ketapang': 'KTG', 'larangan': 'LR'}
+# Kode yang berganti antar-GAPEKA (mis. Benteng: SBE di 2025, BET di 2026) -> alias_tambahan.json di folder kerja.
+if os.path.exists('alias_tambahan.json'): ALIAS.update(json.load(open('alias_tambahan.json')))
 G = collections.defaultdict(dict)
 for m in M:
     for a in range(len(m['kode']) - 1):
@@ -87,12 +92,14 @@ L = json.load(open('lembar_judul.json'))
 out, masalah, selisih = [], [], []
 for sh in L:
     reg = REG.get(sh['lembar'], 'Jawa')
-    rows = resolve_axis(AXR.get(sh['berkas'][:-4]) or [], reg)
+    rows = resolve_axis(AXR.get(sh.get('berkas_sumbu', sh['berkas'])[:-4]) or [], reg)
+    if KODE_ADA is not None: rows = [r for r in rows if r['kode'] in KODE_ADA]
     for t in sh['lintas']:
         pts = [s.strip() for s in t.split(' - ')]
         codes = []
         for p in pts:
             n = norm(p); c = ALIAS.get(n)
+            if not c and re.fullmatch(r'[A-Z][A-Z0-9]{0,5}', p) and p in G: c = p   # judul ditulis dengan kode stasiun (lembar 2025)
             if not c:
                 cs = [c for w, c in NK.get(n, []) if w == reg] or [c for w, c in NK.get(n, [])]
                 c = cs[0] if cs else None
@@ -122,7 +129,7 @@ for sh in L:
                 masalah.append((sh['lembar'], t, 'tidak ada jalur %s-%s' % (a, b))); ok = False; break
         if not ok: continue
         if len(set(seq)) != len(seq): masalah.append((sh['lembar'], t, 'stasiun berulang: ' + ' '.join(seq))); continue
-        out.append(dict(id='%s|%s' % (sh['lembar'], t), lembar=sh['lembar'], wilayah=sh['wilayah'], judul=t, berkas=sh['berkas'], halaman=sh['halaman'],
+        out.append(dict(id='%s|%s' % (sh['lembar'], t), lembar=sh['lembar'], wilayah=sh['wilayah'], judul=t, berkas=sh['berkas'], halaman=sh['halaman'], judul_sumber=sh.get('judul_sumber', ''),
                         sumber_jarak=dict(src), stasiun=[dict(kode=c, nama=code2name.get(c, ''), km=k) for c, k in zip(seq, km)]))
 json.dump(out, open('marey_lintas.json', 'w'), ensure_ascii=False)
 print('lintas terbentuk:', len(out), '| masalah:', len(masalah), '| selisih total lembar vs matriks:', len(selisih))

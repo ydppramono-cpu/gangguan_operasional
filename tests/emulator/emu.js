@@ -126,6 +126,8 @@ if (require.main === module) {
   const t = Date.now(), r = vm.runInContext('runSync_(true, "uji")', ctx);
   console.log('runSync_', JSON.stringify(r), (Date.now() - t) + ' ms'); console.log('status', props.SYNC_STATUS);
   const out = {}; ['apiBootstrap()', 'apiNarratives()', 'apiRef()', 'apiStatus()', 'apiGapeka26()'].forEach(c => { out[c.replace('()', '')] = vm.runInContext(c, ctx); });
+  out.apiGapeka = { __byArg: true, '2025': vm.runInContext('apiGapeka("2025")', ctx), '2026': vm.runInContext('apiGapeka("2026")', ctx), x: vm.runInContext('apiGapeka("1999")', ctx) };
+  console.log('apiGapeka 2025', out.apiGapeka['2025'].ok, '2026', out.apiGapeka['2026'].ok, 'tahun tak dikenal ditolak:', out.apiGapeka.x.ok === false);
   Object.entries(out).forEach(([k, v]) => console.log(k, v.ok, v.error || '', JSON.stringify(v).length));
   fs.writeFileSync(__dirname + '/api.json', JSON.stringify(out));
 }

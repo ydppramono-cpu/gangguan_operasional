@@ -1,16 +1,23 @@
-<!-- View.Gapeka — grafik perjalanan KA (diagram Marey waktu × km) per judul lintas Lembar GAPEKA 2026, dengan filter lintas, jam, dan jenis KA. -->
+<!-- View.Gapeka — grafik perjalanan KA (diagram Marey waktu × km) per judul lintas Lembar GAPEKA (pilih versi 2025/2026), dengan filter lintas, jam, dan jenis KA. -->
 <template x-if="$store.app.route === 'gapeka'">
   <section class="view" x-data="vGapeka">
     <div class="card">
       <div class="card-h">
         <div>
-          <h3>Grafik perjalanan KA · GAPEKA 2026</h3>
-          <p x-text="cur ? ('Lembar ' + cur.lembar + ' · ' + cur.wilayah + ' · ' + cur.halaman) : 'Diagram waktu × kilometer sesuai Lembar GAPEKA (berlaku 1 Desember 2026)'"></p>
+          <h3 x-text="'Grafik perjalanan KA · ' + vInfo.label"></h3>
+          <p x-text="(cur ? ('Lembar ' + cur.lembar + ' · ' + cur.wilayah + ' · ' + cur.halaman + ' · ') : 'Diagram waktu × kilometer sesuai Lembar GAPEKA · ') + vInfo.status"></p>
+        </div>
+        <div class="spacer"></div>
+        <div class="field">
+          <label for="mr-ver">Versi GAPEKA</label>
+          <select id="mr-ver" class="ctl" x-model="ver" @change="switchVer()">
+            <template x-for="v in versions" :key="v.id"><option :value="v.id" :selected="v.id === ver" x-text="v.label + (v.id === berlakuId ? ' (berlaku saat ini)' : v.berlaku > today ? ' (mulai ' + fmtTgl(v.berlaku) + ')' : '')"></option></template>
+          </select>
         </div>
       </div>
       <div class="card-b">
         <template x-if="state === 'loading'"><div class="skel" style="height:320px" aria-busy="true"></div></template>
-        <template x-if="state === 'error'"><div class="empty" role="alert"><b>Gagal memuat data GAPEKA 2026.</b> <span x-text="err"></span>
+        <template x-if="state === 'error'"><div class="empty" role="alert"><b x-text="'Gagal memuat data ' + vInfo.label + '.'"></b> <span x-text="err"></span>
           <div class="mt-s"><button class="btn sm" @click="init()">Coba lagi</button></div></div></template>
 
         <div x-show="state === 'ready'">
@@ -71,21 +78,25 @@
             </div>
           </div>
           <p class="note mt-s" x-text="status"></p>
-          <template x-if="cur && !nTracks"><div class="empty">Tidak ada perjalanan KA di Buku Daftar Waktu 2026 untuk lintas ini pada jenis yang dipilih (lembar mungkin hanya memuat KA dinas/langsir).</div></template>
+          <template x-if="cur && !nTracks"><div class="empty" x-text="'Tidak ada perjalanan KA di Buku Daftar Waktu ' + ver + ' untuk lintas ini pada jenis yang dipilih (lembar mungkin hanya memuat KA dinas/langsir).'"></div></template>
+          <p class="note mt-s" x-show="cur && cur.js && cur.js.indexOf('mengikuti') === 0" x-text="'Judul lintas ' + (cur ? cur.judul : '') + ': ' + (cur ? cur.js : '') + '.'"></p>
         </div>
       </div>
     </div>
 
     <div class="card mt">
-      <div class="card-h"><div><h3>Sumber & cara membaca</h3><p>Data apa adanya dari dokumen GAPEKA 2026; yang tidak terbaca ditandai, tidak diperkirakan</p></div></div>
+      <div class="card-h"><div><h3>Sumber & cara membaca</h3><p x-text="'Data apa adanya dari dokumen ' + vInfo.label + '; yang tidak terbaca ditandai, tidak diperkirakan'"></p></div></div>
       <div class="card-b">
         <dl class="kv">
-          <dt>Judul lintas</dt><dd>Sama dengan judul pada Lembar GAPEKA 2026 (Lampiran I KP-DJKA 116 Tahun 2026). Satu lembar bisa memuat beberapa lintas; pilih di daftar "Judul lintas".</dd>
-          <dt>Sumbu km</dt><dd>Urutan stasiun dan jarak dari matriks "Jarak Antar Stasiun" Buku Penomoran 2026; halte yang hanya tercetak di sumbu lembar disisipkan memakai kolom jarak lembar. Label stasiun yang terlalu rapat digeser dan diberi garis penunjuk ke posisi km sebenarnya.</dd>
-          <dt>Garis KA</dt><dd>Jam datang/berangkat dari Buku Daftar Waktu 2026. Stasiun yang dilewati tanpa jam ("Ls –") atau berhenti sebentar tanpa jam ("Berh Sb") tidak diberi titik; garis disambung lurus. Garis putus-putus = KA barang; garis titik-strip = KA fakultatif.</dd>
+          <dt>Versi</dt><dd x-text="meta.sumber || vInfo.label"></dd>
+          <dt>Judul lintas</dt><dd>Sama dengan judul pada Lembar GAPEKA versi terpilih. Satu lembar bisa memuat beberapa lintas; pilih di daftar "Judul lintas".</dd>
+          <dt>Sumbu km</dt><dd>Urutan stasiun dan jarak dari matriks "Jarak Antar Stasiun" Buku Penomoran versi yang sama; halte yang hanya tercetak di sumbu lembar disisipkan memakai kolom jarak lembar. Label stasiun yang terlalu rapat digeser dan diberi garis penunjuk ke posisi km sebenarnya.</dd>
+          <dt>Garis KA</dt><dd>Jam datang/berangkat dari Buku Daftar Waktu versi yang sama. Stasiun yang dilewati tanpa jam ("Ls –") atau berhenti sebentar tanpa jam ("Berh Sb") tidak diberi titik; garis disambung lurus. Garis putus-putus = KA barang; garis titik-strip = KA fakultatif.</dd>
           <dt>Nomor KA</dt><dd>Ditulis hanya bila tidak menumpuk nomor lain; arahkan kursor ke garis untuk melihat semua detail.</dd>
-          <dt>Sumatera</dt><dd>Buku Daftar Waktu Divre I–IV berupa gambar dan dibaca dengan OCR. KA yang jam awal–akhirnya cocok dengan Buku Penomoran ditandai terverifikasi; lainnya tampil lebih pudar dan bisa disembunyikan.</dd>
+          <dt x-show="ver === '2026'">Sumatera</dt><dd x-show="ver === '2026'">Buku Daftar Waktu Divre I–IV berupa gambar dan dibaca dengan OCR. KA yang jam awal–akhirnya cocok dengan Buku Penomoran ditandai terverifikasi; lainnya tampil lebih pudar dan bisa disembunyikan.</dd>
           <dt>Belum tercakup</dt><dd>KA dinas (lokomotif/rangkaian) tidak ada di Buku Daftar Waktu sehingga tidak digambar. Lintas Panarukan–Kalisat belum ada jaraknya di Buku Penomoran.</dd>
+          <dt x-show="meta.catatan">Catatan versi</dt><dd x-show="meta.catatan" x-text="meta.catatan"></dd>
+          <dt>Versi lain</dt><dd>Data yang tersedia: GAPEKA 2025 dan 2026. GAPEKA sebelumnya dapat ditambahkan bila bukunya (Lembar, Penomoran, Daftar Waktu) diunggah.</dd>
         </dl>
       </div>
     </div>
@@ -99,21 +110,37 @@ document.addEventListener('alpine:init', function () {
     return {
       state: 'loading', err: '', groups: [], lid: '', q: '', h0: 6, dur: 8, hiNo: '', showNo: true, verifOnly: false, pxKm: 3,
       kat: { pjj: true, lokal: true, krl: true, barang: true, dinas: true, lainnya: true }, counts: {}, tip: null, pinned: null,
-      status: '', nTracks: 0, hasUnverified: false, cur: null,
+      status: '', nTracks: 0, hasUnverified: false, cur: null, ver: '', meta: {},
+      today: new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Jakarta' }).slice(0, 10),
+      get versions() { return KAIM.VERSI; },
+      get berlakuId() { return KAIM.versiBerlaku(this.today); },
+      get vInfo() { var self = this, v = KAIM.VERSI.filter(function (x) { return x.id === self.ver; })[0] || KAIM.VERSI[0];
+        return { label: v.label, status: v.id === this.berlakuId ? 'berlaku sejak ' + this.fmtTgl(v.berlaku) : v.berlaku > this.today ? 'mulai berlaku ' + this.fmtTgl(v.berlaku) : 'versi lama (berlaku ' + this.fmtTgl(v.berlaku) + ')' }; },
+      fmtTgl: function (ymd) { var b = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'], p = ymd.split('-'); return +p[2] + ' ' + b[+p[1] - 1] + ' ' + p[0]; },
       get katList() { var K = KAIM.KAT; return Object.keys(K).filter(function (k) { return k !== 'lainnya' || this.counts.lainnya; }, this).map(function (k) { return { id: k, label: K[k].label, color: K[k].color }; }); },
       init: function () {
-        var self = this; self.state = 'loading';
-        KAIM.load(KAI.api, KAI.gunzipJson).then(function (d) {
-          D = d; self.state = 'ready'; self.filterGroups();
-          var saved = KAI.store.get('gapeka.lid');
-          self.lid = (saved && d.lintasById[saved]) ? saved : d.lintas[0].id;
+        var self = this, sv = KAI.store.get('gapeka.ver');
+        if (!self.ver) self.ver = (sv && KAIM.VERSI.some(function (v) { return v.id === sv; })) ? sv : self.berlakuId;   // bawaan: versi yang berlaku hari ini
+        self.state = 'loading';
+        KAIM.load(KAI.api, KAI.gunzipJson, self.ver).then(function (d) {
+          D = d; self.meta = d.meta || {}; self.state = 'ready'; self.filterGroups();
+          var saved = KAI.store.get('gapeka.lid'), same = self._keep && d.lintas.filter(function (l) { return l.judul === self._keep; })[0];
+          self._keep = '';
+          self.lid = same ? same.id : (saved && d.lintasById[saved]) ? saved : d.lintas[0].id;
           if (root.innerWidth < 640) self.dur = 4;
           self.$nextTick(function () {
             self.redraw(true);
             if (!ro && root.ResizeObserver) { ro = new ResizeObserver(function () { self.redraw(); }); ro.observe(self.$refs.wrap); }
           });
-          self.$watch('q', function () { self.filterGroups(); });
+          if (!self._wq) { self._wq = true; self.$watch('q', function () { self.filterGroups(); }); }
         }).catch(function (e) { self.state = 'error'; self.err = e.message || String(e); });
+      },
+      /** Ganti versi: muat data versi itu; pertahankan judul lintas yang sama bila ada di versi baru. */
+      switchVer: function () {
+        KAI.store.set('gapeka.ver', this.ver);
+        this._keep = this.cur ? this.cur.judul : '';
+        this.pinned = null; this.tip = null; this.cur = null;
+        this.init();
       },
       filterGroups: function () {
         var q = String(this.q || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -164,7 +191,7 @@ document.addEventListener('alpine:init', function () {
       png: function () {
         var cv = this.$refs.host.querySelector('canvas'); if (!cv) return;
         var a = document.createElement('a'), l = D.lintasById[this.lid];
-        a.download = 'GAPEKA2026_' + l.lembar.replace(/\s+/g, '') + '_' + l.judul.replace(/[^A-Za-z0-9]+/g, '_').slice(0, 60) + '_' + String(this.h0).padStart(2, '0') + '-' + String(Math.min(24, this.h0 + this.dur)).padStart(2, '0') + '.png';
+        a.download = 'GAPEKA' + this.ver + '_' + l.lembar.replace(/\s+/g, '') + '_' + l.judul.replace(/[^A-Za-z0-9]+/g, '_').slice(0, 60) + '_' + String(this.h0).padStart(2, '0') + '-' + String(Math.min(24, this.h0 + this.dur)).padStart(2, '0') + '.png';
         a.href = cv.toDataURL('image/png'); a.click();
       },
       destroy: function () { if (ro) { ro.disconnect(); ro = null; } }

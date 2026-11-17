@@ -47,8 +47,20 @@ function apiRef(version) {
  * @return {{ok: boolean, gz: string}} gz = base64(gzip(JSON)) dibuka di browser (KAI.gunzipJson).
  */
 function apiGapeka26() {
+  return apiGapeka('2026');
+}
+
+/**
+ * Data grafik perjalanan per versi GAPEKA (statis dari 19_SeedGapeka26.gs, 20_SeedGapeka25.gs).
+ * @param {string} tahun '2025' | '2026' (daftar tertutup — nilai lain ditolak).
+ * @return {{ok: boolean, tahun: string, gz: string}}
+ */
+function apiGapeka(tahun) {
   return guard_(function () {
-    return { ok: true, gz: SEED_GAPEKA26_GZ };
+    var SEEDS = { '2025': typeof SEED_GAPEKA25_GZ !== 'undefined' ? SEED_GAPEKA25_GZ : '', '2026': SEED_GAPEKA26_GZ };
+    var t = String(tahun || '2026');
+    if (!Object.prototype.hasOwnProperty.call(SEEDS, t) || !SEEDS[t]) throw new Error('Data GAPEKA ' + t + ' tidak tersedia.');
+    return { ok: true, tahun: t, gz: SEEDS[t] };
   });
 }
 

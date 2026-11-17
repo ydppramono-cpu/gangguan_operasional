@@ -29,10 +29,21 @@
   var FAK_DASH = [9, 3, 2, 3];
 
   /* ---------------- data ---------------- */
-  var cache = null;
-  function load(api, gunzip) {
-    if (cache) return Promise.resolve(cache);
-    return api('apiGapeka26').then(function (r) { return gunzip(r.gz); }).then(function (d) { cache = index(d); return cache; });
+  /** Versi GAPEKA yang tersedia (terbaru dulu). berlaku = tanggal mulai berlaku (WIB). */
+  var VERSI = [
+    { id: '2026', label: 'GAPEKA 2026', berlaku: '2026-12-01', dasar: 'KP-DJKA 116 Tahun 2026' },
+    { id: '2025', label: 'GAPEKA 2025', berlaku: '2025-02-01', dasar: 'KP-DJKA 224–227 Tahun 2024' }
+  ];
+  /** Versi yang berlaku pada tanggal ymd (yyyy-mm-dd): yang terakhir mulai berlaku ≤ tanggal itu. */
+  function versiBerlaku(ymd) {
+    var v = VERSI.filter(function (x) { return x.berlaku <= ymd; });
+    return (v[0] || VERSI[VERSI.length - 1]).id;
+  }
+  var cache = {};
+  function load(api, gunzip, tahun) {
+    tahun = tahun || '2026';
+    if (cache[tahun]) return Promise.resolve(cache[tahun]);
+    return api('apiGapeka', tahun).then(function (r) { return gunzip(r.gz); }).then(function (d) { cache[tahun] = index(d); cache[tahun].tahun = tahun; return cache[tahun]; });
   }
   function index(d) {
     var groups = [], byLembar = {};
@@ -296,7 +307,7 @@
   }
 
   var KAIM = {
-    KAT: KAT, load: load, index: index, tracks: tracks, layoutLabels: layoutLabels, intersects: intersects, anyOverlap: anyOverlap,
+    KAT: KAT, VERSI: VERSI, versiBerlaku: versiBerlaku, load: load, index: index, tracks: tracks, layoutLabels: layoutLabels, intersects: intersects, anyOverlap: anyOverlap,
     draw: draw, hit: hit, hms: hms,
     km: function (v) { var k = Math.floor(v + 1e-9), m = Math.round((v - k) * 1000); if (m === 1000) { k++; m = 0; } return k + '+' + (m < 100 ? (m < 10 ? '00' : '0') : '') + m; }
   };
