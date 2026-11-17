@@ -20,6 +20,6 @@
     "src/16_Pendapatan.gs",
     "src/17_SeedDuksar.gs",
     "src/18_SeedPeta.gs",
-    "src/19_SeedGapeka26.gs"
+    "src/19_SeedGapeka26.gs", "src/20_SeedGapeka25.gs"
   ]
 }
