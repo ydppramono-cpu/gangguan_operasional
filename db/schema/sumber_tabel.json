@@ -11,6 +11,18 @@
   "REF": {
    "id": "1nQuug9iDE6AeK8ZMRyk1dBbK849GDvLiP8l88kPQ3I0",
    "nama": "KAI_Referensi_Turunan (GAPEKA 2025, peta, Duksar, JPL, resor)"
+  },
+  "G26DB": {
+   "id": "14Cz2Ovgwa_hoWg1KAbdOcN4JkvrAeoXoR-4NpsY1Ung",
+   "nama": "GAPEKA_2026_Basis_Data (02_DB)"
+  },
+  "G26SAR": {
+   "id": "1L4dh9ADls3xMfsJcoIVPIgo8e5bEga4Y5r5LX6IcFoE",
+   "nama": "GAPEKA_2026_Sarana_Unit (02_DB)"
+  },
+  "G25DB": {
+   "id": "1UM8d7CvzhrXl1CeB7J7XNTaw0mcPiWA8-4_2RdZnH-c",
+   "nama": "GAPEKA_2025_Basis_Data (02_DB)"
   }
  },
  "tables": [
@@ -695,6 +707,260 @@
     "Aktif"
    ],
    "num": [],
+   "date": []
+  },
+  {
+   "name": "gapeka26_jadwal_dw",
+   "ss": "G26DB",
+   "sheet": "jadwal_dw_2026",
+   "skip": 1,
+   "desc": "Daftar Waktu GAPEKA 2026 per KA × stasiun (rencana; dasar pembanding realisasi)",
+   "headers": [
+    "no_ka",
+    "nama_ka",
+    "relasi",
+    "urut",
+    "kode_stasiun",
+    "nama_stasiun",
+    "vmax_kmj",
+    "datang",
+    "berangkat",
+    "keterangan",
+    "sumber_buku",
+    "status_verifikasi"
+   ],
+   "num": [
+    "urut",
+    "vmax_kmj"
+   ],
+   "date": []
+  },
+  {
+   "name": "gapeka26_penomoran_ka",
+   "ss": "G26DB",
+   "sheet": "penomoran_ka_2026",
+   "skip": 1,
+   "desc": "Buku Penomoran GAPEKA 2026: nomor, kelas, relasi, jam awal/akhir",
+   "headers": [
+    "wilayah",
+    "kelas_ka",
+    "no_ka",
+    "status",
+    "nama_ka",
+    "nama_identitas",
+    "lintas",
+    "penyelenggara",
+    "jarak_km",
+    "berangkat",
+    "datang",
+    "waktu_tempuh"
+   ],
+   "num": [
+    "jarak_km"
+   ],
+   "date": []
+  },
+  {
+   "name": "gapeka26_jarak_lintas",
+   "ss": "G26DB",
+   "sheet": "jarak_lintas_2026",
+   "skip": 1,
+   "desc": "Matriks Jarak Antar Stasiun 2026 (km kumulatif)",
+   "headers": [
+    "wilayah",
+    "lintas",
+    "urut",
+    "kode_stasiun",
+    "km_kumulatif",
+    "sumber"
+   ],
+   "num": [
+    "urut",
+    "km_kumulatif"
+   ],
+   "date": []
+  },
+  {
+   "name": "gapeka26_lintas_lembar",
+   "ss": "G26DB",
+   "sheet": "lintas_lembar_2026",
+   "skip": 1,
+   "desc": "Urutan stasiun + km per judul lintas Lembar GAPEKA 2026",
+   "headers": [
+    "lembar",
+    "wilayah",
+    "judul_lintas",
+    "urut",
+    "kode_stasiun",
+    "nama_stasiun",
+    "km",
+    "berkas_lembar"
+   ],
+   "num": [
+    "urut",
+    "km"
+   ],
+   "date": []
+  },
+  {
+   "name": "gapeka26_duksar_rekap",
+   "ss": "G26DB",
+   "sheet": "duksar_rekap_2026",
+   "skip": 1,
+   "desc": "Duksar 2026: rekap siap guna/operasi per jenis sarana",
+   "headers": [
+    "wilayah",
+    "jenis_sarana",
+    "siap_guna",
+    "siap_operasi",
+    "stamformasi",
+    "cadangan"
+   ],
+   "num": [
+    "siap_guna",
+    "siap_operasi",
+    "stamformasi",
+    "cadangan"
+   ],
+   "date": []
+  },
+  {
+   "name": "gapeka26_duksar_lok_dipo",
+   "ss": "G26DB",
+   "sheet": "duksar_lok_dipo_2026",
+   "skip": 1,
+   "desc": "Duksar 2026: lokomotif per dipo",
+   "headers": [
+    "wilayah",
+    "dipo",
+    "jenis_lok",
+    "siap_guna",
+    "tsgo",
+    "tso",
+    "so"
+   ],
+   "num": [
+    "siap_guna",
+    "tsgo",
+    "tso",
+    "so"
+   ],
+   "date": []
+  },
+  {
+   "name": "gapeka26_sarana_unit",
+   "ss": "G26SAR",
+   "sheet": "sarana_unit_2026",
+   "skip": 1,
+   "desc": "Duksar 2026: nomor unit per sarana (penanda pembangkit & rangkaian KRD/KRL)",
+   "headers": [
+    "wilayah",
+    "sarana",
+    "dipo_depo",
+    "jenis",
+    "kelas_klasifikasi",
+    "nomor_sarana",
+    "nomor_seri",
+    "kereta_pembangkit",
+    "tergabung_di_krd",
+    "catatan",
+    "baris_teks_sumber"
+   ],
+   "num": [
+    "baris_teks_sumber"
+   ],
+   "date": []
+  },
+  {
+   "name": "gapeka25_jadwal_dw",
+   "ss": "G25DB",
+   "sheet": "jadwal_dw_2025",
+   "skip": 1,
+   "desc": "Daftar Waktu GAPEKA 2025 per KA × stasiun",
+   "headers": [
+    "no_ka",
+    "nama_ka",
+    "relasi",
+    "urut",
+    "kode_stasiun",
+    "nama_stasiun",
+    "vmax_kmj",
+    "datang",
+    "berangkat",
+    "keterangan",
+    "sumber_buku",
+    "status_verifikasi"
+   ],
+   "num": [
+    "urut"
+   ],
+   "date": []
+  },
+  {
+   "name": "gapeka25_penomoran_ka",
+   "ss": "G25DB",
+   "sheet": "penomoran_ka_2025",
+   "skip": 1,
+   "desc": "Buku Penomoran GAPEKA 2025",
+   "headers": [
+    "wilayah",
+    "kelas_ka",
+    "no_ka",
+    "status",
+    "nama_ka",
+    "nama_identitas",
+    "lintas",
+    "penyelenggara",
+    "jarak_km",
+    "berangkat",
+    "datang",
+    "waktu_tempuh"
+   ],
+   "num": [
+    "jarak_km"
+   ],
+   "date": []
+  },
+  {
+   "name": "gapeka25_jarak_lintas",
+   "ss": "G25DB",
+   "sheet": "jarak_lintas_2025",
+   "skip": 1,
+   "desc": "Matriks Jarak Antar Stasiun 2025 (km kumulatif)",
+   "headers": [
+    "wilayah",
+    "lintas",
+    "urut",
+    "kode_stasiun",
+    "km_kumulatif",
+    "sumber"
+   ],
+   "num": [
+    "urut",
+    "km_kumulatif"
+   ],
+   "date": []
+  },
+  {
+   "name": "gapeka25_lintas_lembar",
+   "ss": "G25DB",
+   "sheet": "lintas_lembar_2025",
+   "skip": 1,
+   "desc": "Urutan stasiun + km per judul lintas Lembar GAPEKA 2025",
+   "headers": [
+    "lembar",
+    "wilayah",
+    "judul_lintas",
+    "urut",
+    "kode_stasiun",
+    "nama_stasiun",
+    "km",
+    "berkas_lembar"
+   ],
+   "num": [
+    "urut",
+    "km"
+   ],
    "date": []
   }
  ]

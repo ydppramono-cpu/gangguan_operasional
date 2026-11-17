@@ -1989,5 +1989,615 @@ var PLATFORM_TABLES = [
     "S"
    ]
   ]
+ },
+ {
+  "name": "gapeka26_jadwal_dw",
+  "ss": "14Cz2Ovgwa_hoWg1KAbdOcN4JkvrAeoXoR-4NpsY1Ung",
+  "sheet": "jadwal_dw_2026",
+  "range": "jadwal_dw_2026!A:L",
+  "skip": 1,
+  "desc": "Daftar Waktu GAPEKA 2026 per KA × stasiun (rencana; dasar pembanding realisasi)",
+  "cols": [
+   [
+    "no_ka",
+    "no_ka",
+    "S"
+   ],
+   [
+    "nama_ka",
+    "nama_ka",
+    "S"
+   ],
+   [
+    "relasi",
+    "relasi",
+    "S"
+   ],
+   [
+    "urut",
+    "urut",
+    "N"
+   ],
+   [
+    "kode_stasiun",
+    "kode_stasiun",
+    "S"
+   ],
+   [
+    "nama_stasiun",
+    "nama_stasiun",
+    "S"
+   ],
+   [
+    "vmax_kmj",
+    "vmax_kmj",
+    "N"
+   ],
+   [
+    "datang",
+    "datang",
+    "S"
+   ],
+   [
+    "berangkat",
+    "berangkat",
+    "S"
+   ],
+   [
+    "keterangan",
+    "keterangan",
+    "S"
+   ],
+   [
+    "sumber_buku",
+    "sumber_buku",
+    "S"
+   ],
+   [
+    "status_verifikasi",
+    "status_verifikasi",
+    "S"
+   ]
+  ]
+ },
+ {
+  "name": "gapeka26_penomoran_ka",
+  "ss": "14Cz2Ovgwa_hoWg1KAbdOcN4JkvrAeoXoR-4NpsY1Ung",
+  "sheet": "penomoran_ka_2026",
+  "range": "penomoran_ka_2026!A:L",
+  "skip": 1,
+  "desc": "Buku Penomoran GAPEKA 2026: nomor, kelas, relasi, jam awal/akhir",
+  "cols": [
+   [
+    "wilayah",
+    "wilayah",
+    "S"
+   ],
+   [
+    "kelas_ka",
+    "kelas_ka",
+    "S"
+   ],
+   [
+    "no_ka",
+    "no_ka",
+    "S"
+   ],
+   [
+    "status",
+    "status",
+    "S"
+   ],
+   [
+    "nama_ka",
+    "nama_ka",
+    "S"
+   ],
+   [
+    "nama_identitas",
+    "nama_identitas",
+    "S"
+   ],
+   [
+    "lintas",
+    "lintas",
+    "S"
+   ],
+   [
+    "penyelenggara",
+    "penyelenggara",
+    "S"
+   ],
+   [
+    "jarak_km",
+    "jarak_km",
+    "N"
+   ],
+   [
+    "berangkat",
+    "berangkat",
+    "S"
+   ],
+   [
+    "datang",
+    "datang",
+    "S"
+   ],
+   [
+    "waktu_tempuh",
+    "waktu_tempuh",
+    "S"
+   ]
+  ]
+ },
+ {
+  "name": "gapeka26_jarak_lintas",
+  "ss": "14Cz2Ovgwa_hoWg1KAbdOcN4JkvrAeoXoR-4NpsY1Ung",
+  "sheet": "jarak_lintas_2026",
+  "range": "jarak_lintas_2026!A:F",
+  "skip": 1,
+  "desc": "Matriks Jarak Antar Stasiun 2026 (km kumulatif)",
+  "cols": [
+   [
+    "wilayah",
+    "wilayah",
+    "S"
+   ],
+   [
+    "lintas",
+    "lintas",
+    "S"
+   ],
+   [
+    "urut",
+    "urut",
+    "N"
+   ],
+   [
+    "kode_stasiun",
+    "kode_stasiun",
+    "S"
+   ],
+   [
+    "km_kumulatif",
+    "km_kumulatif",
+    "N"
+   ],
+   [
+    "sumber",
+    "sumber",
+    "S"
+   ]
+  ]
+ },
+ {
+  "name": "gapeka26_lintas_lembar",
+  "ss": "14Cz2Ovgwa_hoWg1KAbdOcN4JkvrAeoXoR-4NpsY1Ung",
+  "sheet": "lintas_lembar_2026",
+  "range": "lintas_lembar_2026!A:H",
+  "skip": 1,
+  "desc": "Urutan stasiun + km per judul lintas Lembar GAPEKA 2026",
+  "cols": [
+   [
+    "lembar",
+    "lembar",
+    "S"
+   ],
+   [
+    "wilayah",
+    "wilayah",
+    "S"
+   ],
+   [
+    "judul_lintas",
+    "judul_lintas",
+    "S"
+   ],
+   [
+    "urut",
+    "urut",
+    "N"
+   ],
+   [
+    "kode_stasiun",
+    "kode_stasiun",
+    "S"
+   ],
+   [
+    "nama_stasiun",
+    "nama_stasiun",
+    "S"
+   ],
+   [
+    "km",
+    "km",
+    "N"
+   ],
+   [
+    "berkas_lembar",
+    "berkas_lembar",
+    "S"
+   ]
+  ]
+ },
+ {
+  "name": "gapeka26_duksar_rekap",
+  "ss": "14Cz2Ovgwa_hoWg1KAbdOcN4JkvrAeoXoR-4NpsY1Ung",
+  "sheet": "duksar_rekap_2026",
+  "range": "duksar_rekap_2026!A:F",
+  "skip": 1,
+  "desc": "Duksar 2026: rekap siap guna/operasi per jenis sarana",
+  "cols": [
+   [
+    "wilayah",
+    "wilayah",
+    "S"
+   ],
+   [
+    "jenis_sarana",
+    "jenis_sarana",
+    "S"
+   ],
+   [
+    "siap_guna",
+    "siap_guna",
+    "N"
+   ],
+   [
+    "siap_operasi",
+    "siap_operasi",
+    "N"
+   ],
+   [
+    "stamformasi",
+    "stamformasi",
+    "N"
+   ],
+   [
+    "cadangan",
+    "cadangan",
+    "N"
+   ]
+  ]
+ },
+ {
+  "name": "gapeka26_duksar_lok_dipo",
+  "ss": "14Cz2Ovgwa_hoWg1KAbdOcN4JkvrAeoXoR-4NpsY1Ung",
+  "sheet": "duksar_lok_dipo_2026",
+  "range": "duksar_lok_dipo_2026!A:G",
+  "skip": 1,
+  "desc": "Duksar 2026: lokomotif per dipo",
+  "cols": [
+   [
+    "wilayah",
+    "wilayah",
+    "S"
+   ],
+   [
+    "dipo",
+    "dipo",
+    "S"
+   ],
+   [
+    "jenis_lok",
+    "jenis_lok",
+    "S"
+   ],
+   [
+    "siap_guna",
+    "siap_guna",
+    "N"
+   ],
+   [
+    "tsgo",
+    "tsgo",
+    "N"
+   ],
+   [
+    "tso",
+    "tso",
+    "N"
+   ],
+   [
+    "so",
+    "so",
+    "N"
+   ]
+  ]
+ },
+ {
+  "name": "gapeka26_sarana_unit",
+  "ss": "1L4dh9ADls3xMfsJcoIVPIgo8e5bEga4Y5r5LX6IcFoE",
+  "sheet": "sarana_unit_2026",
+  "range": "sarana_unit_2026!A:K",
+  "skip": 1,
+  "desc": "Duksar 2026: nomor unit per sarana (penanda pembangkit & rangkaian KRD/KRL)",
+  "cols": [
+   [
+    "wilayah",
+    "wilayah",
+    "S"
+   ],
+   [
+    "sarana",
+    "sarana",
+    "S"
+   ],
+   [
+    "dipo_depo",
+    "dipo_depo",
+    "S"
+   ],
+   [
+    "jenis",
+    "jenis",
+    "S"
+   ],
+   [
+    "kelas_klasifikasi",
+    "kelas_klasifikasi",
+    "S"
+   ],
+   [
+    "nomor_sarana",
+    "nomor_sarana",
+    "S"
+   ],
+   [
+    "nomor_seri",
+    "nomor_seri",
+    "S"
+   ],
+   [
+    "kereta_pembangkit",
+    "kereta_pembangkit",
+    "S"
+   ],
+   [
+    "tergabung_di_krd",
+    "tergabung_di_krd",
+    "S"
+   ],
+   [
+    "catatan",
+    "catatan",
+    "S"
+   ],
+   [
+    "baris_teks_sumber",
+    "baris_teks_sumber",
+    "N"
+   ]
+  ]
+ },
+ {
+  "name": "gapeka25_jadwal_dw",
+  "ss": "1UM8d7CvzhrXl1CeB7J7XNTaw0mcPiWA8-4_2RdZnH-c",
+  "sheet": "jadwal_dw_2025",
+  "range": "jadwal_dw_2025!A:L",
+  "skip": 1,
+  "desc": "Daftar Waktu GAPEKA 2025 per KA × stasiun",
+  "cols": [
+   [
+    "no_ka",
+    "no_ka",
+    "S"
+   ],
+   [
+    "nama_ka",
+    "nama_ka",
+    "S"
+   ],
+   [
+    "relasi",
+    "relasi",
+    "S"
+   ],
+   [
+    "urut",
+    "urut",
+    "N"
+   ],
+   [
+    "kode_stasiun",
+    "kode_stasiun",
+    "S"
+   ],
+   [
+    "nama_stasiun",
+    "nama_stasiun",
+    "S"
+   ],
+   [
+    "vmax_kmj",
+    "vmax_kmj",
+    "S"
+   ],
+   [
+    "datang",
+    "datang",
+    "S"
+   ],
+   [
+    "berangkat",
+    "berangkat",
+    "S"
+   ],
+   [
+    "keterangan",
+    "keterangan",
+    "S"
+   ],
+   [
+    "sumber_buku",
+    "sumber_buku",
+    "S"
+   ],
+   [
+    "status_verifikasi",
+    "status_verifikasi",
+    "S"
+   ]
+  ]
+ },
+ {
+  "name": "gapeka25_penomoran_ka",
+  "ss": "1UM8d7CvzhrXl1CeB7J7XNTaw0mcPiWA8-4_2RdZnH-c",
+  "sheet": "penomoran_ka_2025",
+  "range": "penomoran_ka_2025!A:L",
+  "skip": 1,
+  "desc": "Buku Penomoran GAPEKA 2025",
+  "cols": [
+   [
+    "wilayah",
+    "wilayah",
+    "S"
+   ],
+   [
+    "kelas_ka",
+    "kelas_ka",
+    "S"
+   ],
+   [
+    "no_ka",
+    "no_ka",
+    "S"
+   ],
+   [
+    "status",
+    "status",
+    "S"
+   ],
+   [
+    "nama_ka",
+    "nama_ka",
+    "S"
+   ],
+   [
+    "nama_identitas",
+    "nama_identitas",
+    "S"
+   ],
+   [
+    "lintas",
+    "lintas",
+    "S"
+   ],
+   [
+    "penyelenggara",
+    "penyelenggara",
+    "S"
+   ],
+   [
+    "jarak_km",
+    "jarak_km",
+    "N"
+   ],
+   [
+    "berangkat",
+    "berangkat",
+    "S"
+   ],
+   [
+    "datang",
+    "datang",
+    "S"
+   ],
+   [
+    "waktu_tempuh",
+    "waktu_tempuh",
+    "S"
+   ]
+  ]
+ },
+ {
+  "name": "gapeka25_jarak_lintas",
+  "ss": "1UM8d7CvzhrXl1CeB7J7XNTaw0mcPiWA8-4_2RdZnH-c",
+  "sheet": "jarak_lintas_2025",
+  "range": "jarak_lintas_2025!A:F",
+  "skip": 1,
+  "desc": "Matriks Jarak Antar Stasiun 2025 (km kumulatif)",
+  "cols": [
+   [
+    "wilayah",
+    "wilayah",
+    "S"
+   ],
+   [
+    "lintas",
+    "lintas",
+    "S"
+   ],
+   [
+    "urut",
+    "urut",
+    "N"
+   ],
+   [
+    "kode_stasiun",
+    "kode_stasiun",
+    "S"
+   ],
+   [
+    "km_kumulatif",
+    "km_kumulatif",
+    "N"
+   ],
+   [
+    "sumber",
+    "sumber",
+    "S"
+   ]
+  ]
+ },
+ {
+  "name": "gapeka25_lintas_lembar",
+  "ss": "1UM8d7CvzhrXl1CeB7J7XNTaw0mcPiWA8-4_2RdZnH-c",
+  "sheet": "lintas_lembar_2025",
+  "range": "lintas_lembar_2025!A:H",
+  "skip": 1,
+  "desc": "Urutan stasiun + km per judul lintas Lembar GAPEKA 2025",
+  "cols": [
+   [
+    "lembar",
+    "lembar",
+    "S"
+   ],
+   [
+    "wilayah",
+    "wilayah",
+    "S"
+   ],
+   [
+    "judul_lintas",
+    "judul_lintas",
+    "S"
+   ],
+   [
+    "urut",
+    "urut",
+    "N"
+   ],
+   [
+    "kode_stasiun",
+    "kode_stasiun",
+    "S"
+   ],
+   [
+    "nama_stasiun",
+    "nama_stasiun",
+    "S"
+   ],
+   [
+    "km",
+    "km",
+    "N"
+   ],
+   [
+    "berkas_lembar",
+    "berkas_lembar",
+    "S"
+   ]
+  ]
  }
 ];

@@ -445,3 +445,147 @@ CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.ref_koreksi_data` (
   tanggal STRING OPTIONS(description="Tanggal"),
   aktif STRING OPTIONS(description="Aktif")
 ) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/1nQuug9iDE6AeK8ZMRyk1dBbK849GDvLiP8l88kPQ3I0"], sheet_range = "koreksi_data!A:I", skip_leading_rows = 1, description = "Log koreksi data berbukti (seed 12_SeedRujukan.gs)");
+
+-- gapeka26_jadwal_dw: Daftar Waktu GAPEKA 2026 per KA × stasiun (rencana; dasar pembanding realisasi) (G26DB!jadwal_dw_2026)
+CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.gapeka26_jadwal_dw` (
+  no_ka STRING OPTIONS(description="no_ka"),
+  nama_ka STRING OPTIONS(description="nama_ka"),
+  relasi STRING OPTIONS(description="relasi"),
+  urut STRING OPTIONS(description="urut"),
+  kode_stasiun STRING OPTIONS(description="kode_stasiun"),
+  nama_stasiun STRING OPTIONS(description="nama_stasiun"),
+  vmax_kmj STRING OPTIONS(description="vmax_kmj"),
+  datang STRING OPTIONS(description="datang"),
+  berangkat STRING OPTIONS(description="berangkat"),
+  keterangan STRING OPTIONS(description="keterangan"),
+  sumber_buku STRING OPTIONS(description="sumber_buku"),
+  status_verifikasi STRING OPTIONS(description="status_verifikasi")
+) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/14Cz2Ovgwa_hoWg1KAbdOcN4JkvrAeoXoR-4NpsY1Ung"], sheet_range = "jadwal_dw_2026!A:L", skip_leading_rows = 1, description = "Daftar Waktu GAPEKA 2026 per KA × stasiun (rencana; dasar pembanding realisasi)");
+
+-- gapeka26_penomoran_ka: Buku Penomoran GAPEKA 2026: nomor, kelas, relasi, jam awal/akhir (G26DB!penomoran_ka_2026)
+CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.gapeka26_penomoran_ka` (
+  wilayah STRING OPTIONS(description="wilayah"),
+  kelas_ka STRING OPTIONS(description="kelas_ka"),
+  no_ka STRING OPTIONS(description="no_ka"),
+  status STRING OPTIONS(description="status"),
+  nama_ka STRING OPTIONS(description="nama_ka"),
+  nama_identitas STRING OPTIONS(description="nama_identitas"),
+  lintas STRING OPTIONS(description="lintas"),
+  penyelenggara STRING OPTIONS(description="penyelenggara"),
+  jarak_km STRING OPTIONS(description="jarak_km"),
+  berangkat STRING OPTIONS(description="berangkat"),
+  datang STRING OPTIONS(description="datang"),
+  waktu_tempuh STRING OPTIONS(description="waktu_tempuh")
+) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/14Cz2Ovgwa_hoWg1KAbdOcN4JkvrAeoXoR-4NpsY1Ung"], sheet_range = "penomoran_ka_2026!A:L", skip_leading_rows = 1, description = "Buku Penomoran GAPEKA 2026: nomor, kelas, relasi, jam awal/akhir");
+
+-- gapeka26_jarak_lintas: Matriks Jarak Antar Stasiun 2026 (km kumulatif) (G26DB!jarak_lintas_2026)
+CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.gapeka26_jarak_lintas` (
+  wilayah STRING OPTIONS(description="wilayah"),
+  lintas STRING OPTIONS(description="lintas"),
+  urut STRING OPTIONS(description="urut"),
+  kode_stasiun STRING OPTIONS(description="kode_stasiun"),
+  km_kumulatif STRING OPTIONS(description="km_kumulatif"),
+  sumber STRING OPTIONS(description="sumber")
+) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/14Cz2Ovgwa_hoWg1KAbdOcN4JkvrAeoXoR-4NpsY1Ung"], sheet_range = "jarak_lintas_2026!A:F", skip_leading_rows = 1, description = "Matriks Jarak Antar Stasiun 2026 (km kumulatif)");
+
+-- gapeka26_lintas_lembar: Urutan stasiun + km per judul lintas Lembar GAPEKA 2026 (G26DB!lintas_lembar_2026)
+CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.gapeka26_lintas_lembar` (
+  lembar STRING OPTIONS(description="lembar"),
+  wilayah STRING OPTIONS(description="wilayah"),
+  judul_lintas STRING OPTIONS(description="judul_lintas"),
+  urut STRING OPTIONS(description="urut"),
+  kode_stasiun STRING OPTIONS(description="kode_stasiun"),
+  nama_stasiun STRING OPTIONS(description="nama_stasiun"),
+  km STRING OPTIONS(description="km"),
+  berkas_lembar STRING OPTIONS(description="berkas_lembar")
+) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/14Cz2Ovgwa_hoWg1KAbdOcN4JkvrAeoXoR-4NpsY1Ung"], sheet_range = "lintas_lembar_2026!A:H", skip_leading_rows = 1, description = "Urutan stasiun + km per judul lintas Lembar GAPEKA 2026");
+
+-- gapeka26_duksar_rekap: Duksar 2026: rekap siap guna/operasi per jenis sarana (G26DB!duksar_rekap_2026)
+CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.gapeka26_duksar_rekap` (
+  wilayah STRING OPTIONS(description="wilayah"),
+  jenis_sarana STRING OPTIONS(description="jenis_sarana"),
+  siap_guna STRING OPTIONS(description="siap_guna"),
+  siap_operasi STRING OPTIONS(description="siap_operasi"),
+  stamformasi STRING OPTIONS(description="stamformasi"),
+  cadangan STRING OPTIONS(description="cadangan")
+) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/14Cz2Ovgwa_hoWg1KAbdOcN4JkvrAeoXoR-4NpsY1Ung"], sheet_range = "duksar_rekap_2026!A:F", skip_leading_rows = 1, description = "Duksar 2026: rekap siap guna/operasi per jenis sarana");
+
+-- gapeka26_duksar_lok_dipo: Duksar 2026: lokomotif per dipo (G26DB!duksar_lok_dipo_2026)
+CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.gapeka26_duksar_lok_dipo` (
+  wilayah STRING OPTIONS(description="wilayah"),
+  dipo STRING OPTIONS(description="dipo"),
+  jenis_lok STRING OPTIONS(description="jenis_lok"),
+  siap_guna STRING OPTIONS(description="siap_guna"),
+  tsgo STRING OPTIONS(description="tsgo"),
+  tso STRING OPTIONS(description="tso"),
+  so STRING OPTIONS(description="so")
+) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/14Cz2Ovgwa_hoWg1KAbdOcN4JkvrAeoXoR-4NpsY1Ung"], sheet_range = "duksar_lok_dipo_2026!A:G", skip_leading_rows = 1, description = "Duksar 2026: lokomotif per dipo");
+
+-- gapeka26_sarana_unit: Duksar 2026: nomor unit per sarana (penanda pembangkit & rangkaian KRD/KRL) (G26SAR!sarana_unit_2026)
+CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.gapeka26_sarana_unit` (
+  wilayah STRING OPTIONS(description="wilayah"),
+  sarana STRING OPTIONS(description="sarana"),
+  dipo_depo STRING OPTIONS(description="dipo_depo"),
+  jenis STRING OPTIONS(description="jenis"),
+  kelas_klasifikasi STRING OPTIONS(description="kelas_klasifikasi"),
+  nomor_sarana STRING OPTIONS(description="nomor_sarana"),
+  nomor_seri STRING OPTIONS(description="nomor_seri"),
+  kereta_pembangkit STRING OPTIONS(description="kereta_pembangkit"),
+  tergabung_di_krd STRING OPTIONS(description="tergabung_di_krd"),
+  catatan STRING OPTIONS(description="catatan"),
+  baris_teks_sumber STRING OPTIONS(description="baris_teks_sumber")
+) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/1L4dh9ADls3xMfsJcoIVPIgo8e5bEga4Y5r5LX6IcFoE"], sheet_range = "sarana_unit_2026!A:K", skip_leading_rows = 1, description = "Duksar 2026: nomor unit per sarana (penanda pembangkit & rangkaian KRD/KRL)");
+
+-- gapeka25_jadwal_dw: Daftar Waktu GAPEKA 2025 per KA × stasiun (G25DB!jadwal_dw_2025)
+CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.gapeka25_jadwal_dw` (
+  no_ka STRING OPTIONS(description="no_ka"),
+  nama_ka STRING OPTIONS(description="nama_ka"),
+  relasi STRING OPTIONS(description="relasi"),
+  urut STRING OPTIONS(description="urut"),
+  kode_stasiun STRING OPTIONS(description="kode_stasiun"),
+  nama_stasiun STRING OPTIONS(description="nama_stasiun"),
+  vmax_kmj STRING OPTIONS(description="vmax_kmj"),
+  datang STRING OPTIONS(description="datang"),
+  berangkat STRING OPTIONS(description="berangkat"),
+  keterangan STRING OPTIONS(description="keterangan"),
+  sumber_buku STRING OPTIONS(description="sumber_buku"),
+  status_verifikasi STRING OPTIONS(description="status_verifikasi")
+) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/1UM8d7CvzhrXl1CeB7J7XNTaw0mcPiWA8-4_2RdZnH-c"], sheet_range = "jadwal_dw_2025!A:L", skip_leading_rows = 1, description = "Daftar Waktu GAPEKA 2025 per KA × stasiun");
+
+-- gapeka25_penomoran_ka: Buku Penomoran GAPEKA 2025 (G25DB!penomoran_ka_2025)
+CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.gapeka25_penomoran_ka` (
+  wilayah STRING OPTIONS(description="wilayah"),
+  kelas_ka STRING OPTIONS(description="kelas_ka"),
+  no_ka STRING OPTIONS(description="no_ka"),
+  status STRING OPTIONS(description="status"),
+  nama_ka STRING OPTIONS(description="nama_ka"),
+  nama_identitas STRING OPTIONS(description="nama_identitas"),
+  lintas STRING OPTIONS(description="lintas"),
+  penyelenggara STRING OPTIONS(description="penyelenggara"),
+  jarak_km STRING OPTIONS(description="jarak_km"),
+  berangkat STRING OPTIONS(description="berangkat"),
+  datang STRING OPTIONS(description="datang"),
+  waktu_tempuh STRING OPTIONS(description="waktu_tempuh")
+) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/1UM8d7CvzhrXl1CeB7J7XNTaw0mcPiWA8-4_2RdZnH-c"], sheet_range = "penomoran_ka_2025!A:L", skip_leading_rows = 1, description = "Buku Penomoran GAPEKA 2025");
+
+-- gapeka25_jarak_lintas: Matriks Jarak Antar Stasiun 2025 (km kumulatif) (G25DB!jarak_lintas_2025)
+CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.gapeka25_jarak_lintas` (
+  wilayah STRING OPTIONS(description="wilayah"),
+  lintas STRING OPTIONS(description="lintas"),
+  urut STRING OPTIONS(description="urut"),
+  kode_stasiun STRING OPTIONS(description="kode_stasiun"),
+  km_kumulatif STRING OPTIONS(description="km_kumulatif"),
+  sumber STRING OPTIONS(description="sumber")
+) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/1UM8d7CvzhrXl1CeB7J7XNTaw0mcPiWA8-4_2RdZnH-c"], sheet_range = "jarak_lintas_2025!A:F", skip_leading_rows = 1, description = "Matriks Jarak Antar Stasiun 2025 (km kumulatif)");
+
+-- gapeka25_lintas_lembar: Urutan stasiun + km per judul lintas Lembar GAPEKA 2025 (G25DB!lintas_lembar_2025)
+CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.gapeka25_lintas_lembar` (
+  lembar STRING OPTIONS(description="lembar"),
+  wilayah STRING OPTIONS(description="wilayah"),
+  judul_lintas STRING OPTIONS(description="judul_lintas"),
+  urut STRING OPTIONS(description="urut"),
+  kode_stasiun STRING OPTIONS(description="kode_stasiun"),
+  nama_stasiun STRING OPTIONS(description="nama_stasiun"),
+  km STRING OPTIONS(description="km"),
+  berkas_lembar STRING OPTIONS(description="berkas_lembar")
+) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/1UM8d7CvzhrXl1CeB7J7XNTaw0mcPiWA8-4_2RdZnH-c"], sheet_range = "lintas_lembar_2025!A:H", skip_leading_rows = 1, description = "Urutan stasiun + km per judul lintas Lembar GAPEKA 2025");

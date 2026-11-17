@@ -60,7 +60,7 @@ Tanpa clasp, Anda tetap bisa memakai cara lama: `python3 tools/pack.py dist/`, l
 2. Salin **Project ID** ke properti `BQ_PROJECT` (langkah C3).
 3. Jalankan `setupBigQuery`. Fungsi ini akan:
    - membuat dataset `kai_raw`, `kai`, dan `kai_snap` (lokasi Jakarta, `asia-southeast2`);
-   - membuat 23 tabel eksternal;
+   - membuat 34 tabel eksternal (termasuk 11 tabel GAPEKA 2025/2026 di `02_DB`: jadwal Daftar Waktu, penomoran KA, jarak, lintas lembar, Duksar & nomor unit sarana);
    - mendeteksi format angka;
    - membuat fungsi `kai.num` dan `kai.tgl` serta view;
    - memverifikasi jumlah baris dan total.
@@ -92,6 +92,20 @@ Tanpa clasp, Anda tetap bisa memakai cara lama: `python3 tools/pack.py dist/`, l
 3. Kesegaran data dapat dilihat di `_manifest.csv` (kolom `csv_ditulis`).
 
 Koneksi DBeaver bersifat baca saja. Penulisan data tetap lewat Google Sheets.
+
+**Contoh kueri GAPEKA (rencana perjalanan)**
+```sql
+-- Jumlah KA berjadwal yang berhenti/lewat per stasiun, GAPEKA 2025 vs 2026
+SELECT kode_stasiun, '2025' AS gapeka, COUNT(DISTINCT no_ka) AS ka FROM kai.gapeka25_jadwal_dw GROUP BY 1
+UNION ALL
+SELECT kode_stasiun, '2026', COUNT(DISTINCT no_ka) FROM kai.gapeka26_jadwal_dw GROUP BY 1
+ORDER BY kode_stasiun, gapeka;
+```
+
+**Realisasi perjalanan (CSV dari Excel) — disiapkan, menunggu contoh berkas**
+1. Simpan ekspor realisasi (CSV, UTF-8) ke Drive `KAI_Data_Platform/01_RAW/realisasi_perjalanan/` — satu berkas per hari atau per bulan, nama `realisasi_YYYY-MM-DD.csv`.
+2. Setelah contoh berkas diterima, kolomnya didaftarkan di `db/schema/sumber_tabel.json` (tabel `realisasi_perjalanan`), lalu `python3 tools/gen_schema.py` membangkitkan DDL, kamus data, dan `platform/Tables.gs`.
+3. Pencocokan rencana × realisasi memakai kunci **nomor KA + kode stasiun + tanggal**, dengan versi GAPEKA dipilih otomatis menurut tanggal berlaku (2025: 1 Feb 2025; 2026: 1 Des 2026). Kolom realisasi tidak ditebak sebelum contoh berkas tersedia.
 
 ## F. Bank kepintaran (Claude & ChatGPT)
 1. **Claude.** Di Proyek "Dashboard Gangguan Operasional", tempel `knowledge/prompts/instruksi_claude_project.md` ke instruksi proyek, lalu tambahkan berkas `knowledge/*.md` dan `knowledge/rilis/*.md`.

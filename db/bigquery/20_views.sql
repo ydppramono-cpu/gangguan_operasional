@@ -466,3 +466,158 @@ SELECT
   NULLIF(TRIM(aktif), "") AS aktif
 FROM `${PROJECT}.kai_raw.ref_koreksi_data`
 WHERE COALESCE(NULLIF(TRIM(tanda_isi),""), NULLIF(TRIM(kunci_asal_saat_dibuat),""), NULLIF(TRIM(jenis_koreksi),"")) IS NOT NULL;
+
+CREATE OR REPLACE VIEW `${PROJECT}.kai.gapeka26_jadwal_dw` OPTIONS(description="Daftar Waktu GAPEKA 2026 per KA × stasiun (rencana; dasar pembanding realisasi)") AS
+SELECT
+  NULLIF(TRIM(no_ka), "") AS no_ka,
+  NULLIF(TRIM(nama_ka), "") AS nama_ka,
+  NULLIF(TRIM(relasi), "") AS relasi,
+  `${PROJECT}.kai.num`(urut) AS urut,
+  NULLIF(TRIM(kode_stasiun), "") AS kode_stasiun,
+  NULLIF(TRIM(nama_stasiun), "") AS nama_stasiun,
+  `${PROJECT}.kai.num`(vmax_kmj) AS vmax_kmj,
+  NULLIF(TRIM(datang), "") AS datang,
+  NULLIF(TRIM(berangkat), "") AS berangkat,
+  NULLIF(TRIM(keterangan), "") AS keterangan,
+  NULLIF(TRIM(sumber_buku), "") AS sumber_buku,
+  NULLIF(TRIM(status_verifikasi), "") AS status_verifikasi
+FROM `${PROJECT}.kai_raw.gapeka26_jadwal_dw`
+WHERE COALESCE(NULLIF(TRIM(no_ka),""), NULLIF(TRIM(nama_ka),""), NULLIF(TRIM(relasi),"")) IS NOT NULL;
+
+CREATE OR REPLACE VIEW `${PROJECT}.kai.gapeka26_penomoran_ka` OPTIONS(description="Buku Penomoran GAPEKA 2026: nomor, kelas, relasi, jam awal/akhir") AS
+SELECT
+  NULLIF(TRIM(wilayah), "") AS wilayah,
+  NULLIF(TRIM(kelas_ka), "") AS kelas_ka,
+  NULLIF(TRIM(no_ka), "") AS no_ka,
+  NULLIF(TRIM(status), "") AS status,
+  NULLIF(TRIM(nama_ka), "") AS nama_ka,
+  NULLIF(TRIM(nama_identitas), "") AS nama_identitas,
+  NULLIF(TRIM(lintas), "") AS lintas,
+  NULLIF(TRIM(penyelenggara), "") AS penyelenggara,
+  `${PROJECT}.kai.num`(jarak_km) AS jarak_km,
+  NULLIF(TRIM(berangkat), "") AS berangkat,
+  NULLIF(TRIM(datang), "") AS datang,
+  NULLIF(TRIM(waktu_tempuh), "") AS waktu_tempuh
+FROM `${PROJECT}.kai_raw.gapeka26_penomoran_ka`
+WHERE COALESCE(NULLIF(TRIM(wilayah),""), NULLIF(TRIM(kelas_ka),""), NULLIF(TRIM(no_ka),"")) IS NOT NULL;
+
+CREATE OR REPLACE VIEW `${PROJECT}.kai.gapeka26_jarak_lintas` OPTIONS(description="Matriks Jarak Antar Stasiun 2026 (km kumulatif)") AS
+SELECT
+  NULLIF(TRIM(wilayah), "") AS wilayah,
+  NULLIF(TRIM(lintas), "") AS lintas,
+  `${PROJECT}.kai.num`(urut) AS urut,
+  NULLIF(TRIM(kode_stasiun), "") AS kode_stasiun,
+  `${PROJECT}.kai.num`(km_kumulatif) AS km_kumulatif,
+  NULLIF(TRIM(sumber), "") AS sumber
+FROM `${PROJECT}.kai_raw.gapeka26_jarak_lintas`
+WHERE COALESCE(NULLIF(TRIM(wilayah),""), NULLIF(TRIM(lintas),""), NULLIF(TRIM(urut),"")) IS NOT NULL;
+
+CREATE OR REPLACE VIEW `${PROJECT}.kai.gapeka26_lintas_lembar` OPTIONS(description="Urutan stasiun + km per judul lintas Lembar GAPEKA 2026") AS
+SELECT
+  NULLIF(TRIM(lembar), "") AS lembar,
+  NULLIF(TRIM(wilayah), "") AS wilayah,
+  NULLIF(TRIM(judul_lintas), "") AS judul_lintas,
+  `${PROJECT}.kai.num`(urut) AS urut,
+  NULLIF(TRIM(kode_stasiun), "") AS kode_stasiun,
+  NULLIF(TRIM(nama_stasiun), "") AS nama_stasiun,
+  `${PROJECT}.kai.num`(km) AS km,
+  NULLIF(TRIM(berkas_lembar), "") AS berkas_lembar
+FROM `${PROJECT}.kai_raw.gapeka26_lintas_lembar`
+WHERE COALESCE(NULLIF(TRIM(lembar),""), NULLIF(TRIM(wilayah),""), NULLIF(TRIM(judul_lintas),"")) IS NOT NULL;
+
+CREATE OR REPLACE VIEW `${PROJECT}.kai.gapeka26_duksar_rekap` OPTIONS(description="Duksar 2026: rekap siap guna/operasi per jenis sarana") AS
+SELECT
+  NULLIF(TRIM(wilayah), "") AS wilayah,
+  NULLIF(TRIM(jenis_sarana), "") AS jenis_sarana,
+  `${PROJECT}.kai.num`(siap_guna) AS siap_guna,
+  `${PROJECT}.kai.num`(siap_operasi) AS siap_operasi,
+  `${PROJECT}.kai.num`(stamformasi) AS stamformasi,
+  `${PROJECT}.kai.num`(cadangan) AS cadangan
+FROM `${PROJECT}.kai_raw.gapeka26_duksar_rekap`
+WHERE COALESCE(NULLIF(TRIM(wilayah),""), NULLIF(TRIM(jenis_sarana),""), NULLIF(TRIM(siap_guna),"")) IS NOT NULL;
+
+CREATE OR REPLACE VIEW `${PROJECT}.kai.gapeka26_duksar_lok_dipo` OPTIONS(description="Duksar 2026: lokomotif per dipo") AS
+SELECT
+  NULLIF(TRIM(wilayah), "") AS wilayah,
+  NULLIF(TRIM(dipo), "") AS dipo,
+  NULLIF(TRIM(jenis_lok), "") AS jenis_lok,
+  `${PROJECT}.kai.num`(siap_guna) AS siap_guna,
+  `${PROJECT}.kai.num`(tsgo) AS tsgo,
+  `${PROJECT}.kai.num`(tso) AS tso,
+  `${PROJECT}.kai.num`(so) AS so
+FROM `${PROJECT}.kai_raw.gapeka26_duksar_lok_dipo`
+WHERE COALESCE(NULLIF(TRIM(wilayah),""), NULLIF(TRIM(dipo),""), NULLIF(TRIM(jenis_lok),"")) IS NOT NULL;
+
+CREATE OR REPLACE VIEW `${PROJECT}.kai.gapeka26_sarana_unit` OPTIONS(description="Duksar 2026: nomor unit per sarana (penanda pembangkit & rangkaian KRD/KRL)") AS
+SELECT
+  NULLIF(TRIM(wilayah), "") AS wilayah,
+  NULLIF(TRIM(sarana), "") AS sarana,
+  NULLIF(TRIM(dipo_depo), "") AS dipo_depo,
+  NULLIF(TRIM(jenis), "") AS jenis,
+  NULLIF(TRIM(kelas_klasifikasi), "") AS kelas_klasifikasi,
+  NULLIF(TRIM(nomor_sarana), "") AS nomor_sarana,
+  NULLIF(TRIM(nomor_seri), "") AS nomor_seri,
+  NULLIF(TRIM(kereta_pembangkit), "") AS kereta_pembangkit,
+  NULLIF(TRIM(tergabung_di_krd), "") AS tergabung_di_krd,
+  NULLIF(TRIM(catatan), "") AS catatan,
+  `${PROJECT}.kai.num`(baris_teks_sumber) AS baris_teks_sumber
+FROM `${PROJECT}.kai_raw.gapeka26_sarana_unit`
+WHERE COALESCE(NULLIF(TRIM(wilayah),""), NULLIF(TRIM(sarana),""), NULLIF(TRIM(dipo_depo),"")) IS NOT NULL;
+
+CREATE OR REPLACE VIEW `${PROJECT}.kai.gapeka25_jadwal_dw` OPTIONS(description="Daftar Waktu GAPEKA 2025 per KA × stasiun") AS
+SELECT
+  NULLIF(TRIM(no_ka), "") AS no_ka,
+  NULLIF(TRIM(nama_ka), "") AS nama_ka,
+  NULLIF(TRIM(relasi), "") AS relasi,
+  `${PROJECT}.kai.num`(urut) AS urut,
+  NULLIF(TRIM(kode_stasiun), "") AS kode_stasiun,
+  NULLIF(TRIM(nama_stasiun), "") AS nama_stasiun,
+  NULLIF(TRIM(vmax_kmj), "") AS vmax_kmj,
+  NULLIF(TRIM(datang), "") AS datang,
+  NULLIF(TRIM(berangkat), "") AS berangkat,
+  NULLIF(TRIM(keterangan), "") AS keterangan,
+  NULLIF(TRIM(sumber_buku), "") AS sumber_buku,
+  NULLIF(TRIM(status_verifikasi), "") AS status_verifikasi
+FROM `${PROJECT}.kai_raw.gapeka25_jadwal_dw`
+WHERE COALESCE(NULLIF(TRIM(no_ka),""), NULLIF(TRIM(nama_ka),""), NULLIF(TRIM(relasi),"")) IS NOT NULL;
+
+CREATE OR REPLACE VIEW `${PROJECT}.kai.gapeka25_penomoran_ka` OPTIONS(description="Buku Penomoran GAPEKA 2025") AS
+SELECT
+  NULLIF(TRIM(wilayah), "") AS wilayah,
+  NULLIF(TRIM(kelas_ka), "") AS kelas_ka,
+  NULLIF(TRIM(no_ka), "") AS no_ka,
+  NULLIF(TRIM(status), "") AS status,
+  NULLIF(TRIM(nama_ka), "") AS nama_ka,
+  NULLIF(TRIM(nama_identitas), "") AS nama_identitas,
+  NULLIF(TRIM(lintas), "") AS lintas,
+  NULLIF(TRIM(penyelenggara), "") AS penyelenggara,
+  `${PROJECT}.kai.num`(jarak_km) AS jarak_km,
+  NULLIF(TRIM(berangkat), "") AS berangkat,
+  NULLIF(TRIM(datang), "") AS datang,
+  NULLIF(TRIM(waktu_tempuh), "") AS waktu_tempuh
+FROM `${PROJECT}.kai_raw.gapeka25_penomoran_ka`
+WHERE COALESCE(NULLIF(TRIM(wilayah),""), NULLIF(TRIM(kelas_ka),""), NULLIF(TRIM(no_ka),"")) IS NOT NULL;
+
+CREATE OR REPLACE VIEW `${PROJECT}.kai.gapeka25_jarak_lintas` OPTIONS(description="Matriks Jarak Antar Stasiun 2025 (km kumulatif)") AS
+SELECT
+  NULLIF(TRIM(wilayah), "") AS wilayah,
+  NULLIF(TRIM(lintas), "") AS lintas,
+  `${PROJECT}.kai.num`(urut) AS urut,
+  NULLIF(TRIM(kode_stasiun), "") AS kode_stasiun,
+  `${PROJECT}.kai.num`(km_kumulatif) AS km_kumulatif,
+  NULLIF(TRIM(sumber), "") AS sumber
+FROM `${PROJECT}.kai_raw.gapeka25_jarak_lintas`
+WHERE COALESCE(NULLIF(TRIM(wilayah),""), NULLIF(TRIM(lintas),""), NULLIF(TRIM(urut),"")) IS NOT NULL;
+
+CREATE OR REPLACE VIEW `${PROJECT}.kai.gapeka25_lintas_lembar` OPTIONS(description="Urutan stasiun + km per judul lintas Lembar GAPEKA 2025") AS
+SELECT
+  NULLIF(TRIM(lembar), "") AS lembar,
+  NULLIF(TRIM(wilayah), "") AS wilayah,
+  NULLIF(TRIM(judul_lintas), "") AS judul_lintas,
+  `${PROJECT}.kai.num`(urut) AS urut,
+  NULLIF(TRIM(kode_stasiun), "") AS kode_stasiun,
+  NULLIF(TRIM(nama_stasiun), "") AS nama_stasiun,
+  `${PROJECT}.kai.num`(km) AS km,
+  NULLIF(TRIM(berkas_lembar), "") AS berkas_lembar
+FROM `${PROJECT}.kai_raw.gapeka25_lintas_lembar`
+WHERE COALESCE(NULLIF(TRIM(lembar),""), NULLIF(TRIM(wilayah),""), NULLIF(TRIM(judul_lintas),"")) IS NOT NULL;
