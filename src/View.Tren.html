@@ -65,7 +65,7 @@
         <div class="card">
           <div class="card-h"><div><h3 x-text="'Top 3 · ' + $store.app.classLabel(k)"></h3><p x-text="R.label + ' · diurutkan menurut menit'"></p></div></div>
           <div class="card-b">
-            <table class="tbl">
+            <div class="tbl-x"><table class="tbl">
               <thead><tr><th>Jenis gangguan</th><th class="num">Kej.</th><th class="num">Menit</th><th class="num" x-text="'≥' + R.cfg.top + ' mnt'"></th></tr></thead>
               <tbody>
                 <template x-for="t in R.top[k]" :key="t.label">
@@ -74,7 +74,7 @@
                   </tr>
                 </template>
               </tbody>
-            </table>
+            </table></div>
             <div class="empty" x-show="!R.top[k].length">Tidak ada kejadian kelas ini.</div>
           </div>
         </div>

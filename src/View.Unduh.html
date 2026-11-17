@@ -51,14 +51,14 @@
       <div class="card">
         <div class="card-h"><div><h3>Data</h3><p>Tabel yang sudah dinormalkan, termasuk uraian kejadian</p></div></div>
         <div class="card-b">
-          <table class="tbl">
+          <div class="tbl-x"><table class="tbl">
             <tbody>
               <template x-for="d in datasets" :key="d.id">
                 <tr><td><b x-text="d.title"></b><div class="note" x-text="d.desc"></div></td>
                   <td class="num" style="white-space:nowrap"><button class="btn sm" :disabled="d.needRef && !$store.app.refReady" @click="data(d, 'csv')">CSV</button> <button class="btn sm" :disabled="d.needRef && !$store.app.refReady" @click="data(d, 'xlsx')">Excel</button></td></tr>
               </template>
             </tbody>
-          </table>
+          </table></div>
         </div>
       </div>
     </div>
@@ -86,7 +86,7 @@ document.addEventListener('alpine:init', function () {
       opt: (function () { var o = { expo: true, external: false, extraViz: false, appendix: true, notes: '' }; try { Object.assign(o, JSON.parse(localStorage.getItem('KAI_REPORT_OPT') || '{}')); } catch (e) { } return o; })(),
       refs: (function () { try { return JSON.parse(localStorage.getItem('KAI_REPORT_REFS') || '[]'); } catch (e) { return []; } })(),
       draft: { apa: '', url: '', tanggal: '', wilayah: '', topik: '', jenis: 'Media', fakta: '' },
-      get libCount() { var r = KAI.data && KAI.data.ref; return r && r.ruj ? r.ruj.length : 0; },
+      get libCount() { var r = this.$store.app.refReady && KAI.data.ref; return r && r.ruj ? r.ruj.length : 0; },
       get scopeVal() { var w = this.$store.app.f.wilayah; return w.length === 1 ? w[0] : w.length > 1 ? '__multi' : ''; },
       setScope: function (v) { if (v === '__multi') return; this.$store.app.f.wilayah = v ? [v] : []; },
       saveRefs: function () { try { localStorage.setItem('KAI_REPORT_REFS', JSON.stringify(this.refs)); } catch (e) { } },

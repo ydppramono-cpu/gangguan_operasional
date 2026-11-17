@@ -60,7 +60,7 @@ window.KAIChart = (function () {
     var maxN = Math.max.apply(null, m.points.map(function (p) { return p.n; }).concat([1]));
     var xMax = opts.xMax || Math.ceil(maxN * 1.15), yMax = opts.yMax || Math.ceil(maxMenit * 1.2);
     return {
-      grid: { left: 64, right: 24, top: 24, bottom: 46 },
+      grid: { left: 64, right: 24, top: 46, bottom: 46 },
       tooltip: { formatter: function (p) { var d = p.data; return '<b>' + CLASS_LABEL[d.kelas] + '</b><br>' + KAI.fmt.n(d.value[0]) + ' kejadian · ' + KAI.fmt.n(d.value[1]) + ' menit'; } },
       xAxis: { type: 'value', name: 'Frekuensi (kejadian)', nameLocation: 'middle', nameGap: 28, min: 0, max: xMax, nameTextStyle: { color: C.axis } },
       yAxis: { type: 'value', name: 'Total kelambatan (menit)', nameLocation: 'middle', nameGap: 48, min: 0, max: yMax, axisLabel: { formatter: k }, nameTextStyle: { color: C.axis } },
@@ -74,7 +74,7 @@ window.KAIChart = (function () {
         markLine: { silent: true, symbol: 'none', lineStyle: { type: 'dashed', color: '#8C95A8' }, label: { color: C.axis, fontSize: 11 },
           data: [{ xAxis: m.medN, label: { formatter: 'median ' + KAI.fmt.d1(m.medN) + ' kej.', position: 'end' } },
                  { yAxis: m.medMenit, label: { formatter: 'median ' + KAI.fmt.n(m.medMenit) + ' mnt', position: 'insideEndTop' } }] },
-        markArea: { silent: true, itemStyle: { color: 'rgba(240,106,37,.07)' }, label: { color: '#B54708', fontSize: 11.5, position: 'insideTopRight' },
+        markArea: { silent: true, itemStyle: { color: 'rgba(240,106,37,.07)' }, label: { show: false },   // keterangan area ditulis di subjudul kartu agar tidak tertutup gelembung
           data: [[{ name: 'Sering · dampak tinggi', xAxis: m.medN, yAxis: m.medMenit }, { xAxis: xMax, yAxis: yMax }]] }
       }]
     };
@@ -86,7 +86,7 @@ window.KAIChart = (function () {
     return {
       grid: { left: 8, right: 56, top: 6, bottom: 6, containLabel: true },
       tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return KAI.fmt.n(v) + ' ' + unit; } },
-      xAxis: { type: 'value', axisLabel: { formatter: k }, splitLine: { show: false } },
+      xAxis: { type: 'value', minInterval: unit === 'kejadian' ? 1 : 0, axisLabel: { formatter: k }, splitLine: { show: false } },
       yAxis: { type: 'category', data: rev.map(function (i) { return i.label; }), axisLabel: { width: 190, overflow: 'truncate', color: C.ink } },
       series: [{ type: 'bar', data: rev.map(function (i) { return { value: i.value, itemStyle: { color: i.color || color || C.navy, borderRadius: [0, 4, 4, 0] }, key: i.key }; }),
         barMaxWidth: 18, label: { show: true, position: 'right', formatter: function (p) { return KAI.fmt.n(p.value); }, color: C.axis, fontSize: 11.5 } }],
@@ -127,7 +127,7 @@ window.KAIChart = (function () {
       tooltip: { trigger: 'axis' },
       xAxis: { type: 'category', data: hrs }, yAxis: [{ type: 'value', name: 'kej.', nameTextStyle: { color: C.axis } }, { type: 'value', name: 'menit', axisLabel: { formatter: k }, splitLine: { show: false }, nameTextStyle: { color: C.axis } }],
       series: [{ name: 'Kejadian', type: 'bar', data: H.n, color: C.navy, barMaxWidth: 18, itemStyle: { borderRadius: [3, 3, 0, 0] } },
-        { name: 'Menit', type: 'line', yAxisIndex: 1, data: H.menit, color: C.orange, smooth: true, symbol: 'none', lineStyle: { width: 2 } }],
+        { name: 'Menit', type: 'line', yAxisIndex: 1, data: H.menit, color: C.orange, smooth: false, symbol: 'none', lineStyle: { width: 2 } }],
       animation: !REDUCE
     };
   }
@@ -141,7 +141,7 @@ window.KAIChart = (function () {
       grid: { left: 60, right: 16, top: 10, bottom: 50 },
       tooltip: { formatter: function (p) { return KAIA.DOW[p.data[1]] + ' pukul ' + hrs[p.data[0]] + ':00 · <b>' + p.data[2] + '</b> kejadian'; } },
       xAxis: { type: 'category', data: hrs, splitArea: { show: true } }, yAxis: { type: 'category', data: KAIA.DOW, inverse: true },
-      visualMap: { min: 0, max: max, calculable: false, orient: 'horizontal', left: 'center', bottom: 0, itemHeight: 120, itemWidth: 10,
+      visualMap: { min: 0, max: max, calculable: false, orient: 'horizontal', left: 'center', bottom: 0, itemHeight: 120, itemWidth: 10, text: [max + ' kejadian', '0'], textGap: 6,
         inRange: { color: ['#F3F3FA', '#B9BCE3', '#6C6FC0', '#252271', '#F06A25'] }, textStyle: { color: C.axis, fontSize: 11 } },
       series: [{ type: 'heatmap', data: data, label: { show: false }, emphasis: { itemStyle: { borderColor: '#fff', borderWidth: 1 } } }],
       animation: !REDUCE
@@ -241,10 +241,12 @@ window.KAIChart = (function () {
     var idn = function (v) { v = Array.isArray(v) ? v[v.length - 1] : v && typeof v === 'object' ? v.value : v; if (v == null || v === '' || isNaN(v)) return v == null ? '–' : v; return Math.abs(v % 1) > 0 ? KAI.fmt.d1(v) : KAI.fmt.n(v); };
     (o.series || []).forEach(function (sr) { if (sr.label && sr.label.show && !sr.label.formatter) sr.label.formatter = function (p) { return idn(p.value); }; });
     if (o.tooltip && !o.tooltip.formatter && !o.tooltip.valueFormatter) o.tooltip.valueFormatter = idn;
-    if (o.legend && !Array.isArray(o.legend)) { o.legend.type = o.legend.type || 'scroll'; if (o.legend.bottom == null && o.legend.right == null) o.legend.right = 150; }
+    if (o.legend && !Array.isArray(o.legend)) { o.legend.type = o.legend.type || 'scroll'; }   // bilah alat kini di luar kanvas → legenda boleh memakai lebar penuh
     // Sumbu nilai: angka Indonesia; ruang untuk nama sumbu vertikal (containLabel tidak menghitung nama sumbu).
     var A = axes(o), g = o.grid && !Array.isArray(o.grid) ? o.grid : null;
-    A.x.concat(A.y).forEach(function (ax) { if (ax && ax.type === 'value') { ax.axisLabel = ax.axisLabel || {}; if (!ax.axisLabel.formatter) ax.axisLabel.formatter = function (v) { return Number(v).toLocaleString('id-ID', { maximumFractionDigits: 2 }); }; } });
+    A.x.concat(A.y).forEach(function (ax) { if (ax && ax.type === 'value') { ax.axisLabel = ax.axisLabel || {}; if (!ax.axisLabel.formatter) ax.axisLabel.formatter = function (v) { return Number(v).toLocaleString('id-ID', { maximumFractionDigits: 2 }); };
+      // Besaran cacah (kejadian, KA, perjalanan) tidak punya pecahan → tik sumbu bilangan bulat.
+      if (ax.minInterval == null && /kejadian|perjalanan|jumlah|\bKA\b/i.test(ax.name || '')) ax.minInterval = 1; } });
     if (g && A.y[0] && A.y[0].name && A.y[0].nameLocation === 'middle' && (g.left || 0) < 30) g.left = 30;
     if (g && A.y[1] && A.y[1].name && A.y[1].nameLocation === 'middle' && (g.right || 0) < 40) g.right = 40;
     return o;

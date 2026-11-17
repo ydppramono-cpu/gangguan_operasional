@@ -105,7 +105,7 @@
       var locs = KAIA.locations(L, 3);
       if (locs.length) add({ tone: 'warn', area: 'Lokasi', src: src('Lokasi per wilayah', 'wilayah', 'Lokasi berulang'), metric: locs.length + ' lokasi',
         head: 'Lokasi berulang (≥3 kejadian)', text: 'Tertinggi ' + locs[0].lokasi + ' (' + locs[0].n + '×, ' + F.n(locs[0].menit) + ' mnt)' + (locs[1] ? ', lalu ' + locs[1].lokasi + ' (' + locs[1].n + '×)' : '') + '.',
-        ids: locs[0].ids, rec: { area: 'Lokasi', title: 'Inspeksi gabungan di lokasi berulang', actions: ['Jadwalkan inspeksi bersama (sarana, prasarana, operasi) di lokasi teratas.', 'Catat temuan per kunjungan dan cocokkan dengan kejadian berikutnya.'], lit: [] } });
+        ids: locs[0].ids, idsOf: 'di ' + locs[0].lokasi, rec: { area: 'Lokasi', title: 'Inspeksi gabungan di lokasi berulang', actions: ['Jadwalkan inspeksi bersama (sarana, prasarana, operasi) di lokasi teratas.', 'Catat temuan per kunjungan dan cocokkan dengan kejadian berikutnya.'], lit: [] } });
     }
     // 7. Pola jam & hari
     var H = KAIA.hourly(L);
@@ -128,7 +128,7 @@
     var units = KAIA.unitsOf(L).filter(function (u) { return u.n >= 2; }).sort(function (a, b) { return b.n - a.n || b.menit - a.menit; });
     if (units.length) add({ tone: 'warn', area: 'Sarana', src: src('Tabel sarana berulang', 'sarana', 'Sarana terkait'), metric: units.length + ' unit',
       head: 'Unit sarana dengan ≥2 gangguan', text: 'Tertinggi ' + F.unit(units[0].unit) + ' (' + units[0].n + '×, ' + F.n(units[0].menit) + ' mnt).',
-      ids: [].concat.apply([], units.slice(0, 5).map(function (u) { return ids(u.events); })),
+      ids: [].concat.apply([], units.slice(0, 5).map(function (u) { return ids(u.events); })), idsOf: 'dari 5 unit teratas',
       rec: { area: 'Sarana', title: 'RCA per unit berulang dan percepat perbaikan',
         actions: ['Buka profil unit, cek apakah gangguannya sejenis (komponen sama) → RCA dan perbaikan permanen.', 'Ukur MTTR per depo; siapkan suku cadang komponen kritis (bogie, kompresor, kontrol).', 'Sesuaikan interval perawatan preventif dengan data kegagalan, bukan hanya jadwal tetap.'],
         lit: ['oskouei2024', 'corman2017'] } });
@@ -146,7 +146,7 @@
     if (ctx.inv && L.some(function (r) { return r.cross; })) {
       var rep = ctx.inv.points.filter(function (p) { return p.n >= 2; }).sort(function (a, b) { return b.n - a.n; });
       if (rep.length) add({ tone: 'bad', area: 'Perlintasan', src: src('Inventaris JPL', 'perlintasan', 'Tab JPL'), metric: rep.length + ' titik',
-        head: 'Titik perlintasan berulang (≥2 kejadian)', text: 'Tertinggi ' + rep[0].label + ' (' + rep[0].n + '×).', ids: ids(rep[0].recs),
+        head: 'Titik perlintasan berulang (≥2 kejadian)', text: 'Tertinggi ' + rep[0].label.replace(/ \(titik tidak tercatat\)$/, '') + ' (' + rep[0].n + '×' + (/titik tidak tercatat/.test(rep[0].label) ? '; nomor JPL tidak tercatat' : '') + ').', ids: ids(rep[0].recs), idsOf: 'di titik ini',
         rec: { area: 'Perlintasan', title: 'Tangani JPL berulang dengan urutan prioritas risiko',
           actions: ['Urutkan titik menurut kejadian 12 bulan × KA/hari (Perlintasan → Inventaris JPL).', 'JPL tak terjaga: pasang lampu kilat + palang (EWS) atau tutup/gabungkan JPL liar bersama Dishub/Pemda.', 'JPL terjaga yang tetap berulang: audit waktu tutup palang, jarak pandang, dan disiplin penjaga.'],
           lit: ['morrissey1980', 'evans2011', 'singh2022', 'fhwa2019'] } });

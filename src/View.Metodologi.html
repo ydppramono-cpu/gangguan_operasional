@@ -59,10 +59,10 @@
       <div class="card">
         <div class="card-h"><div><h3>Kecocokan ke data master</h3><p>Seberapa banyak isian yang dikenali master</p></div></div>
         <div class="card-b">
-          <table class="tbl"><thead><tr><th>Isian</th><th class="num">Dikenali</th><th class="num">Terisi</th><th class="num">%</th></tr></thead><tbody>
+          <div class="tbl-x"><table class="tbl"><thead><tr><th>Isian</th><th class="num">Dikenali</th><th class="num">Terisi</th><th class="num">%</th></tr></thead><tbody>
             <template x-for="m in match" :key="m.label"><tr><td x-text="m.label"></td><td class="num" x-text="KAI.fmt.n(m.ok)"></td><td class="num" x-text="KAI.fmt.n(m.all)"></td>
               <td class="num"><b x-text="m.all ? KAI.fmt.d1(m.ok / m.all * 100) : '–'"></b></td></tr></template>
-          </tbody></table>
+          </tbody></table></div>
         </div>
       </div>
       <div class="card">
@@ -112,10 +112,10 @@
     <div class="card mt">
       <div class="card-h"><div><h3>Aturan 4 kelas (urutan = prioritas)</h3><p x-text="'Versi ' + cfg.rule + ' · diuji: September 2026 sama dengan laporan (Alam 2.900, Prasarana 991, Sarana 5.435, Operasional 5.049 menit)'"></p></div></div>
       <div class="card-b">
-        <table class="tbl"><thead><tr><th>#</th><th>Kelas</th><th>Kategori sumber</th><th>Pola Subgangguan</th><th>Catatan</th></tr></thead><tbody>
+        <div class="tbl-x"><table class="tbl"><thead><tr><th>#</th><th>Kelas</th><th>Kategori sumber</th><th>Pola Subgangguan</th><th>Catatan</th></tr></thead><tbody>
           <template x-for="(r, i) in cfg.classRules" :key="i"><tr><td x-text="i + 1"></td><td><b x-text="$store.app.classLabel(r.kelas)"></b></td><td x-text="r.kategori.join(', ') || 'Semua kategori (pola Subgangguan)'"></td><td><code style="font-size:12px" x-text="r.sub"></code></td><td x-text="r.catatan"></td></tr></template>
           <tr><td x-text="cfg.classRules.length + 1"></td><td><b>Operasional, pelayanan & keamanan</b></td><td colspan="3">Semua yang tidak cocok aturan di atas.</td></tr>
-        </tbody></table>
+        </tbody></table></div>
       </div>
     </div>
 
@@ -147,7 +147,7 @@
 
     <div class="card mt">
       <div class="card-h"><div><h3>Kata kunci kelompok komponen</h3><p x-text="'Versi ' + cfg.componentRule + ' · dicocokkan ke teks Subgangguan kelas sarana'"></p></div></div>
-      <div class="card-b"><table class="tbl"><tbody><template x-for="c in cfg.components" :key="c.id"><tr><td style="width:220px"><b x-text="c.label"></b></td><td><code style="font-size:11.5px" x-text="c.re || '(sisanya)'"></code></td></tr></template></tbody></table></div>
+      <div class="card-b"><div class="tbl-x"><table class="tbl"><tbody><template x-for="c in cfg.components" :key="c.id"><tr><td style="width:220px"><b x-text="c.label"></b></td><td><code style="font-size:11.5px" x-text="c.re || '(sisanya)'"></code></td></tr></template></tbody></table></div></div>
     </div>
   </section>
 </template>
@@ -162,7 +162,7 @@ document.addEventListener('alpine:init', function () {
       get noHour() { void this.$store.app.ver; return KAI.data.all.filter(function (r) { return r.hm < 0; }).length; },
       get lit() { return Object.keys(KAIInsight.LIT).map(function (k) { return KAIInsight.LIT[k]; }); },
       get rs() { return this.$store.app.refReady ? KAIRef.ensureRoutes(KAI.data.ref).stats : {}; },
-      get jplStat() { var R = KAI.data.ref; if (!R) return {}; return { total: R.jpl.length, p190: R.jpl.filter(function (j) { return j.p190; }).length, pair: R.jpl.filter(function (j) { return j.pairKey; }).length, seg: R.jpl.filter(function (j) { return j.segKey; }).length }; },
+      get jplStat() { var R = this.$store.app.refReady && KAI.data.ref; if (!R) return {}; return { total: R.jpl.length, p190: R.jpl.filter(function (j) { return j.p190; }).length, pair: R.jpl.filter(function (j) { return j.pairKey; }).length, seg: R.jpl.filter(function (j) { return j.segKey; }).length }; },
       get match() {
         var s = (this.meta.stats || {});
         return [{ label: 'Nomor sarana → Referensi Sarana', ok: s.saranaMatched, all: s.saranaAny },

@@ -24,7 +24,7 @@
           </div>
           <div class="pf-m"><b x-text="p.metric"></b><span x-text="p.head"></span></div>
           <p x-text="p.text"></p>
-          <button class="link-btn sm" x-show="p.ids && p.ids.length" @click="$store.app.go('telusuri', { ids: p.ids, label: p.id + ' · ' + p.head, period: 'all' })" x-text="'Lihat ' + (p.ids ? p.ids.length : 0) + ' kejadian →'"></button>
+          <button class="link-btn sm" x-show="p.ids && p.ids.length" @click="$store.app.go('telusuri', { ids: p.ids, label: p.id + ' · ' + p.head, period: 'all' })" x-text="'Lihat ' + (p.ids ? p.ids.length : 0) + ' kejadian' + (p.idsOf ? ' ' + p.idsOf : '') + ' →'"></button>
         </div>
         <div class="pa" aria-hidden="true"><svg class="i"><use href="#i-arrow"/></svg></div>
         <div class="pr">

@@ -13,7 +13,7 @@ window.KAITable = (function () {
     counter: { showing: 'Menampilkan', of: 'dari', rows: 'baris', pages: 'halaman' } }, data: { loading: 'Memuat…', error: 'Gagal' } } };
 
   function counter(pageSize, currentRow, currentPage, totalRows) {
-    if (!totalRows) return 'Tidak ada data';
+    if (!totalRows) return '';
     var to = Math.min(currentRow + pageSize - 1, totalRows);
     return 'Menampilkan ' + KAI.fmt.n(currentRow) + '–' + KAI.fmt.n(to) + ' dari ' + KAI.fmt.n(totalRows) + ' baris';
   }
@@ -153,7 +153,7 @@ window.KAITable = (function () {
     st.mo.disconnect();
     rowsEl.forEach(function (r, i) { r.classList.toggle('pg-hide', Math.floor(i / size) !== st.page); });
     var from = n ? st.page * size + 1 : 0, to = Math.min(n, (st.page + 1) * size);
-    var txt = !n ? 'Tidak ada data' : (pages > 1 ? 'Menampilkan ' + KAI.fmt.n(from) + '–' + KAI.fmt.n(to) + ' dari ' + KAI.fmt.n(n) + ' baris' : 'Menampilkan ' + KAI.fmt.n(n) + ' baris');
+    var txt = !n ? '' : (pages > 1 ? 'Menampilkan ' + KAI.fmt.n(from) + '–' + KAI.fmt.n(to) + ' dari ' + KAI.fmt.n(n) + ' baris' : 'Menampilkan ' + KAI.fmt.n(n) + ' baris');
     st.foot.innerHTML = '<span>' + txt + '</span>' + (pages > 1 ? '<span class="pg-b"><button data-d="-1"' + (st.page ? '' : ' disabled') + ' aria-label="Sebelumnya">‹</button><span>' +
       (st.page + 1) + ' / ' + pages + '</span><button data-d="1"' + (st.page < pages - 1 ? '' : ' disabled') + ' aria-label="Berikutnya">›</button></span>' : '');
     st.mo.observe(tb, { childList: true, subtree: true });

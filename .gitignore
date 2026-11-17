@@ -14,3 +14,7 @@ data_raw/
 knowledge/sumber_teks/*.txt
 # dependensi Node (dipasang ulang dengan `npm ci`)
 node_modules/
+tests/emulator/node_modules/
+tests/emulator/api.json
+tests/emulator/app.html
+tests/emulator/shots/
