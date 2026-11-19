@@ -42,7 +42,9 @@ if (fs.existsSync(G26 + '/jarak_lintas.json')) {
 const st = {}, seg = [];
 lintas.forEach((l, li) => { const d = l.wilayah === 'Jawa' ? 'DAOP ' + (1 + li % 9) : 'DIVRE ' + ['I', 'II', 'III', 'IV'][li % 4];
   l.kode.forEach((k, i) => { if (!st[k]) st[k] = d; if (i) seg.push([d, l.judul, l.kode[i - 1], k, Math.round((l.km[i] - l.km[i - 1]) * 1000) / 1000]); }); });
-const stRows = [['Singkatan Stasiun', 'Nama Stasiun', 'Wilayah Operasi']].concat(Object.keys(st).map(k => [k, 'Stasiun ' + k, st[k]]));
+// Nama stasiun asli dari master gabungan repo (db/csv/master_stasiun.csv); kode tanpa nama tetap memakai kodenya.
+const NAMA = Object.fromEntries(fs.readFileSync(path.resolve(__dirname, '../../db/csv/master_stasiun.csv'), 'utf8').trim().split('\n').slice(1).map(l => l.split(',')).map(c => [c[0], c[1]]));
+const stRows = [['Singkatan Stasiun', 'Nama Stasiun', 'Wilayah Operasi']].concat(Object.keys(st).map(k => [k, NAMA[k] || k, st[k]]));
 const pjRows = [['Daop/Divre', 'Lintas', 'Stasiun A', 'Stasiun B', 'Jarak']].concat(seg);
 const kaRows = [['No KA', 'Nama KA', 'Lintas', 'Pnp/brg']].concat(pen.map(p => [p.no, p.nama, p.lintas, /barang|BB|Peti/i.test(p.kelas) ? 'Barang' : 'Penumpang']));
 const sarCsv = fs.readFileSync(path.resolve(__dirname, '../../db/gapeka2026/sarana_unit_2026.csv'), 'utf8').trim().split('\n').slice(1).map(l => l.split(','));
@@ -126,7 +128,7 @@ const ctx = {
       return f.replace('yyyy', j.getUTCFullYear()).replace('MM', p(j.getUTCMonth() + 1)).replace('dd', p(j.getUTCDate())).replace('HH', p(j.getUTCHours())).replace('mm', p(j.getUTCMinutes())).replace('ss', p(j.getUTCSeconds())); },
     computeDigest: (a, s) => [...crypto.createHash('sha256').update(String(s)).digest()].map(x => x > 127 ? x - 256 : x), DigestAlgorithm: { SHA_256: 'sha256' }, Charset: { UTF_8: 'utf8' }, sleep() {}, getUuid: () => crypto.randomUUID()
   },
-  HtmlService: {}, ScriptApp: {}, Session: { getActiveUser: () => ({ getEmail: () => '' }) }
+  HtmlService: {}, ScriptApp: {}, Session: { getActiveUser: () => ({ getEmail: () => process.env.EMU_USER || '' }), getEffectiveUser: () => ({ getEmail: () => 'pemilik@contoh.id' }) }
 };
 vm.createContext(ctx);
 fs.readdirSync(SRC).filter(f => f.endsWith('.gs')).sort().forEach(f => vm.runInContext(fs.readFileSync(path.join(SRC, f), 'utf8'), ctx, { filename: f }));

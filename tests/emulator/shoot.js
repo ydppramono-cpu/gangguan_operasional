@@ -5,7 +5,7 @@ const MAP = [[/echarts@[\d.]+\/dist\/echarts\.min\.js/, L + 'echarts/dist/echart
 const routes = (process.argv[2] || 'ringkasan,tren,perlintasan,wilayah,sarana,eksposur,gapeka,telusuri,cari,unduh,metodologi').split(',');
 const widths = (process.env.W || '1440,400').split(',').map(Number);
 (async () => {
-  const b = await chromium.launch(); fs.mkdirSync('shots', { recursive: true }); const rep = {};
+  const b = await chromium.launch(); process.chdir(__dirname); fs.mkdirSync('shots', { recursive: true }); const rep = {};
   for (const w of widths) for (const r of routes) {
     const ctx = await b.newContext({ viewport: { width: w, height: w > 800 ? 900 : 860 } }); const p = await ctx.newPage(); const errs = [];
     await p.route('**/*', rt => { const u = rt.request().url(); for (const [re, f] of MAP) if (re.test(u)) return rt.fulfill({ path: f }); if (/^https?:/.test(u)) return rt.fulfill({ status: 404, body: '' }); return rt.continue(); });

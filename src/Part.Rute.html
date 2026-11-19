@@ -18,7 +18,7 @@
       <div class="kpis rt-kpis mt">
         <div class="kpi"><span x-text="C.name"></span><b x-text="KAI.fmt.n(C.len) + ' km'"></b><em x-text="C.path.length + ' stasiun · ganda ' + KAI.fmt.d1(C.len ? C.kmGanda / C.len * 100 : 0) + '%'"></em></div>
         <div class="kpi"><span>Wilayah dilewati</span><b x-text="C.regions.length + ' wilayah'"></b><em x-text="C.regions.map(function (r) { return r.region + ' ' + KAI.fmt.n(r.km) + ' km'; }).join(' · ')"></em></div>
-        <div class="kpi"><span>Perjalanan harian (GAPEKA 2025)</span><b x-text="KAI.fmt.n(C.nDaily) + ' KA'"></b><em x-text="'penumpang ' + C.nPnp + ' · KRL ' + C.nKrl + ' · barang ' + C.nBrg + ' · dinas ' + C.nDinas"></em></div>
+        <div class="kpi"><span x-text="'Perjalanan harian (' + ($store.app.R && KAI.data.ref ? KAI.data.ref.gapekaLabel : 'GAPEKA') + ')'"></span><b x-text="KAI.fmt.n(C.nDaily) + ' KA'"></b><em x-text="'penumpang ' + C.nPnp + ' · KRL ' + C.nKrl + ' · barang ' + C.nBrg + ' · dinas ' + C.nDinas"></em></div>
         <div class="kpi"><span>Pendapatan alokasi km · 12 bln</span><b x-text="KAI.fmt.rp(C.revA)"></b><em x-text="'penumpang ' + KAI.fmt.rp(C.revPA) + ' · barang ' + KAI.fmt.rp(C.revBA)"></em></div>
         <div class="kpi"><span>Volume alokasi km · 12 bln</span><b x-text="KAI.fmt.n(C.paxA) + ' pnp'"></b><em x-text="KAI.fmt.n(C.tonA) + ' ton barang'"></em></div>
         <div class="kpi"><span>Kejadian di koridor · 12 bln</span><b x-text="KAI.fmt.n(C.g.n) + ' · ' + KAI.fmt.n(C.g.menit) + '′'"></b><em x-text="'prasarana ' + C.gPras + ' · keamanan ' + C.gSec + ' · alam ' + C.gNat"></em></div>

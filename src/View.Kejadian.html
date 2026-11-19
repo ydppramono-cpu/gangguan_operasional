@@ -22,7 +22,7 @@
             <div><dt>Lokasi</dt><dd><button class="link-btn plain" @click="$store.app.openLoc(ev)" x-text="ev.lokasi || KAI.NIL" :class="ev.drvSet.lokasi && 'drv'" :title="ev.drvSet.lokasi ? KAI.DRV_TIP : null"></button></dd></div>
             <div><dt>KM</dt><dd :class="ev.drvSet.km && 'drv'" :title="ev.drvSet.km ? KAI.DRV_TIP : null" x-text="ev.km || KAI.NIL"></dd></div>
             <div x-show="jpl"><dt>JPL</dt><dd><button class="link-btn plain" @click="$store.app.open('jpl', jpl.id)" x-text="jpl ? 'JPL ' + jpl.no + ' · ' + jpl.kab : ''"></button></dd></div>
-            <div><dt>Kereta api</dt><dd><button class="link-btn plain" :disabled="!ev.ka" @click="ev.ka && $store.app.open('ka', ev.ka)" :class="ev.drvSet.ka && 'drv'" :title="ev.drvSet.ka ? KAI.DRV_TIP : null" x-text="ev.ka ? 'KA ' + ev.ka + (ev.kaNama ? ' ' + ev.kaNama : ' (tidak ada di GAPEKA 2025)') : KAI.NIL"></button></dd></div>
+            <div><dt>Kereta api</dt><dd><button class="link-btn plain" :disabled="!ev.ka" @click="ev.ka && $store.app.open('ka', ev.ka)" :class="ev.drvSet.ka && 'drv'" :title="ev.drvSet.ka ? KAI.DRV_TIP : null" x-text="ev.ka ? 'KA ' + ev.ka + (ev.kaNama ? ' ' + ev.kaNama : ' (tidak ada di LIST KA)') : KAI.NIL"></button></dd></div>
           </dl>
         </div>
 
@@ -64,9 +64,9 @@
             <div class="card">
               <div class="card-h"><div><h3 x-text="g.title"></h3><p x-text="g.sub"></p></div><div class="spacer"></div>
                 <button class="btn sm ghost" x-show="!!g.more" @click="g.more()">Profil<svg class="i"><use href="#i-arrow"/></svg></button></div>
-              <div class="card-b">
+              <div class="card-b tbl-x">
                 <table class="tbl"><thead><tr><th>Tanggal</th><th>Kejadian</th><th class="num">Menit</th></tr></thead><tbody>
-                  <template x-for="r in g.items" :key="r.id"><tr class="click" @click="$store.app.openEvent(r.id)"><td class="num" style="white-space:nowrap" x-text="KAI.fmt.date(r)"></td><td x-text="(r.judul || r.sub)"></td><td class="num" x-text="KAI.fmt.n(r.menit)"></td></tr></template>
+                  <template x-for="r in g.items" :key="r.id"><tr class="click" @click="$store.app.openEvent(r.id)"><td class="num" style="white-space:nowrap" x-text="KAI.fmt.date(r)"></td><td class="wrap" :title="r.judul || r.sub" x-text="r.sub || r.judul"></td><td class="num" x-text="KAI.fmt.n(r.menit)"></td></tr></template>
                 </tbody></table>
                 <div class="empty" x-show="!g.items.length">Tidak ada kejadian lain.</div>
               </div>

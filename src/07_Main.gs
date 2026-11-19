@@ -10,5 +10,7 @@ function doGet() {
 
 /** Dipakai di HTML: <?!= include('Css.Tokens'); ?> — dievaluasi sebagai template agar include bisa bertingkat. */
 function include(name) {
+  // Dipanggil template server; bila dipanggil browser, hanya nama parsial baku yang diterima (daftar pola tertutup).
+  if (!/^(?:Index|(?:Css|Ui|Js|View|Part)\.[A-Za-z0-9]+)$/.test(String(name))) throw new Error('Parsial tidak dikenal.');
   return HtmlService.createTemplateFromFile(name).evaluate().getContent();
 }

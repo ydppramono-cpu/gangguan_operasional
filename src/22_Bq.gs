@@ -102,9 +102,7 @@ function bqCekJudul_() {
 }
 /** Jalankan dari editor (pemilik). Membandingkan jalur Sheets vs BigQuery; tidak mengubah data apa pun. */
 function ujiKondisiBq() {
-  var act = '', eff = '';
-  try { act = Session.getActiveUser().getEmail(); eff = Session.getEffectiveUser().getEmail(); } catch (e) { }
-  if (!act || act !== eff) throw new Error('Hanya pemilik skrip (dari editor Apps Script).');
+  pemilik_();
   if (!bqTersedia_()) throw new Error('BQ_PROJECT belum diisi atau layanan lanjutan BigQuery belum aktif.');
   var ym = Utilities.formatDate(new Date(), 'Asia/Jakarta', 'yyyy-MM'), m = readMasters_(), x = readExtra_();
   var st = buildRef_({ ka: m.ka, st: m.st, pj: m.pj, sar: m.sar, jpl: x.jpl, jadwal: x.jadwal, ops: x.ops, depo: x.depo, ruj: x.ruj }).st;

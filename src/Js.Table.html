@@ -79,7 +79,8 @@ window.KAITable = (function () {
   /** Sel teks: kosong → "Tidak tercatat" (abu-abu miring); hasil turunan → garis bawah titik + tooltip. */
   function cellFmt(c) {
     var v = c.getValue(), d = c.getData(), f = c.getField();
-    if (v == null || v === '' || v === '–') return '<span class="nil">' + KAI.NIL + '</span>';
+    if (v == null || v === '' || v === '–') return '<span class="nil" title="' + KAI.NIL + '">–</span>';
+    if (f === 'kejadian' && d._full && d._full !== v) return '<span title="' + esc(d._full) + '">' + esc(v) + '</span>';
     return d._d && FIELD_DRV[f] && d._d[FIELD_DRV[f]] ? '<span class="drv" title="' + KAI.DRV_TIP + '">' + esc(v) + '</span>' : esc(v);
   }
   function waktuFmt(c) {
@@ -89,10 +90,17 @@ window.KAITable = (function () {
     if (r.hm < 0) return esc(KAI.fmt.date(r)) + ' <span class="nil" title="Jam mulai tidak tercatat di laporan">· tanpa jam</span>';
     return esc(KAI.fmt.date(r)) + ' · ' + (r.drvSet && r.drvSet.jam ? '<span class="drv" title="' + KAI.DRV_TIP + '">' + KAI.fmt.hm(r.hm) + '</span>' : KAI.fmt.hm(r.hm));
   }
+  /** Judul sumber sering diawali "KA 123 (Nama KA)" — sama dengan kolom KA. Untuk tabel, awalan itu dibuang (teks lengkap di tooltip). */
+  function judulTanpaKa(r) {
+    var j = r.judul || r.sub || '';
+    if (!r.ka || !j) return j;
+    var no = String(r.ka).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), t = j.replace(new RegExp('^KA\\s*' + no + '(?![\\w/-])\\s*(\\([^)]*\\))?\\s*[-–:,]?\\s*', 'i'), '');
+    return t.length >= 3 ? t.charAt(0).toUpperCase() + t.slice(1) : (r.sub || j);
+  }
   function eventRows(list, extra) {
     return list.map(function (r) {
       var o = { id: r.id, _r: r, _d: r.drvSet || {}, waktu: KAI.fmt.dateTime(r), sk: KAIA.sortKey(r), wilayah: r.wilayah || '', kelas: r.kelas, kelasLabel: CLASS_SHORT[r.kelas] || r.kelas,
-        kejadian: r.judul || r.sub || '', lokasi: (r.lokasi || '') + (r.lokasi && r.cross && r.jpl ? ' · JPL ' + r.jpl : ''),
+        kejadian: judulTanpaKa(r), _full: r.judul || r.sub || '', lokasi: (r.lokasi || '') + (r.lokasi && r.cross && r.jpl ? ' · JPL ' + r.jpl : ''),
         ka: r.ka ? r.ka + (r.kaNama ? ' ' + r.kaNama : '') : '',
         sarana: r.sarana && r.sarana.length ? r.sarana.map(KAI.fmt.unit).join(', ') : '', menit: r.menit };
       return extra ? Object.assign(o, extra(r)) : o;

@@ -18,15 +18,13 @@
           <p>Lokasi = petak jalan bila tercatat, selain itu stasiun · klik nama wilayah untuk profil lengkap, klik lokasi untuk profil lokasi</p></div></div>
         <div class="card-b tbl-wrap" style="max-height:none">
           <table class="tbl" data-pg="20">
-            <thead><tr><th>Wilayah</th><th>Lokasi paling sering</th><th class="num">Frek</th><th>Lokasi kelambatan terbesar</th><th class="num">Menit</th><th class="num">Total wilayah</th></tr></thead>
+            <thead><tr><th>Wilayah</th><th>Lokasi paling sering</th><th>Lokasi kelambatan terbesar</th><th class="num">Total wilayah</th></tr></thead>
             <tbody>
               <template x-for="r in R.regions" :key="r.wilayah">
                 <tr>
                   <td><button class="link-btn" @click="$store.app.open('wilayah', r.wilayah)" x-text="r.wilayah"></button></td>
-                  <td><button class="link-btn plain" x-show="r.freq" @click="openLoc(r.freq)" x-text="r.freq && r.freq.lokasi"></button><span class="nil" x-show="!r.freq" x-text="r.n ? 'Lokasi tidak tercatat' : 'Tidak ada kejadian — periksa kelengkapan input'"></span></td>
-                  <td class="num" x-text="r.freq ? r.freq.n + 'x' : '0x'"></td>
-                  <td><button class="link-btn plain" x-show="r.worst" @click="openLoc(r.worst)" x-text="r.worst && r.worst.lokasi"></button><span class="nil" x-show="!r.worst" x-text="r.n ? 'Lokasi tidak tercatat' : 'Tidak ada kejadian'"></span></td>
-                  <td class="num" x-text="r.worst ? KAI.fmt.n(r.worst.menit) : '0'"></td>
+                  <td class="wrap"><button class="link-btn plain" x-show="r.freq" @click="openLoc(r.freq)" x-text="r.freq && r.freq.lokasi"></button><span class="sub-n" x-show="r.freq" x-text="r.freq && r.freq.n + '×'"></span><span class="nil" x-show="!r.freq" x-text="r.n ? 'Lokasi tidak tercatat' : 'Tidak ada kejadian'"></span></td>
+                  <td class="wrap"><button class="link-btn plain" x-show="r.worst" @click="openLoc(r.worst)" x-text="r.worst && r.worst.lokasi"></button><span class="sub-n" x-show="r.worst" x-text="r.worst && KAI.fmt.n(r.worst.menit) + ' mnt'"></span><span class="nil" x-show="!r.worst" x-text="r.n ? 'Lokasi tidak tercatat' : 'Tidak ada kejadian'"></span></td>
                   <td class="num bar-cell"><div class="b" :style="'width:' + (maxMenit ? r.menit / maxMenit * 100 : 0) + '%'"></div><span x-text="KAI.fmt.n(r.menit) + ' mnt · ' + r.n + ' kej.'"></span></td>
                 </tr>
               </template>
@@ -41,11 +39,11 @@
     </div>
 
     <div class="card mt">
-      <div class="card-h"><div><h3>Lintas dengan kelambatan terbesar</h3><p>Lintas dari GAPEKA 2025 (LIST PETAK JALAN) · hanya kejadian di petak · klik untuk profil lintas</p></div></div>
+      <div class="card-h"><div><h3>Lintas dengan kelambatan terbesar</h3><p>Lintas dari LIST PETAK JALAN (master GAPEKA 2025) · hanya kejadian di petak · klik untuk profil lintas</p></div></div>
       <div class="card-b">
         <table class="tbl"><thead><tr><th>Lintas</th><th>Wilayah</th><th class="num">Kej.</th><th class="num">Menit</th></tr></thead><tbody>
           <template x-for="l in R.lintas" :key="l.lintas"><tr class="click" @click="$store.app.open('lintas', l.lintas)"><td x-text="l.lintas"></td><td x-text="l.wilayah"></td><td class="num" x-text="l.n"></td><td class="num"><b x-text="KAI.fmt.n(l.menit)"></b></td></tr></template>
-        </tbody></table>
+        </tbody></table><div class="empty" x-show="!R.lintas.length">Tidak ada kejadian berlokasi petak pada periode ini, jadi lintas belum bisa diperingkat.</div>
       </div>
     </div>
     </div>

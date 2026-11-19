@@ -169,7 +169,7 @@
               <div class="card-f" x-text="M.sched.note"></div>
             </div>
             <div class="card">
-              <div class="card-h"><div><h3>KA per jam</h3><p>Pasti = Buku Daftar Waktu GAPEKA 2025 · perkiraan = KA tanpa Daftar Waktu</p></div></div>
+              <div class="card-h"><div><h3>KA per jam</h3><p x-text="'Pasti = Buku Daftar Waktu ' + (KAI.data.ref ? KAI.data.ref.gapekaLabel : 'GAPEKA') + ' · perkiraan = KA tanpa Daftar Waktu'"></p></div></div>
               <div class="card-b fill"><div class="chart" x-chart="tab === 'jadwal' ? KAIChart.passHist(schedHist.exact, schedHist.est) : null"></div></div>
               <div class="card-b statgrid" style="padding-top:0">
                 <template x-for="s in M.sched.stats" :key="s[0]"><div><span x-text="s[0]"></span><b x-text="KAI.fmt.n(s[1])"></b></div></template>

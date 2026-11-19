@@ -55,7 +55,7 @@ document.addEventListener('alpine:init', function () {
     if (k) return { no: no, nama: k.nama, relasi: k.lintas, ber: k.ber || '', dat: k.dat || '', kelas: k.kelas || '', jenis: k.jenis || '' };
     var T = R.tt[n];
     if (T) { var a = T.stops[0], b = T.stops[T.stops.length - 1]; return { no: no, nama: T.nama, relasi: T.rel, ber: a.ber != null ? KAI.fmt.hm(a.ber) : '', dat: b.dat != null ? KAI.fmt.hm(b.dat) : '', kelas: '', jenis: '' }; }
-    return { no: no, nama: '(tidak ada di GAPEKA 2025)', relasi: '', ber: '', dat: '', kelas: '', jenis: '' };
+    return { no: no, nama: '(tidak ada di LIST KA)', relasi: '', ber: '', dat: '', kelas: '', jenis: '' };
   }
   /** Peta unit sarana → depo, untuk menghitung gangguan per depo. */
   function byDepot(R, all) {

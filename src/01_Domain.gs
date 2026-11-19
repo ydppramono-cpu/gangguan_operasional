@@ -318,7 +318,7 @@ var Domain = (function () {
     var s = txt(stasiun);
     if (s && s !== '-') {
       var c = stationCode(s, idx);
-      if (c) return { type: 'stasiun', code: c, label: 'Sta. ' + idx.st[c].name, lintas: '', matched: true };
+      if (c) return { type: 'stasiun', code: c, label: 'Sta. ' + String(idx.st[c].name).replace(/^(stasiun|sta\.?)\s+/i, ''), lintas: '', matched: true };
       // Isian bebas yang bukan nama stasiun (mis. "& Alat Pengamanan ...") tidak dijadikan lokasi.
       if (/^[A-Za-z][A-Za-z .'-]{1,23}$/.test(s)) return { type: 'stasiun', code: s.toUpperCase(), label: 'Sta. ' + title(s), lintas: '', matched: false };
       return { type: 'lain', code: '', label: '', lintas: '', matched: false };

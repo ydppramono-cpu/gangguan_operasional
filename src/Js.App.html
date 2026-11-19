@@ -221,7 +221,7 @@ document.addEventListener('alpine:init', function () {
         self.gapekaBusy = true;
         return KAI.gapeka.jadwalRows(raw, tahun).then(function (jadwal) {
           var today = new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Jakarta' }).slice(0, 10);
-          var R = KAIRef.build(Object.assign({}, raw, { jadwal: jadwal }), { today: today });
+          var R = KAIRef.build(Object.assign({}, raw, { jadwal: jadwal, gapekaLabel: KAI.gapeka.label(tahun) }), { today: today });
           R.gapeka = tahun;
           KAI.data.ref = R;
           // Pendapatan terekspos: rate bulanan dari Passenger/Freight + GAPEKA (bulan berjalan memakai rate acuan).

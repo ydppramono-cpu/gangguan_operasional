@@ -13,6 +13,24 @@
       </div>
     </div>
     <template x-if="!$store.app.refReady"><div class="card mt"><div class="card-b"><div class="skel" style="height:200px"></div><p class="note">Data referensi sedang dimuat…</p></div></div></template>
+    <template x-if="$store.app.refReady && !q.trim().length">
+      <div class="mt">
+        <p class="note" x-text="'Belum tahu harus mencari apa? Mulai dari yang paling terdampak · ' + $store.app.R.label + ' · urut menurut total kelambatan · klik untuk profil.'"></p>
+        <div class="grid g-3 mt-s">
+          <template x-for="t in tops" :key="t.id">
+            <div class="card">
+              <div class="card-h"><div><h3 x-text="t.title"></h3><p x-text="t.sub"></p></div></div>
+              <div class="card-b">
+                <div class="tbl-x"><table class="tbl nopg"><thead><tr><th x-text="t.col"></th><th class="num">Kej.</th><th class="num">Menit</th></tr></thead><tbody>
+                  <template x-for="r in t.rows" :key="r.k"><tr class="click" @click="r.go()"><td class="wrap" x-text="r.label"></td><td class="num" x-text="r.n"></td><td class="num"><b x-text="KAI.fmt.n(r.menit)"></b></td></tr></template>
+                </tbody></table></div>
+                <div class="empty" x-show="!t.rows.length" x-text="t.none"></div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </template>
     <template x-if="$store.app.refReady && q.trim().length">
       <div class="grid g-2 mt">
         <div class="card">
@@ -47,6 +65,24 @@ document.addEventListener('alpine:init', function () {
     return {
       q: '', samples: ['CC 206 13 49', 'Bekasi', 'Daop 8', 'Divre 1', 'Argo Bromo', 'JPL 124', 'Manggarai', 'Depo Cipinang', 'pohon tumbang'],
       init: function () { this.q = (this.$store.app.params && this.$store.app.params.q) || ''; var self = this; this.$nextTick(function () { self.$refs.q && self.$refs.q.focus(); }); },
+      /** Titik masuk umum → rinci: 5 lokasi, KA, dan sarana dengan kelambatan terbesar di periode aktif (dari R.L). */
+      get tops() {
+        var st = this.$store.app, L = (st.R && st.R.L) || [];
+        function rank(keyOf, labelOf, goOf) {
+          var g = {};
+          L.forEach(function (r) { (keyOf(r) || []).forEach(function (k) { var x = g[k] = g[k] || { k: k, n: 0, menit: 0, r: r }; x.n++; x.menit += Number(r.menit) || 0; }); });
+          return Object.keys(g).map(function (k) { var x = g[k]; return { k: k, n: x.n, menit: Math.round(x.menit), label: labelOf(x), go: function () { goOf(x); } }; })
+            .sort(function (a, b) { return b.menit - a.menit || b.n - a.n; }).slice(0, 5);
+        }
+        return [
+          { id: 'lok', title: 'Lokasi', col: 'Petak / stasiun', sub: 'Lokasi tercatat di laporan', none: 'Tidak ada kejadian berlokasi pada periode ini.',
+            rows: rank(function (r) { return r.lokasi ? [r.lokasi] : []; }, function (x) { return x.k; }, function (x) { st.openLoc(x.r); }) },
+          { id: 'ka', title: 'Kereta api', col: 'KA', sub: 'Nomor KA dari laporan · nama dari LIST KA', none: 'Tidak ada kejadian dengan nomor KA pada periode ini.',
+            rows: rank(function (r) { return r.ka ? [r.ka] : []; }, function (x) { return 'KA ' + x.k + (x.r.kaNama ? ' ' + x.r.kaNama : ''); }, function (x) { st.open('ka', x.k); }) },
+          { id: 'sar', title: 'Sarana', col: 'Nomor sarana', sub: 'Hanya kejadian yang mencatat nomor sarana', none: 'Tidak ada kejadian dengan nomor sarana pada periode ini.',
+            rows: rank(function (r) { return r.sarana || []; }, function (x) { return KAI.fmt.unit(x.k); }, function (x) { st.openUnit(x.k); }) }
+        ];
+      },
       get hits() { void this.$store.app.refReady; return KAI.data.search ? KAIRef.search(KAI.data.search, this.q, 120) : []; },
       get groups() {
         var g = {}; this.hits.forEach(function (e) { (g[e.type] = g[e.type] || []).push(e); });

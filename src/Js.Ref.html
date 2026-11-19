@@ -10,6 +10,7 @@
  * Fungsi murni (tanpa DOM) agar bisa diuji di Node.
  */
 (function (root) {
+  var GLBL = 'GAPEKA 2025';   // label sumber jadwal aktif (switch global); diisi build()
   var tc = function (x) { return root.KAI && root.KAI.tc ? root.KAI.tc(x) : x; };
   function norm(s) { return String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
   function pad(n) { return (n < 10 ? '0' : '') + n; }
@@ -34,9 +35,9 @@
   function pathTo(sp, src, dst) { if (sp.dist[dst] == null) return null; var p = [dst]; while (p[p.length - 1] !== src) { p.push(sp.prev[p[p.length - 1]]); if (p.length > 5000) return null; } return p.reverse(); }
 
   function build(raw, opts) {
-    opts = opts || {};
+    opts = opts || {}; GLBL = raw.gapekaLabel || 'GAPEKA 2025';
     var R = { depot: {}, st: {}, stList: [], seg: {}, segList: [], adj: {}, nameIdx: {}, ka: {}, kaList: [], jpl: [], fleet: {}, fleetList: [],
-      regions: {}, lintas: {}, today: opts.today || new Date().toISOString().slice(0, 10), counts: raw.counts || {} };
+      regions: {}, lintas: {}, gapekaLabel: GLBL, today: opts.today || new Date().toISOString().slice(0, 10), counts: raw.counts || {} };
 
     (raw.st || []).forEach(function (r) {
       var s = { code: r[0], name: tc(r[1]), region: r[2], status: r[3] ? r[3].charAt(0).toUpperCase() + r[3].slice(1) : '', deg: 0 };
@@ -260,7 +261,7 @@
       ber: fmtMin(T.stops[0].ber), dat: fmtMin(T.stops[T.stops.length - 1].dat), layanan: parent ? parent.layanan : '', sf: parent ? parent.sf : '', kap: parent ? parent.kap : '',
       klas: parent ? parent.klas : '', jenisKa: parent && direct ? parent.jenisKa : (/F$/.test(T.no) ? 'FAK' : 'REG'), parent: parent, tt: T, src: T.src };
     k.reg = !k.jenisKa || k.jenisKa === 'REG';
-    k.route = { ok: true, path: path, cum: cum, len: cum[cum.length - 1], err: null, quality: 'jadwal', method: 'Daftar Waktu GAPEKA 2025' };
+    k.route = { ok: true, path: path, cum: cum, len: cum[cum.length - 1], err: null, quality: 'jadwal', method: 'Daftar Waktu ' + GLBL };
     k.times = times;
     return k;
   }
