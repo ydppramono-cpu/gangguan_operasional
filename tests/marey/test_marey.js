@@ -1,9 +1,11 @@
-// Uji invarian grafik perjalanan: label stasiun tidak rapat/tumpuk, jam per perjalanan tidak mundur. Pemakaian: GZ=jalur/gapekaYY.json.gz node test_marey.js
+// Uji invarian grafik perjalanan: label stasiun tidak rapat/tumpuk, jam per perjalanan tidak mundur.
+// Pemakaian: node test_marey.js 2025|2026  (membaca seed di src/), atau GZ=jalur/gapekaYY.json.gz node test_marey.js
 const fs = require('fs'), vm = require('vm'), zlib = require('zlib');
 const src = fs.readFileSync(require('path').resolve(__dirname, '../../src/Js.Marey.html'), 'utf8').replace(/^<script>|<\/script>\s*$/g, '');
 vm.runInThisContext(src);
 const K = globalThis.KAIM;
-const d = K.index(JSON.parse(zlib.gunzipSync(fs.readFileSync(process.env.GZ))));
+const seedGz = th => { const f = { 2025: '20_SeedGapeka25.gs', 2026: '19_SeedGapeka26.gs' }[th]; const c = {}; require('vm').runInNewContext(fs.readFileSync(require('path').resolve(__dirname, '../../src', f), 'utf8'), c); return Buffer.from(c['SEED_GAPEKA' + String(th).slice(2) + '_GZ'], 'base64'); };
+const d = K.index(JSON.parse(zlib.gunzipSync(process.env.GZ ? fs.readFileSync(process.env.GZ) : seedGz(process.argv[2] || 2026))));
 let fails = 0;
 function ok(c, m) { if (!c) { fails++; console.log('GAGAL:', m); } }
 // layoutLabels: tidak ada dua label lebih rapat dari gap, untuk semua lintas & tinggi minimum yang dipakai renderer

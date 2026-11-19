@@ -16,7 +16,7 @@
       <div class="card-b">
         <dl class="kv">
           <dt>Koridor</dt><dd>Stasiun jangkar disambung jalur terpendek graf LIST PETAK JALAN GAPEKA 2025. Daop/Divre per petak dari LIST PETAK; UPT Resor JR dari PETA WILAYAH.</dd>
-          <dt>KA lewat</dt><dd>Perjalanan Daftar Waktu GAPEKA 2025 (jam pasti; stasiun langsung tanpa jam diinterpolasi km) + LIST KA tanpa Daftar Waktu (jam perkiraan). Kategori: penumpang, KRL (Commuter Line), barang, dinas. Hanya perjalanan harian (REG/PLB) untuk jam kosong & hitungan harian.</dd>
+          <dt>KA lewat</dt><dd>Perjalanan Daftar Waktu GAPEKA yang dipilih di switch pojok kanan atas (2025 atau 2026) (jam pasti; stasiun langsung tanpa jam diinterpolasi km) + LIST KA tanpa Daftar Waktu (jam perkiraan). Kategori: penumpang, KRL (Commuter Line), barang, dinas. Hanya perjalanan harian (REG/PLB) untuk jam kosong & hitungan harian.</dd>
           <dt>Pendapatan</dt><dd>Apa adanya dari tab Passenger (per nomor KA) & Freight (per Nama KA). Penuh = seluruh pendapatan KA yang lewat; alokasi = × km KA di koridor ÷ km rute KA (barang: digabung atas semua perjalanan bernama sama). Tanpa skor produktivitas.</dd>
           <dt>Jam kosong</dt><dd>24 jam dikurangi waktu tempuh petak tiap perjalanan harian ± 5 menit. Petak ganda juga per sepur (WKP satu sepur). Rekomendasi WKP memakai jendela ≥ 60 menit, diutamakan 21:00–05:00.</dd>
           <dt>Status petak</dt><dd>P1 = gangguan prasarana ≥ 2 & (THI &lt; 70 atau WKP jalan rel ≤ 1) · P2 = gangguan tanpa WKP jalan rel · P3 = THI &lt; 70 tanpa gangguan. WKP dipetakan ke petak dari teks lokasi (petak, rentang stasiun, atau emplasemen; 97% baris).</dd>
@@ -96,7 +96,7 @@
           <template x-if="!$store.app.refReady"><div class="skel" style="height:160px"></div></template>
           <template x-if="$store.app.refReady">
             <dl class="kv">
-              <dt>Jadwal KA</dt><dd x-text="'Buku Daftar Waktu GAPEKA 2025 (KA Antar Kota, Perkotaan, KRL, Barang — Jawa; Sumatera Utara, Barat, Selatan) → tab M_JADWAL: ' + KAI.fmt.n(rs.tt) + ' perjalanan, jam datang/berangkat, status berhenti/langsung/berhenti sebentar, dan catatan silang/susul. Jam asal & tujuan 1.830 KA yang juga ada di LIST KA cocok 100%.'"></dd>
+              <dt>Jadwal KA</dt><dd x-text="'Sumber aktif: ' + KAI.gapeka.label($store.app.gapeka || '2025') + ' (switch pojok kanan atas). GAPEKA 2025: Buku Daftar Waktu (KA Antar Kota, Perkotaan, KRL, Barang — Jawa; Sumatera Utara, Barat, Selatan) → tab M_JADWAL; GAPEKA 2026: Buku Daftar Waktu 2026 (seed 19_SeedGapeka26). Termuat: ' + KAI.fmt.n(rs.tt) + ' perjalanan, jam datang/berangkat, status berhenti/langsung/berhenti sebentar, dan catatan silang/susul. Jam asal & tujuan 1.830 KA yang juga ada di LIST KA cocok 100%.'"></dd>
               <dt>Rute & jam perkiraan</dt><dd x-text="'Hanya untuk KA di LIST KA yang tidak punya Daftar Waktu (mis. KA dinas, varian nomor): rute dari Lintas + Jarak dan jaringan petak — ' + KAI.fmt.n(rs.ok) + ' cocok ≤2% jarak, ' + KAI.fmt.n(rs.approx) + ' mendekati, ' + KAI.fmt.n(rs.bad) + ' tidak pasti (tidak dipakai), ' + KAI.fmt.n(rs.none) + ' tidak terpetakan. Jam antara = interpolasi menurut km (≈, bisa meleset ±30 menit).'"></dd>
               <dt>Dinas tutup / non operasi</dt><dd>PTDO GAPEKA 2025 Bab IV → tab M_STASIUN_OPS; tampil di profil stasiun.</dd>
               <dt>KA/hari</dt><dd>Jumlah perjalanan berstatus REG (reguler) yang rutenya melewati petak. KA fakultatif, KLB, dan PLB tidak dihitung.</dd>

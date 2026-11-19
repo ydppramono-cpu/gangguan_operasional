@@ -57,7 +57,7 @@
 
       <div class="grid g-2-1 mt">
         <div class="card">
-          <div class="card-h"><div><h3>Grafik perjalanan (Marey) · GAPEKA 2025</h3><p x-text="'Garis = perjalanan harian (REG/PLB) · miring = berjalan, datar = berhenti · pita hijau = jam kosong petak terpilih' + (seg ? ' (' + seg.nmA + ' – ' + seg.nmB + ')' : '')"></p></div>
+          <div class="card-h"><div><h3 x-text="'Grafik perjalanan (Marey) · ' + KAI.gapeka.label($store.app.gapeka || '2025')"></h3><p x-text="'Garis = perjalanan harian (REG/PLB) · miring = berjalan, datar = berhenti · pita hijau = jam kosong petak terpilih' + (seg ? ' (' + seg.nmA + ' – ' + seg.nmB + ')' : '')"></p></div>
             <div class="seg" role="group" aria-label="Jenis KA"><template x-for="m in mareyCats" :key="m[0]"><button :aria-pressed="String(mCat[m[0]])" @click="mCat[m[0]] = !mCat[m[0]]" x-text="m[1]"></button></template></div></div>
           <div class="card-b fill"><div class="chart rt-marey" x-chart="mareyOpt()" @chart-click="onMareyClick($event.detail)"></div></div>
         </div>

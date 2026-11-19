@@ -138,7 +138,7 @@ document.addEventListener('alpine:init', function () {
           { title: 'Alamat', field: 'alamat', minWidth: 180 },
           { title: 'KM', field: 'km', width: 100 },
           { title: 'Jaga', field: 'jaga', width: 118, formatter: function (c) { var v = c.getValue(); return '<span class="badge ' + (v === 'tidak dijaga' ? 'bad' : v === 'dijaga' ? 'good' : '') + '">' + KAI.cap(v) + '</span>'; } },
-          { title: 'KA/hari', field: 'ka', hozAlign: 'right', width: 88, headerTooltip: 'Perjalanan KA per hari yang melewati petak (rute GAPEKA 2025)',
+          { title: 'KA/hari', field: 'ka', hozAlign: 'right', width: 88, headerTooltip: 'Perjalanan KA per hari yang melewati petak (jadwal GAPEKA terpilih di pojok kanan atas)',
             formatter: function (c) { var v = c.getValue(); return v === '' || v == null ? '<span class="muted" title="Petak tidak tercatat, jadi KA/hari tidak dapat dihitung">–</span>' : KAI.fmt.n(v); } },
           { title: 'Periode', field: 'nP', hozAlign: 'right', width: 86 },
           { title: '12 bln', field: 'n12', hozAlign: 'right', width: 80, formatter: function (c) { var v = c.getValue(); return v >= 2 ? '<b style="color:var(--bad)">' + v + '</b>' : v; } },

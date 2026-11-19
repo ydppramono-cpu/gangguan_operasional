@@ -6,7 +6,11 @@
   "scripts": {
     "lint": "eslint \"src/**/*.{gs,html}\" \"platform/**/*.gs\"",
     "check": "npm run lint && python3 tools/check_build.py",
-    "pack": "python3 tools/pack.py dist"
+    "pack": "python3 tools/pack.py dist",
+    "test:emu": "node tests/emulator/emu.js && python3 tests/emulator/build.py && node tests/emulator/shoot.js",
+    "test:marey": "node tests/marey/test_marey.js 2025 && node tests/marey/test_marey.js 2026",
+    "csv": "echo 'Lihat docstring tools/csv/export_csv.py untuk argumen' && node tools/csv/dump_seeds.js ${KERJA:-/tmp}",
+    "test:switch": "node tests/emulator/sw_test.js"
   },
   "devDependencies": {
     "eslint": "9.17.0",

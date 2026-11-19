@@ -39,6 +39,17 @@
     var v = VERSI.filter(function (x) { return x.berlaku <= ymd; });
     return (v[0] || VERSI[VERSI.length - 1]).id;
   }
+  /** Ubah data GAPEKA (ka[].pts detik) ke baris jadwal format referensi: [no, nama, relasi, sumber, "kode|datang|berangkat|ket|catatan\n..."]. */
+  function jadwalRowsOf(d) {
+    var hm = function (t) { if (t == null || t < 0) return ''; var m = Math.round(t / 60) % 1440; return ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2); };
+    return d.ka.map(function (k) {
+      var n = k.pts.length;
+      return [k.no, k.nama, k.relasi, k.src, k.pts.map(function (p, i) {
+        var ket = i === 0 ? 'A' : i === n - 1 ? 'Z' : (p[1] < 0 || p[2] < 0 || p[1] === p[2]) ? 'L' : 'H';
+        return [p[0], hm(p[1]), hm(p[2]), ket, ''].join('|');
+      }).join('\n')];
+    });
+  }
   var cache = {};
   function load(api, gunzip, tahun) {
     tahun = tahun || '2026';
@@ -307,7 +318,7 @@
   }
 
   var KAIM = {
-    KAT: KAT, VERSI: VERSI, versiBerlaku: versiBerlaku, load: load, index: index, tracks: tracks, layoutLabels: layoutLabels, intersects: intersects, anyOverlap: anyOverlap,
+    KAT: KAT, VERSI: VERSI, versiBerlaku: versiBerlaku, load: load, index: index, jadwalRowsOf: jadwalRowsOf, tracks: tracks, layoutLabels: layoutLabels, intersects: intersects, anyOverlap: anyOverlap,
     draw: draw, hit: hit, hms: hms,
     km: function (v) { var k = Math.floor(v + 1e-9), m = Math.round((v - k) * 1000); if (m === 1000) { k++; m = 0; } return k + '+' + (m < 100 ? (m < 10 ? '00' : '0') : '') + m; }
   };

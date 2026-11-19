@@ -28,8 +28,17 @@ function mkSS(id, name, tabs) {
   return ss;
 }
 // ---------- Data sintetis ----------
-const lintas = JSON.parse(fs.readFileSync(G26 + '/jarak_lintas.json'));
-const pen = JSON.parse(fs.readFileSync(G26 + '/penomoran.json'));
+// Data acuan: hasil ekstraksi GAPEKA (G26_DIR) bila ada; bila tidak, diturunkan dari seed 19_SeedGapeka26.gs di repo.
+let lintas, pen;
+if (fs.existsSync(G26 + '/jarak_lintas.json')) {
+  lintas = JSON.parse(fs.readFileSync(G26 + '/jarak_lintas.json'));
+  pen = JSON.parse(fs.readFileSync(G26 + '/penomoran.json'));
+} else {
+  const c = {}; vm.runInNewContext(fs.readFileSync(SRC + '/19_SeedGapeka26.gs', 'utf8'), c);
+  const g = JSON.parse(zlib.gunzipSync(Buffer.from(c.SEED_GAPEKA26_GZ, 'base64')));
+  lintas = g.lintas.map(l => ({ judul: l.judul, wilayah: /^Daop/.test(l.wilayah) ? 'Jawa' : 'Sumatera', kode: l.st.map(x => x[0]), km: l.st.map(x => x[2]) }));
+  pen = g.ka.map(k => ({ no: k.no, nama: k.nama, lintas: k.relasi, kelas: k.kelas || '', status: k.f ? 'FAKULTATIF' : 'REGULER' }));
+}
 const st = {}, seg = [];
 lintas.forEach((l, li) => { const d = l.wilayah === 'Jawa' ? 'DAOP ' + (1 + li % 9) : 'DIVRE ' + ['I', 'II', 'III', 'IV'][li % 4];
   l.kode.forEach((k, i) => { if (!st[k]) st[k] = d; if (i) seg.push([d, l.judul, l.kode[i - 1], k, Math.round((l.km[i] - l.km[i - 1]) * 1000) / 1000]); }); });

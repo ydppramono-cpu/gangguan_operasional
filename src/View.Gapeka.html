@@ -8,12 +8,7 @@
           <p x-text="(cur ? ('Lembar ' + cur.lembar + ' · ' + cur.wilayah + ' · ' + cur.halaman + ' · ') : 'Diagram waktu × kilometer sesuai Lembar GAPEKA · ') + vInfo.status"></p>
         </div>
         <div class="spacer"></div>
-        <div class="field">
-          <label for="mr-ver">Versi GAPEKA</label>
-          <select id="mr-ver" class="ctl" x-model="ver" @change="switchVer()">
-            <template x-for="v in versions" :key="v.id"><option :value="v.id" :selected="v.id === ver" x-text="v.label + (v.id === berlakuId ? ' (berlaku saat ini)' : v.berlaku > today ? ' (mulai ' + fmtTgl(v.berlaku) + ')' : '')"></option></template>
-          </select>
-        </div>
+        <span class="tag" x-text="vInfo.label + (ver === berlakuId ? ' · berlaku hari ini' : '')" title="Ganti versi lewat switch GAPEKA di pojok kanan atas"></span>
       </div>
       <div class="card-b">
         <template x-if="state === 'loading'"><div class="skel" style="height:320px" aria-busy="true"></div></template>
@@ -119,8 +114,9 @@ document.addEventListener('alpine:init', function () {
       fmtTgl: function (ymd) { var b = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'], p = ymd.split('-'); return +p[2] + ' ' + b[+p[1] - 1] + ' ' + p[0]; },
       get katList() { var K = KAIM.KAT; return Object.keys(K).filter(function (k) { return k !== 'lainnya' || this.counts.lainnya; }, this).map(function (k) { return { id: k, label: K[k].label, color: K[k].color }; }); },
       init: function () {
-        var self = this, sv = KAI.store.get('gapeka.ver');
-        if (!self.ver) self.ver = (sv && KAIM.VERSI.some(function (v) { return v.id === sv; })) ? sv : self.berlakuId;   // bawaan: versi yang berlaku hari ini
+        var self = this;
+        self.ver = self.$store.app.gapeka || KAI.gapeka.initial();   // versi = switch global di bilah atas
+        if (!self._ws) { self._ws = true; self.$watch('$store.app.gapeka', function (v) { if (v && v !== self.ver) { self.ver = v; self.switchVer(); } }); }
         self.state = 'loading';
         KAIM.load(KAI.api, KAI.gunzipJson, self.ver).then(function (d) {
           D = d; self.meta = d.meta || {}; self.state = 'ready'; self.filterGroups();
@@ -137,7 +133,6 @@ document.addEventListener('alpine:init', function () {
       },
       /** Ganti versi: muat data versi itu; pertahankan judul lintas yang sama bila ada di versi baru. */
       switchVer: function () {
-        KAI.store.set('gapeka.ver', this.ver);
         this._keep = this.cur ? this.cur.judul : '';
         this.pinned = null; this.tip = null; this.cur = null;
         this.init();

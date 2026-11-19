@@ -120,10 +120,10 @@ document.addEventListener('alpine:init', function () {
       var pass = routes.stPass[s.code] || [];
       M.sched.rows = pass.map(function (x) { return schedRow(x, R, ''); });
       M.sched.roles = true;
-      M.sched.title = 'Jadwal KA di ' + s.name; M.sched.sub = pass.length + ' perjalanan dalam GAPEKA 2025 · klik baris untuk profil KA';
+      M.sched.title = 'Jadwal KA di ' + s.name; M.sched.sub = pass.length + ' perjalanan dalam ' + KAI.gapeka.label(R.gapeka || '2025') + ' · klik baris untuk profil KA';
       var cnt = function (r) { return pass.filter(function (x) { return x.role === r; }).length; };
       M.sched.stats = [['Berangkat (asal)', cnt('berangkat')], ['Datang (tujuan)', cnt('datang')], ['Berhenti', cnt('berhenti')], ['Langsung', cnt('langsung')], ['Perkiraan (tanpa Daftar Waktu)', cnt('lintas')], ['Reguler', pass.filter(function (x) { return x.ka.reg; }).length]];
-      M.sched.note = 'Sumber: Buku Daftar Waktu GAPEKA 2025 (tab M_JADWAL) — jam datang/berangkat, berhenti/langsung, dan catatan silang/susul tercetak apa adanya. "≈" = KA langsung yang di buku tanpa jam ("Ls -"), diisi interpolasi antar jam pasti terdekat. Baris "Perkiraan rute" = KA di LIST KA tanpa Daftar Waktu (mis. KA dinas/varian): jam antara = interpolasi menurut km, bisa meleset ±30 menit.';
+      M.sched.note = 'Sumber: Buku Daftar Waktu ' + KAI.gapeka.label(R.gapeka || '2025') + ((R.gapeka || '2025') === '2025' ? ' (tab M_JADWAL)' : '') + ' — jam datang/berangkat, berhenti/langsung, dan catatan silang/susul tercetak apa adanya. "≈" = KA langsung yang di buku tanpa jam ("Ls -"), diisi interpolasi antar jam pasti terdekat. Baris "Perkiraan rute" = KA di LIST KA tanpa Daftar Waktu (mis. KA dinas/varian): jam antara = interpolasi menurut km, bisa meleset ±30 menit.';
       var ops = KAIRef.opsOf(R, s.code);
       ops.forEach(function (o) { M.facts.push([o.jenis + ' (PTDO)', [o.buka ? 'buka ' + o.buka : '', o.tutup ? 'tutup ' + o.tutup : ''].filter(Boolean).join(' · ')]); });
       if (ops.length) M.tags.push({ t: ops[0].jenis === 'Non operasi' ? 'Stasiun non operasi pada jam tertentu' : 'Dinas tutup pada jam tertentu', c: 'warn' });
@@ -149,7 +149,7 @@ document.addEventListener('alpine:init', function () {
         tA: x.tFrom != null ? (x.est ? '≈ ' : '') + KAI.fmt.hm(x.tFrom) : '', tB: x.tTo != null ? (x.est ? '≈ ' : '') + KAI.fmt.hm(x.tTo) : '', jam: x.tFrom, ket: x.est ? 'Perkiraan' : 'Pasti', reg: k.reg }; });
       M.sched.title = 'KA yang melintas'; M.sched.sub = sp.length + ' perjalanan (' + traffic + ' reguler) · arah dan jam di kedua ujung petak';
       M.sched.stats = [['Total perjalanan', sp.length], ['Reguler', traffic], ['Penumpang', sp.filter(function (x) { return x.ka.jenis === 'PENUMPANG'; }).length], ['Barang', sp.filter(function (x) { return x.ka.jenis === 'BARANG'; }).length]];
-      M.sched.note = 'Jam di kedua ujung petak dari Buku Daftar Waktu GAPEKA 2025. "≈" = KA langsung tanpa jam tercetak (interpolasi antar jam pasti) atau KA tanpa Daftar Waktu (perkiraan rute).';
+      M.sched.note = 'Jam di kedua ujung petak dari Buku Daftar Waktu ' + KAI.gapeka.label(R.gapeka || '2025') + '. "≈" = KA langsung tanpa jam tercetak (interpolasi antar jam pasti) atau KA tanpa Daftar Waktu (perkiraan rute).';
       M.tabs.push({ id: 'jadwal', label: 'KA melintas (' + sp.length + ')' });
       M.jplRows = jplRowsFor(R, app, cfg, function (j) { return j.segKey === g.key || j.pairKey === g.key; }, function (pt) { return pt.segKey === g.key; });
       M.tabs.push({ id: 'jpl', label: 'JPL (' + M.jplRows.length + ')' });
@@ -218,7 +218,7 @@ document.addEventListener('alpine:init', function () {
       M.jplRows = jplRowsFor(R, app, cfg, function (j) { return Ln.segs.indexOf(j.segKey) >= 0; }, function (pt) { return Ln.segs.indexOf(pt.segKey) >= 0; });
       M.tabs.push({ id: 'jpl', label: 'JPL (' + M.jplRows.length + ')' });
     } else if (p.type === 'ka') {
-      var KI = KAIRef.kaInfo(R, p.id); if (!KI) return { ok: false, msg: 'KA ' + p.id + ' tidak ada di LIST KA maupun Buku Daftar Waktu GAPEKA 2025.' };
+      var KI = KAIRef.kaInfo(R, p.id); if (!KI) return { ok: false, msg: 'KA ' + p.id + ' tidak ada di LIST KA (GAPEKA 2025) maupun Buku Daftar Waktu ' + KAI.gapeka.label(R.gapeka || '2025') + '.' };
       var k = KI.base, legs = KI.legs, nos = {};
       [k.no].concat(legs.map(function (l) { return l.no; })).forEach(function (n) { nos[norm(n)] = 1; String(n).split('-').forEach(function (x) { nos[norm(x)] = 1; }); });
       M.title = 'KA ' + k.no + ' ' + k.nama; M.sub = k.lintas + ' · ' + (k.ber || KAI.NIL) + ' → ' + (k.dat || KAI.NIL) + ' · ' + (k.jarak != null ? KAI.fmt.d1(k.jarak) + ' km' : '');
@@ -248,7 +248,7 @@ document.addEventListener('alpine:init', function () {
           { title: 'Gangguan', field: 'inc', hozAlign: 'right', width: 96, formatter: function (c) { var v = c.getValue(); return v ? '<b style="color:var(--kai-orange)">' + v + '</b>' : '0'; } }]),
         note: '', open: function (d, a) { a.open('stasiun', d.code); } });
       if (legs.length) {
-        M.routeNote = M.route.length + ' stasiun · sumber Buku Daftar Waktu GAPEKA 2025 (' + legs[0].src + ') · jam pasti; "≈" = langsung tanpa jam tercetak · titik oranye = stasiun dengan riwayat gangguan';
+        M.routeNote = M.route.length + ' stasiun · sumber Buku Daftar Waktu ' + KAI.gapeka.label(R.gapeka || '2025') + ' (' + legs[0].src + ') · jam pasti; "≈" = langsung tanpa jam tercetak · titik oranye = stasiun dengan riwayat gangguan';
         M.tabs.push({ id: 'rute', label: 'Rute & jam (' + M.route.length + ' stasiun)' });
         M.tags.push({ t: 'Jadwal resmi GAPEKA', c: 'good' });
       } else if (KI.inferred) {

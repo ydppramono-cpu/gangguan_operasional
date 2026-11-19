@@ -117,7 +117,20 @@ KAI.HIDDEN_ROUTES = { profil: 'Profil', kejadian: 'Detail kejadian' };
 
   function routeTitle(r) { var x = KAI.ROUTES.filter(function (q) { return q.id === r; })[0]; return x ? x.title : KAI.HIDDEN_ROUTES[r] || ''; }
 
-  document.addEventListener('alpine:init', function () {
+  /** KAI.gapeka — konteks versi GAPEKA global (2025 = tab M_JADWAL/seed; versi lain = data apiGapeka). */
+KAI.gapeka = {
+  valid: function (t) { return KAIM.VERSI.some(function (v) { return v.id === t; }); },
+  label: function (t) { var v = KAIM.VERSI.filter(function (x) { return x.id === t; })[0]; return v ? v.label : 'GAPEKA ' + t; },
+  today: function () { return new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Jakarta' }).slice(0, 10); },
+  initial: function () { var sv = KAI.store.get('gapeka.ver'); return KAI.gapeka.valid(sv) ? sv : KAIM.versiBerlaku(KAI.gapeka.today()); },
+  /** Baris jadwal untuk referensi. 2025 memakai tab M_JADWAL (sudah di raw); versi lain dimuat dari server. */
+  jadwalRows: function (raw, tahun) {
+    if (tahun === '2025') return Promise.resolve(raw.jadwal || []);
+    return KAIM.load(KAI.api, KAI.gunzipJson, tahun).then(function (d) { return KAIM.jadwalRowsOf(d); });
+  }
+};
+
+document.addEventListener('alpine:init', function () {
     KAIChart.register(Alpine);
     KAITable.register(Alpine);
     document.addEventListener('DOMContentLoaded', function () { KAITable.autoPager(); });
@@ -126,6 +139,8 @@ KAI.HIDDEN_ROUTES = { profil: 'Profil', kejadian: 'Detail kejadian' };
     Alpine.store('app', {
       phase: 'landing', entered: false, error: '', meta: null, status: null, config: null,
       ver: 0, coreReady: false, narrReady: false, refReady: false,
+      // Sumber jadwal GAPEKA untuk SEMUA menu (switch pojok kanan atas). '' = belum ditentukan → versi yang berlaku hari ini.
+      gapeka: '', gapekaBusy: false,
       route: 'ringkasan', params: {}, vtab: { wilayah: 'peringkat', sarana: 'ringkasan', fleet: 'lok' }, stack: [], months: [], dates: { min: '', max: '' }, wilayahList: [],
       f: { mode: 'month', ym: '', from: '', to: '', h0: 0, h1: 23, cmp: 'prev', wilayah: [], kelas: [], imbas: true },
       tel: { q: '', period: 'p', kelas: '', cross: '', ids: null, label: '' },
@@ -193,19 +208,42 @@ KAI.HIDDEN_ROUTES = { profil: 'Profil', kejadian: 'Detail kejadian' };
       loadRef: function () {
         var self = this, v = self.meta && self.meta.version;
         KAI.api('apiRef', v).then(function (r) { return KAI.gunzipJson(r.ref); }).then(function (raw) {
+          KAI.data.refRaw = raw;   // disimpan agar referensi bisa dibangun ulang saat versi GAPEKA diganti
+          if (!self.gapeka) self.gapeka = KAI.gapeka.initial();
+          return self.applyGapeka();
+        }).catch(function (e) { self.say('Data referensi (stasiun, petak, KA, JPL, armada) belum termuat: ' + e.message, true); });
+      },
+
+      /** Bangun referensi (rute KA, KA/hari, pendapatan) dengan jadwal dari versi GAPEKA terpilih. */
+      applyGapeka: function () {
+        var self = this, raw = KAI.data.refRaw, tahun = self.gapeka;
+        if (!raw) return Promise.resolve();
+        self.gapekaBusy = true;
+        return KAI.gapeka.jadwalRows(raw, tahun).then(function (jadwal) {
           var today = new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Jakarta' }).slice(0, 10);
-          var R = KAIRef.build(raw, { today: today });
+          var R = KAIRef.build(Object.assign({}, raw, { jadwal: jadwal }), { today: today });
+          R.gapeka = tahun;
           KAI.data.ref = R;
           // Pendapatan terekspos: rate bulanan dari Passenger/Freight + GAPEKA (bulan berjalan memakai rate acuan).
           try { KAI.data.rar = R.pend && !R.pend.error ? KAIP.build(R, R.pend, today.slice(0, 7)) : null; } catch (er) { KAI.data.rar = null; console.warn('[KAI] mesin pendapatan', er); }
           KAIA.setRar(KAI.data.rar && KAI.data.rar.ok ? KAI.data.rar.rarOf : null);
-          var wait = function () {
-            if (!self.coreReady) return setTimeout(wait, 60);
-            KAI.data.search = KAIRef.searchIndex(R, KAI.data.units);
-            self.refReady = true; self.ver++;
-          };
-          wait();
-        }).catch(function (e) { self.say('Data referensi (stasiun, petak, KA, JPL, armada) belum termuat: ' + e.message, true); });
+          return new Promise(function (done) {
+            var wait = function () {
+              if (!self.coreReady) return setTimeout(wait, 60);
+              KAI.data.search = KAIRef.searchIndex(R, KAI.data.units);
+              self.refReady = true; self.gapekaBusy = false; self.ver++; done();
+            };
+            wait();
+          });
+        }).catch(function (e) { self.gapekaBusy = false; self.say('Jadwal GAPEKA ' + tahun + ' belum termuat: ' + e.message, true); });
+      },
+
+      /** Switch global: ganti sumber jadwal GAPEKA untuk seluruh web app. */
+      setGapeka: function (tahun) {
+        if (!KAI.gapeka.valid(tahun) || tahun === this.gapeka || this.gapekaBusy) return;
+        this.gapeka = tahun; KAI.store.set('gapeka.ver', tahun);
+        var self = this;
+        this.applyGapeka().then(function () { self.say('Sumber jadwal: ' + KAI.gapeka.label(tahun) + '.'); });
       },
 
       loadNarratives: function () {

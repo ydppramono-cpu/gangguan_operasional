@@ -67,6 +67,15 @@
           </div>
         </div>
       </div>
+      <!-- Switch GAPEKA global: mengganti sumber jadwal untuk semua menu (keputusan 19 Nov 2026). -->
+      <div class="seg gapeka-sw" role="group" aria-label="Sumber jadwal GAPEKA" :aria-busy="String($store.app.gapekaBusy)">
+        <template x-for="v in KAIM.VERSI.slice().reverse()" :key="v.id">
+          <button type="button" :aria-pressed="String($store.app.gapeka === v.id)" :disabled="$store.app.gapekaBusy" @click="$store.app.setGapeka(v.id)"
+            :title="v.label + ' · berlaku ' + v.berlaku.split('-').reverse().join('-') + (v.id === KAIM.versiBerlaku(KAI.gapeka.today()) ? ' (berlaku hari ini)' : '')">
+            <span class="hide-md">GAPEKA </span><span x-text="v.id"></span>
+          </button>
+        </template>
+      </div>
       <button class="btn sm" @click="$store.app.go('unduh')" title="Unduh"><svg class="i"><use href="#i-download"/></svg><span class="hide-md">Unduh</span></button>
     </div>
     <div class="filterbar" role="group" aria-label="Filter global" x-show="['kejadian', 'gapeka'].indexOf($store.app.route) < 0">
