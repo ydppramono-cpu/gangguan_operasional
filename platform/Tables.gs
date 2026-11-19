@@ -961,7 +961,7 @@ var PLATFORM_TABLES = [
    [
     "program_durasi_hari_excel",
     "Program durasi (hari Excel)",
-    "S"
+    "N"
    ],
    [
     "realisasi_mulai",
@@ -976,7 +976,7 @@ var PLATFORM_TABLES = [
    [
     "realisasi_durasi_hari_excel",
     "Realisasi durasi (hari Excel)",
-    "S"
+    "N"
    ],
    [
     "keterangan",

@@ -350,7 +350,9 @@
    ],
    "num": [
     "Durasi dalam menit - nilai sumber",
-    "Baris sumber"
+    "Baris sumber",
+    "Program durasi (hari Excel)",
+    "Realisasi durasi (hari Excel)"
    ],
    "date": [
     "Tanggal",

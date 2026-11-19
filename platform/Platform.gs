@@ -6,6 +6,9 @@
  *                       mendeteksi cara BigQuery membaca angka (tampilan id_ID atau mentah), lalu memverifikasi jumlah baris & total.
  *   refreshBigQuery()   membuat ulang definisi tabel/view (sandbox menghapus tabel & view setelah 60 hari) — dipicu bulanan.
  *   snapshotBigQuery()  menyalin view kai.* ke tabel asli kai_snap.* (≤15 menit) — untuk DBeaver/klien yang tidak bisa memberi izin Google Drive.
+ *   agregatBigQuery()   membangun tabel agregat kai_agg.* (RHI/THI/WKP/Gangguan) dari kai_snap.* — SQL di Agregat.gs (dibangkitkan
+ *                       dari db/bigquery/30_agregat.sql) — dipicu harian.
+ *   jagaKedaluwarsa()   memperpanjang masa tabel kai_snap.* & kai_agg.* yang mendekati batas 60 hari sandbox — dipicu mingguan.
  *   mirrorCsv()         cermin CSV mesin (angka bertitik desimal, tanggal ISO) ke folder Drive 05_DBEAVER_Mirror_CSV — jalur cadangan DBeaver.
  *   inventarisDrive()   katalog rekursif folder sumber (nama, ID, tipe, ukuran, md5, pemilik, URL) ke spreadsheet katalog.
  *   pasangPemicu()      memasang semua pemicu waktu sekali jalan.
@@ -20,9 +23,10 @@
  * Tabel & kolom: Tables.gs (dibangkitkan dari db/schema/sumber_tabel.json). Jangan menulis nama kolom manual di sini.
  */
 var PLATFORM = {
-  VERSION: '1.0.0',
+  VERSION: '1.1.0',
   LOCATION: 'asia-southeast2',          // Jakarta
-  RAW: 'kai_raw', DS: 'kai', SNAP: 'kai_snap',
+  RAW: 'kai_raw', DS: 'kai', SNAP: 'kai_snap', AGG: 'kai_agg',
+  JAGA_HARI: 14,                        // perpanjang masa tabel bila sisa < 14 hari (batas sandbox 60 hari)
   MIRROR_FOLDER: '1VwL9xh5SufQ9qC7vcAZof9E3MNDzJY6b',
   TZ: 'Asia/Jakarta',
   TIME_BUDGET_MS: 5 * 60 * 1000,        // batas aman di bawah 6 menit Apps Script
@@ -191,6 +195,45 @@ function snapshotBigQuery() {
   finally { lock.releaseLock(); }
 }
 
+/* ---------------------------------------------------------- Agregat & kedaluwarsa ---------------------------------------------------------- */
+/** Bangun ulang semua tabel kai_agg.* (CREATE OR REPLACE TABLE … AS SELECT dari kai_snap.*). DDL → sah di sandbox. */
+function agregatBigQuery() {
+  var lock = LockService.getScriptLock(); if (!lock.tryLock(1000)) return;
+  try {
+    var t0 = Date.now(), done = [], gagal = [];
+    ensureDataset_(PLATFORM.AGG, 'Agregat RHI/THI/WKP/Gangguan dari kai_snap (dibuat Platform.gs → agregatBigQuery)');
+    PLATFORM_AGREGAT.forEach(function (a) {
+      try { bq_(a.sql.split('${PROJECT}').join(project_())); done.push(a.name); }
+      catch (e) { gagal.push(a.name + ': ' + String(e && e.message || e).slice(0, 200)); }
+    });
+    log_('agregatBigQuery', gagal.length ? 'PERIKSA' : 'ok', { dibangun: done, gagal: gagal, detik: Math.round((Date.now() - t0) / 1000) });
+  } finally { lock.releaseLock(); }
+}
+/** Tabel asli di sandbox dihapus otomatis 60 hari setelah dibuat. Tabel kai_snap.* hanya disalin ulang bila sumbernya
+ *  berubah, jadi tabel yang jarang berubah bisa hilang. Fungsi ini memperpanjang masa tabel yang sisa < JAGA_HARI:
+ *  1) patch expirationTime = sekarang + 59 hari; 2) bila ditolak, buat ulang tabel dari isinya sendiri (CREATE OR REPLACE TABLE). */
+function jagaKedaluwarsa() {
+  var p = project_(), batas = Date.now() + PLATFORM.JAGA_HARI * 864e5, baru = String(Date.now() + 59 * 864e5), out = [];
+  [PLATFORM.SNAP, PLATFORM.AGG].forEach(function (ds) {
+    var tok, list;
+    do {
+      try { list = BigQuery.Tables.list(p, ds, { maxResults: 200, pageToken: tok }); } catch (e) { return; }   // dataset belum ada
+      (list.tables || []).forEach(function (t) {
+        var id = t.tableReference.tableId, exp = Number(t.expirationTime || 0);
+        if (t.type !== 'TABLE' || !exp || exp > batas) return;
+        try { BigQuery.Tables.patch({ expirationTime: baru }, p, ds, id); out.push(ds + '.' + id + ' diperpanjang'); }
+        catch (e1) {
+          try { bq_('CREATE OR REPLACE TABLE `' + p + '.' + ds + '.' + id + '` AS SELECT * FROM `' + p + '.' + ds + '.' + id + '`'); out.push(ds + '.' + id + ' dibuat ulang'); }
+          catch (e2) { out.push(ds + '.' + id + ' GAGAL: ' + String(e2 && e2.message || e2).slice(0, 160)); }
+        }
+      });
+      tok = list.nextPageToken;
+    } while (tok);
+  });
+  log_('jagaKedaluwarsa', out.some(function (x) { return /GAGAL/.test(x); }) ? 'PERIKSA' : 'ok', out.length ? out : 'semua tabel masih > ' + PLATFORM.JAGA_HARI + ' hari');
+  return out;
+}
+
 /* ------------------------------------------------------------- Cermin CSV ------------------------------------------------------------- */
 function csvCell_(v) {
   if (v === null || v === undefined || v === '') return '';
@@ -291,6 +334,10 @@ function pasangPemicu() {
   ScriptApp.newTrigger('mirrorCsv').timeBased().everyMinutes(15).create();
   if (prop_('BQ_PROJECT', '')) ScriptApp.newTrigger('snapshotBigQuery').timeBased().everyMinutes(15).create();
   ScriptApp.newTrigger('refreshBigQuery').timeBased().onMonthDay(1).atHour(2).create();
+  if (prop_('BQ_PROJECT', '')) {
+    ScriptApp.newTrigger('agregatBigQuery').timeBased().everyDays(1).atHour(4).create();
+    ScriptApp.newTrigger('jagaKedaluwarsa').timeBased().onWeekDay(ScriptApp.WeekDay.MONDAY).atHour(3).create();
+  }
   ScriptApp.newTrigger('inventarisDrive').timeBased().onWeekDay(ScriptApp.WeekDay.SUNDAY).atHour(3).create();
-  log_('pasangPemicu', 'ok', 'mirrorCsv 15 mnt · snapshotBigQuery 15 mnt (bila BQ_PROJECT terisi) · refreshBigQuery tiap tgl 1 · inventarisDrive Minggu 03:00');
+  log_('pasangPemicu', 'ok', 'mirrorCsv 15 mnt · snapshotBigQuery 15 mnt (bila BQ_PROJECT terisi) · refreshBigQuery tiap tgl 1 · agregatBigQuery harian 04:00 & jagaKedaluwarsa Senin 03:00 (bila BQ_PROJECT terisi) · inventarisDrive Minggu 03:00');
 }

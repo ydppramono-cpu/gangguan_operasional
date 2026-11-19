@@ -67,3 +67,13 @@ js = 'var PLATFORM_TABLES = ' + json.dumps([{'name': t['name'], 'ss': t['ssid'],
                                             ensure_ascii=False, indent=1) + ';\n'
 open(os.path.join(ROOT, 'platform/Tables.gs'), 'w').write('/** Tables.gs — DIBANGKITKAN tools/gen_schema.py dari db/schema/sumber_tabel.json. Jangan diedit manual. */\n' + js)
 print('ok', len(tables), 'tabel', sum(len(t['cols']) for t in tables), 'kolom')
+
+# Kolom tabel kondisi untuk adaptor BigQuery web app (src/22_Bq.gs): [kolom_sql, judul_sheet, tipe].
+KOND = ['thi', 'rhi', 'wkp']
+bqk = {t['name']: [[c['col'], c['header'], 'N' if c['num'] else 'D' if c['date'] else 'S'] for c in t['cols']] for t in tables if t['name'] in KOND}
+open(os.path.join(ROOT, 'src/21_BqKolom.gs'), 'w').write(
+    '/**\n * 21_BqKolom.gs — DIBANGKITKAN tools/gen_schema.py dari db/schema/sumber_tabel.json. Jangan diedit manual.\n'
+    ' * Peta kolom view BigQuery kai_snap.<tabel> → judul kolom sheet asli, dipakai adaptor 22_Bq.gs\n'
+    ' * agar Kondisi.build menerima bentuk data yang sama dengan pembacaan Sheets.\n */\n'
+    'var BQ_KOLOM = ' + json.dumps(bqk, ensure_ascii=False) + ';\n')
+print('ok src/21_BqKolom.gs', {k: len(v) for k, v in bqk.items()})

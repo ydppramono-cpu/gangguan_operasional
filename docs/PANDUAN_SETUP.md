@@ -38,6 +38,7 @@ Tanpa clasp, Anda tetap bisa memakai cara lama: `python3 tools/pack.py dist/`, l
 2. Buat tiga berkas dengan isi dari repo:
    - `Tables.gs` dari `platform/Tables.gs`;
    - `Platform.gs` dari `platform/Platform.gs`;
+   - `Agregat.gs` dari `platform/Agregat.gs` (v1.1: agregat kai_agg, lalu jalankan ulang `pasangPemicu`);
    - manifest. Aktifkan dulu **Project Settings → Show "appsscript.json"**, lalu tempel isi `platform/appsscript.json`.
 3. Buka **Project Settings → Script properties** dan isi:
    | Properti | Nilai |

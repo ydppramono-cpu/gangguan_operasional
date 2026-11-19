@@ -31,6 +31,8 @@ Wilayah & koridor memakai peta vektor OSM sendiri (dasar P1: `SEED_PETA`, © kon
 - `npm run test:emu` — pipeline .gs asli di Node + semua menu di Chromium desktop/400 px (data sintetis dari seed repo; pustaka ECharts/Tabulator/Alpine di `tests/emulator/node_modules`, lihat README di sana).
 - `npm run test:marey` — invarian grafik perjalanan (label tidak tumpuk, jam tidak mundur) untuk 2025 & 2026 (membaca seed di src/).
 - `npm run test:switch` — switch GAPEKA global: bawaan, ganti ke 2026, kembali ke 2025 (setelah `test:emu` membangun app.html).
+- `npm run test:bq` — adaptor BigQuery web app (`src/22_Bq.gs`) dengan tiruan BigQuery: hasil Kondisi setara Sheets, cadangan ke Sheets, masukan tertutup.
+- `python3 tools/bigquery/gen_agregat.py` — bangkitkan `platform/Agregat.gs` dari `db/bigquery/30_agregat.sql`.
 - `npm run pack` — paket tempel editor GAS di `dist/` (Code.gs, Index.html utuh, seed terpisah).
 - `npm run csv` — ekspor ulang CSV non-Sheets ke `db/csv` (lihat docstring `tools/csv/export_csv.py`).
 Perintah proyek Claude Code: `/uji`, `/rilis`, `/data-baru`, `/fitur` (`.claude/commands`). Agen: `peninjau-data`, `peninjau-ui` (`.claude/agents`).

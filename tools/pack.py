@@ -27,6 +27,33 @@ def read(name):
         return fh.read()
 
 
+CARA_TEMPEL = """Paket tempel manual editor Google Apps Script — Web App Gangguan Operasional v{v}
+=====================================================================================
+Dibangun dari repo GitHub ydppramono-cpu/gangguan_operasional (tools/pack.py); isi identik dengan src/.
+Catatan rilis: knowledge/rilis/ringkasan_rilis_v{vn}.md
+
+Di editor Apps Script web app:
+1. Cadangkan dulu: File > Make a copy (atau unduh tiap berkas lama).
+2. Ganti isi berkas berikut dengan isi berkas bernama sama di paket ini
+   (buat berkas baru bila belum ada; .gs = "Script", .html = "HTML"):
+     Code.gs            semua modul server ({first} ... {last}, {n} modul)
+     SeedJadwal.gs      data jadwal GAPEKA 2025
+     AsetLaporan.gs     aset laporan
+     SeedPeta.gs        data peta
+     SeedGapeka26.gs    data grafik perjalanan GAPEKA 2026
+     SeedGapeka25.gs    data grafik perjalanan GAPEKA 2025
+     Index.html         seluruh tampilan (satu berkas utuh, tanpa include)
+   appsscript.json : Project Settings > centang "Show appsscript.json", lalu samakan isinya.
+                     Sejak v3.13.0 memuat layanan lanjutan BigQuery v2 + cakupan auth/bigquery:
+                     editor akan meminta IZIN ULANG sekali (Run fungsi apa saja, mis. showStatus).
+                     Tanpa properti KONDISI_SUMBER=bq web app tetap membaca Sheets seperti sebelumnya.
+3. Bila proyek memakai berkas modular hasil clasp push (00_Config.gs, Css.*, Js.* ...), JANGAN campur:
+   pilih salah satu cara (modular via clasp ATAU paket ini).
+4. Simpan, lalu Deploy > Manage deployments > Edit > Version: New version > Deploy.
+5. Opsional BigQuery: ikuti docs/ARSITEKTUR.md bagian "Menyalakan BigQuery di web app" (ujiKondisiBq dulu).
+"""
+
+
 def main():
     out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'dist')
     os.makedirs(out, exist_ok=True)
@@ -42,6 +69,8 @@ def main():
         fh.write(expand(SRC, 'Index'))
     for src_name, dst_name in SEPARATE:
         shutil.copy(os.path.join(SRC, src_name), os.path.join(out, dst_name))
+    with open(os.path.join(out, 'CARA_TEMPEL.txt'), 'w', encoding='utf-8') as fh:
+        fh.write(CARA_TEMPEL.format(v=version, vn=version.replace('.', ''), first=order[0][:-3], last=order[-1][:-3], n=len(order)))
     print('paket v%s -> %s %s' % (version, out, sorted(os.listdir(out))))
 
 

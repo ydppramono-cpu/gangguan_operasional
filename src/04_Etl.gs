@@ -105,7 +105,11 @@ function runSync_(force, trigger) {
     var out = transformRows_(values, idx, null, koreksiMap_(extra.koreksi));
     var ref = buildRef_({ ka: m.ka, st: m.st, pj: m.pj, sar: m.sar, jpl: extra.jpl, jadwal: extra.jadwal, ops: extra.ops, depo: extra.depo, ruj: extra.ruj });
     // Kondisi prasarana & sarana (THI, RHI, WKP). Opsional: kegagalan tidak menahan snapshot gangguan.
-    try { ref.kondisi = Kondisi.build(readKondisi_(), Utilities.formatDate(new Date(), 'Asia/Jakarta', 'yyyy-MM'), ref.st); }
+    try {
+      var kb = readKondisiAuto_();   // 22_Bq.gs: BigQuery bila KONDISI_SUMBER=bq, selain itu Google Sheets
+      ref.kondisi = Kondisi.build(kb.raw, Utilities.formatDate(new Date(), 'Asia/Jakarta', 'yyyy-MM'), ref.st);
+      ref.kondisi.stats.sumberBaca = kb.sumber;
+    }
     catch (ek) { ref.kondisi = { version: 1, error: String(ek && ek.message || ek), thi: [], rhi: [], wkp: [], resor: SEED_RESOR }; }
     // Pendapatan (Passenger & Freight) → rate pendapatan per jam. Opsional, sama seperti kondisi.
     try { ref.pend = Pendapatan.build(readPendapatan_()); }
