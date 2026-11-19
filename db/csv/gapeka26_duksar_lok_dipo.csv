@@ -1,0 +1,39 @@
+wilayah,dipo,jenis_lok,siap_guna,tsgo,tso,so
+Jawa,CPN,CC 201,12,1,1,10
+Jawa,CPN,CC 203,9,1,0,8
+Jawa,CPN,CC 206,33,1,2,30
+Jawa,BD,CC 201,13,1,0,12
+Jawa,BD,CC 203,1,0,0,1
+Jawa,BD,CC 206,19,1,2,16
+Jawa,CN,CC 201,4,1,0,3
+Jawa,CN,CC 206,9,1,0,8
+Jawa,SMC,CC 201,10,1,1,8
+Jawa,SMC,CC 203,2,0,0,2
+Jawa,SMC,CC 206,8,1,0,7
+Jawa,PWT,CC 201,10,1,0,9
+Jawa,PWT,CC 203,4,0,1,3
+Jawa,PWT,CC 204,7,0,0,7
+Jawa,PWT,CC 206,10,0,2,8
+Jawa,YK,CC 201,8,1,0,7
+Jawa,YK,CC 203,8,0,0,8
+Jawa,YK,CC 206,17,1,1,15
+Jawa,MN,CC 201,6,0,1,5
+Jawa,MN,CC 203,4,0,0,4
+Jawa,SDT,CC 201,23,2,2,19
+Jawa,SDT,CC 203,7,1,0,6
+Jawa,SDT,CC 206,26,1,2,23
+Jawa,JR,CC 201,9,0,1,8
+Jawa,JR,CC 203,2,0,0,2
+Sumatera Utara,MDN,CC 201,21,1,1,19
+Sumatera Utara,MDN,BB 203,3,2,0,1
+Sumatera Utara,MDN,BB 302,1,0,0,1
+Sumatera Utara,MDN,BB 303,8,1,0,7
+Sumatera Barat,PD,CC 201,5,0,1,4
+Sumatera Barat,PD,BB 303,7,1,0,6
+Sumatera Selatan,KPT,CC 202,17,1,2,14
+Sumatera Selatan,KPT,CC 204,29,2,1,26
+Sumatera Selatan,KPT,CC 205,17,1,1,15
+Sumatera Selatan,KPT,CC 206,26,2,2,22
+Sumatera Selatan,TNK,CC 201,3,0,0,3
+Sumatera Selatan,TNK,CC 205,123,8,10,105
+Sumatera Selatan,THN,CC 202,30,2,2,26

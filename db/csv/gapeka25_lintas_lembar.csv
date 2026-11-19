@@ -1,0 +1,674 @@
+lembar,wilayah,judul_lintas,urut,kode_stasiun,nama_stasiun,km,berkas_lembar
+I-1,Daop 1 Jakarta,DURI - TANGERANG,1,DU,Duri,0.0,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,DURI - TANGERANG,2,GRG,Grogol,1.85,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,DURI - TANGERANG,3,PSG,Pesing,3.68,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,DURI - TANGERANG,4,TKO,Taman Kota,5.5,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,DURI - TANGERANG,5,BOI,Bojongindah,7.684,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,DURI - TANGERANG,6,RW,Rawabuaya,9.241,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,DURI - TANGERANG,7,KDS,Kalideres,11.4,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,DURI - TANGERANG,8,PI,Poris,13.949,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,DURI - TANGERANG,9,BPR,Batuceper,15.722,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,DURI - TANGERANG,10,THI,Tanah Tinggi,17.75,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,DURI - TANGERANG,11,TNG,Tangerang,19.297,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,BATUCEPER - BANDARA SOEKARNO HATTA,1,BPR,Batuceper,0.0,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,BATUCEPER - BANDARA SOEKARNO HATTA,2,BST,Bandara Soekarno Hatta,12.3,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,1,THB,Tanahabang,0.0,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,2,PLM,Palmerah,3.191,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,3,KBY,Kebayoran,6.928,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,4,PDJ,Pondokranji,13.146,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,5,JMU,Jurangmangu,15.325,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,6,SDM,Sudimara,17.299,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,7,SRP,Serpong,24.278,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,8,CSK,Cisauk,26.062,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,9,PRP,Parungpanjang,34.549,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,10,CJT,Cilejit,41.524,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,11,DAR,Daru,44.249,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,12,TEJ,Tenjo,48.151,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,13,TGS,Tigaraksa,51.125,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,14,CKY,Cikoya,53.776,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,15,MJ,Maja,55.623,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,16,CTR,Citeras,62.922,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,17,RK,Rangkasbitung,72.769,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,18,JBU,Jambubaru,79.429,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,19,CT,Catang,83.722,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,20,CKL,Cikeusal,90.403,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,21,WLT,Walantaka,97.983,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,22,SG,Serang,106.519,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,23,KRA,Karangantu,114.696,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,24,TOJB,Tonjongbaru,119.609,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,25,CLG,Cilegon,127.341,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,26,KEN,Krenceng,130.98,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,TANAHABANG - KRENCENG - MERAK,27,MER,Merak,141.19,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,KRENCENG - ANYER KIDUL,1,KEN,Krenceng,0.0,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-1,Daop 1 Jakarta,KRENCENG - ANYER KIDUL,2,CGD,Cigading,6.439,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - TPK,1,JAKK,Jakarta Kota,0.0,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - TPK,2,KPB,Kampungbandan,1.364,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - TPK,3,AC,Ancol,3.549,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - TPK,4,TPK,Tanjungpriuk,8.115,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,TPK - KMO,1,TPK,Tanjungpriuk,0.0,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,TPK - KMO,2,AC,Ancol,4.566,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,TPK - KMO,3,RJW,Rajawali,6.725,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,TPK - KMO,4,KMO,Kemayoran,8.624,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - KMO - JNG,1,JAKK,Jakarta Kota,0.0,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - KMO - JNG,2,KPB,Kampungbandan,1.364,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - KMO - JNG,3,RJW,Rajawali,2.808,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - KMO - JNG,4,KMO,Kemayoran,4.709,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - KMO - JNG,5,PSE,Pasarsenen,6.145,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - KMO - JNG,6,GST,Gangsentiong,7.712,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - KMO - JNG,7,KMT,Kramat,8.685,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - KMO - JNG,8,POK,Pondokjati,10.514,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - KMO - JNG,9,JNG,Jatinegara,11.75,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - MRI - JNG,1,JAKK,Jakarta Kota,0.0,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - MRI - JNG,2,JAY,Jayakarta,1.264,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - MRI - JNG,3,MGB,Manggabesar,2.344,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - MRI - JNG,4,SW,Sawahbesar,3.25,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - MRI - JNG,5,JUA,Juanda,4.399,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - MRI - JNG,6,GMR,Gambir,5.404,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - MRI - JNG,7,GDD,Gondangdia,6.414,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - MRI - JNG,8,CKI,Cikini,8.164,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - MRI - JNG,9,MRI,Manggarai,9.754,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - MRI - JNG,10,MTR,Matraman,11.029,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JAKK - MRI - JNG,11,JNG,Jatinegara,12.406,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JNG - BKS,1,JNG,Jatinegara,0.0,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JNG - BKS,2,CUK,Cakung,9.185,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,JNG - BKS,3,BKS,Bekasi,14.653,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,BKS - CKP,1,BKS,Bekasi,0.0,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,BKS - CKP,2,TB,Tambun,6.956,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,BKS - CKP,3,CIT,Cibitung,10.397,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,BKS - CKP,4,TLM,Telaga Murni,13.197,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,BKS - CKP,5,CKR,Cikarang,16.997,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,BKS - CKP,6,LMB,Lemahabang,21.225,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,BKS - CKP,7,KDH,Kedunggedeh,30.22,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,BKS - CKP,8,KW,Karawang,36.466,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,BKS - CKP,9,KLI,Klari,43.461,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,BKS - CKP,10,KOS,Kosambi,47.371,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,BKS - CKP,11,DWN,Dawuan,54.342,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-2,Daop 1 Jakarta,BKS - CKP,12,CKP,Cikampek,57.604,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,KPB - DU - MRI,1,KPB,Kampungbandan,0.0,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,KPB - DU - MRI,2,AK,Angke,4.102,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,KPB - DU - MRI,3,DU,Duri,5.327,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,KPB - DU - MRI,4,THB,Tanahabang,8.964,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,KPB - DU - MRI,5,KAT,Karet,10.993,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,KPB - DU - MRI,6,SUDB,Sudirmanbaru,11.464,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,KPB - DU - MRI,7,SUD,Sudirman,11.804,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,KPB - DU - MRI,8,MRI,Manggarai,14.99,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,JAKK - MRI - CTA - BOO,1,JAKK,Jakarta Kota,0.0,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,JAKK - MRI - CTA - BOO,2,GMR,Gambir,5.404,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,JAKK - MRI - CTA - BOO,3,MRI,Manggarai,9.754,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,JAKK - MRI - CTA - BOO,4,PSM,Pasarminggu,18.344,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,JAKK - MRI - CTA - BOO,5,UI,Univ. Indonesia,27.128,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,JAKK - MRI - CTA - BOO,6,DPB,Depokbaru,30.964,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,JAKK - MRI - CTA - BOO,7,DP,Depok,32.548,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,JAKK - MRI - CTA - BOO,8,CTA,Citayam,37.632,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,JAKK - MRI - CTA - BOO,9,BJD,Bojonggede,42.829,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,JAKK - MRI - CTA - BOO,10,CLT,Cilebut,47.16,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+I-3,Daop 1 Jakarta,JAKK - MRI - CTA - BOO,11,BOO,Bogor,54.674,Lembar Gapeka 2025 - Daop 1 Jakarta.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,1,CKP,Cikampek,0.0,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,2,CBR,Cibungur,7.636,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,3,SAD,Sadang,13.771,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,4,PWK,Purwakarta,19.063,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,5,CA,Ciganea,25.628,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,6,SUT,Sukatani,32.864,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,7,PLD,Plered,36.934,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,8,CG,Cisomang,43.157,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,9,CD,Cikadongdong,48.862,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,10,RH,Rendeh,51.939,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,11,MSI,Maswati,56.059,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,12,SKT,Sasaksaat,60.704,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,13,CLE,Cilame,67.76,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,14,PDL,Padalarang,75.065,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,15,GK,Gadobangkong,78.219,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,16,CMI,Cimahi,81.55,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,17,CMD,Cimindi,84.605,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,18,AND,Andir,86.998,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,19,BD,Bandung,89.727,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,20,CTH,Cikudapateuh,92.365,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,21,KAC,Kiaracondong,94.717,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,22,GDB,Gedebage,99.925,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,23,CMK,Cimekar,102.464,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,24,RCK,Rancaekek,107.57,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,25,HRP,Haurpugur,112.743,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,26,CCL,Cicalengka,116.864,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,27,NG,Nagreg,125.349,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,28,LBJ,Lebakjero,131.153,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,29,LL,Leles,137.553,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,30,KRAI,Karangsari,142.065,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,31,LO,Leuwigoong,145.511,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,32,CB,Cibatu,148.224,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,33,WB,Warungbandrek,154.168,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,34,BMW,Bumiwaluya,162.943,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,35,CPD,Cipeundeuy,169.181,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,36,CAA,Cirahayu,177.378,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,37,CAW,Ciawi,182.771,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,38,RJP,Rajapolah,192.103,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,39,IH,Indihiang,200.018,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,40,TSM,Tasikmalaya,204.786,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,41,AW,Awipari,211.441,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,42,MNJ,Manonjaya,214.571,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,43,CI,Ciamis,223.289,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,44,BJG,Bojong,231.922,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,45,KNP,Karangpucung,239.513,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIKAMPEK - PADALARANG - ANDIR - BANDUNG - CIBATU - BANJAR,46,BJR,Banjar,245.562,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,ANDIR - CIROYOM - BANDUNG,1,AND,Andir,0.0,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,ANDIR - CIROYOM - BANDUNG,2,CIR,Ciroyom,1.383,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,ANDIR - CIROYOM - BANDUNG,3,BD,Bandung,2.729,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIBATU - GARUT,1,CB,Cibatu,0.0,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIBATU - GARUT,2,PSJ,Pasirjengkol,4.685,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIBATU - GARUT,3,WNR,Wanaraja,9.12,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-1,Daop 2 Bandung,CIBATU - GARUT,4,GRT,Garut,19.324,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-2,Daop 2 Bandung,SUKABUMI - CIANJUR - PADALARANG,1,SI,Sukabumi,0.0,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-2,Daop 2 Bandung,SUKABUMI - CIANJUR - PADALARANG,2,GDS,Gandasoli,7.123,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-2,Daop 2 Bandung,SUKABUMI - CIANJUR - PADALARANG,3,CRG,Cireungas,12.969,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-2,Daop 2 Bandung,SUKABUMI - CIANJUR - PADALARANG,4,LP,Lampegan,16.079,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-2,Daop 2 Bandung,SUKABUMI - CIANJUR - PADALARANG,5,CBB,Cibeber,25.237,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-2,Daop 2 Bandung,SUKABUMI - CIANJUR - PADALARANG,6,CJ,Cianjur,38.601,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-2,Daop 2 Bandung,SUKABUMI - CIANJUR - PADALARANG,7,CRJ,Ciranjang,50.905,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-2,Daop 2 Bandung,SUKABUMI - CIANJUR - PADALARANG,8,CPY,Cipeuyeum,56.096,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-2,Daop 2 Bandung,SUKABUMI - CIANJUR - PADALARANG,9,CPT,Cipatat,66.904,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-2,Daop 2 Bandung,SUKABUMI - CIANJUR - PADALARANG,10,TAU,,77.731,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+II-2,Daop 2 Bandung,SUKABUMI - CIANJUR - PADALARANG,11,PDL,Padalarang,83.299,Lembar Gapeka 2025 - Daop 2 Bandung.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,1,CKP,Cikampek,0.0,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,2,TJS,Tanjungrasa,9.093,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,3,PAB,Pabuaran,13.891,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,4,PRI,Pringkasap,19.593,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,5,PAS,Pasirbungur,25.636,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,6,CKM,Cikaum,31.399,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,7,PGB,Pegadenbaru,40.257,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,8,CRA,Cipunegara,47.547,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,9,HGL,Haurgeulis,53.954,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,10,CLH,Cilegeh,64.403,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,11,KAB,Kadokangabus,72.329,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,12,TIS,Terisi,78.332,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,13,TLS,Telagasari,86.517,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,14,JTB,Jatibarang,95.113,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,15,KTM,Kertasemaya,103.327,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,16,AWN,Arjawinangun,118.07,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,17,BDW,Bangoduwa,123.486,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,18,CNK,Cangkring,128.342,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,19,CN,Cirebon,135.161,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,20,CNP,Cirebon Prujakan,136.761,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,21,WDW,Waruduwur,147.376,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,22,BBK,Babakan,160.748,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,23,LOS,Losari,169.938,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,24,TGN,Tanjung,178.033,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,25,BB,Brebes,198.75,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIKAMPEK - CIREBON PRUJAKAN - TEGAL,26,TG,Tegal,211.018,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIREBON PRUJAKAN - PRUPUK,1,CNP,Cirebon Prujakan,0.0,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIREBON PRUJAKAN - PRUPUK,2,LWG,Luwung,7.534,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIREBON PRUJAKAN - PRUPUK,3,SDU,Sindanglaut,14.664,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIREBON PRUJAKAN - PRUPUK,4,CLD,Ciledug,30.251,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIREBON PRUJAKAN - PRUPUK,5,KGG,Ketanggungan,46.284,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIREBON PRUJAKAN - PRUPUK,6,LR,Larangan,55.479,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIREBON PRUJAKAN - PRUPUK,7,SGG,Songgom,61.309,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+III,Daop 3 Cirebon,CIREBON PRUJAKAN - PRUPUK,8,PPK,Prupuk,73.169,Lembar Gapeka 2025 - Daop 3 Cirebon.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,1,TG,Tegal,0.0,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,2,LR,Larangan,5.518,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,3,SD,Surodadi,15.588,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,4,PML,Pemalang,28.023,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,5,PTA,Petarukan,34.9,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,6,CO,Comal,44.61,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,7,SRI,Sragi,48.908,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,8,PK,Pekalongan,60.166,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,9,BTG,Batang,69.71,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,10,UJN,Ujungnegoro,74.519,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,11,KRP,Kuripan,86.681,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,12,PLB,Plabuan,94.103,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,13,KNS,Krengseng,103.714,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,14,WLR,Weleri,109.045,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,15,KBD,Kalibodri,117.919,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,16,KLN,Kaliwungu,129.921,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,17,MKG,Mangkang,135.354,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,18,JRK,Jerakah,142.208,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,19,SMC,Semarang Poncol,148.11,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,20,SMT,Semarang Tawang,149.859,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,21,ATA,Alastua,156.966,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,22,BBG,Brumbung,163.822,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,23,TGW,Tegowanu,173.249,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,24,GUB,Gubug,180.795,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,25,KGT,Karangjati,193.881,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,26,SDI,Sedadi,202.675,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,27,NBO,Ngrombo,208.527,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,28,GBN,Gambringan,210.168,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,29,JBN,Jambon,221.338,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,30,PNL,Panunggalan,227.055,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,31,KNN,Kradenan,236.801,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,32,SL,Sulur,245.776,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,33,DPL,Doplang,253.179,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,34,RBG,Randublatung,265.728,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,35,WDU,Wadu,277.192,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,36,KPA,Kapuan,283.263,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,TEGAL - BRUMBUNG - CEPU,37,CU,Cepu,288.966,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,BRUMBUNG - GUNDIH,1,BBG,Brumbung,0.0,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,BRUMBUNG - GUNDIH,2,TGW,Tegowanu,9.427,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,BRUMBUNG - GUNDIH,3,GUB,Gubug,16.973,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,BRUMBUNG - GUNDIH,4,KGT,Karangjati,30.059,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,BRUMBUNG - GUNDIH,5,SDI,Sedadi,38.853,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,BRUMBUNG - GUNDIH,6,NBO,Ngrombo,44.705,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,BRUMBUNG - GUNDIH,7,GBN,Gambringan,46.346,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,BRUMBUNG - GUNDIH,8,GD,Gundih,56.261,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,GAMBRINGAN - GUNDIH,1,GBN,Gambringan,0.0,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+IV,Daop 4 Semarang,GAMBRINGAN - GUNDIH,2,GD,Gundih,9.915,Lembar Gapeka 2025 - Daop 4 Semarang.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,1,PPK,Prupuk,0.0,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,2,LG,Linggapura,10.772,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,3,BMA,Bumiayu,18.623,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,4,KRT,Kretek,25.621,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,5,PAT,Patuguran,31.537,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,6,KRR,Karangsari,42.231,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,7,KGD,Karanggandul,49.991,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,8,PWT,Purwokerto,56.008,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,9,NTG,Notog,64.441,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,10,KBS,Kebasen,70.377,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,11,RDN,Randegan,74.886,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,12,KYA,Kroya,83.185,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,13,KJ,Kemranjen,90.011,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,14,SPH,Sumpiuh,95.203,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,15,TBK,Tambak,100.511,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,16,IJ,Ijo,104.893,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,17,GB,Gombong,111.512,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,18,KA,Karanganyar,119.363,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,19,SRW,Sruweng,123.284,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,20,SOA,Soka,128.325,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,21,KM,Kebumen,131.217,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,22,WNS,Wonosari,135.967,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,23,KWN,Kutowinangun,139.884,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,24,PRB,Prembun,147.169,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,25,BTH,Butuh,153.982,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,PRUPUK - KROYA - KUTOARJO,26,KTA,Kutoarjo,159.26,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,BANJAR - MAOS - KROYA,1,BJR,Banjar,0.0,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,BANJAR - MAOS - KROYA,2,LN,Langen,10.757,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,BANJAR - MAOS - KROYA,3,MLW,Meluwung,19.515,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,BANJAR - MAOS - KROYA,4,CPI,Cipari,28.312,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,BANJAR - MAOS - KROYA,5,SDR,Sidareja,35.676,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,BANJAR - MAOS - KROYA,6,GDM,Gandrungmangun,43.072,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,BANJAR - MAOS - KROYA,7,KWG,Kawunganten,52.694,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,BANJAR - MAOS - KROYA,8,JRL,Jeruklegi,65.502,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,BANJAR - MAOS - KROYA,9,LBG,Lebeng,72.19,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,BANJAR - MAOS - KROYA,10,KH,Kasugihan,77.386,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,BANJAR - MAOS - KROYA,11,MA,Maos,79.109,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,BANJAR - MAOS - KROYA,12,SKP,Sikampuh,85.527,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,BANJAR - MAOS - KROYA,13,KYA,Kroya,91.807,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,TEGAL - PRUPUK,1,TG,Tegal,0.0,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,TEGAL - PRUPUK,2,SLW,Slawi,13.52,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,TEGAL - PRUPUK,3,PPK,Prupuk,38.5,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,KARANGTALUN - GUMILIR,1,KRL,Karangtalun,0.0,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,KARANGTALUN - GUMILIR,2,GM,Gumilir,3.407,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,CILACAP - MAOS,1,CP,Cilacap,0.0,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,CILACAP - MAOS,2,GM,Gumilir,7.18,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,CILACAP - MAOS,3,KKD,Karangkandri,11.405,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,CILACAP - MAOS,4,KH,Kasugihan,18.789,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,CILACAP - MAOS,5,MA,Maos,20.512,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,KUTOARJO - PURWOREJO,1,KTA,Kutoarjo,0.0,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+V,Daop 5 Purwokerto,KUTOARJO - PURWOREJO,2,PWR,,11.688,Lembar Gapeka 2025 - Daop 5 Purwokerto.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,1,KTA,Kutoarjo,0.0,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,2,JN,Jenar,13.707,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,3,WJ,Wojo,21.985,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,4,WT,Wates,28.871,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,5,KDG,Kedundang,35.637,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,6,STL,Sentolo,45.782,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,7,RWL,Rewulu,54.823,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,8,PTN,Patukan,59.402,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,9,YK,Yogyakarta,63.643,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,10,LPN,Lempuyangan,64.95,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,11,MGW,Maguwo,71.749,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,12,BBN,Brambanan,79.654,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,13,SWT,Srowot,85.504,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,14,KT,Klaten,92.242,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,15,CE,Ceper,101.521,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,16,DL,Delanggu,107.792,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,17,GW,Gawok,113.335,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,18,PWS,Purwosari,119.974,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,19,SLO,Solobalapan,122.81,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,20,SK,Solojebres,124.951,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,21,PL,Palur,129.101,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,22,KMR,Kemiri,133.808,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,23,MSR,Masaran,142.845,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,24,SR,Sragen,151.824,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,25,KRO,Kebonromo,157.033,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,26,KDB,Kedungbanteng,163.093,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,KUTOARJO - KEDUNDANG - PURWOSARI - SOLOBALAPAN - WALIKUKUN,27,WK,Walikukun,175.388,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,YOGYAKARTA INT AIRPORT - KEDUNDANG,1,YIA,Yogyakarta International Airport,0.0,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,YOGYAKARTA INT AIRPORT - KEDUNDANG,2,KDG,Kedundang,5.465,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,GUNDIH - KADIPIRO - SOLOBALAPAN,1,GD,Gundih,0.0,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,GUNDIH - KADIPIRO - SOLOBALAPAN,2,GPK,Goprak,6.273,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,GUNDIH - KADIPIRO - SOLOBALAPAN,3,SUM,Sumberlawang,14.021,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,GUNDIH - KADIPIRO - SOLOBALAPAN,4,SLM,Salem,23.01,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,GUNDIH - KADIPIRO - SOLOBALAPAN,5,KO,Kalioso,31.334,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,GUNDIH - KADIPIRO - SOLOBALAPAN,6,KDO,Kadipiro,38.59,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,GUNDIH - KADIPIRO - SOLOBALAPAN,7,SLO,Solobalapan,42.057,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,ADI SOEMARMO - KADIPIRO,1,SMO,Adi Soemarmo,0.0,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,ADI SOEMARMO - KADIPIRO,2,KDO,Kadipiro,9.63,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,PURWOSARI - WONOGIRI,1,PWS,Purwosari,0.0,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,PURWOSARI - WONOGIRI,2,STA,Solokota,4.802,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,PURWOSARI - WONOGIRI,3,SKH,Sukoharjo,18.049,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,PURWOSARI - WONOGIRI,4,PNT,Pasarnguter,26.082,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VI,Daop 6 Yogyakarta,PURWOSARI - WONOGIRI,5,WNG,Wonogiri,36.66,Lembar Gapeka 2025 - Daop 6 Yogyakarta.pdf
+VII,Daop 7 Madiun,WK - MR,1,WK,Walikukun,0.0,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,2,KG,Kedunggalar,9.335,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,3,NGW,Ngawi,18.549,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,4,GG,Geneng,25.88,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,5,MGA,,33.937,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,6,MN,Madiun,44.414,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,7,BBD,Babadan,52.365,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,8,CRB,Caruban,60.727,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,9,SRD,Saradan,69.158,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,10,BGR,Bagor,85.029,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,11,NJ,Nganjuk,91.355,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,12,SKM,Sukomoro,95.752,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,13,BRN,Baron,106.387,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,14,KTS,Kertosono,113.392,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,15,SMB,Sembung,120.79,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,16,JG,Jombang,128.7,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,17,PTR,Peterongan,134.061,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,18,SBO,Sumobito,141.087,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,19,CRM,Curahmalang,144.717,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,WK - MR,20,MR,Mojokerto,152.839,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,1,KTS,Kertosono,0.0,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,2,PWA,Purwoasri,7.15,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,3,PPR,Papar,13.142,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,4,MGN,Minggiran,17.356,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,5,SS,Susuhan,23.395,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,6,KD,Kediri,28.613,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,7,NDL,Ngadiluwih,38.158,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,8,KRS,Kras,44.5,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,9,NJG,Ngujang,52.23,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,10,TA,Tulungagung,58.659,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,11,SBL,Sumbergempol,63.841,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,12,NT,Ngunut,71.618,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,13,RJ,Rejotangan,79.508,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,14,BL,Blitar,92.584,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,15,GRM,Garum,99.806,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,16,TAL,Talun,108.09,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VII,Daop 7 Madiun,KERTOSONO - WLINGI,17,WG,Wlingi,111.81,Lembar Gapeka 2025 - Daop 7 Madiun.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,1,CU,Cepu,0.0,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,2,TBO,Tobo,7.916,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,3,KIT,Kalitidu,21.597,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,4,BJ,Bojonegoro,36.058,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,5,KPS,Kapas,42.559,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,6,SRJ,Sumberrejo,50.515,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,7,BWO,Bowerno,62.712,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,8,BBT,Babat,71.66,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,9,GEB,Gembong,77.716,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,10,PC,Pucuk,82.978,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,11,SBN,Surabayan,92.542,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,12,LMG,Lamongan,99.861,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,13,DD,Duduk,112.084,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,14,CME,Cerme,121.851,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,15,BNW,Benowo,127.088,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,16,KDA,Kandangan,132.227,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,17,TES,Tandes,135.51,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,18,SBI,Surabaya Pasarturi,140.86,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,19,MST,Mesigit,142.19,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,CEPU - KANDANGAN - SURABAYA PASARTURI - KALIMAS,20,KLM,Kalimas,144.752,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,GRESIK - KANDANGAN,1,GS,,0.0,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,GRESIK - KANDANGAN,2,IDO,Indro,2.905,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,GRESIK - KANDANGAN,3,KDA,Kandangan,12.625,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,MOJOKERTO - TARIK - WONOKROMO - SURABAYAKOTA,1,MR,Mojokerto,0.0,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,MOJOKERTO - TARIK - WONOKROMO - SURABAYAKOTA,2,TRK,Tarik,9.768,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,MOJOKERTO - TARIK - WONOKROMO - SURABAYAKOTA,3,KDN,Kedinding,14.3,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,MOJOKERTO - TARIK - WONOKROMO - SURABAYAKOTA,4,KRN,Krian,19.093,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,MOJOKERTO - TARIK - WONOKROMO - SURABAYAKOTA,5,BH,Boharan,23.491,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,MOJOKERTO - TARIK - WONOKROMO - SURABAYAKOTA,6,SPJ,Sepanjang,33.268,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,MOJOKERTO - TARIK - WONOKROMO - SURABAYAKOTA,7,WO,Wonokromo,39.997,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,MOJOKERTO - TARIK - WONOKROMO - SURABAYAKOTA,8,SGU,Surabayagubeng,44.403,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,MOJOKERTO - TARIK - WONOKROMO - SURABAYAKOTA,9,SB,Surabayakota,47.579,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,SURABAYA GUBENG - SIDOTOPO - BENTENG,1,SGU,Surabayagubeng,0.0,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,SURABAYA GUBENG - SIDOTOPO - BENTENG,2,SDT,Sidotopo,3.454,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,SURABAYA GUBENG - SIDOTOPO - BENTENG,3,SBE,Benteng,9.194,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,SIDOTOPO - SURABAYAKOTA,1,SDT,Sidotopo,0.0,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,SIDOTOPO - SURABAYAKOTA,2,SB,Surabayakota,2.046,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,SIDOTOPO - SURABAYAKOTA - SEGITIGAMESIGIT - KALIMAS,1,SDT,Sidotopo,0.0,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,SIDOTOPO - SURABAYAKOTA - SEGITIGAMESIGIT - KALIMAS,2,SB,Surabayakota,2.046,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,SIDOTOPO - SURABAYAKOTA - SEGITIGAMESIGIT - KALIMAS,3,STM,Segitigamesigit,3.506,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,SIDOTOPO - SURABAYAKOTA - SEGITIGAMESIGIT - KALIMAS,4,MST,Mesigit,4.454,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,SIDOTOPO - SURABAYAKOTA - SEGITIGAMESIGIT - KALIMAS,5,KLM,Kalimas,7.016,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,SEGITIGAMESIGIT - SURABAYA PASARTURI,1,STM,Segitigamesigit,0.0,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-1,Daop 8 Surabaya,SEGITIGAMESIGIT - SURABAYA PASARTURI,2,SBI,Surabaya Pasarturi,0.93,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,1,WG,Wlingi,0.0,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,2,KSB,Kesamben,9.316,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,3,PGJ,Pogajih,16.896,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,4,SBP,Sumberpucung,25.383,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,5,NB,Ngebruk,29.746,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,6,KPN,Kepanjen,36.728,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,7,PSI,Pakisaji,44.375,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,8,MLK,Malangkotalama,53.46,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,9,ML,Malang,55.596,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,10,BMG,Blimbing,59.884,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,11,SGS,Singosari,65.658,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,12,LW,Lawang,73.716,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,13,SN,Sengon,83.593,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,14,SKJ,Sukorejo,87.859,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,15,WN,Wonokerto,96.072,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,16,BG,Bangil,104.83,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,17,PR,Porong,117.217,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,18,TGA,Tanggulangin,120.796,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,19,SDA,Sidoarjo,126.358,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,20,GDG,Gedangan,134.188,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,21,WR,Waru,138.216,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,WLINGI - MALANG - BANGIL - SIDOARJO - WONOKROMO,22,WO,Wonokromo,143.987,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,TARIK - TULANGAN - SIDOARJO,1,TRK,Tarik,0.0,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,TARIK - TULANGAN - SIDOARJO,2,TLN,Tulangan,14.593,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+VIII-2,Daop 8 Surabaya,TARIK - TULANGAN - SIDOARJO,3,SDA,Sidoarjo,22.147,Lembar Gapeka 2025 - Daop 8 Surabaya.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,1,KTG,Ketapang,0.0,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,2,AGO,Argopuro,5.854,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,3,BWI,Banyuwangi Kota,11.629,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,4,RGP,Rogojampi,22.844,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,5,SGJ,Singojuruh,28.725,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,6,TGR,Temuguruh,32.951,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,7,KSL,Kalisetail,40.275,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,8,SWD,Sumberwadung,44.087,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,9,GLM,Glenmore,50.289,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,10,KBR,Kalibaru,57.651,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,11,MRW,Mrawan,65.161,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,12,GRN,Garahan,74.77,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,13,SPL,Sempolan,79.021,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,14,LDO,Ledokombo,86.721,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,15,KLT,Kalisat,95.041,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,16,KTK,Kotok,102.098,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,17,AJ,Arjasa,106.333,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,18,JR,Jember,112.218,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,19,MI,Mangli,118.96,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,20,RBP,Rambipuji,122.915,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,21,BSS,Bangsalsari,131.955,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,22,TGL,Tanggul,142.453,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,23,JTR,Jatiroto,153.503,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,24,RDA,Randuagung,162.613,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,25,KK,Klakah,174.119,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,26,RN,Ranuyoso,179.022,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,27,MLS,Malasan,187.763,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,28,LEC,Leces,195.777,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,29,PB,Probolinggo,208.052,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,30,BYM,Bayeman,219.579,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,31,GI,Grati,231.966,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,32,RO,Rejoso,237.636,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,33,PS,Pasuruan,246.527,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+IX,Daop 9 Jember,KETAPANG - KALISAT - BANGIL,34,BG,Bangil,262.465,Lembar Gapeka 2025 - Daop 9 Jember.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,1,BLW,Belawan,0.0,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,2,LBU,Labuan,4.89,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,3,TPP,Titi Papan,9.545,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,4,PUB,Pulu Brayan,16.952,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,5,MDN,Medan,21.607,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,6,BAP,Bandar Kalipah,31.249,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,7,BTK,Batang Kuis,36.71,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,8,ARB,Araskabu,44.361,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,9,LBP,Lubuk Pakam,50.973,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,10,PBA,Perbaungan,59.397,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,11,LDT,Lidah Tanah,66.711,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,12,TKE,Teluk Mengkudu,76.147,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,13,RPH,Rampah,83.457,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,14,BMB,Bamban,89.747,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,15,TBI,Tebing Tinggi,102.149,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,16,LTD,Laut Tador,114.433,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,17,BDT,Bandar Tinggi,119.898,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,18,BLI,Bahlias,131.513,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,19,PRA,Perlanaan,135.66,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,20,LMP,Lima Puluh,141.222,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,21,DSU,Dusun,153.421,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,22,SBJ,Seibejangkar,159.364,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,23,BUU,Bunut,172.354,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,24,KIS,Kisaran,175.346,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,25,HL,Hengelo,191.049,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,26,TUK,Teluk Dalam,195.064,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,27,PUR,Puluraja,211.016,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,28,AKB,Aekloba,216.514,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,29,MBM,Membang Muda,227.1,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,30,SIU,Situngir,236.61,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,31,TBK,Tambak,236.61,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,32,PME,Pamienke,253.798,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,33,PHA,Padang Halaban,264.018,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,34,MBU,Marbau,270.018,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,35,RAPB,Rantauprapat Baru,287.546,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BELAWAN - MEDAN - ARASKABU - TEBING TINGGI - BANDAR TINGGI - KISARAN - RANTAU PRAPAT BARU - RANTAU PRAPAT,36,RAP,Rantau Prapat,289.218,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,MEDAN - BESITANG,1,MDN,Medan,0.0,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,MEDAN - BESITANG,2,BIJ,Binjai,20.889,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,MEDAN - BESITANG,3,KBG,Kuala Bingei,34.94,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,MEDAN - BESITANG,4,SBT,Stabat,43.284,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,MEDAN - BESITANG,5,TSL,,53.399,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,MEDAN - BESITANG,6,TJP,,67.651,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,MEDAN - BESITANG,7,GBG,,76.204,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,MEDAN - BESITANG,8,PBN,,86.747,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,MEDAN - BESITANG,9,BSG,Besitang,99.589,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,MEDAN - BANDAR KALIPAH,1,MDN,Medan,0.0,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,MEDAN - BANDAR KALIPAH,2,BAP,Bandar Kalipah,9.642,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,ARASKABU - KUALANAMU,1,ARB,Araskabu,0.0,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,ARASKABU - KUALANAMU,2,KNM,Kualanamu,4.68,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,TEBING TINGGI - SIANTAR,1,TBI,Tebing Tinggi,0.0,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,TEBING TINGGI - SIANTAR,2,BJL,Baja Linggei,22.69,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,TEBING TINGGI - SIANTAR,3,DMR,Dolok Merangir,28.542,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,TEBING TINGGI - SIANTAR,4,SIR,Siantar,48.467,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BANDAR TINGGI - KUALA TANJUNG,1,BDT,Bandar Tinggi,0.0,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BANDAR TINGGI - KUALA TANJUNG,2,TGD,Tanjung Gading,6.132,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BANDAR TINGGI - KUALA TANJUNG,3,LAG,Lalang,17.823,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,BANDAR TINGGI - KUALA TANJUNG,4,KTJ,Kuala Tanjung,20.75,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,KISARAN - TANJUNG BALAI,1,KIS,Kisaran,0.0,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,KISARAN - TANJUNG BALAI,2,TNB,Tanjung Balai,20.683,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,RANTAU PRAPAT BARU - PONDOK S5,1,RAPB,Rantauprapat Baru,0.0,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,RANTAU PRAPAT BARU - PONDOK S5,2,DNB,Danau Bale,10.1,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,RANTAU PRAPAT BARU - PONDOK S5,3,AKN,Aek Nabara,17.1,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre I,Divre I Sumatera Utara,RANTAU PRAPAT BARU - PONDOK S5,4,PS5,Pondok S5,26.3,Lembar Gapeka 2025 - DIVRE I SUMUT.pdf
+Divre II,Divre II Sumatera Barat,PULAU AIE - PADANG,1,PLA,Pulau Air,0.0,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,PULAU AIE - PADANG,2,TDM,Tarandam,1.125,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,PULAU AIE - PADANG,3,PD,Padang,2.575,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,1,IDA,Indarung,0.0,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,2,IMA,Pauhlima,6.136,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,3,KAJ,Kampung Juar,10.14,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,4,BKP,Bukitputus,14.574,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,5,PD,Padang,19.734,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,6,AI,Alai,21.626,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,7,AT,Air Tawar,24.976,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,8,TAB,Tabing,28.981,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,9,LBY,Lubuk Buaya,33.175,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,10,DUK,Duku,38.673,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,11,PRU,Pasar Usang,44.462,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,12,LA,Lubuk Alung,52.34,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,13,PAK,Pauh Kambar,60.77,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,14,KI,Kuraitaji,66.805,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,15,CPH,Cimparuh,70.317,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,16,PMN,Pariaman,73.233,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,INDARUNG - LUBUK ALUNG - NARAS,17,NRS,Naras,80.184,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,DUKU - BANDARA INTERNASIONAL MINANGKABAU,1,DUK,Duku,0.0,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,DUKU - BANDARA INTERNASIONAL MINANGKABAU,2,BIM,Bandara Internasional Minangkabau,3.947,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,LUBUK ALUNG - SAWAHLUNTO,1,LA,Lubuk Alung,0.0,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,LUBUK ALUNG - SAWAHLUNTO,2,SCN,Sicincin,13.434,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,LUBUK ALUNG - SAWAHLUNTO,3,KTN,Kayutanam,20.341,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,LUBUK ALUNG - SAWAHLUNTO,4,KDP,,25.716,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,LUBUK ALUNG - SAWAHLUNTO,5,PP,,35.664,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,LUBUK ALUNG - SAWAHLUNTO,6,KKR,,44.689,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,LUBUK ALUNG - SAWAHLUNTO,7,BTL,,54.176,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,LUBUK ALUNG - SAWAHLUNTO,8,KCN,,64.912,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,LUBUK ALUNG - SAWAHLUNTO,9,SKA,,74.499,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,LUBUK ALUNG - SAWAHLUNTO,10,SLK,,88.259,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,LUBUK ALUNG - SAWAHLUNTO,11,SNL,,100.682,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,LUBUK ALUNG - SAWAHLUNTO,12,MKL,,111.745,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre II,Divre II Sumatera Barat,LUBUK ALUNG - SAWAHLUNTO,13,SWL,,115.823,Lembar Gapeka 2025 - DIVRE II SUMBAR.pdf
+Divre III,Divre III Palembang,KERTAPATI - POS INDRALAYA - PRABUMULIH - PRABUMULIH BARU X6,1,KPT,Kertapati,0.0,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,KERTAPATI - POS INDRALAYA - PRABUMULIH - PRABUMULIH BARU X6,2,KAS,Kramasan,3.877,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,KERTAPATI - POS INDRALAYA - PRABUMULIH - PRABUMULIH BARU X6,3,SIG,Simpang,11.556,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,KERTAPATI - POS INDRALAYA - PRABUMULIH - PRABUMULIH BARU X6,4,POS IDR,Pos Indralaya,21.702,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,KERTAPATI - POS INDRALAYA - PRABUMULIH - PRABUMULIH BARU X6,5,PYK,Payakabung,26.836,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,KERTAPATI - POS INDRALAYA - PRABUMULIH - PRABUMULIH BARU X6,6,SDN,Serdang,36.623,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,KERTAPATI - POS INDRALAYA - PRABUMULIH - PRABUMULIH BARU X6,7,GLB,Glumbang,46.28,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,KERTAPATI - POS INDRALAYA - PRABUMULIH - PRABUMULIH BARU X6,8,KED,Karangenda,54.508,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,KERTAPATI - POS INDRALAYA - PRABUMULIH - PRABUMULIH BARU X6,9,LEB,Lembak,61.914,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,KERTAPATI - POS INDRALAYA - PRABUMULIH - PRABUMULIH BARU X6,10,PBM,Prabumulih,77.807,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,KERTAPATI - POS INDRALAYA - PRABUMULIH - PRABUMULIH BARU X6,11,PBR X6,Prabumulih Baru X6,80.417,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,POS INDRALAYA - INDRALAYA,1,POS IDR,Pos Indralaya,0.0,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,POS INDRALAYA - INDRALAYA,2,IDR,,3.935,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,PRABUMULIH - PRABUMULIH BARU X5,1,PBM,Prabumulih,0.0,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,PRABUMULIH - PRABUMULIH BARU X5,2,PBR X5,Prabumulih Baru X5,2.61,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,PRABUMULIH BARU X6 - MUARAENIM - TANJUNGENIM BARU,1,PBR X6,Prabumulih Baru X6,0.0,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,PRABUMULIH BARU X6 - MUARAENIM - TANJUNGENIM BARU,2,PNM,Penimur,8.107,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,PRABUMULIH BARU X6 - MUARAENIM - TANJUNGENIM BARU,3,NRU,Niru,18.939,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,PRABUMULIH BARU X6 - MUARAENIM - TANJUNGENIM BARU,4,BIB,Blimbing Pendopo,29.029,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,PRABUMULIH BARU X6 - MUARAENIM - TANJUNGENIM BARU,5,GNM,Gunung Megang,41.724,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,PRABUMULIH BARU X6 - MUARAENIM - TANJUNGENIM BARU,6,PNG,Penanggiran,48.595,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,PRABUMULIH BARU X6 - MUARAENIM - TANJUNGENIM BARU,7,UJM,Ujan Mas,56.199,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,PRABUMULIH BARU X6 - MUARAENIM - TANJUNGENIM BARU,8,MRL,Muara Gula,62.401,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,PRABUMULIH BARU X6 - MUARAENIM - TANJUNGENIM BARU,9,ME,Muara Enim,70.781,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,PRABUMULIH BARU X6 - MUARAENIM - TANJUNGENIM BARU,10,TMB,Tanjungenim Baru,78.031,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,MUARAENIM - LUBUK LINGGAU,1,ME,Muara Enim,0.0,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,MUARAENIM - LUBUK LINGGAU,2,MLI,Muaralawai,6.498,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,MUARAENIM - LUBUK LINGGAU,3,BJI,Banjarsari,10.785,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,MUARAENIM - LUBUK LINGGAU,4,MRP,Merapi,18.604,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,MUARAENIM - LUBUK LINGGAU,5,SCT,Sukacinta,27.527,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,MUARAENIM - LUBUK LINGGAU,6,LT,Lahat,38.063,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,MUARAENIM - LUBUK LINGGAU,7,BGM,Bunga Mas,63.89,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,MUARAENIM - LUBUK LINGGAU,8,SUA,Sukaraja,78.272,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,MUARAENIM - LUBUK LINGGAU,9,SNA,Saung Naga,88.878,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,MUARAENIM - LUBUK LINGGAU,10,TI,Tebingtinggi,104.644,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,MUARAENIM - LUBUK LINGGAU,11,MSL,Muara Saling,123.807,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,MUARAENIM - LUBUK LINGGAU,12,KOP,Kota Padang,132.852,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre III,Divre III Palembang,MUARAENIM - LUBUK LINGGAU,13,LLG,Lubuk Linggau,153.352,Lembar Gapeka 2025 - DIVRE III PG.pdf
+Divre IV,Divre IV Tanjungkarang,PANJANG - KILOMETERTIGA,1,PJN,,0.0,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,PANJANG - KILOMETERTIGA,2,PID,,1.259,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,PANJANG - KILOMETERTIGA,3,KM3,,2.199,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,1,THN,Tarahan,0.0,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,2,SKN,Sukamenanti,4.483,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,3,KM3,,6.533,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,4,GR,Garuntang,10.317,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,5,TNK,Tanjungkarang,15.763,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,6,LAR,Labuan Ratu,20.546,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,7,GDR,Gedung Ratu,25.09,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,8,RJS,Rejosari,32.087,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,9,BTI,Branti,36.613,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,10,TGI,Tegineneng,42.627,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,11,RGS,Rengas,50.562,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,12,BKI,Bekri,57.667,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,13,HJP,Haji Pemanggilan,66.433,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,14,SLS,Sulusuban,73.183,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,15,BBA,Blambangan Pagar,81.477,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,16,KAG,Kalibalangan,89.653,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,17,CMS,Candimas,95.273,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,18,KB,Kotabumi,101.203,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,19,CEP,Cempaka,109.359,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,20,KTP,Ketapang,118.816,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,21,NRR,Negara Ratu,130.002,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,22,TLY,Tulung Buyut,139.288,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,23,NGN,Negeri Agung,151.285,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,24,BBU,Blambangan Umpu,166.568,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,25,GHM,Giham,176.482,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,26,TJO,Tanjungrajo,180.433,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,27,WAY,Waytuba,187.508,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,28,WAP,Way Pisang,192.033,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,29,MP,Martapura,199.174,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,30,SGT,Sungai Tuha,204.326,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,31,GLS,Gilas,208.733,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,32,SPC,Sepancar,222.171,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,33,KMK,Kemelak,225.613,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,34,BTA,Baturaja,231.538,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,35,TJH,Tigagajah,233.511,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,36,LBT,Lubuk Batang,241.933,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,37,BLT,Belatung,245.817,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,38,KPY,Kepayang,250.183,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,39,BIK,Blimbing Air Kaka,254.301,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,40,DAN,Durian,257.758,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,41,LRM,Lubuk Rukam,263.125,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,42,PNW,Peninjawan,270.621,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,43,TLB,Talang Baru,275.158,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,44,MET,Metur,281.963,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,45,KBU,Kotabaru,289.083,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,46,PGG,Pagergunung,294.333,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,47,ASM,Air Asam,299.436,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,48,SKU,Sukamerindu,306.133,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,49,TJR,Tanjungrambang,312.793,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,50,PBR X5,Prabumulih Baru X5,322.333,Lembar Gapeka 2025 - DIVRE IV TNK.pdf
+Divre IV,Divre IV Tanjungkarang,TARAHAN - KILOMETERTIGA - PRABUMULIH BARU X5 - PRABUMULIH BARU X6,51,PBR X6,Prabumulih Baru X6,325.021,Lembar Gapeka 2025 - DIVRE IV TNK.pdf

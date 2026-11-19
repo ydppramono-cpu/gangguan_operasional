@@ -1,0 +1,84 @@
+no_ka,nama_ka,relasi,urut,kode_stasiun,nama_stasiun,vmax_kmj,datang,berangkat,keterangan,sumber_buku,status_verifikasi
+3993,Linggapati,KPT-LLG,1,KPT,Kertapati,,,00:30:00,Berangkat,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,2,KAS,Kramasan,,,00:37:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,3,SIG,Simpang,,,00:47:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,4,POS IDR,Pos Indralaya,,,00:59:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,5,PYK,Payakabung,,,01:06:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,6,SDN,Serdang,,,01:18:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,7,GLB,Glumbang,,,01:30:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,8,KED,Karangenda,,,01:40:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,9,LEB,Lembak,,,01:49:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,10,PBM,Prabumulih,,02:10:00,02:17:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,11,PBR X6,Prabumulih Baru X6,,,02:22:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,12,PNM,Penimur,,,02:32:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,13,NRU,Niru,,,02:45:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,14,BIB,Blimbing Pendopo,,,02:58:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,15,GNM,Gunung Megang,,,03:14:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,16,PNG,Penanggiran,,,03:23:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,17,UJM,Ujan Mas,,,03:33:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,18,MRL,Muara Gula,,,03:41:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,19,ME,Muara Enim,,,03:51:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,20,MLI,Muaralawai,,04:02:00,04:04:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,21,BJI,Banjarsari,,04:12:00,04:43:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,22,MRP,Merapi,,,04:56:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,23,SCT,Sukacinta,,,05:09:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,24,LT,Lahat,,05:25:00,05:40:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,25,BGM,Bunga Mas,,,06:14:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,26,SUA,Sukaraja,,,06:32:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,27,SNA,Saung Naga,,,06:45:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,28,TI,Tebingtinggi,,,07:04:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,29,MSL,Muara Saling,,,07:27:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,30,KOP,Kota Padang,,,07:38:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3993,Linggapati,KPT-LLG,31,LLG,Lubuk Linggau,,08:05:00,,Datang,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,1,TJH,Tigagajah,,,01:15:00,Berangkat,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,2,LBT,Lubuk Batang,,01:31:00,02:53:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,3,BLT,Belatung,,,03:01:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,4,KPY,Kepayang,,,03:07:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,5,BIK,Blimbing Air Kaka,,03:15:00,03:26:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,6,DAN,Durian,,,03:33:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,7,LRM,Lubuk Rukam,,03:42:00,03:58:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,8,PNW,Peninjawan,,,04:10:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,9,TLB,Talang Baru,,,04:17:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,10,MET,Metur,,04:28:00,04:37:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,11,KBU,Kotabaru,,,04:49:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,12,PGG,Pagergunung,,04:58:00,05:14:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,13,ASM,Air Asam,,,05:23:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,14,SKU,Sukamerindu,,,05:32:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,15,TJR,Tanjungrambang,,05:43:00,05:48:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,16,PBR X5,Prabumulih Baru X5,,,06:03:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,17,PBM,Prabumulih,,06:10:00,07:10:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,18,LEB,Lembak,,,07:30:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,19,KED,Karangenda,,,07:39:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,20,GLB,Glumbang,,,07:49:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,21,SDN,Serdang,,,08:01:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,22,PYK,Payakabung,,,08:13:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,23,POS IDR,Pos Indralaya,,,08:20:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,24,SIG,Simpang,,,08:34:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,25,KAS,Kramasan,,,08:47:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3994,Tigapati,TJH-KPT,26,KPT,Kertapati,,08:54:00,,Datang,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,1,KPT,Kertapati,,,11:40:00,Berangkat,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,2,KAS,Kramasan,,,11:47:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,3,SIG,Simpang,,,11:58:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,4,POS IDR,Pos Indralaya,,,12:10:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,5,PYK,Payakabung,,,12:16:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,6,SDN,Serdang,,,12:28:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,7,GLB,Glumbang,,,12:40:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,8,KED,Karangenda,,,12:50:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,9,LEB,Lembak,,,12:59:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,10,PBM,Prabumulih,,13:19:00,14:02:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,11,PBR X5,Prabumulih Baru X5,,,14:10:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,12,TJR,Tanjungrambang,,,14:23:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,13,SKU,Sukamerindu,,,14:32:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,14,ASM,Air Asam,,14:43:00,14:58:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,15,PGG,Pagergunung,,,15:07:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,16,KBU,Kotabaru,,15:16:00,15:44:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,17,MET,Metur,,,15:56:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,18,TLB,Talang Baru,,,16:05:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,19,PNW,Peninjawan,,16:14:00,16:34:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,20,LRM,Lubuk Rukam,,,16:46:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,21,DAN,Durian,,,16:53:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,22,BIK,Blimbing Air Kaka,,,16:58:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,23,KPY,Kepayang,,17:06:00,17:19:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,24,BLT,Belatung,,,17:27:00,Langsung,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,25,LBT,Lubuk Batang,,17:35:00,19:34:00,Berhenti,DW KA Sumatera Selatan 2025,terverifikasi
+3995,Tigapati,KPT-TJH,26,TJH,Tigagajah,,19:50:00,,Datang,DW KA Sumatera Selatan 2025,terverifikasi

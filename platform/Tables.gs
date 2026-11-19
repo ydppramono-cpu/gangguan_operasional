@@ -2599,5 +2599,145 @@ var PLATFORM_TABLES = [
     "S"
    ]
   ]
+ },
+ {
+  "name": "skema",
+  "ss": "1HmlF2DL4KeHGVSO87aQAKu86dbfrnZohkCA7SsaL3OM",
+  "sheet": "Skema",
+  "range": "Skema!A:D",
+  "skip": 1,
+  "desc": "Kamus kolom Gangguan_Induk (kolom, nama kanonis, fungsi, aturan pengisian)",
+  "cols": [
+   [
+    "kolom",
+    "Kolom",
+    "S"
+   ],
+   [
+    "nama_kanonis",
+    "Nama kanonis",
+    "S"
+   ],
+   [
+    "fungsi",
+    "Fungsi",
+    "S"
+   ],
+   [
+    "aturan_pengisian",
+    "Aturan pengisian",
+    "S"
+   ]
+  ]
+ },
+ {
+  "name": "sarana_sap",
+  "ss": "115j4MRjEKeUkKULyGGhF2pQ4l_OSGhnyBYmZE-pqSc0",
+  "sheet": "Sarana_Knowledge",
+  "range": "Sarana_Knowledge!A:T",
+  "skip": 1,
+  "desc": "Referensi sarana SAP per unit: dipo, pabrikan, mulai dinas, karakteristik (JSON)",
+  "cols": [
+   [
+    "asset_key",
+    "asset_key",
+    "S"
+   ],
+   [
+    "equipment_number",
+    "equipment_number",
+    "S"
+   ],
+   [
+    "no_sarana",
+    "no_sarana",
+    "S"
+   ],
+   [
+    "equipment_desc",
+    "equipment_desc",
+    "S"
+   ],
+   [
+    "catalog_profile",
+    "catalog_profile",
+    "S"
+   ],
+   [
+    "class_sarana",
+    "class_sarana",
+    "S"
+   ],
+   [
+    "class_desc",
+    "class_desc",
+    "S"
+   ],
+   [
+    "dipo_code",
+    "dipo_code",
+    "S"
+   ],
+   [
+    "dipo_name",
+    "dipo_name",
+    "S"
+   ],
+   [
+    "plant",
+    "plant",
+    "S"
+   ],
+   [
+    "lokasi_kepemilikan",
+    "lokasi_kepemilikan",
+    "S"
+   ],
+   [
+    "manuf_asset",
+    "manuf_asset",
+    "S"
+   ],
+   [
+    "manuf_model_number",
+    "manuf_model_number",
+    "S"
+   ],
+   [
+    "manuf_serial_number",
+    "manuf_serial_number",
+    "S"
+   ],
+   [
+    "kapasitas",
+    "kapasitas",
+    "N"
+   ],
+   [
+    "mulai_dinas",
+    "mulai_dinas",
+    "S"
+   ],
+   [
+    "bast_date",
+    "bast_date",
+    "S"
+   ],
+   [
+    "sys",
+    "sys",
+    "S"
+   ],
+   [
+    "usr",
+    "usr",
+    "S"
+   ],
+   [
+    "characteristics_json",
+    "characteristics_json",
+    "S"
+   ]
+  ]
  }
 ];

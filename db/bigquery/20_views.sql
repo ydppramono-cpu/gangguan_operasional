@@ -621,3 +621,37 @@ SELECT
   NULLIF(TRIM(berkas_lembar), "") AS berkas_lembar
 FROM `${PROJECT}.kai_raw.gapeka25_lintas_lembar`
 WHERE COALESCE(NULLIF(TRIM(lembar),""), NULLIF(TRIM(wilayah),""), NULLIF(TRIM(judul_lintas),"")) IS NOT NULL;
+
+CREATE OR REPLACE VIEW `${PROJECT}.kai.skema` OPTIONS(description="Kamus kolom Gangguan_Induk (kolom, nama kanonis, fungsi, aturan pengisian)") AS
+SELECT
+  NULLIF(TRIM(kolom), "") AS kolom,
+  NULLIF(TRIM(nama_kanonis), "") AS nama_kanonis,
+  NULLIF(TRIM(fungsi), "") AS fungsi,
+  NULLIF(TRIM(aturan_pengisian), "") AS aturan_pengisian
+FROM `${PROJECT}.kai_raw.skema`
+WHERE COALESCE(NULLIF(TRIM(kolom),""), NULLIF(TRIM(nama_kanonis),""), NULLIF(TRIM(fungsi),"")) IS NOT NULL;
+
+CREATE OR REPLACE VIEW `${PROJECT}.kai.sarana_sap` OPTIONS(description="Referensi sarana SAP per unit: dipo, pabrikan, mulai dinas, karakteristik (JSON)") AS
+SELECT
+  NULLIF(TRIM(asset_key), "") AS asset_key,
+  NULLIF(TRIM(equipment_number), "") AS equipment_number,
+  NULLIF(TRIM(no_sarana), "") AS no_sarana,
+  NULLIF(TRIM(equipment_desc), "") AS equipment_desc,
+  NULLIF(TRIM(catalog_profile), "") AS catalog_profile,
+  NULLIF(TRIM(class_sarana), "") AS class_sarana,
+  NULLIF(TRIM(class_desc), "") AS class_desc,
+  NULLIF(TRIM(dipo_code), "") AS dipo_code,
+  NULLIF(TRIM(dipo_name), "") AS dipo_name,
+  NULLIF(TRIM(plant), "") AS plant,
+  NULLIF(TRIM(lokasi_kepemilikan), "") AS lokasi_kepemilikan,
+  NULLIF(TRIM(manuf_asset), "") AS manuf_asset,
+  NULLIF(TRIM(manuf_model_number), "") AS manuf_model_number,
+  NULLIF(TRIM(manuf_serial_number), "") AS manuf_serial_number,
+  `${PROJECT}.kai.num`(kapasitas) AS kapasitas,
+  NULLIF(TRIM(mulai_dinas), "") AS mulai_dinas,
+  NULLIF(TRIM(bast_date), "") AS bast_date,
+  NULLIF(TRIM(sys), "") AS sys,
+  NULLIF(TRIM(usr), "") AS usr,
+  NULLIF(TRIM(characteristics_json), "") AS characteristics_json
+FROM `${PROJECT}.kai_raw.sarana_sap`
+WHERE COALESCE(NULLIF(TRIM(asset_key),""), NULLIF(TRIM(equipment_number),""), NULLIF(TRIM(no_sarana),"")) IS NOT NULL;

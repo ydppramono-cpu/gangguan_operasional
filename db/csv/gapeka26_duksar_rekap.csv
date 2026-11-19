@@ -1,0 +1,16 @@
+wilayah,jenis_sarana,siap_guna,siap_operasi,stamformasi,cadangan
+Jawa,LOKOMOTIF,261,229,228,1
+Jawa,KRD,79,63,53,10
+Jawa,KERETA,2029,1716,1525,191
+Jawa,GERBONG,1776,1547,1134,413
+Sumatera Utara,LOKOMOTIF,33,28,27,1
+Sumatera Utara,KRD,18,14,14,0
+Sumatera Utara,KERETA,87,77,54,23
+Sumatera Utara,GERBONG,331,287,241,46
+Sumatera Barat,LOKOMOTIF,12,10,9,1
+Sumatera Barat,KRD,11,4,4,0
+Sumatera Barat,KERETA,26,22,16,6
+Sumatera Barat,GERBONG,196,169,152,17
+Sumatera Selatan,LOKOMOTIF,245,211,200,11
+Sumatera Selatan,KERETA,120,108,64,44
+Sumatera Selatan,GERBONG,6932,6140,5782,358

@@ -1,0 +1,636 @@
+petak,km_osm,cocok_jarak,jml_jembatan,panjang_jembatan_m,jml_terowongan,panjang_terowongan_m,persen_elektrifikasi,vmax_osm_kmj,nama_lintas_osm
+KEN-MER,10.25,1,1,21,0,0,0,80,Jalur Kereta Api Tanah Abang–Merak
+CGD-KEN,6.91,1,0,0,0,0,0,80,Jalur Kereta Api Krenceng–Anyerkidul
+KEN-CLG,3.64,1,0,0,0,0,0,80,Jalur Kereta Api Tanah Abang–Merak
+CLG-TOJB,7.75,1,2,26,0,0,0,80,Jalur Kereta Api Tanah Abang–Merak
+TOJB-KRA,4.85,1,9,138,0,0,0,80,Jalur KA Rangkasbitung-Merak
+KRA-SG,8.32,1,3,77,0,0,0,80,Jalur Kereta Api Tanah Abang–Merak
+SG-WLT,8.51,1,0,0,0,0,0,80,Jalur Kereta Api Tanah Abang–Merak
+WLT-CKL,7.61,1,0,9,0,0,0,80,Jalur Kereta Api Tanah Abang–Merak
+CKL-CT,6.8,1,3,118,0,0,0,80,Jalur Kereta Api Tanah Abang–Merak
+CT-JBU,4.25,1,0,0,0,0,0,80,Jalur Kereta Api Tanah Abang–Merak
+JBU-RK,6.59,1,1,111,0,0,8,80,Jalur Kereta Api Tanah Abang–Merak
+RK-CTR,9.88,1,8,255,0,0,100,70,Jalur Kereta Api Tanah Abang–Merak
+CTR-MJ,7.21,1,3,154,0,0,100,70,Jalur Kereta Api Tanah Abang–Merak
+MJ-CKY,1.89,1,2,95,0,0,100,70,Jalur Kereta Api Tanah Abang–Merak
+CKY-TGS,2.77,1,0,0,0,0,88,70,Jalur Kereta Api Tanah Abang–Merak
+TGS-TEJ,3.1,1,1,36,0,0,95,70,Jalur Kereta Api Tanah Abang–Merak
+TEJ-DAR,3.67,1,2,55,0,0,100,70,Jalur Kereta Api Tanah Abang–Merak
+DAR-CJT,2.73,1,1,28,0,0,100,70,Jalur Kereta Api Tanah Abang–Merak
+CJT-PRP,7.1,1,5,228,0,0,100,70,Jalur Kereta Api Tanah Abang–Merak
+PRP-CC,5.94,1,1,63,0,0,100,70,Jalur Kereta Api Tanah Abang–Merak
+CC-CSK,2.5,1,0,0,0,0,100,70,Jalur Kereta Api Tanah Abang–Merak
+CSK-SRP,2.89,0,1,176,0,0,100,70,Jalur Kereta Api Tanah Abang–Merak
+SRP-RU,1.35,0,1,61,0,0,100,70,Jalur Kereta Api Tanah Abang–Merak
+RU-SDM,4.49,1,3,118,0,0,100,70,Jalur Kereta Api Tanah Abang–Merak
+SDM-JMU,2.13,1,1,23,0,0,100,70,Jalur Kereta Api Tanah Abang–Merak
+JMU-PDJ,7.35,0,3,78,0,0,100,100,Jalur Kereta Api Tanah Abang–Merak
+PDJ-KBY,6.2,1,3,89,0,0,100,70,Jalur Kereta Api Tanah Abang–Merak
+KBY-PLM,3.64,1,1,12,0,0,100,70,Jalur Kereta Api Tanah Abang–Merak
+PLM-THB,3.38,1,1,41,0,0,100,70,Jalur Kereta Api Tanah Abang–Merak
+THB-KAT,2.03,1,0,10,0,0,100,70,Jalur Kereta Api Tanah Abang–Manggarai
+KAT-SUDB,3.87,0,0,20,0,0,100,70,Jalur Kereta Api Tanah Abang–Manggarai
+SUDB-SUD,0.22,0,0,0,0,0,100,60,Jalur Kereta Api Tanah Abang–Manggarai
+SUD-MRI,3.35,1,1,35,1,44,92,60,Jalur Kereta Api Tanah Abang–Manggarai
+THB-DU,3.67,1,0,0,0,0,100,90,Jalur Kereta Api Duri–Tanah Abang
+DU-AK,1.07,1,1,13,0,0,100,90,Jalur Kereta Api Kampung Bandan–Angke–Duri
+AK-KPB,4.37,1,5,252,0,0,100,50,Jalur Kereta Api Kampung Bandan–Angke–Duri
+KPB-RJW,2.22,0,1,54,0,0,100,70,Jalur Kereta Api Jakarta Kota–Cikampek
+RJW-KMO,1.94,1,0,0,0,0,100,70,Jalur Kereta Api Jakarta Kota–Cikampek
+KMO-PSE,1.43,1,0,0,0,0,55,70,Jalur Kereta Api Jakarta Kota–Cikampek
+PSE-GST,2.22,0,1,34,0,0,83,70,Jalur Kereta Api Jakarta Kota–Cikampek
+GST-KMT,3.64,0,1,14,0,0,100,70,Jalur Kereta Api Jakarta Kota–Cikampek
+KMT-POK,3.13,0,0,0,0,0,100,70,Jalur Kereta Api Jakarta Kota–Cikampek
+POK-JNG,1.89,0,0,0,0,0,100,70,Jalur Kereta Api Manggarai–Jatinegara
+MRI-MTR,1.77,0,2,640,0,0,85,60,Jalur Kereta Api Manggarai–Jatinegara
+MTR-JNG,1.28,1,1,514,0,0,100,60,Jalur Kereta Api Manggarai–Jatinegara
+DU-GRG,1.87,1,2,89,0,0,100,100,Jalur Kereta Api Duri–Tangerang
+GRG-PSG,4.28,0,4,180,0,0,100,100,Jalur Kereta Api Duri–Tangerang
+PSG-TKO,7.92,0,6,252,0,0,100,100,Jalur Kereta Api Duri–Tangerang
+TKO-BOI,2.24,1,2,67,0,0,100,90,Jalur Kereta Api Duri–Tangerang
+BOI-RW,1.75,1,0,0,0,0,100,90,Jalur Kereta Api Duri–Tangerang
+RW-KDS,2.07,1,1,23,0,0,100,90,Jalur Kereta Api Duri–Tangerang
+KDS-PI,2.76,1,0,0,0,0,100,90,Jalur Kereta Api Duri–Tangerang
+PI-BPR,1.64,1,0,0,0,0,100,100,Jalur Kereta Api Duri–Tangerang
+BPR-BST,11.85,1,8,463,2,111,100,90,Jalur Kereta Api Bandara Soekarno-Hatta
+BPR-THI,2.09,1,0,0,0,0,100,75,Jalur Kereta Api Duri–Tangerang
+THI-TNG,1.49,1,0,0,0,0,100,75,Jalur Kereta Api Duri–Tangerang
+JNG-CPN,1.8,1,0,0,0,0,100,115,Jalur Kereta Api Jakarta Kota–Cikampek
+CPN-KLD,3.72,0,2,47,0,0,26,115,Jalur Kereta Api Jakarta Kota–Cikampek
+KLD-BUA,7.99,0,5,110,0,0,66,115,Jalur Kereta Api Jakarta Kota–Cikampek
+BUA-KLDB,1.91,0,1,26,1,26,100,115,Jalur Kereta Api Jakarta Kota–Cikampek
+KLDB-CUK,1.48,1,2,85,0,0,100,115,Jalur Kereta Api Jakarta Kota–Cikampek
+CUK-RWB,1.49,1,0,0,0,0,100,115,Jalur Kereta Api Jakarta Kota–Cikampek
+RWB-KRI,1.66,1,1,27,0,0,100,115,Jalur Kereta Api Jakarta Kota–Cikampek
+KRI-BKS,2.56,1,0,0,0,0,100,115,Jalur Kereta Api Jakarta Kota–Cikampek
+BKS-BKST,2.49,1,2,120,0,0,98,115,Jalur Kereta Api Jakarta Kota–Cikampek
+BKST-TB,4.45,1,0,10,0,0,100,115,Jalur Kereta Api Jakarta Kota–Cikampek
+TB-CIT,3.07,1,0,9,0,0,100,115,Jalur Kereta Api Jakarta Kota–Cikampek
+CIT-TLM,0.93,0,1,23,0,0,100,115,Jalur Kereta Api Jakarta Kota–Cikampek
+TLM-CKR,5.95,0,2,72,0,0,100,115,Jalur Kereta Api Jakarta Kota–Cikampek
+CKR-LMB,4.28,1,1,33,0,0,8,120,Jalur Kereta Api Jakarta Kota–Cikampek
+LMB-KDH,8.92,1,6,131,0,0,0,120,Jalur Kereta Api Jakarta Kota–Cikampek
+KDH-KW,6.04,1,2,213,0,0,0,120,Jalur Kereta Api Jakarta Kota–Cikampek
+KW-KLI,7.11,1,0,0,0,0,0,120,Jalur Kereta Api Jakarta Kota–Cikampek
+KLI-KOS,11.02,0,2,103,0,0,0,120,Jalur Kereta Api Jakarta Kota–Cikampek
+KOS-DWN,6.9,1,1,45,0,0,0,120,Jalur Kereta Api Jakarta Kota–Cikampek
+DWN-CKP,10.16,0,2,68,0,0,0,120,Jalur Kereta Api Jakarta Kota–Cikampek
+JAKK-KPB,1.21,1,1,26,0,0,100,40,Jalur Kereta Api Jakarta Kota–Cikampek
+KPB-JAKG,0.9,0,0,0,0,0,27,50,Jalur Kereta Api Kampung Bandan–Angke–Duri
+KPB-AC,4.15,0,2,114,0,0,99,50,Jalur Kereta Api Jakarta Kota–Tanjung Priuk
+AC-TPK,5.11,1,3,101,0,0,100,40,Jalur Kereta Api Jakarta Kota–Tanjung Priuk
+TPK-AC,5.11,1,3,101,0,0,100,40,Jalur Kereta Api Jakarta Kota–Tanjung Priuk
+AC-RJW,6.25,0,3,168,0,0,100,70,Jalur Kereta Api Jakarta Kota–Tanjung Priuk
+JAKK-JAY,1.57,1,2,839,0,0,92,90,Jalur Kereta Api Jakarta Kota–Bogor
+JAY-MGB,1.14,1,1,1138,0,0,100,90,Jalur Kereta Api Jakarta Kota–Bogor
+MGB-SW,1.14,0,1,1136,0,0,100,90,Jalur Kereta Api Jakarta Kota–Bogor
+SW-JUA,0.72,0,1,724,0,0,100,90,Jalur Kereta Api Jakarta Kota–Bogor
+JUA-GMR,1.2,1,1,1201,0,0,95,90,Jalur Kereta Api Jakarta Kota–Bogor
+GMR-GDD,1.04,1,1,1038,0,0,100,90,Jalur Kereta Api Jakarta Kota–Bogor
+GDD-CKI,2.43,0,1,2430,0,0,100,90,Jalur Kereta Api Jakarta Kota–Bogor
+CKI-MRI,1.53,1,2,787,0,0,82,90,Jalur Kereta Api Jakarta Kota–Bogor
+MRI-TEB,2.55,1,0,0,0,0,89,80,Jalur Kereta Api Jakarta Kota–Bogor
+TEB-CW,4.22,0,0,0,0,0,99,80,Jalur Kereta Api Jakarta Kota–Bogor
+CW-DRN,1.51,1,0,0,0,0,100,80,Jalur Kereta Api Jakarta Kota–Bogor
+DRN-PSMB,0.82,0,0,0,0,0,100,80,Jalur Kereta Api Jakarta Kota–Bogor
+PSMB-PSM,2.61,1,0,0,0,0,100,80,Jalur Kereta Api Jakarta Kota–Bogor
+PSM-TNT,2.66,1,0,0,0,0,100,80,Jalur Kereta Api Jakarta Kota–Bogor
+TNT-LNA,2.52,1,0,0,0,0,100,80,Jalur Kereta Api Jakarta Kota–Bogor
+LNA-UP,1.13,1,0,0,0,0,100,80,Jalur Kereta Api Jakarta Kota–Bogor
+UP-UI,2.41,1,0,0,0,0,100,80,Jalur Kereta Api Jakarta Kota–Bogor
+UI-POC,0.95,1,0,0,0,0,100,80,Jalur Kereta Api Jakarta Kota–Bogor
+POC-DPB,2.86,1,0,0,0,0,100,80,Jalur Kereta Api Jakarta Kota–Bogor
+DPB-DP,1.73,1,0,0,0,0,100,80,Jalur Kereta Api Jakarta Kota–Bogor
+DP-CTA,5.18,1,0,8,0,0,100,80,Jalur Kereta Api Jakarta Kota–Bogor
+CTA-BJD,5.19,1,3,43,0,0,100,80,Jalur Kereta Api Jakarta Kota–Bogor
+BJD-CLT,4.35,1,0,0,0,0,100,80,Jalur Kereta Api Jakarta Kota–Bogor
+CLT-BOO,7.62,1,2,33,0,0,100,80,Jalur Kereta Api Jakarta Kota–Bogor
+CTA-PDRG,3.7,1,2,216,0,0,100,80,Jalur Kereta Api Citayam–Nambo
+PDRG-CBN,3.43,1,0,0,0,0,100,70,Jalur Kereta Api Citayam–Nambo
+CBN-GPI,4.36,1,2,310,0,0,100,70,Jalur KA Citayam-Nambo
+GPI-NMO,2.13,1,2,259,0,0,100,70,Jalur KA Citayam-Nambo
+BOO-BOP,0.38,0,0,0,0,0,51,50,Jalur Kereta Api Bogor-Padalarang
+BOP-BTT,3.97,1,1,23,0,0,0,50,Jalur Kereta Api Bogor-Padalarang
+BTT-CS,3.26,0,1,23,0,0,0,50,Jalur Kereta Api Bogor-Padalarang
+CS-MSG,6.62,0,4,148,0,0,0,50,Jalur Kereta Api Bogor-Padalarang
+MSG-CGB,5.86,1,3,147,0,0,0,50,Jalur Kereta Api Bogor-Padalarang
+CGB-CCR,7.28,1,2,123,0,0,0,50,Jalur Kereta Api Bogor-Padalarang
+CCR-CJE,4.16,1,2,33,0,0,0,50,Jalur Kereta Api Bogor-Padalarang
+CJE-PRK,3.66,1,1,17,0,0,0,50,Jalur Kereta Api Bogor-Padalarang
+PRK-CBD,5.41,1,2,132,0,0,0,50,Jalur Kereta Api Bogor-Padalarang
+CBD-KE,4.87,1,2,179,0,0,0,60,Jalur Kereta Api Bogor-Padalarang
+KE-PON,3.67,1,0,0,0,0,0,60,Jalur Kereta Api Bogor-Padalarang
+PON-CSA,3.92,1,1,49,0,0,0,60,Jalur Kereta Api Bogor-Padalarang
+CSA-SI,4.78,1,1,19,0,0,0,60,Jalur Kereta Api Bogor-Padalarang
+CKP-CBR,7.66,1,0,0,0,0,0,100,Jalur Kereta Api Cikampek–Padalarang
+CBR-SAD,6.18,1,0,0,0,0,0,100,Jalur Kereta Api Cikampek–Padalarang
+SAD-PWK,5.3,1,0,0,0,0,0,100,Jalur Kereta Api Cikampek–Padalarang
+PWK-CA,6.59,1,7,431,0,0,0,60,Jalur Kereta Api Cikampek–Padalarang
+CA-SUT,7.13,1,5,346,0,0,0,60,Jalur Kereta Api Cikampek–Padalarang
+SUT-PLD,3.97,1,3,135,0,0,0,60,Jalur Kereta Api Cikampek–Padalarang
+PLD-CG,6.32,1,1,62,0,0,0,60,Jalur Kereta Api Cikampek–Padalarang
+CG-CD,5.22,1,2,334,0,0,0,60,Jalur Kereta Api Cikampek–Padalarang
+CD-RH,3.15,1,2,227,0,0,0,60,Jalur Kereta Api Cikampek–Padalarang
+RH-MSI,4.13,1,2,81,0,0,0,60,Jalur Kereta Api Cikampek–Padalarang
+MSI-SKT,4.55,1,4,276,1,944,0,60,Jalur Kereta Api Cikampek–Padalarang
+SKT-CLE,7.26,1,12,1446,0,0,0,60,Jalur Kereta Api Cikampek–Padalarang
+CLE-PDL,7.21,1,10,1262,0,0,0,60,Jalur Kereta Api Cikampek–Padalarang
+PDL-GK,3.21,1,0,0,0,0,0,110,Jalur Kereta Api Padalarang–Kasugihan
+GK-CMI,3.27,1,0,10,0,0,0,110,Jalur Kereta Api Padalarang–Kasugihan
+CMI-CMD,3.14,1,1,17,0,0,0,110,Jalur Kereta Api Padalarang–Kasugihan
+CMD-AND,2.45,1,0,5,0,0,0,110,Jalur Kereta Api Padalarang–Kasugihan
+AND-BD,2.77,1,0,13,0,0,0,110,Jalur Kereta Api Padalarang–Kasugihan
+AND-CIR,1.4,1,0,7,0,0,0,110,Jalur Kereta Api Padalarang–Kasugihan
+CIR-BD,1.37,1,0,0,0,0,0,110,Jalur Kereta Api Padalarang–Kasugihan
+BD-CTH,2.57,1,1,57,0,0,0,100,Jalur Kereta Api Padalarang–Kasugihan
+CTH-KAC,2.35,1,1,13,0,0,0,100,Jalur Kereta Api Padalarang–Kasugihan
+KAC-GDB,5.21,1,5,97,0,0,0,100,Jalur Kereta Api Padalarang–Kasugihan
+GDB-CMK,3.56,0,1,25,0,0,0,110,Jalur Kereta Api Padalarang–Kasugihan
+CMK-RCK,4.86,1,3,39,0,0,0,110,Jalur Kereta Api Padalarang–Kasugihan
+RCK-HRP,5.18,1,4,75,0,0,0,110,Jalur Kereta Api Padalarang–Kasugihan
+HRP-CCL,4.12,1,2,38,0,0,0,110,Jalur Kereta Api Padalarang–Kasugihan
+CCL-NG,8.43,1,0,0,0,0,0,50,Jalur Kereta Api Padalarang–Kasugihan
+NG-LBJ,5.92,1,2,242,0,0,0,50,Jalur Kereta Api Padalarang–Kasugihan
+LBJ-LL,6.35,1,3,83,0,0,0,50,Jalur Kereta Api Padalarang–Kasugihan
+LL-KRAI,4.56,1,2,55,0,0,0,60,Jalur Kereta Api Padalarang–Kasugihan
+KRAI-LO,3.47,1,1,65,0,0,0,55,Jalur Kereta Api Padalarang–Kasugihan
+LO-CB,2.72,1,1,96,0,0,0,55,Jalur Kereta Api Padalarang–Kasugihan
+KRAI-CB,6.19,1,2,161,0,0,0,55,Jalur Kereta Api Padalarang–Kasugihan
+CB-WB,5.94,1,1,15,0,0,0,55,Jalur Kereta Api Padalarang–Kasugihan
+WB-BMW,8.83,1,4,251,0,0,0,50,Jalur Kereta Api Padalarang–Kasugihan
+BMW-CPD,6.23,1,3,347,0,0,0,50,Jalur Kereta Api Padalarang–Kasugihan
+CPD-CAA,8.16,1,2,135,0,0,0,50,Jalur Kereta Api Padalarang–Kasugihan
+CAA-CAW,5.4,1,1,36,0,0,0,100,Jalur Kereta Api Padalarang–Kasugihan
+CAW-RJP,9.38,1,10,283,0,0,0,100,Jalur Kereta Api Padalarang–Kasugihan
+RJP-IH,8.07,1,5,169,0,0,0,100,Jalur Kereta Api Padalarang–Kasugihan
+IH-TSM,4.77,1,2,67,0,0,0,100,Jalur Kereta Api Padalarang–Kasugihan
+TSM-AW,6.67,1,3,95,0,0,0,100,Jalur Kereta Api Padalarang–Kasugihan
+AW-MNJ,3.08,1,1,17,0,0,0,100,Jalur Kereta Api Padalarang–Kasugihan
+MNJ-CI,9.1,1,5,378,0,0,0,100,Jalur Kereta Api Padalarang–Kasugihan
+CI-BJG,8.68,1,2,96,0,0,0,110,Jalur Kereta Api Padalarang–Kasugihan
+BJG-KNP,7.6,1,1,112,0,0,0,90,Jalur Kereta Api Padalarang–Kasugihan
+KNP-BJR,6.01,1,0,0,0,0,0,110,Jalur Kereta Api Padalarang–Kasugihan
+CB-PSJ,4.77,1,1,42,0,0,0,60,Jalur Kereta Api Cibatu–Cikajang
+PSJ-WNR,4.39,1,0,0,0,0,0,60,Jalur Kereta Api Cibatu–Cikajang
+WNR-GRT,10.22,1,4,113,1,13,0,60,Jalur Kereta Api Cibatu–Cikajang
+SI-RI,4.06,1,2,32,0,0,0,70,Jalur Kereta Api Bogor-Padalarang
+RI-GDS,3.14,1,0,0,0,0,0,70,Jalur Kereta Api Bogor-Padalarang
+SI-GDS,7.2,1,2,32,0,0,0,70,Jalur Kereta Api Bogor-Padalarang
+GDS-CRG,5.92,1,2,59,0,0,0,60,Jalur Kereta Api Bogor-Padalarang
+CRG-LP,3.09,1,0,0,1,686,0,60,Jalur Kereta Api Bogor-Padalarang
+LP-SSI,7.49,1,5,99,0,0,0,40,Jalur Kereta Api Bogor-Padalarang
+SSI-CBB,1.66,1,0,0,0,0,0,40,Jalur Kereta Api Bogor-Padalarang
+LP-CBB,9.15,1,5,99,0,0,0,40,Jalur Kereta Api Bogor-Padalarang
+CBB-CIK,5.75,1,1,30,0,0,0,45,Jalur Kereta Api Bogor-Padalarang
+CIK-CJ,7.65,1,8,205,0,0,0,45,Jalur Kereta Api Bogor-Padalarang
+CBB-CJ,13.4,1,9,235,0,0,0,45,Jalur Kereta Api Bogor-Padalarang
+CJ-MLB,3.87,1,0,0,0,0,0,70,Jalur Kereta Api Bogor-Padalarang
+MLB-TPR,3.61,1,1,12,0,0,0,70,Jalur Kereta Api Bogor-Padalarang
+TPR-SLJ,1.58,1,0,0,0,0,0,70,Jalur Kereta Api Bogor-Padalarang
+SLJ-CRJ,3.21,1,1,126,0,0,0,70,Jalur Kereta Api Bogor-Padalarang
+CJ-CRJ,12.28,1,2,138,0,0,0,70,Jalur Kereta Api Bogor-Padalarang
+CRJ-CPY,5.24,1,1,36,0,0,0,70,Jalur Kereta Api Bogor-Padalarang
+CPY-RM,6.21,1,1,176,0,0,0,70,Jalur Kereta Api Bogor-Padalarang
+RM-CPT,4.51,1,0,0,0,0,0,70,Jalur Kereta Api Bogor-Padalarang
+CPY-CPT,10.72,1,1,176,0,0,0,70,Jalur Kereta Api Bogor-Padalarang
+CPT-TAU,311.16,0,113,7282,3,1664,25,120,Jalur Kereta Api Bogor-Padalarang
+TAU-PDL,6.75,1,9,1131,0,0,0,60,Jalur Kereta Api Cikampek–Padalarang
+CKP-TJS,9.04,1,3,201,0,0,0,120,Jalur Kereta Api Cikampek–Cirebon
+TJS-PAB,4.93,1,1,14,0,0,0,120,Jalur Kereta Api Cikampek–Cirebon
+PAB-PRI,5.56,1,0,0,0,0,0,120,Jalur Kereta Api Cikampek–Cirebon
+PRI-PAS,6.17,1,0,0,0,0,0,120,Jalur Kereta Api Cikampek–Cirebon
+PAS-CKM,5.65,1,0,0,0,0,0,120,Jalur Kereta Api Cikampek–Cirebon
+CKM-PGB,9.17,1,3,127,0,0,0,120,Jalur Kereta Api Cikampek–Cirebon
+PGB-CRA,6.96,1,3,68,0,0,0,120,Jalur Kereta Api Cikampek–Cirebon
+CRA-HGL,6.46,1,2,108,0,0,0,120,Jalur Kereta Api Cikampek–Cirebon
+HGL-CLH,10.49,1,4,92,0,0,0,115,Jalur Kereta Api Cikampek–Cirebon
+CLH-KAB,7.88,1,3,98,0,0,0,110,Jalur Kereta Api Cikampek–Cirebon
+KAB-TIS,5.9,1,2,32,0,0,0,110,Jalur Kereta Api Cikampek–Cirebon
+TIS-TLS,8.29,1,3,121,0,0,0,110,Jalur Kereta Api Cikampek–Cirebon
+TLS-JTB,8.54,1,8,412,0,0,0,110,Jalur Kereta Api Cikampek–Cirebon
+JTB-KTM,8.23,1,5,93,0,0,0,110,Jalur Kereta Api Cikampek–Cirebon
+KTM-AWN,14.92,1,8,167,0,0,0,110,Jalur Kereta Api Cikampek–Cirebon
+AWN-BDW,5.33,1,2,76,0,0,0,110,Jalur Kereta Api Cikampek–Cirebon
+BDW-CNK,4.91,1,4,108,0,0,0,110,Jalur Kereta Api Cikampek–Cirebon
+CNK-CN,6.83,1,3,66,0,0,0,110,Jalur Kereta Api Cikampek–Cirebon
+CN-CNP,1.58,1,1,16,0,0,0,110,Jalur Kereta Api Cirebon–Prupuk
+CNP-LWG,7.85,1,5,154,0,0,0,120,Jalur Kereta Api Cirebon–Prupuk
+LWG-SDU,7.25,1,2,102,0,0,0,120,Jalur Kereta Api Cirebon–Prupuk
+SDU-CLD,15.53,1,8,245,0,0,0,120,Jalur Kereta Api Cirebon–Prupuk
+CLD-KGG,16.04,1,9,470,0,0,0,120,Jalur Kereta Api Cirebon–Prupuk
+KGG-LRA,9.35,1,5,153,0,0,0,120,Jalur Kereta Api Cirebon–Prupuk
+LRA-SGG,5.74,1,2,119,0,0,0,120,Jalur Kereta Api Cirebon–Prupuk
+SGG-PPK,11.64,1,2,79,1,14,0,120,Jalur Kereta Api Cirebon–Prupuk
+CNP-WDW,10.25,1,8,202,0,0,0,120,Jalur Kereta Api Cirebon–Tegal
+WDW-BBK,13.89,1,5,157,0,0,0,120,Jalur Kereta Api Cirebon–Tegal
+BBK-LOS,9.45,1,3,52,0,0,0,120,Jalur Kereta Api Cirebon–Tegal
+LOS-TGN,7.71,1,6,281,0,0,0,120,Jalur Kereta Api Cirebon–Tegal
+TGN-BB,20.56,1,8,399,0,0,0,120,Jalur Kereta Api Cirebon–Tegal
+BB-TG,12.31,1,5,215,0,0,0,120,Jalur Kereta Api Cirebon–Tegal
+TG-LR,55.66,0,8,335,2,30,0,120,Jalur Kereta Api Tegal–Prupuk
+PML-PTA,6.85,1,1,69,0,0,0,120,Jalur Kereta Api Tegal–Semarang–Brumbung
+PTA-CO,9.74,1,3,184,0,0,0,120,Jalur Kereta Api Tegal–Semarang–Brumbung
+CO-SRI,4.35,1,2,27,0,0,0,105,Jalur Kereta Api Tegal–Semarang–Brumbung
+SRI-PK,11.21,1,8,363,0,0,0,105,Jalur Kereta Api Tegal–Semarang–Brumbung
+PK-BTG,7.86,1,2,126,0,0,0,115,Jalur Kereta Api Tegal–Semarang–Brumbung
+BTG-UJN,6.41,0,2,87,0,0,0,115,Jalur Kereta Api Tegal–Semarang–Brumbung
+UJN-KRP,12.2,1,4,185,0,0,0,105,Jalur Kereta Api Tegal–Semarang–Brumbung
+KRP-PLB,7.22,1,2,43,0,0,0,105,Jalur Kereta Api Tegal–Semarang–Brumbung
+PLB-KNS,9.58,1,1,41,0,0,0,110,Jalur Kereta Api Tegal–Semarang–Brumbung
+KNS-WLR,5.24,1,3,104,0,0,0,110,Jalur Kereta Api Tegal–Semarang–Brumbung
+WLR-KBD,8.87,1,8,317,0,0,0,110,Jalur Kereta Api Tegal–Semarang–Brumbung
+KBD-KLN,11.97,1,5,141,0,0,0,120,Jalur Kereta Api Tegal–Semarang–Brumbung
+KLN-MKG,5.51,1,3,67,0,0,0,120,Jalur Kereta Api Tegal–Semarang–Brumbung
+MKG-JRK,6.81,1,2,34,0,0,0,120,Jalur Kereta Api Tegal–Semarang–Brumbung
+JRK-SMC,5.88,1,4,184,0,0,0,120,Jalur Kereta Api Tegal–Semarang–Brumbung
+SMC-SMT,1.77,1,1,29,0,0,0,50,Jalur Kereta Api Tegal–Semarang–Brumbung
+SMT-ATA,7.01,1,3,155,0,0,0,120,Jalur Kereta Api Tegal–Semarang–Brumbung
+ATA-BBG,6.85,1,2,103,0,0,0,120,Jalur Kereta Api Tegal–Semarang–Brumbung
+BBG-TGW,9.65,1,6,158,0,0,0,120,Jalur Kereta Api Brumbung–Gambringan
+TGW-GUB,7.52,1,2,45,0,0,0,120,Jalur Kereta Api Brumbung–Gambringan
+GUB-KGT,13.1,1,4,178,0,0,0,120,Jalur Kereta Api Brumbung–Gambringan
+KGT-SDI,8.77,1,1,35,0,0,0,120,Jalur Kereta Api Brumbung–Gambringan
+SDI-NBO,5.86,1,2,133,0,0,0,120,Jalur Kereta Api Brumbung–Gambringan
+NBO-GBN,1.65,1,1,34,0,0,0,120,Jalur Kereta Api Brumbung–Gambringan
+GBN-JBN,10.8,1,3,107,0,0,0,120,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+JBN-PNL,5.69,1,0,0,0,0,0,120,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+PNL-KNN,9.63,1,2,117,0,0,0,120,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+KNN-SL,9.28,1,3,106,0,0,0,100,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+SL-DPL,7.44,1,3,61,0,0,0,100,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+DPL-RBG,12.57,1,3,130,0,0,0,100,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+RBG-WDU,11.38,1,2,72,0,0,0,100,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+WDU-KPA,6.23,1,0,0,0,0,0,100,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+KPA-CU,5.62,1,1,29,0,0,0,100,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+BBG-TGG,13.67,1,2,120,0,0,0,120,Jalur Kereta Api Brumbung–Gundih
+TGG-KEJ,9.52,1,1,33,0,0,0,80,Jalur Kereta Api Brumbung–Gundih
+KEJ-PDS,4.46,1,1,57,0,0,0,80,Jalur Kereta Api Brumbung–Gundih
+PDS-TW,9.18,1,1,19,0,0,0,80,Jalur Kereta Api Brumbung–Gundih
+TW-KSO,8.4,1,2,49,0,0,0,80,Jalur Kereta Api Brumbung–Gundih
+KSO-GD,10.45,1,3,178,0,0,0,120,Jalur Kereta Api Brumbung–Gundih
+GBN-GD,9.99,1,5,397,0,0,0,40,Jalur Kereta Api Gundih–Gambringan
+PPK-LG,11.09,1,3,153,2,74,0,120,Jalur Kereta Api Prupuk–Kroya
+LG-BMA,7.96,1,3,386,1,23,0,80,Jalur Kereta Api Prupuk–Kroya
+BMA-KRT,7.27,1,7,547,0,0,0,70,Jalur Kereta Api Prupuk–Kroya
+KRT-PAT,6.15,1,4,105,0,0,0,70,Jalur Kereta Api Prupuk–Kroya
+PAT-KRR,10.64,1,15,630,0,0,0,70,Jalur Kereta Api Prupuk–Kroya
+KRR-KGD,7.69,1,10,464,0,0,0,70,Jalur Kereta Api Prupuk–Kroya
+KGD-PWT,6.18,1,7,343,0,0,0,70,Jalur Kereta Api Prupuk–Kroya
+PWT-NTG,8.47,1,3,450,0,0,0,85,Jalur Kereta Api Prupuk–Kroya
+NTG-KBS,5.38,1,3,386,3,771,0,80,Jalur Kereta Api Prupuk–Kroya
+KBS-RDN,4.78,1,5,95,0,0,0,120,Jalur Kereta Api Prupuk–Kroya
+RDN-KYA,8.31,1,4,131,0,0,0,120,Jalur Kereta Api Prupuk–Kroya
+KYA-KJ,6.79,1,0,0,0,0,0,120,Jalur Kereta Api Kroya–Kutoarjo
+KJ-SPH,5.21,1,4,92,0,0,0,120,Jalur Kereta Api Kroya–Kutoarjo
+SPH-TBK,5.31,1,3,112,0,0,0,120,Jalur Kereta Api Kroya–Kutoarjo
+TBK-IJ,4.39,1,3,92,0,0,0,120,Jalur Kereta Api Kroya–Kutoarjo
+IJ-GB,6.83,1,2,61,1,588,0,120,Jalur Kereta Api Kroya–Kutoarjo
+GB-KA,7.88,1,7,187,0,0,0,120,Jalur Kereta Api Kroya–Kutoarjo
+KA-SRW,3.91,1,2,24,0,0,0,120,Jalur Kereta Api Kroya–Kutoarjo
+SRW-SOA,5.08,1,1,15,0,0,0,120,Jalur Kereta Api Kroya–Kutoarjo
+SOA-KM,2.7,1,2,138,0,0,0,120,Jalur Kereta Api Kroya–Kutoarjo
+KM-WNS,4.67,1,2,58,0,0,0,120,Jalur Kereta Api Kroya–Kutoarjo
+WNS-KWN,4.44,1,2,27,0,0,0,120,Jalur Kereta Api Kroya–Kutoarjo
+KWN-PRB,7.14,1,2,119,0,0,0,120,Jalur Kereta Api Kroya–Kutoarjo
+PRB-BTH,6.6,1,5,238,0,0,0,120,Jalur Kereta Api Kroya–Kutoarjo
+BTH-KTA,5.43,1,2,36,0,0,0,120,Jalur Kereta Api Kroya–Kutoarjo
+PPK-MGS,6,1,1,62,1,16,0,120,Jalur Kereta Api Tegal–Prupuk
+MGS-BLP,9.5,1,1,55,0,0,0,100,Jalur Kereta Api Tegal–Prupuk
+BLP-SLW,9.42,1,1,10,0,0,0,100,Jalur Kereta Api Tegal–Prupuk
+PPK-SLW,24.92,1,3,127,1,16,0,120,Jalur Kereta Api Tegal–Prupuk
+SLW-TG,13.54,1,1,10,0,0,0,100,Jalur Kereta Api Tegal–Prupuk
+MA-KH,2,1,1,382,0,0,0,120,Jalur Kereta Api Cilacap–Maos
+KH-KKD,7.53,1,1,29,0,0,0,100,Jalur Kereta Api Cilacap–Maos
+KKD-GM,4.1,1,1,15,0,0,0,100,Jalur Kereta Api Cilacap–Maos
+GM-CP,191.32,0,93,5321,7,880,0,120,Jalur Kereta Api Prupuk–Kroya
+BJR-LN,10.8,1,5,347,0,0,0,120,Jalur Kereta Api Padalarang–Kasugihan
+LN-MLW,8.77,1,8,459,0,0,0,120,Jalur Kereta Api Padalarang–Kasugihan
+MLW-CPI,8.78,1,6,188,0,0,0,120,Jalur Kereta Api Padalarang–Kasugihan
+CPI-SDR,7.39,1,7,160,0,0,0,120,Jalur Kereta Api Padalarang–Kasugihan
+SDR-GDM,7.49,1,4,140,0,0,0,120,Jalur Kereta Api Padalarang–Kasugihan
+GDM-KWG,9.6,1,7,297,0,0,0,120,Jalur Kereta Api Padalarang–Kasugihan
+KWG-JRL,12.93,1,2,100,0,0,0,120,Jalur Kereta Api Padalarang–Kasugihan
+JRL-LBG,6.61,1,2,36,0,0,0,120,Jalur Kereta Api Padalarang–Kasugihan
+LBG-KH,5.63,1,3,75,0,0,0,120,Jalur Kereta Api Padalarang–Kasugihan
+KH-MA,2,1,1,382,0,0,0,120,Jalur Kereta Api Cilacap–Maos
+MA-SKP,6.41,1,5,220,0,0,0,120,Jalur Kereta Api Maos–Kroya
+SKP-KYA,6.25,1,1,62,0,0,0,120,Jalur Kereta Api Maos–Kroya
+KTA-JN,13.62,1,3,101,0,0,0,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+JN-WJ,8.76,1,3,207,0,0,0,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+WJ-KDG,20.36,0,13,329,0,0,0,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+KDG-WT,6.75,1,4,133,0,0,0,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+WT-STL,10.23,1,5,206,0,0,0,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+STL-RWL,8.42,1,2,199,0,0,0,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+RWL-PTN,5.18,1,0,0,0,0,0,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+PTN-YK,4.2,1,3,120,0,0,21,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+YK-LPN,1.34,1,1,87,0,0,100,65,Jalur Kereta Api Kutoarjo–Solo Balapan
+LPN-MGW,6.82,1,0,0,0,0,100,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+MGW-BBN,7.91,1,5,252,0,0,100,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+BBN-SWT,5.81,1,5,113,0,0,100,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+SWT-KT,6.75,1,3,89,0,0,100,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+KT-CE,9.39,1,2,51,0,0,100,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+CE-DL,6.28,1,2,77,0,0,100,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+DL-GW,5.58,1,3,84,0,0,100,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+GW-PWS,6.58,1,1,22,0,0,99,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+PWS-SLO,2.83,1,0,8,0,0,90,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+PWS-STA,5.06,1,0,0,0,0,7,20,Jalur Kereta Api Purwosari–Wonogiri
+STA-SKH,13.45,1,4,243,0,0,0,80,Jalur Kereta Api Purwosari–Wonogiri
+SKH-PNT,7.93,1,2,65,0,0,0,80,Jalur Kereta Api Purwosari–Wonogiri
+PNT-WNG,10.73,1,2,153,0,0,0,80,Jalur Kereta Api Purwosari–Wonogiri
+GD-GPK,6.3,1,5,95,0,0,0,120,Jalur Kereta Api Gundih–Solo Balapan
+GPK-SUM,7.79,1,1,35,0,0,0,120,Jalur Kereta Api Gundih–Solo Balapan
+SUM-SLM,8.99,1,0,0,0,0,0,120,Jalur Kereta Api Gundih–Solo Balapan
+SLM-KO,8.44,1,1,61,0,0,0,120,Jalur Kereta Api Gundih–Solo Balapan
+KO-KDO,7.33,1,0,0,0,0,0,120,Jalur Kereta Api Gundih–Solo Balapan
+KDO-SLO,4.28,1,3,1521,0,0,22,120,Jalur Kereta Api Gundih–Solo Balapan
+KDO-SMO,9.67,1,2,8790,2,204,0,120,Jalur Kereta Api Bandara Adisumarmo
+SLO-SK,2.54,1,0,0,0,0,92,120,Jalur Kereta Api Solo Balapan–Kertosono
+SK-PL,4.19,1,3,298,0,0,95,120,Jalur Kereta Api Solo Balapan–Kertosono
+PL-KMR,4.87,1,2,55,0,0,11,120,Jalur Kereta Api Solo Balapan–Kertosono
+KMR-MSR,8.97,1,5,153,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+MSR-SR,8.92,1,3,98,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+SR-KRO,5.27,1,3,82,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+KRO-KDB,6.13,1,3,182,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+KDB-WK,12.17,1,8,374,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+YIA-KDG,18.83,0,8,4932,0,0,0,120,Jalur Kereta Api Kutoarjo–Solo Balapan
+WK-KG,9.39,1,3,108,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+KG-NGW,9.24,1,4,116,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+NGW-GG,7.34,1,3,116,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+GG-MAG,8.08,1,1,50,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+MAG-MN,10.56,1,7,246,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+MN-BBD,8.01,1,11,237,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+BBD-CRB,8.35,1,4,92,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+CRB-SRD,8.56,1,6,141,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+SRD-WLG,9.83,1,6,223,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+WLG-BGR,7.23,1,6,115,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+BGR-NJ,6.44,1,3,102,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+NJ-SKM,4.47,1,1,12,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+SKM-BRN,10.69,1,2,120,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+BRN-KTS,6.83,1,4,103,0,0,0,120,Jalur Kereta Api Solo Balapan–Kertosono
+KTS-SMB,7.58,1,9,438,0,0,0,120,Jalur Kereta Api Kertosono–Wonokromo
+SMB-JG,7.81,1,2,58,0,0,0,120,Jalur Kereta Api Kertosono–Wonokromo
+JG-PTR,5.63,1,0,0,0,0,0,120,Jalur Kereta Api Kertosono–Wonokromo
+PTR-SBO,7.28,1,0,0,0,0,0,120,Jalur Kereta Api Kertosono–Wonokromo
+JG-SBO,12.91,1,0,0,0,0,0,120,Jalur Kereta Api Kertosono–Wonokromo
+SBO-CRM,3.71,1,1,47,0,0,0,120,Jalur Kereta Api Kertosono–Wonokromo
+CRM-MR,8.01,1,8,204,0,0,0,120,Jalur Kereta Api Kertosono–Wonokromo
+SBO-MR,11.73,1,9,224,0,0,0,120,Jalur Kereta Api Kertosono–Wonokromo
+KTS-PWA,7.19,1,2,207,0,0,0,120,Jalur Kereta Api Kertosono–Bangil
+PWA-PPR,5.93,1,4,105,0,0,0,120,Jalur Kereta Api Kertosono–Bangil
+PPR-MGN,4.38,1,1,33,0,0,0,120,Jalur Kereta Api Kertosono–Bangil
+MGN-SS,6.08,1,1,20,0,0,0,120,Jalur Kereta Api Kertosono–Bangil
+SS-KD,5.21,1,1,38,0,0,0,120,Jalur Kereta Api Kertosono–Bangil
+KD-NDL,9.6,1,3,69,0,0,0,120,Jalur Kereta Api Kertosono–Bangil
+NDL-KRS,6.45,1,2,52,0,0,0,120,Jalur Kereta Api Kertosono–Bangil
+KRS-NJG,7.79,1,4,156,0,0,0,120,Jalur Kereta Api Kertosono–Bangil
+NJG-TA,6.42,1,1,114,0,0,0,120,Jalur Kereta Api Kertosono–Bangil
+TA-SBL,5.18,1,0,16,0,0,0,120,Jalur Kereta Api Kertosono–Bangil
+SBL-NT,7.91,1,0,0,0,0,0,120,Jalur Kereta Api Kertosono–Bangil
+NT-RJ,7.82,1,0,0,0,0,0,120,Jalur Kereta Api Kertosono–Bangil
+RJ-BL,13.2,1,6,298,0,0,0,120,Jalur Kereta Api Kertosono–Bangil
+BL-GRM,7.28,1,4,108,0,0,0,80,Jalur Kereta Api Kertosono–Bangil
+GRM-TAL,8.29,1,5,165,0,0,0,80,Jalur Kereta Api Kertosono–Bangil
+TAL-WG,3.62,1,5,141,0,0,0,80,Jalur Kereta Api Kertosono–Bangil
+CU-TBO,7.71,1,2,247,0,0,0,105,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+TBO-KIT,13.68,1,6,159,0,0,0,120,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+KIT-BJ,14.45,1,4,153,0,0,0,120,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+BJ-KPS,6.48,1,2,44,0,0,0,120,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+KPS-SRJ,7.94,1,3,122,0,0,0,120,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+SRJ-BWO,12.29,1,3,59,0,0,0,120,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+BWO-BBT,8.45,1,1,42,0,0,0,120,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+BBT-GEB,6.03,1,0,0,0,0,0,120,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+GEB-PC,5.22,1,0,0,0,0,0,120,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+PC-SBN,9.87,1,0,0,0,0,0,120,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+SBN-LMG,7.01,1,4,89,0,0,0,120,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+LMG-DD,12.26,1,1,29,0,0,0,110,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+DD-CME,9.78,1,0,0,0,0,0,110,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+CME-BNW,5.23,1,1,91,0,0,0,110,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+BNW-KDA,4.99,1,1,11,0,0,0,110,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+KDA-TES,3.4,1,1,13,0,0,0,110,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+TES-SBI,5.34,1,1,20,0,0,0,110,Jalur Kereta Api Gambringan–Surabaya Pasarturi
+KDA-IDO,9.59,1,3,160,0,0,0,50,Jalur Kereta Api Kandangan–Indro
+SBI-MST,1.39,1,0,0,1,82,0,105,Jalur Kereta Api Surabaya Pasarturi–Kalimas
+MST-KLM,2.66,1,0,13,0,0,0,50,Jalur Kereta Api Surabaya Pasarturi–Kalimas
+SB-SDT,3.03,0,0,0,0,0,0,50,Jalur Kereta Api Surabaya Kota–Wonokromo
+SBE-SDT,2.67,0,1,18,0,0,6,50,Jalur Kereta Api Gundih–Solo Balapan
+SDT-SGU,3.46,1,0,0,0,0,0,50,Jalur Kereta Api Surabaya Gubeng–Benteng
+SB-SGU,3.44,1,0,0,0,0,0,50,Jalur Kereta Api Surabaya Kota–Wonokromo
+MR-TRK,9.82,1,2,292,0,0,0,110,Jalur Kereta Api Kertosono–Wonokromo
+TRK-KDN,5.1,1,0,0,0,0,0,120,Jalur Kereta Api Kertosono–Wonokromo
+KDN-KRN,4.76,1,2,34,0,0,0,120,Jalur Kereta Api Kertosono–Wonokromo
+KRN-BH,4.41,1,2,37,0,0,0,120,Jalur Kereta Api Kertosono–Wonokromo
+BH-SPJ,9.8,1,2,27,0,0,0,110,Jalur Kereta Api Kertosono–Wonokromo
+SPJ-WO,6.87,1,1,29,0,0,0,110,Jalur Kereta Api Kertosono–Wonokromo
+WO-NGA,1.86,1,1,81,0,0,0,95,Jalur Kereta Api Surabaya Kota–Wonokromo
+NGA-SGU,2.5,1,2,44,0,0,0,95,Jalur Kereta Api Surabaya Kota–Wonokromo
+WO-SGU,4.36,1,3,125,0,0,0,95,Jalur Kereta Api Surabaya Kota–Wonokromo
+WO-MGR,1.61,1,0,0,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+MGR-JMS,1.61,1,2,25,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+JMS-KTL,1.29,1,0,16,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+KTL-WR,1.37,1,1,31,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+WO-WR,5.88,1,3,72,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+WR-STP,1.68,1,2,58,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+STP-GDG,2.36,1,0,9,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+WR-GDG,4.04,1,2,67,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+GDG-BJK,2.66,1,0,14,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+BJK-BDR,1.76,1,1,18,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+BDR-PWJ,1.61,1,1,20,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+PWJ-SDA,1.77,1,1,18,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+GDG-SDA,7.8,1,3,69,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+SDA-TGA,5.7,1,8,142,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+TGA-PR,3.56,1,1,14,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+PR-BG,12.41,1,3,257,0,0,0,80,Jalur Kereta Api Wonokromo–Bangil
+TRK-TLN,14.49,1,0,0,0,0,0,80,Jalur Kereta Api Sidoarjo–Tarik
+TLN-SDA,7.66,1,3,41,0,0,0,80,Jalur Kereta Api Sidoarjo–Tarik
+WG-KSB,9.45,1,4,269,0,0,0,80,Jalur Kereta Api Kertosono–Bangil
+KSB-PGJ,7.56,1,3,147,0,0,0,80,Jalur Kereta Api Kertosono–Bangil
+PGJ-SBP,8.41,1,3,322,2,1195,0,80,Jalur Kereta Api Kertosono–Bangil
+SBP-NB,4.53,1,0,8,0,0,0,80,Jalur Kereta Api Kertosono–Bangil
+NB-KPN,6.85,1,3,232,0,0,0,80,Jalur Kereta Api Kertosono–Bangil
+KPN-PSI,7.63,1,2,56,0,0,0,80,Jalur Kereta Api Kertosono–Bangil
+PSI-MLK,9.18,1,1,27,0,0,0,80,Jalur Kereta Api Kertosono–Bangil
+MLK-ML,2.15,1,3,128,0,0,0,70,Jalur Kereta Api Kertosono–Bangil
+ML-BMG,4.47,1,1,34,0,0,0,70,Jalur Kereta Api Kertosono–Bangil
+BMG-SGS,5.85,1,3,99,0,0,0,70,Jalur Kereta Api Kertosono–Bangil
+SGS-LW,8.07,1,0,7,0,0,0,70,Jalur Kereta Api Kertosono–Bangil
+LW-SN,9.94,1,5,259,0,0,0,70,Jalur Kereta Api Kertosono–Bangil
+SN-SKJ,4.33,1,2,25,0,0,0,70,Jalur Kereta Api Kertosono–Bangil
+SKJ-WN,8.28,1,2,38,0,0,0,70,Jalur Kereta Api Kertosono–Bangil
+WN-BG,8.82,1,1,40,0,0,0,70,Jalur Kereta Api Kertosono–Bangil
+BG-PS,15.93,1,5,110,0,0,0,70,Jalur Kereta Api Bangil–Kalisat
+PS-RO,8.79,1,7,194,0,0,0,90,Jalur Kereta Api Bangil–Kalisat
+RO-GI,5.93,1,2,21,0,0,0,90,Jalur Kereta Api Bangil–Kalisat
+GI-BYM,12.31,1,2,78,0,0,0,90,Jalur Kereta Api Bangil–Kalisat
+BYM-PB,11.57,1,4,161,0,0,0,90,Jalur Kereta Api Bangil–Kalisat
+PB-LEC,12.39,1,1,34,0,0,0,80,Jalur Kereta Api Bangil–Kalisat
+LEC-MLS,7.79,1,4,146,0,0,0,70,Jalur Kereta Api Bangil–Kalisat
+MLS-RN,8.95,1,0,0,0,0,0,80,Jalur Kereta Api Bangil–Kalisat
+RN-KK,4.81,1,1,16,0,0,0,80,Jalur Kereta Api Bangil–Kalisat
+KK-RDA,11.7,1,1,51,0,0,0,80,Jalur Kereta Api Bangil–Kalisat
+RDA-JTR,9.23,1,3,113,0,0,0,80,Jalur Kereta Api Bangil–Kalisat
+JTR-TGL,11.01,1,3,118,0,0,0,80,Jalur Kereta Api Bangil–Kalisat
+TGL-BSS,10.52,1,2,30,0,0,0,80,Jalur Kereta Api Bangil–Kalisat
+BSS-RBP,9.1,1,4,101,0,0,0,80,Jalur Kereta Api Bangil–Kalisat
+RBP-MI,4.73,1,2,37,0,0,0,80,Jalur Kereta Api Bangil–Kalisat
+MI-JR,5.9,1,4,155,0,0,0,80,Jalur Kereta Api Bangil–Kalisat
+JR-AJ,6.56,1,3,104,0,0,0,70,Jalur Kereta Api Bangil–Kalisat
+AJ-KTK,3.56,1,3,99,0,0,0,70,Jalur Kereta Api Bangil–Kalisat
+KTK-KLT,7.17,1,8,198,0,0,0,70,Jalur Kereta Api Bangil–Kalisat
+KLT-LDO,8.22,1,9,316,0,0,0,70,Jalur Kereta Api Kalisat–Ketapang
+LDO-SPL,7.74,1,18,721,0,0,0,70,Jalur Kereta Api Kalisat–Ketapang
+SPL-GRN,4.32,1,4,135,0,0,0,70,Jalur Kereta Api Kalisat–Ketapang
+GRN-MRW,9.62,1,8,783,1,110,0,60,Jalur Kereta Api Kalisat–Ketapang
+MRW-KBR,7.51,1,3,122,1,671,0,70,Jalur Kereta Api Kalisat–Ketapang
+KBR-GLM,7.3,1,8,388,0,0,0,80,Jalur Kereta Api Kalisat–Ketapang
+GLM-SWD,6.2,1,8,227,0,0,0,80,Jalur Kereta Api Kalisat–Ketapang
+SWD-KSL,3.91,1,4,100,0,0,0,80,Jalur Kereta Api Kalisat–Ketapang
+KSL-TGR,7.31,1,5,274,0,0,0,80,Jalur Kereta Api Kalisat–Ketapang
+TGR-SGJ,4.23,1,6,110,0,0,0,80,Jalur Kereta Api Kalisat–Ketapang
+SGJ-RGP,5.92,1,5,124,0,0,0,80,Jalur Kereta Api Kalisat–Ketapang
+RGP-BWI,11.25,1,4,241,0,0,0,80,Jalur Kereta Api Kalisat–Ketapang
+BWI-AGO,5.65,1,5,123,0,0,0,80,Jalur Kereta Api Kalisat–Ketapang
+BTK-ARB,13.6,0,6,188,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+ARB-LBP,6.47,1,0,0,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+LBP-PBA,8.47,1,3,127,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+PBA-LDT,7.18,1,3,50,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+LDT-TKE,9.76,1,2,94,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+TKE-RPH,7.21,1,0,0,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+RPH-BMB,6.31,1,0,0,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+LTD-BDT,23.7,0,2,113,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+BDT-BLI,12.71,1,3,127,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+BLI-PRA,4.07,1,1,125,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+PRA-LMP,5.7,1,0,0,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+LMP-DSU,12.15,1,0,0,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+DSU-SBJ,5.84,1,0,0,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+SBJ-BUU,13.3,1,0,0,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+BUU-KIS,2.71,1,0,0,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+KIS-HL,16.06,1,1,62,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+HL-TUK,3.92,1,0,0,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+TUK-PUR,16.07,1,1,91,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+PUR-AKB,5.48,1,0,0,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+AKB-MBM,10.42,1,0,9,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+MBM-SIU,9.25,1,1,68,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+SIU-PME,17.63,1,2,85,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+PME-PHA,10.28,1,3,34,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+PHA-MBU,6.02,1,1,42,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+MBU-RAPB,17.7,1,1,20,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+RAPB-RAP,1.7,1,0,0,0,0,0,0,Rel Kereta Api Medan–Rantau Prapat
+BJL-DMR,6.07,1,0,0,0,0,0,0,Jalur KA Tebing Tinggi-Siantar
+DMR-SIR,19.91,1,3,71,0,0,0,0,Jalur KA Tebing Tinggi-Siantar
+KIS-TNB,20.64,1,2,74,0,0,0,0,Rel Kereta Api Kisaran–Tanjung Balai
+MDN-BIJ,20.93,1,5,169,0,0,0,80,Jalur Kereta Api Medan–Besitang
+BIJ-KBG,8.2,0,0,0,0,0,0,80,Jalur Kereta Api Medan–Besitang
+KBG-SBT,9.32,1,0,0,0,0,0,80,Jalur Kereta Api Medan–Besitang
+SBT-TAS,11.68,1,3,200,0,0,0,80,Jalur Kereta Api Medan–Besitang
+TAS-TPU,15.78,1,3,118,0,0,0,80,Jalur Kereta Api Medan–Besitang
+TPU-GBA,9.34,1,1,12,0,0,0,80,Jalur Kereta Api Medan–Besitang
+GBA-PBD,11.72,1,1,67,0,0,0,80,Jalur Kereta Api Medan–Besitang
+PBD-BSG,14,1,1,115,0,0,0,80,Jalur Kereta Api Medan–Besitang
+KRG-BKH,5.02,1,1,42,0,0,19,0,Jalur KA Lhokseumawe-Bireuen
+BKH-KRM,3.91,1,0,0,0,0,100,0,Jalur KA Lhokseumawe-Bireuen
+IDA-IMA,5.62,1,2,85,0,0,0,0,Jalur KA Bukit Putus-Indarung
+IMA-KAJ,4.04,1,1,68,0,0,0,0,Jalur KA Bukit Putus-Indarung
+KAJ-BKP,4.43,1,1,27,0,0,0,0,Jalur KA Bukit Putus-Indarung
+BKP-PD,5.16,1,5,192,0,0,0,0,Jalur Kereta Api Gundih–Solo Balapan
+PD-AI,2.04,1,2,83,0,0,0,0,Jalur Kereta Api Gundih–Solo Balapan
+AI-AT,3.23,1,2,104,0,0,0,0,Jalur Kereta Api Gundih–Solo Balapan
+AT-TAB,4,1,1,31,0,0,0,0,Jalur Kereta Api Gundih–Solo Balapan
+PD-TAB,9.27,1,5,217,0,0,0,0,Jalur Kereta Api Gundih–Solo Balapan
+TAB-LBY,4.09,1,2,130,0,0,0,0,Jalur Kereta Api Gundih–Solo Balapan
+LBY-DUK,5.67,1,2,67,0,0,0,0,Jalur Kereta Api Gundih–Solo Balapan
+TAB-DUK,9.76,1,4,197,0,0,0,0,Jalur Kereta Api Gundih–Solo Balapan
+DUK-PRU,5.87,1,1,154,0,0,0,0,Jalur KA Pulau Air - Padang Panjang
+PRU-LA,7.74,1,0,0,0,0,0,0,Jalur KA Pulau Air - Padang Panjang
+LA-SCN,13.49,1,3,100,0,0,0,0,Jalur KA Pulau Air - Padang Panjang
+SCN-KTN,6.92,1,3,156,0,0,0,0,Jalur KA Pulau Air - Padang Panjang
+LA-PAK,8.43,1,3,79,0,0,0,0,Jalur KA Lubuk Alung - Naras
+PAK-KI,6.23,1,2,84,0,0,0,0,Jalur KA Lubuk Alung - Naras
+KI-CPH,3.51,1,0,0,0,0,0,0,Jalur KA Lubuk Alung - Naras
+CPH-PMN,2.85,1,0,0,0,0,0,0,Jalur Kereta Api Padang-Pariaman
+LA-PMN,21.02,1,5,163,0,0,0,0,Jalur KA Lubuk Alung - Naras
+PMN-NRS,6.98,1,5,154,0,0,0,0,Jalur KA Lubuk Alung - Naras
+PD-TDM,1.53,1,0,0,0,0,0,0,Jalur Kereta Api Gundih–Solo Balapan
+TDM-PLA,1.14,1,1,26,0,0,0,0,Jalur Kereta Api Gundih–Solo Balapan
+PNM-ALU,6.31,1,0,0,0,0,0,80,Jalur KA Lubuk Linggau-Prabumulih
+ALU-NRU,4.55,1,1,23,0,0,0,80,Jalur KA Lubuk Linggau-Prabumulih
+PNM-NRU,10.86,1,1,23,0,0,0,80,Jalur KA Lubuk Linggau-Prabumulih
+NRU-TBU,2.62,1,1,42,0,0,0,80,Jalur KA Lubuk Linggau-Prabumulih
+TBU-TLP,2.84,1,0,0,0,0,0,80,Jalur KA Lubuk Linggau-Prabumulih
+TTR-GNM,7.3,1,1,14,0,0,0,80,Jalur KA Lubuk Linggau-Prabumulih
+GNM-PNG,7.3,1,1,51,0,0,0,80,Jalur KA Lubuk Linggau-Prabumulih
+PNG-UJM,7.67,1,0,0,0,0,0,80,Jalur KA Lubuk Linggau-Prabumulih
+UJM-MRL,6.35,1,1,48,0,0,0,80,Jalur KA Lubuk Linggau-Prabumulih
+MRL-ME,8.19,1,2,63,0,0,0,80,Jalur KA Lubuk Linggau-Prabumulih
+ME-TMB,8.92,1,1,21,0,0,0,80,Jalur KA Muara Enim-Tanjung Enim
+KPT-KAS,3.96,1,1,19,0,0,0,80,Jalur KA Kertapati-Prabumulih
+KAS-SIG,7.83,1,4,89,0,0,0,80,Jalur KA Kertapati-Prabumulih
+PYK-SDN,10.13,1,0,0,0,0,0,90,Jalur KA Kertapati-Prabumulih
+SDN-GLB,9.62,1,1,17,0,0,0,90,Jalur KA Kertapati-Prabumulih
+GLB-KED,8.28,1,0,0,0,0,0,90,Jalur KA Kertapati-Prabumulih
+KED-LEB,7.4,1,0,0,0,0,0,90,Jalur KA Kertapati-Prabumulih
+LEB-CBI,6.52,0,0,0,0,0,0,90,Jalur KA Kertapati-Prabumulih
+CBI-PBM,9.41,1,0,0,0,0,0,90,Jalur KA Kertapati-Prabumulih
+LEB-PBM,15.93,1,0,0,0,0,0,90,Jalur KA Kertapati-Prabumulih
+PBM-PBRX5,3.58,1,0,0,0,0,0,80,Jalur KA Kertapati-Prabumulih
+ME-MLI,6.62,1,2,160,0,0,0,80,Jalur KA Lubuk Linggau-Prabumulih
+MLI-BJI,4.43,1,1,30,0,0,0,80,Jalur KA Lubuk Linggau-Prabumulih
+BJI-MRP,9.04,1,2,67,0,0,0,0,Jalur KA Prabumulih-Lubuklinggau
+MRP-SCT,7.53,1,2,226,0,0,0,0,Jalur Kereta Api Gundih–Solo Balapan
+SCT-LT,10.57,1,0,0,0,0,0,0,Jalur Kereta Api Gundih–Solo Balapan
+LT-BGM,25.9,1,6,242,1,368,0,0,Jalur KA Prabumulih-Lubuklinggau
+BGM-SUA,14.4,1,2,96,0,0,0,0,Jalur KA Prabumulih-Lubuklinggau
+SUA-SNA,10.63,1,2,109,0,0,0,0,Jalur KA Prabumulih-Lubuklinggau
+SNA-TI,15.83,1,1,112,1,444,0,0,Jalur KA Prabumulih-Lubuklinggau
+TI-MSL,19.12,1,3,112,0,0,0,0,Jalur Kereta Api Gundih–Solo Balapan
+MSL-KOP,9.04,1,1,57,0,0,0,0,Jalur Kereta Api Gundih–Solo Balapan
+KOP-LLG,20.57,1,1,46,0,0,0,0,Jalur Kereta Api Gundih–Solo Balapan
+THN-SKN,4.49,1,1,59,0,0,0,45,Jalur KA Pidada-Tarahan
+SKN-GR,5.79,1,1,159,0,0,0,45,Jalur KA Panjang-Prabumulih
+GR-TNK,5.37,1,0,0,0,0,0,80,Jalur KA Panjang-Prabumulih
+TNK-LAR,4.75,1,3,48,0,0,0,80,Jalur KA Panjang - Prabumulih
+LAR-GDR,4.68,1,0,0,0,0,0,80,Jalur KA Garuntang-Prabumulih
+GDR-RJS,7.22,1,0,0,0,0,0,90,Jalur KA Garuntang-Prabumulih
+RJS-BTI,4.56,1,0,0,0,0,0,90,Jalur KA Panjang-Prabumulih
+BTI-TGI,6.1,1,0,0,0,0,0,90,Jalur KA Panjang-Prabumulih
+TGI-RGS,8.02,1,1,64,0,0,0,90,Jalur KA Panjang-Prabumulih
+RGS-BKI,6.99,1,1,58,0,0,0,90,Jalur KA Panjang-Prabumulih
+BKI-HJP,9.01,1,2,145,0,0,0,90,Jalur KA Panjang-Prabumulih
+HJP-SLS,6.52,1,2,150,0,0,0,90,Jalur KA Panjang-Prabumulih
+SLS-BBA,8.38,1,2,78,0,0,0,90,Jalur KA Panjang-Prabumulih
+BBA-KAG,8.23,1,0,0,0,0,0,90,Jalur KA Panjang-Prabumulih
+KAG-CMS,6.12,1,0,0,0,0,0,90,Jalur KA Panjang-Prabumulih
+CMS-KB,6.03,1,2,74,0,0,0,90,Jalur Kereta Api Gundih–Solo Balapan
+KB-CEP,8.08,1,2,121,0,0,0,80,Jalur Kereta Api Gundih–Solo Balapan
+CEP-KTP,9.75,1,1,36,0,0,0,80,Jalur KA Panjang-Prabumulih
+KTP-NRR,11.3,1,2,96,0,0,0,75,Jalur KA Panjang-Prabumulih
+NRR-TLY,9.23,1,1,31,0,0,0,75,Jalur KA Panjang-Prabumulih
+TLY-NGN,12.15,1,3,155,0,0,0,75,Jalur KA Prabumulih-Panjang
+NGN-BBU,15.32,1,1,104,0,0,0,60,Jalur KA Prabumulih-Panjang
+BBU-GHM,9.92,1,3,235,0,0,0,60,Jalur KA Prabumulih-Panjang
+GHM-TJO,4.01,1,0,0,0,0,0,60,Jalur KA Prabumulih-Panjang
+TJO-WAY,6.66,1,0,0,0,0,0,60,Jalur KA Prabumulih-Panjang
+WAY-WAP,5.28,1,0,0,0,0,0,60,Jalur KA Prabumulih-Panjang
+WAP-MP,7.22,1,2,232,0,0,0,60,Jalur KA Prabumulih-Panjang
+MP-SGT,5.4,1,1,47,0,0,0,60,Jalur Kereta Api Gundih–Solo Balapan
+SGT-GLS,4.28,1,0,0,0,0,0,60,Jalur KA Prabumulih-Panjang
+GLS-ART,7.37,1,0,0,0,0,0,60,Jalur KA Prabumulih-Panjang
+ART-SPC,6.05,1,0,0,0,0,0,60,Jalur KA Prabumulih-Panjang
+GLS-SPC,13.42,1,0,0,0,0,0,60,Jalur KA Prabumulih-Panjang
+SPC-KMK,3.44,1,0,0,0,0,0,60,Jalur KA Prabumulih-Panjang
+KMK-BTA,5.86,1,1,71,0,0,0,60,Jalur KA Prabumulih-Panjang
+BTA-TJH,1.94,1,0,0,0,0,0,60,Tarahan-Prabumulih
+TJH-LBT,8.77,1,0,0,0,0,0,80,Jalur KA Tarahan-Prabumulih
+LBT-BLT,3.87,1,1,41,0,0,0,80,Jalur KA Tarahan-Prabumulih
+BLT-KPY,4.58,1,2,125,0,0,0,80,Jalur KA Tarahan-Prabumulih
+KPY-BIK,4.05,1,0,0,0,0,0,80,Jalur KA Tarahan-Prabumulih
+BIK-DAN,3.36,1,0,0,0,0,0,80,Jalur KA Tarahan-Prabumulih
+DAN-LRM,5.32,1,1,63,0,0,0,80,Jalur KA Tarahan-Prabumulih
+LRM-PNW,7.54,1,0,0,0,0,0,80,Jalur KA Tarahan-Prabumulih
+PNW-TLB,5.14,1,0,0,0,0,0,80,Jalur KA Tarahan-Prabumulih
+TLB-MET,6.2,1,1,42,0,0,0,80,Jalur KA Tarahan-Prabumulih
+MET-KBU,7.24,1,1,30,0,0,0,80,Jalur KA Tarahan-Prabumulih
+KBU-PGG,5.26,1,1,31,0,0,0,80,Jalur KA Tarahan-Prabumulih
+PGG-ASM,5.13,1,1,35,0,0,0,80,Jalur KA Tarahan-Prabumulih
+ASM-SKU,7.02,1,0,0,0,0,0,80,Jalur KA Tarahan-Prabumulih
+SKU-TJR,6.38,1,2,155,0,0,0,80,Jalur KA Tarahan-Prabumulih
+TJR-PBRX5,9.56,1,0,0,0,0,0,80,Jalur KA Tarahan-Prabumulih
+PID-PJN,1.09,1,0,0,0,0,0,45,Jalur Kereta Api Gundih–Solo Balapan

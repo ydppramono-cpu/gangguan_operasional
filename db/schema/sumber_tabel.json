@@ -23,6 +23,10 @@
   "G25DB": {
    "id": "1UM8d7CvzhrXl1CeB7J7XNTaw0mcPiWA8-4_2RdZnH-c",
    "nama": "GAPEKA_2025_Basis_Data (02_DB)"
+  },
+  "SAR": {
+   "id": "115j4MRjEKeUkKULyGGhF2pQ4l_OSGhnyBYmZE-pqSc0",
+   "nama": "KAI | Referensi Sarana Gangguan 2025–2026"
   }
  },
  "tables": [
@@ -960,6 +964,54 @@
    "num": [
     "urut",
     "km"
+   ],
+   "date": []
+  },
+  {
+   "name": "skema",
+   "ss": "DB",
+   "sheet": "Skema",
+   "skip": 1,
+   "desc": "Kamus kolom Gangguan_Induk (kolom, nama kanonis, fungsi, aturan pengisian)",
+   "headers": [
+    "Kolom",
+    "Nama kanonis",
+    "Fungsi",
+    "Aturan pengisian"
+   ],
+   "num": [],
+   "date": []
+  },
+  {
+   "name": "sarana_sap",
+   "ss": "SAR",
+   "sheet": "Sarana_Knowledge",
+   "skip": 1,
+   "desc": "Referensi sarana SAP per unit: dipo, pabrikan, mulai dinas, karakteristik (JSON)",
+   "headers": [
+    "asset_key",
+    "equipment_number",
+    "no_sarana",
+    "equipment_desc",
+    "catalog_profile",
+    "class_sarana",
+    "class_desc",
+    "dipo_code",
+    "dipo_name",
+    "plant",
+    "lokasi_kepemilikan",
+    "manuf_asset",
+    "manuf_model_number",
+    "manuf_serial_number",
+    "kapasitas",
+    "mulai_dinas",
+    "bast_date",
+    "sys",
+    "usr",
+    "characteristics_json"
+   ],
+   "num": [
+    "kapasitas"
    ],
    "date": []
   }

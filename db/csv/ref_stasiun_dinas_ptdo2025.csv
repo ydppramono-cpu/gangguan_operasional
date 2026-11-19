@@ -1,0 +1,105 @@
+Kode stasiun,Jenis,Buka,Tutup,Sumber
+CRG,Dinas tutup,,16:30 ke GDS
+CBB,Dinas tutup,08:30 ke CRG,
+CBB,Dinas tutup,,16:00 ke CJ
+CJ,Dinas tutup,08:00 ke CBB,
+CPY,Dinas tutup,,20:05 ke CRJ
+CRJ,Dinas tutup,12:05 ke CPY,
+KEJ,Dinas tutup,15:20 ke TGG,
+TGG,Dinas tutup,,23:20 ke KEJ
+TW,Dinas tutup,14:30 ke PDS,
+PDS,Dinas tutup,,22:30 ke TW
+GD,Dinas tutup,14:45 ke KSO,
+KSO,Dinas tutup,,22:45 ke GD
+GM,Dinas tutup,05:30 ke KKD,
+KKD,Dinas tutup,,21:30 ke GM
+SUM,Dinas tutup,14:05 ke GPK,
+GPK,Dinas tutup,,06:05 ke SUM
+KO,Dinas tutup,14:00 ke SLM,
+SLM,Dinas tutup,,06:00 ke KO
+KTS,Dinas tutup,05:00 ke PWA,
+PWA,Dinas tutup,,21:00 ke KTS
+PPR,Dinas tutup,05:00 ke MGN,
+MGN,Dinas tutup,,20:35 ke KD
+KD,Dinas tutup,05:00 ke SS,
+SS,Dinas tutup,,20:35 ke KD
+KRS,Dinas tutup,05:10 ke NDL,
+NDL,Dinas tutup,,20:35 ke KRS
+TA,Dinas tutup,05:18 ke NJG,
+NJG,Dinas tutup,,20:45 ke TA
+TA,Dinas tutup,04:00 ke SBL,
+SBL,Dinas tutup,,19:15 ke NT
+BL,Dinas tutup,04:00 ke RJ,
+RJ,Dinas tutup,,19:45 ke NT
+BL,Dinas tutup,04:30 ke GRM,
+GRM,Dinas tutup,,20:00 ke BL
+WG,Dinas tutup,04:30 ke TAL,
+TAL,Dinas tutup,,20:00 ke WG
+SDA,Dinas tutup,04:15 ke GDG,
+GDG,Dinas tutup,,19:20 ke SDA
+SDA,Dinas tutup,04:30 ke TGA,
+TGA,Dinas tutup,,20:30 ke SDA
+SKJ,Dinas tutup,03:00 ke WN,
+WN,Dinas tutup,,19:00 ke SKJ
+LW,Dinas tutup,05:05 ke SN,
+SN,Dinas tutup,,21:00 ke LW
+LW,Dinas tutup,03:45 ke SGS,
+SGS,Dinas tutup,,19:30 ke LW
+ML,Dinas tutup,03:45 ke BMG,
+BMG,Dinas tutup,,19:30 ke ML
+MLK,Dinas tutup,05:00 ke PSI,
+PSI,Dinas tutup,,21:00 ke MLK
+KPN,Dinas tutup,05:30 ke NB,
+NB,Dinas tutup,,21:30 ke KPN
+PGJ,Dinas tutup,05:25 ke SBP,
+SBP,Dinas tutup,,21:25 ke PGJ
+WG,Dinas tutup,04:00 ke KSB,
+KSB,Dinas tutup,,20:00 ke WG
+KTG,Dinas tutup,05:55 ke AGO,
+AGO,Dinas tutup,,13:55 ke KTG
+SGJ,Dinas tutup,,14:00 ke TGR
+TGR,Dinas tutup,06:00 ke SGJ,
+KSL,Dinas tutup,05:30 ke SWD,
+SWD,Dinas tutup,,21:30 ke KSL
+GLM,Dinas tutup,,21:15 ke KBR
+KBR,Dinas tutup,05:15 ke GLM; 08:15 ke MRW,
+MRW,Dinas tutup,,16:15 ke KBR
+SPL,Dinas tutup,,14:25 ke GRN
+LDO,Dinas tutup,,16:45 ke KLT
+KLT,Dinas tutup,07:35 ke KTK; 08:45 ke LDO,
+KTK,Dinas tutup,,15:35 ke KLT
+AJ,Dinas tutup,,14:50 ke JR
+JR,Dinas tutup,06:50 ke AJ,
+MI,Dinas tutup,,14:10 ke RBP
+RBP,Dinas tutup,06:10 ke MI; 11:00 ke BSS,
+BSS,Dinas tutup,,19:00 ke RBP
+TGL,Dinas tutup,05:25 ke JTR,
+JTR,Dinas tutup,,21:25 ke TGL
+RDA,Dinas tutup,,15:30 ke KK
+KK,Dinas tutup,07:30 ke RDA,
+RN,Dinas tutup,,20:35 ke KK
+MLS,Dinas tutup,,21:55 ke PB
+LEC,Dinas tutup,,18:20 ke PB
+PB,Dinas tutup,05:55 ke MLS; 10:20 ke LEC,
+BYM,Dinas tutup,,17:00 ke GI
+GI,Dinas tutup,09:00 ke BYM,
+RO,Dinas tutup,,14:30 ke PS
+PS,Dinas tutup,06:30 ke RO,
+MSG,Non operasi,04:52 ke CCR,13:35 ke CCR
+MSG,Non operasi,15:15 ke CCR,22:30 ke CCR
+CGD,Non operasi,02:50 ke KEN,18:50 ke KEN
+GDS,Non operasi,05:15 ke SI,13:15 ke CPY
+GDS,Non operasi,14:00 ke CPT,22:00 ke SI
+CJ,Non operasi,05:45 ke SI,21:45 ke SI
+CRJ,Non operasi,06:00 ke GDS,21:35 ke GDS
+CPT,Non operasi,06:00 ke GDS,21:35 ke GDS
+CIR,Non operasi,04:55 ke KAC,21:55 ke CMD
+PSJ,Non operasi,19:30 ke CB,11:30 ke CB
+WNR,Non operasi,19:30 ke CB,12:30 ke CB
+GRT,Non operasi,19:30 ke CB,13:30 ke CB
+STA,Non operasi,05:30 ke PWS,13:56 ke PWS
+SKH,Non operasi,05:30 ke PWS,13:54 ke PWS
+PNT,Non operasi,05:30 ke PWS,13:52 ke PWS
+WNG,Non operasi,05:30 ke PWS,13:50 ke PWS
+TLN,Non operasi,05:30 ke MR,19:30 ke MR
+IDO,Non operasi,06:00 ke KDA,18:00 ke KDA

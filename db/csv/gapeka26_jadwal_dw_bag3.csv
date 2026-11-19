@@ -1,0 +1,1443 @@
+no_ka,nama_ka,relasi,urut,kode_stasiun,nama_stasiun,vmax_kmj,datang,berangkat,keterangan,sumber_buku,status_verifikasi
+3566,Simpangrapi,MRP-SIG,2,BJI,Banjarsari,55,Ls,05:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,3,MLI,Muaralawai,55,Ls,05:27:00,(KA 3661 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,4,ME,Muara Enim,75,Ls,05:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,5,MRL,Muara Gula,75,Ls,05:51:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,6,UJM,Ujan Mas,75,Ls,06:01:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,7,PNG,Penanggiran,75,Ls,06:13:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,8,GNM,Gunung Megang,75,Ls,06:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,9,BIB,Blimbing Pendopo,75,Ls,06:39:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,10,NRU,Niru,75,Ls,06:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,11,PNM,Penimur,75,Ls,07:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,12,PBR X6,Prabumulih Baru X6,75,Ls,07:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,13,PBM,Prabumulih,75,Ls,07:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,14,LEB,Lembak,75,07:45:00,08:51:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,15,KED,Karangenda,75,Ls,09:01:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,16,GLB,Glumbang,75,Ls,09:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,17,SDN,Serdang,75,Ls,09:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,18,PYK,Payakabung,75,Ls,09:33:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,19,POS IDR,Pos Indralaya,75,Ls,09:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3566,Simpangrapi,MRP-SIG,20,SIG,Simpang,0,09:54:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,1,SIG,Simpang,75,-,07:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,2,POS IDR,Pos Indralaya,75,Ls,08:12:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,3,PYK,Payakabung,75,Ls,08:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,4,SDN,Serdang,75,Ls,08:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,5,GLB,Glumbang,75,Ls,08:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,6,KED,Karangenda,75,Ls,08:48:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,7,LEB,Lembak,75,Ls,08:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,8,PBM,Prabumulih,75,Ls,09:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,9,PBR X6,Prabumulih Baru X6,75,Ls,09:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,10,PNM,Penimur,75,Ls,09:31:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,11,NRU,Niru,75,Ls,09:41:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,12,BIB,Blimbing Pendopo,75,Ls,09:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,13,GNM,Gunung Megang,75,Ls,10:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,14,PNG,Penanggiran,75,Ls,10:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,15,UJM,Ujan Mas,75,Ls,10:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,16,MRL,Muara Gula,75,Ls,10:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,17,ME,Muara Enim,55,Ls,10:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,18,MLI,Muaralawai,55,10:56:00,11:15:00,X KA 3572,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,19,BJI,Banjarsari,55,Ls,11:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3567,Simpangrapi,SIG-MRP,20,MRP,Merapi,0,11:35:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,1,MRP,Merapi,55,-,06:50:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,2,BJI,Banjarsari,55,Ls,07:03:00,X KA 3561 (KA 3561 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,3,MLI,Muaralawai,55,07:13:00,07:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,4,ME,Muara Enim,75,Ls,07:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,5,MRL,Muara Gula,75,Ls,07:43:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,6,UJM,Ujan Mas,75,Ls,07:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,7,PNG,Penanggiran,75,Ls,08:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,8,GNM,Gunung Megang,75,Ls,08:15:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,9,BIB,Blimbing Pendopo,75,Ls,08:31:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,10,NRU,Niru,75,Ls,08:47:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,11,PNM,Penimur,75,Ls,09:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,12,PBR X6,Prabumulih Baru X6,75,Ls,09:13:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,13,PBM,Prabumulih,75,Ls,09:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,14,LEB,Lembak,75,09:37:00,10:43:00,"KA 3002, KA 3110, KA 3882 (KA 3002,",DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,15,KED,Karangenda,75,Ls,10:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,16,GLB,Glumbang,75,Ls,11:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,17,SDN,Serdang,75,Ls,11:15:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,18,PYK,Payakabung,75,Ls,11:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,19,POS IDR,Pos Indralaya,75,Ls,11:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3568,Simpangrapi,MRP-SIG,20,SIG,Simpang,0,11:46:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,1,SIG,Simpang,75,-,14:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,2,POS IDR,Pos Indralaya,75,Ls,14:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,3,PYK,Payakabung,75,Ls,15:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,4,SDN,Serdang,75,Ls,15:12:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,5,GLB,Glumbang,75,Ls,15:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,6,KED,Karangenda,75,Ls,15:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,7,LEB,Lembak,75,Ls,15:41:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,8,PBM,Prabumulih,75,Ls,15:58:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,9,PBR X6,Prabumulih Baru X6,75,Ls,16:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,10,PNM,Penimur,75,Ls,16:15:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,11,NRU,Niru,75,Ls,16:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,12,BIB,Blimbing Pendopo,75,Ls,16:37:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,13,GNM,Gunung Megang,75,Ls,16:50:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,14,PNG,Penanggiran,75,Ls,16:58:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,15,UJM,Ujan Mas,75,Ls,17:08:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,16,MRL,Muara Gula,75,Ls,17:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,17,ME,Muara Enim,55,Ls,17:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,18,MLI,Muaralawai,55,17:40:00,17:58:00,X KA 3334,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,19,BJI,Banjarsari,55,Ls,18:06:00,X KA 3576 (KA 3576 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3569,Simpangrapi,SIG-MRP,20,MRP,Merapi,0,18:18:00,-,(KA 3578 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,1,MRP,Merapi,55,-,08:50:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,2,BJI,Banjarsari,55,Ls,09:02:00,X KA 3563 (KA 3563 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,3,MLI,Muaralawai,55,Ls,09:10:00,(KA 3331F JJ X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,4,ME,Muara Enim,75,Ls,09:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,5,MRL,Muara Gula,75,Ls,09:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,6,UJM,Ujan Mas,75,Ls,09:45:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,7,PNG,Penanggiran,75,Ls,09:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,8,GNM,Gunung Megang,75,Ls,10:07:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,9,BIB,Blimbing Pendopo,75,Ls,10:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,10,NRU,Niru,75,Ls,10:39:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,11,PNM,Penimur,75,Ls,10:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,12,PBR X6,Prabumulih Baru X6,75,Ls,11:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,13,PBM,Prabumulih,75,Ls,11:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,14,LEB,Lembak,75,11:29:00,11:53:00,- KA 3024 (KA 3024 /1),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,15,KED,Karangenda,75,Ls,12:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,16,GLB,Glumbang,75,Ls,12:13:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,17,SDN,Serdang,75,Ls,12:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,18,PYK,Payakabung,75,Ls,12:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,19,POS IDR,Pos Indralaya,75,Ls,12:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3570,Simpangrapi,MRP-SIG,20,SIG,Simpang,0,12:56:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,1,SIG,Simpang,15,-,15:08:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,2,POS IDR,Pos Indralaya,75,Ls,15:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,3,PYK,Payakabung,75,Ls,15:31:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,4,SDN,Serdang,75,Ls,15:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,5,GLB,Glumbang,75,Ls,15:50:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,6,KED,Karangenda,75,Ls,16:00:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,7,LEB,Lembak,75,Ls,16:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,8,PBM,Prabumulih,75,Ls,16:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,9,PBR X6,Prabumulih Baru X6,75,Ls,16:33:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,10,PNM,Penimur,75,Ls,16:43:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,11,NRU,Niru,75,Ls,16:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,12,BIB,Blimbing Pendopo,75,Ls,17:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,13,GNM,Gunung Megang,75,Ls,17:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,14,PNG,Penanggiran,75,Ls,17:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,15,UJM,Ujan Mas,75,Ls,17:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,16,MRL,Muara Gula,75,Ls,17:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,17,ME,Muara Enim,55,Ls,17:54:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,18,MLI,Muaralawai,55,18:08:00,18:24:00,X KA 3576,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,19,BJI,Banjarsari,55,18:34:00,18:48:00,X KA 3578 (KA 3578 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3571,Simpangrapi,SIG-MRP,20,MRP,Merapi,0,19:02:00,-,(KA 3992 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,1,MRP,Merapi,55,-,10:42:00,"X KA 3565, KA 3333",DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,2,BJI,Banjarsari,55,Ls,10:54:00,X KA 3663,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,3,MLI,Muaralawai,55,Ls,11:02:00,(KA 3567 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,4,ME,Muara Enim,75,Ls,11:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,5,MRL,Muara Gula,75,Ls,11:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,6,UJM,Ujan Mas,75,Ls,11:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,7,PNG,Penanggiran,75,Ls,11:50:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,8,GNM,Gunung Megang,75,Ls,12:00:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,9,BIB,Blimbing Pendopo,75,Ls,12:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,10,NRU,Niru,15,Ls,12:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,11,PNM,Penimur,75,Ls,12:48:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,12,PBR X6,Prabumulih Baru X6,75,Ls,12:58:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,13,PBM,Prabumulih,75,Ls,13:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,14,LEB,Lembak,15,13:22:00,14:55:00,in,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,15,KED,Karangenda,75,Ls,15:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,16,GLB,Glumbang,75,Ls,15:15:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,17,SDN,Serdang,75,Ls,15:27:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,18,PYK,Payakabung,75,Ls,15:37:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,19,POS IDR,Pos Indralaya,75,Ls,15:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3572,Simpangrapi,MRP-SIG,20,SIG,Simpang,0,15:58:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,1,SIG,Simpang,75,-,17:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,2,POS IDR,Pos Indralaya,75,Ls,18:12:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,3,PYK,Payakabung,75,Ls,18:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,4,SDN,Serdang,75,Ls,18:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,5,GLB,Glumbang,75,Ls,18:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,6,KED,Karangenda,75,Ls,18:48:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,7,LEB,Lembak,15,Ls,18:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,8,PBM,Prabumulih,75,Ls,19:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,9,PBR X6,Prabumulih Baru X6,75,Ls,19:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,10,PNM,Penimur,75,Ls,19:31:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,11,NRU,Niru,15,Ls,19:41:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,12,BIB,Blimbing Pendopo,75,Ls,19:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,13,GNM,Gunung Megang,75,Ls,20:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,14,PNG,Penanggiran,75,Ls,20:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,15,UJM,Ujan Mas,75,Ls,20:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,16,MRL,Muara Gula,75,Ls,20:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,17,ME,Muara Enim,55,Ls,20:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,18,MLI,Muaralawai,55,20:56:00,21:00:00,X KA 3336F JJ,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,19,BJI,Banjarsari,55,Ls,21:08:00,X KA 3886 (KA 3886 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3573,Simpangrapi,SIG-MRP,20,MRP,Merapi,0,21:20:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,1,MRP,Merapi,55,-,16:59:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,2,BJI,Banjarsari,55,Ls,17:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,3,MLI,Muaralawai,55,Ls,17:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,4,ME,Muara Enim,75,Ls,17:33:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,5,MRL,Muara Gula,75,Ls,17:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,6,UJM,Ujan Mas,75,Ls,17:54:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,7,PNG,Penanggiran,75,Ls,18:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,8,GNM,Gunung Megang,75,Ls,18:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,9,BIB,Blimbing Pendopo,75,Ls,18:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,10,NRU,Niru,75,Ls,18:48:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,11,PNM,Penimur,75,Ls,19:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,12,PBR X6,Prabumulih Baru X6,75,Ls,19:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,13,PBM,Prabumulih,75,Ls,19:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,14,LEB,Lembak,15,19:38:00,20:02:00,- KA 3122 (KA 3122 /1),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,15,KED,Karangenda,75,Ls,20:12:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,16,GLB,Glumbang,75,Ls,20:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,17,SDN,Serdang,75,Ls,20:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,18,PYK,Payakabung,75,Ls,20:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,19,POS IDR,Pos Indralaya,75,Ls,20:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3574,Simpangrapi,MRP-SIG,20,SIG,Simpang,0,21:05:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,1,SIG,Simpang,15,-,18:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,2,POS IDR,Pos Indralaya,75,Ls,19:08:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,3,PYK,Payakabung,75,Ls,19:15:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,4,SDN,Serdang,75,Ls,19:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,5,GLB,Glumbang,75,Ls,19:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,6,KED,Karangenda,75,Ls,19:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,7,LEB,Lembak,75,Ls,19:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,8,PBM,Prabumulih,75,Ls,20:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,9,PBR X6,Prabumulih Baru X6,75,Ls,20:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,10,PNM,Penimur,75,Ls,20:27:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,11,NRU,Niru,75,Ls,20:37:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,12,BIB,Blimbing Pendopo,75,Ls,20:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,13,GNM,Gunung Megang,75,Ls,21:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,14,PNG,Penanggiran,75,Ls,21:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,15,UJM,Ujan Mas,75,Ls,21:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,16,MRL,Muara Gula,75,Ls,21:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,17,ME,Muara Enim,55,Ls,21:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,18,MLI,Muaralawai,55,21:52:00,21:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,19,BJI,Banjarsari,55,22:05:00,22:50:00,"X KA S2, KA 3580 (KA S2, KA 3580 X)",DW KA Divre III-IV Sumsel 2026,terverifikasi
+3575,Simpangrapi,SIG-MRP,20,MRP,Merapi,0,23:04:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,1,MRP,Merapi,55,-,17:45:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,2,BJI,Banjarsari,55,17:59:00,18:09:00,X KA 3569 (KA 3569 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,3,MLI,Muaralawai,55,18:21:00,18:27:00,(KA 3571X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,4,ME,Muara Enim,75,Ls,18:43:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,5,MRL,Muara Gula,75,Ls,18:54:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,6,UJM,Ujan Mas,75,Ls,19:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,7,PNG,Penanggiran,75,Ls,19:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,8,GNM,Gunung Megang,75,Ls,19:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,9,BIB,Blimbing Pendopo,75,Ls,19:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,10,NRU,Niru,75,Ls,19:58:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,11,PNM,Penimur,75,Ls,20:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,12,PBR X6,Prabumulih Baru X6,75,Ls,20:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,13,PBM,Prabumulih,75,Ls,20:29:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,14,LEB,Lembak,15,20:48:00,21:36:00,- KA 3770 (KA 3770 11),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,15,KED,Karangenda,75,Ls,21:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,16,GLB,Glumbang,75,Ls,21:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,17,SDN,Serdang,75,Ls,22:08:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,18,PYK,Payakabung,75,Ls,22:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,19,POS IDR,Pos Indralaya,75,Ls,22:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3576,Simpangrapi,MRP-SIG,20,SIG,Simpang,0,22:39:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,1,SIG,Simpang,75,-,20:43:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,2,POS IDR,Pos Indralaya,75,Ls,20:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,3,PYK,Payakabung,75,Ls,21:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,4,SDN,Serdang,75,Ls,21:13:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,5,GLB,Glumbang,75,Ls,21:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,6,KED,Karangenda,75,Ls,21:33:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,7,LEB,Lembak,15,Ls,21:43:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,8,PBM,Prabumulih,75,Ls,22:00:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,9,PBR X6,Prabumulih Baru X6,75,Ls,22:07:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,10,PNM,Penimur,75,Ls,22:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,11,NRU,Niru,15,Ls,22:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,12,BIB,Blimbing Pendopo,75,Ls,22:39:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,13,GNM,Gunung Megang,75,Ls,22:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,14,PNG,Penanggiran,75,Ls,23:00:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,15,UJM,Ujan Mas,75,Ls,23:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,16,MRL,Muara Gula,75,Ls,23:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,17,ME,Muara Enim,55,Ls,23:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,18,MLI,Muaralawai,55,23:42:00,23:45:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,19,BJI,Banjarsari,55,23:55:00,00:16:00,X KA 3560 (KA 3560 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3577,Simpangrapi,SIG-MRP,20,MRP,Merapi,0,00:30:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,1,MRP,Merapi,55,-,18:33:00,X KA 3569,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,2,BJI,Banjarsari,55,Ls,18:45:00,X KA 3571 (KA 3571X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,3,MLI,Muaralawai,55,18:55:00,19:51:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,4,ME,Muara Enim,75,Ls,20:07:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,5,MRL,Muara Gula,75,Ls,20:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,6,UJM,Ujan Mas,75,Ls,20:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,7,PNG,Penanggiran,75,Ls,20:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,8,GNM,Gunung Megang,75,Ls,20:50:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,9,BIB,Blimbing Pendopo,75,Ls,21:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,10,NRU,Niru,75,Ls,21:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,11,PNM,Penimur,75,Ls,21:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,12,PBR X6,Prabumulih Baru X6,75,Ls,21:47:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,13,PBM,Prabumulih,75,Ls,21:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,14,LEB,Lembak,75,22:12:00,23:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,15,KED,Karangenda,75,Ls,23:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,16,GLB,Glumbang,75,Ls,23:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,17,SDN,Serdang,75,Ls,23:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,18,PYK,Payakabung,75,Ls,23:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,19,POS IDR,Pos Indralaya,75,Ls,23:51:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3578,Simpangrapi,MRP-SIG,20,SIG,Simpang,0,00:07:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,1,SIG,Simpang,75,-,23:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,2,POS IDR,Pos Indralaya,75,Ls,23:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,3,PYK,Payakabung,75,Ls,23:43:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,4,SDN,Serdang,75,Ls,23:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,5,GLB,Glumbang,75,Ls,00:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,6,KED,Karangenda,75,Ls,00:12:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,7,LEB,Lembak,75,Ls,00:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,8,PBM,Prabumulih,75,Ls,00:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,9,PBR X6,Prabumulih Baru X6,75,Ls,00:45:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,10,PNM,Penimur,75,Ls,00:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,11,NRU,Niru,75,Ls,01:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,12,BIB,Blimbing Pendopo,75,Ls,01:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,13,GNM,Gunung Megang,75,Ls,01:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,14,PNG,Penanggiran,75,Ls,01:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,15,UJM,Ujan Mas,75,Ls,01:48:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,16,MRL,Muara Gula,75,Ls,01:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,17,ME,Muara Enim,55,Ls,02:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,18,MLI,Muaralawai,55,02:20:00,02:23:00,X KA 3880,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,19,BJI,Banjarsari,55,02:33:00,02:54:00,X KA 3562 (KA 3562 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3579,Simpangrapi,SIG-MRP,20,MRP,Merapi,0,03:08:00,-,(KA 3564 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,1,MRP,Merapi,55,-,22:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,2,BJI,Banjarsari,55,Ls,22:47:00,X KA 3575 (KA 3575 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,3,MLI,Muaralawai,55,22:57:00,23:08:00,"(KASI, KA 3665 X)",DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,4,ME,Muara Enim,75,Ls,23:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,5,MRL,Muara Gula,75,Ls,23:33:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,6,UJM,Ujan Mas,75,Ls,23:43:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,7,PNG,Penanggiran,75,Ls,23:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,8,GNM,Gunung Megang,75,Ls,00:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,9,BIB,Blimbing Pendopo,75,Ls,00:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,10,NRU,Niru,75,Ls,00:37:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,11,PNM,Penimur,75,Ls,00:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,12,PBR X6,Prabumulih Baru X6,75,Ls,01:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,13,PBM,Prabumulih,75,Ls,01:08:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,14,LEB,Lembak,75,01:27:00,01:51:00,- KA 3130 (KA 3130 //),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,15,KED,Karangenda,75,Ls,02:01:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,16,GLB,Glumbang,75,Ls,02:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,17,SDN,Serdang,75,Ls,02:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,18,PYK,Payakabung,75,Ls,02:33:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,19,POS IDR,Pos Indralaya,75,Ls,02:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3580,Simpangrapi,MRP-SIG,20,SIG,Simpang,0,02:51:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,1,SIG,Simpang,75,-,23:45:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,2,POS IDR,Pos Indralaya,75,Ls,00:01:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,3,PYK,Payakabung,75,Ls,00:07:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,4,SDN,Serdang,75,Ls,00:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,5,GLB,Glumbang,75,Ls,00:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,6,KED,Karangenda,75,Ls,00:39:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,7,LEB,Lembak,75,Ls,00:48:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,8,PBM,Prabumulih,75,Ls,01:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,9,PBR X6,Prabumulih Baru X6,75,Ls,01:12:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,10,PNM,Penimur,75,Ls,01:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,11,NRU,Niru,75,Ls,01:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,12,BIB,Blimbing Pendopo,75,Ls,01:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,13,GNM,Gunung Megang,75,Ls,01:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,14,PNG,Penanggiran,75,Ls,02:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,15,UJM,Ujan Mas,75,Ls,02:15:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,16,MRL,Muara Gula,75,Ls,02:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,17,ME,Muara Enim,55,Ls,02:33:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,18,MLI,Muaralawai,55,02:47:00,03:09:00,X KA 3562,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,19,BJI,Banjarsari,55,03:19:00,03:30:00,X KA 3564 (KA 3564 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3581,Simpangrapi,SIG-MRP,20,MRP,Merapi,-,03:44:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,1,BJI,Banjarsari,55,-,04:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,2,MLI,Muaralawai,55,04:31:00,04:42:00,(KA 3993 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,3,ME,Muara Enim,75,Ls,04:58:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,4,MRL,Muara Gula,75,Ls,05:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,5,UJM,Ujan Mas,75,Ls,05:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,6,PNG,Penanggiran,75,Ls,05:31:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,7,GNM,Gunung Megang,75,Ls,05:41:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,8,BIB,Blimbing Pendopo,75,Ls,05:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,9,NRU,Niru,75,Ls,06:13:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,10,PNM,Penimur,75,Ls,06:29:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,11,PBR X6,Prabumulih Baru X6,75,Ls,06:39:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,12,PBM,Prabumulih,75,Ls,06:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,13,LEB,Lembak,75,Ls,07:01:00,// KA 3564 (KA 3564 -),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,14,KED,Karangenda,75,Ls,07:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,15,GLB,Glumbang,75,Ls,07:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,16,SDN,Serdang,75,Ls,07:31:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,17,PYK,Payakabung,75,Ls,07:41:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,18,POS IDR,Pos Indralaya,75,Ls,07:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3660,Simpangsari,BJI-SIG,19,SIG,Simpang,-,08:02:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,1,SIG,Simpang,15,-,02:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,2,POS IDR,Pos Indralaya,15,Ls,02:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,3,PYK,Payakabung,15,Ls,02:43:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,4,SDN,Serdang,15,Ls,02:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,5,GLB,Glumbang,15,Ls,03:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,6,KED,Karangenda,75,Ls,03:12:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,7,LEB,Lembak,75,Ls,03:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,8,PBM,Prabumulih,75,Ls,03:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,9,PBR X6,Prabumulih Baru X6,75,Ls,03:45:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,10,PNM,Penimur,75,Ls,03:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,11,NRU,Niru,75,Ls,04:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,12,BIB,Blimbing Pendopo,75,Ls,04:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,13,GNM,Gunung Megang,75,Ls,04:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,14,PNG,Penanggiran,75,Ls,04:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,15,UJM,Ujan Mas,75,Ls,04:48:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,16,MRL,Muara Gula,75,Ls,04:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,17,ME,Muara Enim,55,Ls,05:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,18,MLI,Muaralawai,55,05:20:00,05:30:00,X KA 3566,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3661,Simpangsari,SIG-BJI,19,BJI,Banjarsari,0,05:40:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,1,BJI,Banjarsari,55,-,10:25:00,X KA 3333,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,2,MLI,Muaralawai,55,Ls,10:34:00,(KA 3663 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,3,ME,Muara Enim,75,Ls,10:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,4,MRL,Muara Gula,75,Ls,11:00:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,5,UJM,Ujan Mas,75,Ls,11:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,6,PNG,Penanggiran,75,Ls,11:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,7,GNM,Gunung Megang,75,Ls,11:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,8,BIB,Blimbing Pendopo,75,Ls,11:48:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,9,NRU,Niru,75,Ls,12:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,10,PNM,Penimur,75,Ls,12:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,11,PBR X6,Prabumulih Baru X6,75,Ls,12:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,12,PBM,Prabumulih,75,Ls,12:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,13,LEB,Lembak,75,Ls,12:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,14,KED,Karangenda,75,Ls,13:00:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,15,GLB,Glumbang,75,Ls,13:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,16,SDN,Serdang,75,Ls,13:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,17,PYK,Payakabung,75,Ls,13:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,18,POS IDR,Pos Indralaya,75,Ls,13:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3662,Simpangsari,BJI-SIG,19,SIG,Simpang,0,13:55:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,1,SIG,Simpang,75,-,07:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,2,POS IDR,Pos Indralaya,75,Ls,07:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,3,PYK,Payakabung,75,Ls,07:51:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,4,SDN,Serdang,75,Ls,08:00:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,5,GLB,Glumbang,75,Ls,08:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,6,KED,Karangenda,75,Ls,08:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,7,LEB,Lembak,75,Ls,08:29:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,8,PBM,Prabumulih,75,Ls,08:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,9,PBR X6,Prabumulih Baru X6,75,Ls,08:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,10,PNM,Penimur,75,Ls,09:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,11,NRU,Niru,75,Ls,09:13:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,12,BIB,Blimbing Pendopo,75,Ls,09:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,13,GNM,Gunung Megang,75,Ls,09:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,14,PNG,Penanggiran,75,Ls,09:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,15,UJM,Ujan Mas,75,Ls,09:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,16,MRL,Muara Gula,75,Ls,10:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,17,ME,Muara Enim,55,Ls,10:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,18,MLI,Muaralawai,55,10:28:00,10:37:00,X KA 3662,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3663,Simpangsari,SIG-BJI,19,BJI,Banjarsari,0,10:47:00,-,(KA 3572 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,1,BJI,Banjarsari,55,-,20:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,2,MLI,Muaralawai,55,Ls,20:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,3,ME,Muara Enim,75,Ls,20:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,4,MRL,Muara Gula,75,Ls,20:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,5,UJM,Ujan Mas,75,Ls,20:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,6,PNG,Penanggiran,75,Ls,21:08:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,7,GNM,Gunung Megang,75,Ls,21:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,8,BIB,Blimbing Pendopo,75,Ls,21:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,9,NRU,Niru,75,Ls,21:50:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,10,PNM,Penimur,75,Ls,22:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,11,PBR X6,Prabumulih Baru X6,75,Ls,22:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,12,PBM,Prabumulih,75,Ls,22:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,13,LEB,Lembak,75,Ls,22:38:00,// KA 3578 (KA 3578 -—),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,14,KED,Karangenda,75,Ls,22:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,15,GLB,Glumbang,75,Ls,22:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,16,SDN,Serdang,75,Ls,23:08:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,17,PYK,Payakabung,75,Ls,23:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,18,POS IDR,Pos Indralaya,75,Ls,23:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3664,Simpangsari,BJI-SIG,19,SIG,Simpang,0,23:38:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,1,SIG,Simpang,75,-,19:48:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,2,POS IDR,Pos Indralaya,75,Ls,20:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,3,PYK,Payakabung,75,Ls,20:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,4,SDN,Serdang,75,Ls,20:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,5,GLB,Glumbang,75,Ls,20:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,6,KED,Karangenda,75,Ls,20:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,7,LEB,Lembak,15,Ls,20:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,8,PBM,Prabumulih,75,Ls,21:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,9,PBR X6,Prabumulih Baru X6,75,Ls,21:13:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,10,PNM,Penimur,75,Ls,21:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,11,NRU,Niru,75,Ls,21:33:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,12,BIB,Blimbing Pendopo,75,Ls,21:45:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,13,GNM,Gunung Megang,75,Ls,21:58:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,14,PNG,Penanggiran,75,Ls,22:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,15,UJM,Ujan Mas,75,Ls,22:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,16,MRL,Muara Gula,75,Ls,22:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,17,ME,Muara Enim,55,Ls,22:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,18,MLI,Muaralawai,55,22:48:00,23:20:00,"X KA 3580, - KASI (KASI //)",DW KA Divre III-IV Sumsel 2026,terverifikasi
+3665,Simpangsari,SIG-BJI,19,BJI,Banjarsari,0,23:30:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3880,Baraserdang,SCT-SDN,1,SCT,Sukacinta,55,-,01:44:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,2,MRP,Merapi,55,Ls,01:58:00,X KA 3337 (KA 3337 X),DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,3,BJI,Banjarsari,55,Ls,02:08:00,X KA 3887 (KA 3887 X),DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,4,MLI,Muaralawai,55,02:18:00,02:38:00,(KA 3579 X),DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,5,ME,Muara Enim,75,Ls,02:52:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,6,MRL,Muara Gula,75,Ls,03:03:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,7,UJM,Ujan Mas,75,Ls,03:13:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,8,PNG,Penanggiran,75,Ls,03:25:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,9,GNM,Gunung Megang,75,Ls,03:35:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,10,BIB,Blimbing Pendopo,75,Ls,03:51:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,11,NRU,Niru,75,Ls,04:07:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,12,PNM,Penimur,75,Ls,04:23:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,13,PBR X6,Prabumulih Baru X6,75,Ls,04:33:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,14,PBM,Prabumulih,75,Ls,04:38:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,15,LEB,Lembak,75,Ls,04:55:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,16,KED,Karangenda,75,Ls,05:03:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,17,GLB,Glumbang,75,Ls,05:13:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3880,Baraserdang,SCT-SDN,18,SDN,Serdang,0,Ls,05:29:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3881,Baraserdang,SDN-SCT,1,SDN,Serdang,75,-,05:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,2,GLB,Glumbang,75,Ls,05:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,3,KED,Karangenda,75,Ls,05:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,4,LEB,Lembak,75,Ls,05:41:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,5,PBM,Prabumulih,75,Ls,05:58:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,6,PBR X6,Prabumulih Baru X6,75,Ls,06:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,7,PNM,Penimur,75,Ls,06:15:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,8,NRU,Niru,75,Ls,06:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,9,BIB,Blimbing Pendopo,75,Ls,06:37:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,10,GNM,Gunung Megang,75,Ls,06:50:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,11,PNG,Penanggiran,75,Ls,06:58:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,12,UJM,Ujan Mas,75,Ls,07:08:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,13,MRL,Muara Gula,75,Ls,07:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,14,ME,Muara Enim,55,Ls,07:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,15,MLI,Muaralawai,55,07:40:00,07:43:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,16,BJI,Banjarsari,55,07:53:00,08:03:00,X KA 3882 (KA 3882 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,17,MRP,Merapi,55,08:18:00,08:28:00,X KA 3332 (KA 3332 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3881,Baraserdang,SDN-SCT,18,SCT,Sukacinta,0,08:44:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3882,Baraserdang,SCT-SDN,1,SCT,Sukacinta,55,-,07:36:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,2,MRP,Merapi,55,Ls,07:50:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,3,BJI,Banjarsari,55,Ls,08:00:00,X KA 3881 (KA 3881 X),DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,4,MLI,Muaralawai,55,08:10:00,08:14:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,5,ME,Muara Enim,75,Ls,08:28:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,6,MRL,Muara Gula,75,Ls,08:39:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,7,UJM,Ujan Mas,75,Ls,08:49:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,8,PNG,Penanggiran,75,Ls,09:01:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,9,GNM,Gunung Megang,75,Ls,09:11:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,10,BIB,Blimbing Pendopo,75,Ls,09:27:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,11,NRU,Niru,75,Ls,09:43:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,12,PNM,Penimur,75,Ls,09:59:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,13,PBR X6,Prabumulih Baru X6,75,Ls,10:09:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,14,PBM,Prabumulih,75,Ls,10:14:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,15,LEB,Lembak,75,Ls,10:31:00,// KA 3568 (KA 3568 —),DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,16,KED,Karangenda,75,Ls,10:39:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,17,GLB,Glumbang,75,Ls,10:49:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3882,Baraserdang,SCT-SDN,18,SDN,Serdang,0,Ls,11:02:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3883,Baraserdang,SDN-SCT,1,SDN,Serdang,75,-,10:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,2,GLB,Glumbang,75,Ls,10:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,3,KED,Karangenda,75,Ls,10:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,4,LEB,Lembak,75,Ls,11:01:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,5,PBM,Prabumulih,75,Ls,11:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,6,PBR X6,Prabumulih Baru X6,75,Ls,11:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,7,PNM,Penimur,75,Ls,11:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,8,NRU,Niru,75,Ls,11:45:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,9,BIB,Blimbing Pendopo,75,Ls,11:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,10,GNM,Gunung Megang,75,Ls,12:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,11,PNG,Penanggiran,75,Ls,12:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,12,UJM,Ujan Mas,75,Ls,12:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,13,MRL,Muara Gula,75,Ls,12:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,14,ME,Muara Enim,55,Ls,12:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,15,MLI,Muaralawai,55,13:00:00,13:18:00,X KA S10,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,16,BJI,Banjarsari,55,Ls,13:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,17,MRP,Merapi,55,Ls,13:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3883,Baraserdang,SDN-SCT,18,SCT,Sukacinta,0,13:50:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3884,Baraserdang,SCT-SDN,1,SCT,Sukacinta,55,-,14:43:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,2,MRP,Merapi,55,Ls,14:57:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,3,BJI,Banjarsari,55,Ls,15:07:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,4,MLI,Muaralawai,55,Ls,15:15:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,5,ME,Muara Enim,75,Ls,15:27:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,6,MRL,Muara Gula,75,Ls,15:38:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,7,UJM,Ujan Mas,75,Ls,15:48:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,8,PNG,Penanggiran,75,Ls,16:00:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,9,GNM,Gunung Megang,75,Ls,16:10:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,10,BIB,Blimbing Pendopo,75,Ls,16:26:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,11,NRU,Niru,75,Ls,16:42:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,12,PNM,Penimur,75,Ls,16:58:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,13,PBR X6,Prabumulih Baru X6,75,Ls,17:08:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,14,PBM,Prabumulih,75,Ls,17:13:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,15,LEB,Lembak,15,Ls,17:30:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,16,KED,Karangenda,75,Ls,17:38:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,17,GLB,Glumbang,75,Ls,17:48:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3884,Baraserdang,SCT-SDN,18,SDN,Serdang,0,Ls,18:02:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3885,Baraserdang,SDN-SCT,1,SDN,Serdang,75,-,16:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,2,GLB,Glumbang,75,Ls,16:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,3,KED,Karangenda,75,Ls,16:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,4,LEB,Lembak,15,Ls,16:51:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,5,PBM,Prabumulih,75,Ls,17:08:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,6,PBR X6,Prabumulih Baru X6,75,Ls,17:15:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,7,PNM,Penimur,75,Ls,17:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,8,NRU,Niru,75,Ls,17:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,9,BIB,Blimbing Pendopo,75,Ls,17:47:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,10,GNM,Gunung Megang,75,Ls,18:00:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,11,PNG,Penanggiran,75,Ls,18:08:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,12,UJM,Ujan Mas,75,Ls,18:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,13,MRL,Muara Gula,75,Ls,18:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,14,ME,Muara Enim,55,Ls,18:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,15,MLI,Muaralawai,55,18:50:00,19:00:00,X KA 3578,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,16,BJI,Banjarsari,55,19:10:00,19:24:00,X KA 3992 (KA 3992 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,17,MRP,Merapi,55,Ls,19:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3885,Baraserdang,SDN-SCT,18,SCT,Sukacinta,0,19:49:00,-,(KA 3336F JJ X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3886,Baraserdang,SCT-SDN,1,SCT,Sukacinta,55,-,20:33:00,X KA 3335,DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,2,MRP,Merapi,55,Ls,20:47:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,3,BJI,Banjarsari,55,20:59:00,21:23:00,X KA 3573 (KA 3573 X),DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,4,MLI,Muaralawai,55,Ls,21:33:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,5,ME,Muara Enim,75,Ls,21:45:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,6,MRL,Muara Gula,75,Ls,21:56:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,7,UJM,Ujan Mas,75,Ls,22:06:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,8,PNG,Penanggiran,75,Ls,22:18:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,9,GNM,Gunung Megang,75,Ls,22:28:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,10,BIB,Blimbing Pendopo,75,Ls,22:44:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,11,NRU,Niru,75,Ls,23:00:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,12,PNM,Penimur,75,Ls,23:16:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,13,PBR X6,Prabumulih Baru X6,75,Ls,23:26:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,14,PBM,Prabumulih,75,Ls,23:31:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,15,LEB,Lembak,75,Ls,23:48:00,// KA 3336F JJ (KA 3336F JJ —),DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,16,KED,Karangenda,75,Ls,23:56:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,17,GLB,Glumbang,75,Ls,00:06:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3886,Baraserdang,SCT-SDN,18,SDN,Serdang,0,Ls,00:22:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3887,Baraserdang,SDN-SCT,1,SDN,Serdang,75,-,23:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,2,GLB,Glumbang,75,Ls,23:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,3,KED,Karangenda,75,Ls,23:33:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,4,LEB,Lembak,75,Ls,23:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,5,PBM,Prabumulih,75,Ls,23:59:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,6,PBR X6,Prabumulih Baru X6,75,Ls,00:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,7,PNM,Penimur,75,Ls,00:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,8,NRU,Niru,75,Ls,00:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,9,BIB,Blimbing Pendopo,75,Ls,00:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,10,GNM,Gunung Megang,75,Ls,00:51:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,11,PNG,Penanggiran,75,Ls,00:59:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,12,UJM,Ujan Mas,75,Ls,01:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,13,MRL,Muara Gula,75,Ls,01:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,14,ME,Muara Enim,55,Ls,01:27:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,15,MLI,Muaralawai,55,01:41:00,01:51:00,X KA 3330,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,16,BJI,Banjarsari,55,02:01:00,02:11:00,X KA 3880 (KA 3880 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,17,MRP,Merapi,55,Ls,02:23:00,(KA 3562 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3887,Baraserdang,SDN-SCT,18,SCT,Sukacinta,-,02:37:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,1,MLI,Muaralawai,55,-,18:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,2,ME,Muara Enim,75,Ls,19:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,3,MRL,Muara Gula,75,Ls,19:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,4,UJM,Ujan Mas,75,Ls,19:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,5,PNG,Penanggiran,75,Ls,19:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,6,GNM,Gunung Megang,75,Ls,19:54:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,7,BIB,Blimbing Pendopo,75,Ls,20:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,8,NRU,Niru,75,Ls,20:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,9,PNM,Penimur,75,Ls,20:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,10,PBR X6,Prabumulih Baru X6,75,Ls,20:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,11,PBM,Prabumulih,75,Ls,20:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,12,LEB,Lembak,75,Ls,21:14:00,// KA 3576 (KA 3576 —),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,13,KED,Karangenda,75,Ls,21:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,14,GLB,Glumbang,75,Ls,21:31:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,15,SDN,Serdang,75,Ls,21:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,16,PYK,Payakabung,75,Ls,21:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,17,POS IDR,Pos Indralaya,75,Ls,21:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3770,Simpangmuara,MLI-SIG,18,SIG,Simpang,0,22:11:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,1,SIG,Simpang,15,-,03:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,2,POS IDR,Pos Indralaya,15,Ls,03:33:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,3,PYK,Payakabung,75,Ls,03:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,4,SDN,Serdang,75,Ls,03:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,5,GLB,Glumbang,75,Ls,03:59:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,6,KED,Karangenda,75,Ls,04:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,7,LEB,Lembak,75,Ls,04:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,8,PBM,Prabumulih,75,Ls,04:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,9,PBR X6,Prabumulih Baru X6,75,Ls,04:41:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,10,PNM,Penimur,75,Ls,04:51:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,11,NRU,Niru,75,Ls,05:01:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,12,BIB,Blimbing Pendopo,75,Ls,05:13:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,13,GNM,Gunung Megang,75,Ls,05:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,14,PNG,Penanggiran,75,Ls,05:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,15,UJM,Ujan Mas,75,Ls,05:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,16,MRL,Muara Gula,75,Ls,05:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,17,ME,Muara Enim,55,Ls,06:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3771,Simpangmuara,SIG-MLI,18,MLI,Muaralawai,-,06:16:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+4090F-4091F,Baragajah,GNM-PBRX6,1,GNM,Gunung Megang,75,-,12:46:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4090F-4091F,Baragajah,GNM-PBRX6,2,BIB,Blimbing Pendopo,75,Ls,13:02:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4090F-4091F,Baragajah,GNM-PBRX6,3,NRU,Niru,75,Ls,13:18:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4090F-4091F,Baragajah,GNM-PBRX6,4,PNM,Penimur,75,Ls,13:34:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4090F-4091F,Baragajah,GNM-PBRX6,5,PBR X6,Prabumulih Baru X6,0,Ls,13:44:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,1,PBR X6,Prabumulih Baru X6,55,Ls,13:44:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,2,PBR X5,Prabumulih Baru X5,55,Ls,13:49:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,3,TJR,Tanjungrambang,55,Ls,14:01:00,X KA 4100,DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,4,SKU,Sukamerindu,55,14:12:00,14:46:00,x,DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,5,ASM,Air Asam,55,Ls,14:57:00,X KA 4106 (KA 4106 X),DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,6,PGG,Pagergunung,55,Ls,15:04:00,X KA S8 (KAS8X),DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,7,KBU,Kotabaru,55,Ls,15:11:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,8,MET,Metur,55,Ls,15:21:00,X KA 3928F JJ (KA 3928F JJ X),DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,9,TLB,Talang Baru,55,Ls,15:30:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,10,PNW,Peninjawan,55,15:39:00,15:56:00,X KA 4108F JJ (KA 4108F JJ X),DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,11,LRM,Lubuk Rukam,55,Ls,16:08:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,12,DAN,Durian,55,Ls,16:15:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,13,BIK,Blimbing Air Kaka,55,Ls,16:20:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,14,KPY,Kepayang,55,Ls,16:26:00,X KA 4110F JJ (KA 4110F JJ X),DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,15,BLT,Belatung,55,16:34:00,16:50:00,X KA 4112 (KA 4112 X),DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,16,LBT,Lubuk Batang,55,Ls,16:58:00,(KA 4114X),DW KA Divre III-IV Sumsel 2026,periksa
+4091F,Baragajah,PBRX6-TJH,17,TJH,Tigagajah,-,17:11:00,-,,DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,1,TJH,Tigagajah,70,-,19:27:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,2,LBT,Lubuk Batang,70,19:40:00,19:43:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,3,BLT,Belatung,70,Ls,19:49:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,4,KPY,Kepayang,70,19:56:00,20:11:00,X KA 4033F JJ (KA 4033F JJ X),DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,5,BIK,Blimbing Air Kaka,70,Ls,20:17:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,6,DAN,Durian,70,20:23:00,20:40:00,X KA 4035F JJ (KA 4035F JJ X),DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,7,LRM,Lubuk Rukam,70,20:50:00,21:01:00,X KA 4037 (KA 4037 X),DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,8,PNW,Peninjawan,70,Ls,21:12:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,9,TLB,Talang Baru,70,21:19:00,21:29:00,X KA 4039 (KA 4039 X),DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,10,MET,Metur,70,Ls,21:38:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,11,KBU,Kotabaru,70,Ls,21:45:00,X KA 4041 (KA 4041 X),DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,12,PGG,Pagergunung,70,Ls,21:51:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,13,ASM,Air Asam,70,Ls,21:57:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,14,SKU,Sukamerindu,70,22:06:00,22:16:00,X KA 4043 (KA 4043 X),DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,15,TJR,Tanjungrambang,70,22:21:00,22:46:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,16,PBR X5,Prabumulih Baru X5,70,Ls,22:58:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4092F-4093F,Baragajah,TJH-PBRX6,17,PBR X6,Prabumulih Baru X6,0,Ls,23:02:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4093F,Baragajah,PBRX6-GNM,1,PBR X6,Prabumulih Baru X6,75,Ls,23:02:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4093F,Baragajah,PBRX6-GNM,2,PNM,Penimur,75,Ls,23:12:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4093F,Baragajah,PBRX6-GNM,3,NRU,Niru,75,Ls,23:22:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4093F,Baragajah,PBRX6-GNM,4,BIB,Blimbing Pendopo,75,Ls,23:33:00,,DW KA Divre III-IV Sumsel 2026,periksa
+4093F,Baragajah,PBRX6-GNM,5,GNM,Gunung Megang,0,23:46:00,-,,DW KA Divre III-IV Sumsel 2026,periksa
+3000,Baratambang,TMB-SIG,1,TMB,Tanjungenim Baru,55,-,04:27:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,2,ME,Muara Enim,75,Ls,04:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,3,MRL,Muara Gula,75,Ls,04:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,4,UJM,Ujan Mas,75,Ls,05:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,5,PNG,Penanggiran,75,Ls,05:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,6,GNM,Gunung Megang,75,Ls,05:27:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,7,BIB,Blimbing Pendopo,75,Ls,05:43:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,8,NRU,Niru,75,Ls,05:59:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,9,PNM,Penimur,75,Ls,06:15:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,10,PBR X6,Prabumulih Baru X6,75,Ls,06:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,11,PBM,Prabumulih,75,Ls,06:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,12,LEB,Lembak,75,Ls,06:47:00,// KA 3564 (KA 3564 —),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,13,KED,Karangenda,75,Ls,06:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,14,GLB,Glumbang,75,Ls,07:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,15,SDN,Serdang,75,Ls,07:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,16,PYK,Payakabung,75,Ls,07:27:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,17,POS IDR,Pos Indralaya,75,Ls,07:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3000,Baratambang,TMB-SIG,18,SIG,Simpang,0,07:48:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,1,SIG,Simpang,15,-,02:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,2,POS IDR,Pos Indralaya,15,Ls,02:50:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,3,PYK,Payakabung,15,Ls,02:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,4,SDN,Serdang,75,Ls,03:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,5,GLB,Glumbang,75,Ls,03:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,6,KED,Karangenda,75,Ls,03:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,7,LEB,Lembak,75,Ls,03:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,8,PBM,Prabumulih,75,Ls,03:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,9,PBR X6,Prabumulih Baru X6,75,Ls,03:59:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,10,PNM,Penimur,75,Ls,04:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,11,NRU,Niru,75,Ls,04:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,12,BIB,Blimbing Pendopo,75,Ls,04:31:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,13,GNM,Gunung Megang,75,Ls,04:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,14,PNG,Penanggiran,75,Ls,04:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,15,UJM,Ujan Mas,75,Ls,05:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,16,MRL,Muara Gula,75,Ls,05:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,17,ME,Muara Enim,55,Ls,05:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3001,Baratambang,SIG-TMB,18,TMB,Tanjungenim Baru,0,05:33:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,1,TMB,Tanjungenim Baru,55,-,07:43:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,2,ME,Muara Enim,75,Ls,08:00:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,3,MRL,Muara Gula,75,Ls,08:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,4,UJM,Ujan Mas,75,Ls,08:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,5,PNG,Penanggiran,75,Ls,08:33:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,6,GNM,Gunung Megang,75,Ls,08:43:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,7,BIB,Blimbing Pendopo,75,Ls,08:59:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,8,NRU,Niru,75,Ls,09:15:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,9,PNM,Penimur,75,Ls,09:31:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,10,PBR X6,Prabumulih Baru X6,75,Ls,09:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,11,PBM,Prabumulih,75,Ls,09:48:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,12,LEB,Lembak,75,Ls,10:05:00,// KA 3568 (KA 3568 —),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,13,KED,Karangenda,75,Ls,10:13:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,14,GLB,Glumbang,75,Ls,10:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,15,SDN,Serdang,75,Ls,10:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,16,PYK,Payakabung,75,Ls,10:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,17,POS IDR,Pos Indralaya,75,Ls,10:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3002,Baratambang,TMB-SIG,18,SIG,Simpang,0,11:04:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,1,SIG,Simpang,75,-,04:51:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,2,POS IDR,Pos Indralaya,75,Ls,05:07:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,3,PYK,Payakabung,75,Ls,05:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,4,SDN,Serdang,75,Ls,05:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,5,GLB,Glumbang,75,Ls,05:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,6,KED,Karangenda,75,Ls,05:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,7,LEB,Lembak,75,Ls,05:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,8,PBM,Prabumulih,75,Ls,06:12:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,9,PBR X6,Prabumulih Baru X6,75,Ls,06:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,10,PNM,Penimur,75,Ls,06:29:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,11,NRU,Niru,75,Ls,06:39:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,12,BIB,Blimbing Pendopo,75,Ls,06:51:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,13,GNM,Gunung Megang,75,Ls,07:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,14,PNG,Penanggiran,75,Ls,07:12:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,15,UJM,Ujan Mas,75,Ls,07:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,16,MRL,Muara Gula,75,Ls,07:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,17,ME,Muara Enim,55,Ls,07:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3003,Baratambang,SIG-TMB,18,TMB,Tanjungenim Baru,0,07:53:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,1,TMB,Tanjungenim Baru,55,-,10:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,2,ME,Muara Enim,75,Ls,11:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,3,MRL,Muara Gula,75,Ls,11:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,4,UJM,Ujan Mas,75,Ls,11:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,5,PNG,Penanggiran,75,Ls,11:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,6,GNM,Gunung Megang,75,Ls,11:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,7,BIB,Blimbing Pendopo,75,Ls,12:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,8,NRU,Niru,75,Ls,12:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,9,PNM,Penimur,75,Ls,12:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,10,PBR X6,Prabumulih Baru X6,75,Ls,12:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,11,PBM,Prabumulih,75,Ls,12:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,12,LEB,Lembak,75,Ls,13:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,13,KED,Karangenda,75,Ls,13:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,14,GLB,Glumbang,75,Ls,13:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,15,SDN,Serdang,75,Ls,13:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,16,PYK,Payakabung,75,Ls,13:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,17,POS IDR,Pos Indralaya,75,Ls,13:51:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3004,Baratambang,TMB-SIG,18,SIG,Simpang,0,14:07:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,1,SIG,Simpang,75,-,08:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,2,POS IDR,Pos Indralaya,75,Ls,08:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,3,PYK,Payakabung,75,Ls,08:33:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,4,SDN,Serdang,75,Ls,08:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,5,GLB,Glumbang,75,Ls,08:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,6,KED,Karangenda,75,Ls,09:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,7,LEB,Lembak,75,Ls,09:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,8,PBM,Prabumulih,75,Ls,09:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,9,PBR X6,Prabumulih Baru X6,75,Ls,09:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,10,PNM,Penimur,75,Ls,09:45:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,11,NRU,Niru,75,Ls,09:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,12,BIB,Blimbing Pendopo,75,Ls,10:07:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,13,GNM,Gunung Megang,75,Ls,10:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,14,PNG,Penanggiran,75,Ls,10:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,15,UJM,Ujan Mas,75,Ls,10:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,16,MRL,Muara Gula,75,Ls,10:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,17,ME,Muara Enim,55,Ls,10:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3005,Baratambang,SIG-TMB,18,TMB,Tanjungenim Baru,0,11:09:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,1,TMB,Tanjungenim Baru,55,-,15:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,2,ME,Muara Enim,75,Ls,16:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,3,MRL,Muara Gula,75,Ls,16:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,4,UJM,Ujan Mas,75,Ls,16:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,5,PNG,Penanggiran,75,Ls,16:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,6,GNM,Gunung Megang,75,Ls,16:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,7,BIB,Blimbing Pendopo,75,Ls,17:08:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,8,NRU,Niru,75,Ls,17:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,9,PNM,Penimur,75,Ls,17:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,10,PBR X6,Prabumulih Baru X6,75,Ls,17:50:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,11,PBM,Prabumulih,75,Ls,17:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,12,LEB,Lembak,75,Ls,18:12:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,13,KED,Karangenda,75,Ls,18:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,14,GLB,Glumbang,75,Ls,18:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,15,SDN,Serdang,75,Ls,18:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,16,PYK,Payakabung,75,Ls,18:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,17,POS IDR,Pos Indralaya,75,Ls,18:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3006,Baratambang,TMB-SIG,18,SIG,Simpang,0,19:13:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,1,SIG,Simpang,15,-,16:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,2,POS IDR,Pos Indralaya,15,Ls,16:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,3,PYK,Payakabung,15,Ls,16:27:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,4,SDN,Serdang,75,Ls,16:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,5,GLB,Glumbang,75,Ls,16:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,6,KED,Karangenda,75,Ls,16:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,7,LEB,Lembak,75,Ls,17:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,8,PBM,Prabumulih,75,Ls,17:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,9,PBR X6,Prabumulih Baru X6,75,Ls,17:29:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,10,PNM,Penimur,75,Ls,17:39:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,11,NRU,Niru,75,Ls,17:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,12,BIB,Blimbing Pendopo,75,Ls,18:01:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,13,GNM,Gunung Megang,75,Ls,18:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,14,PNG,Penanggiran,75,Ls,18:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,15,UJM,Ujan Mas,75,Ls,18:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,16,MRL,Muara Gula,75,Ls,18:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,17,ME,Muara Enim,55,Ls,18:50:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3007,Baratambang,SIG-TMB,18,TMB,Tanjungenim Baru,0,19:03:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,1,TMB,Tanjungenim Baru,55,-,17:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,2,ME,Muara Enim,75,Ls,17:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,3,MRL,Muara Gula,75,Ls,17:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,4,UJM,Ujan Mas,75,Ls,17:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,5,PNG,Penanggiran,75,Ls,17:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,6,GNM,Gunung Megang,75,Ls,18:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,7,BIB,Blimbing Pendopo,75,Ls,18:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,8,NRU,Niru,75,Ls,18:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,9,PNM,Penimur,75,Ls,18:50:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,10,PBR X6,Prabumulih Baru X6,75,Ls,19:00:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,11,PBM,Prabumulih,75,Ls,19:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,12,LEB,Lembak,75,Ls,19:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,13,KED,Karangenda,75,Ls,19:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,14,GLB,Glumbang,75,Ls,19:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,15,SDN,Serdang,75,Ls,19:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,16,PYK,Payakabung,75,Ls,20:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,17,POS IDR,Pos Indralaya,75,Ls,20:07:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3008,Baratambang,TMB-SIG,18,SIG,Simpang,0,20:23:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,1,SIG,Simpang,15,-,17:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,2,POS IDR,Pos Indralaya,15,Ls,17:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,3,PYK,Payakabung,75,Ls,17:47:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,4,SDN,Serdang,75,Ls,17:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,5,GLB,Glumbang,75,Ls,18:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,6,KED,Karangenda,75,Ls,18:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,7,LEB,Lembak,75,Ls,18:29:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,8,PBM,Prabumulih,75,Ls,18:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,9,PBR X6,Prabumulih Baru X6,75,Ls,18:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,10,PNM,Penimur,75,Ls,19:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,11,NRU,Niru,75,Ls,19:13:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,12,BIB,Blimbing Pendopo,75,Ls,19:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,13,GNM,Gunung Megang,75,Ls,19:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,14,PNG,Penanggiran,75,Ls,19:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,15,UJM,Ujan Mas,75,Ls,19:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,16,MRL,Muara Gula,75,Ls,20:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,17,ME,Muara Enim,55,Ls,20:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3009,Baratambang,SIG-TMB,18,TMB,Tanjungenim Baru,0,20:27:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,1,TMB,Tanjungenim Baru,55,-,23:47:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,2,ME,Muara Enim,75,Ls,00:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,3,MRL,Muara Gula,75,Ls,00:15:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,4,UJM,Ujan Mas,75,Ls,00:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,5,PNG,Penanggiran,75,Ls,00:37:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,6,GNM,Gunung Megang,75,Ls,00:47:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,7,BIB,Blimbing Pendopo,75,Ls,01:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,8,NRU,Niru,75,Ls,01:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,9,PNM,Penimur,75,Ls,01:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,10,PBR X6,Prabumulih Baru X6,75,Ls,01:45:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,11,PBM,Prabumulih,75,Ls,01:50:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,12,LEB,Lembak,75,Ls,02:07:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,13,KED,Karangenda,75,Ls,02:15:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,14,GLB,Glumbang,75,Ls,02:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,15,SDN,Serdang,75,Ls,02:37:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,16,PYK,Payakabung,75,Ls,02:47:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,17,POS IDR,Pos Indralaya,75,Ls,02:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3010,Baratambang,TMB-SIG,18,SIG,Simpang,0,03:08:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,1,SIG,Simpang,75,-,22:54:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,2,POS IDR,Pos Indralaya,75,Ls,23:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,3,PYK,Payakabung,75,Ls,23:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,4,SDN,Serdang,75,Ls,23:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,5,GLB,Glumbang,75,Ls,23:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,6,KED,Karangenda,75,Ls,23:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,7,LEB,Lembak,75,Ls,23:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,8,PBM,Prabumulih,75,Ls,00:12:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,9,PBR X6,Prabumulih Baru X6,75,Ls,00:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,10,PNM,Penimur,75,Ls,00:29:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,11,NRU,Niru,75,Ls,00:39:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,12,BIB,Blimbing Pendopo,75,Ls,00:51:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,13,GNM,Gunung Megang,75,Ls,01:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,14,PNG,Penanggiran,75,Ls,01:12:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,15,UJM,Ujan Mas,75,Ls,01:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,16,MRL,Muara Gula,75,Ls,01:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,17,ME,Muara Enim,55,Ls,01:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3011,Baratambang,SIG-TMB,18,TMB,Tanjungenim Baru,-,01:53:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,1,TMB,Tanjungenim Baru,55,-,00:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,2,ME,Muara Enim,75,Ls,01:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,3,MRL,Muara Gula,75,Ls,01:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,4,UJM,Ujan Mas,75,Ls,01:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,5,PNG,Penanggiran,75,Ls,01:47:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,6,GNM,Gunung Megang,75,Ls,01:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,7,BIB,Blimbing Pendopo,75,Ls,02:13:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,8,NRU,Niru,75,Ls,02:29:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,9,PNM,Penimur,75,Ls,02:45:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,10,PBR X6,Prabumulih Baru X6,75,Ls,02:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,11,PBM,Prabumulih,75,Ls,03:00:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,12,LEB,Lembak,75,Ls,03:17:00,// KA 3560 (KA 3560 —),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,13,KED,Karangenda,75,Ls,03:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,14,GLB,Glumbang,75,Ls,03:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,15,SDN,Serdang,75,Ls,03:47:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,16,PYK,Payakabung,75,Ls,03:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,17,POS IDR,Pos Indralaya,75,Ls,04:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,18,SIG,Simpang,75,Ls,04:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,19,KAS,Kramasan,75,Ls,04:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3020F,Barabau,TMB-KPT,20,KPT,Kertapati,0,04:32:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,1,KPT,Kertapati,75,-,01:39:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,2,KAS,Kramasan,75,Ls,01:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,3,SIG,Simpang,75,Ls,01:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,4,POS IDR,Pos Indralaya,75,Ls,02:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,5,PYK,Payakabung,75,Ls,02:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,6,SDN,Serdang,75,Ls,02:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,1,GLB,Glumbang,75,Ls,02:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,8,KED,Karangenda,75,Ls,02:45:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,9,LEB,Lembak,75,Ls,02:54:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,10,PBM,Prabumulih,75,Ls,03:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,11,PBR X6,Prabumulih Baru X6,75,Ls,03:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,12,PNM,Penimur,75,Ls,03:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,13,NRU,Niru,75,Ls,03:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,14,BIB,Blimbing Pendopo,75,Ls,03:50:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,15,GNM,Gunung Megang,75,Ls,04:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,16,PNG,Penanggiran,75,Ls,04:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,17,UJM,Ujan Mas,75,Ls,04:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,18,MRL,Muara Gula,75,Ls,04:29:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,19,ME,Muara Enim,55,Ls,04:39:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3021,Barabau,KPT-TMB,20,TMB,Tanjungenim Baru,0,04:51:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,1,TMB,Tanjungenim Baru,55,-,02:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,2,ME,Muara Enim,75,Ls,03:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,3,MRL,Muara Gula,75,Ls,03:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,4,UJM,Ujan Mas,75,Ls,03:27:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,5,PNG,Penanggiran,75,Ls,03:39:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,6,GNM,Gunung Megang,75,Ls,03:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,7,BIB,Blimbing Pendopo,75,Ls,04:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,8,NRU,Niru,75,Ls,04:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,9,PNM,Penimur,75,Ls,04:37:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,10,PBR X6,Prabumulih Baru X6,75,Ls,04:47:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,11,PBM,Prabumulih,75,Ls,04:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,12,LEB,Lembak,75,Ls,05:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,13,KED,Karangenda,75,Ls,05:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,14,GLB,Glumbang,75,Ls,05:27:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,15,SDN,Serdang,75,Ls,05:39:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,16,PYK,Payakabung,75,Ls,05:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,17,POS IDR,Pos Indralaya,75,Ls,05:54:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,18,SIG,Simpang,75,Ls,06:08:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,19,KAS,Kramasan,75,Ls,06:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3022,Barabau,TMB-KPT,20,KPT,Kertapati,0,06:24:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,1,KPT,Kertapati,75,-,03:58:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,2,KAS,Kramasan,75,Ls,04:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,3,SIG,Simpang,75,Ls,04:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,4,POS IDR,Pos Indralaya,75,Ls,04:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,5,PYK,Payakabung,75,Ls,04:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,6,SDN,Serdang,75,Ls,04:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,1,GLB,Glumbang,75,Ls,04:54:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,8,KED,Karangenda,75,Ls,05:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,9,LEB,Lembak,75,Ls,05:13:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,10,PBM,Prabumulih,75,Ls,05:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,11,PBR X6,Prabumulih Baru X6,75,Ls,05:37:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,12,PNM,Penimur,75,Ls,05:47:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,13,NRU,Niru,75,Ls,05:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,14,BIB,Blimbing Pendopo,75,Ls,06:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,15,GNM,Gunung Megang,75,Ls,06:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,16,PNG,Penanggiran,75,Ls,06:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,17,UJM,Ujan Mas,75,Ls,06:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,18,MRL,Muara Gula,75,Ls,06:48:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,19,ME,Muara Enim,55,Ls,06:58:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3023F,Barabau,KPT-TMB,20,TMB,Tanjungenim Baru,0,07:11:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,1,TMB,Tanjungenim Baru,55,-,09:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,2,ME,Muara Enim,75,Ls,09:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,3,MRL,Muara Gula,75,Ls,09:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,4,UJM,Ujan Mas,75,Ls,09:59:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,5,PNG,Penanggiran,75,Ls,10:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,6,GNM,Gunung Megang,75,Ls,10:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,7,BIB,Blimbing Pendopo,75,Ls,10:37:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,8,NRU,Niru,75,Ls,10:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,9,PNM,Penimur,75,Ls,11:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,10,PBR X6,Prabumulih Baru X6,75,Ls,11:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,11,PBM,Prabumulih,75,Ls,11:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,12,LEB,Lembak,15,Ls,11:41:00,// KA 3570 (KA 3570 —),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,13,KED,Karangenda,75,Ls,11:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,14,GLB,Glumbang,75,Ls,11:59:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,15,SDN,Serdang,75,Ls,12:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,16,PYK,Payakabung,75,Ls,12:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,17,POS IDR,Pos Indralaya,75,Ls,12:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,18,SIG,Simpang,75,Ls,12:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,19,KAS,Kramasan,75,Ls,12:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3024,Barabau,TMB-KPT,20,KPT,Kertapati,0,12:56:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,1,KPT,Kertapati,75,-,06:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,2,KAS,Kramasan,75,Ls,06:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,3,SIG,Simpang,75,Ls,06:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,4,POS IDR,Pos Indralaya,75,Ls,06:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,5,PYK,Payakabung,75,Ls,06:41:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,6,SDN,Serdang,75,Ls,06:50:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,1,GLB,Glumbang,75,Ls,07:00:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,8,KED,Karangenda,75,Ls,07:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,9,LEB,Lembak,75,Ls,07:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,10,PBM,Prabumulih,75,Ls,07:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,11,PBR X6,Prabumulih Baru X6,75,Ls,07:43:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,12,PNM,Penimur,75,Ls,07:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,13,NRU,Niru,75,Ls,08:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,14,BIB,Blimbing Pendopo,75,Ls,08:15:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,15,GNM,Gunung Megang,75,Ls,08:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,16,PNG,Penanggiran,75,Ls,08:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,17,UJM,Ujan Mas,75,Ls,08:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,18,MRL,Muara Gula,75,Ls,08:54:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,19,ME,Muara Enim,55,Ls,09:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3025,Barabau,KPT-TMB,20,TMB,Tanjungenim Baru,0,09:17:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,1,TMB,Tanjungenim Baru,55,-,16:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,2,ME,Muara Enim,75,Ls,16:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,3,MRL,Muara Gula,75,Ls,16:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,4,UJM,Ujan Mas,75,Ls,16:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,5,PNG,Penanggiran,75,Ls,16:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,6,GNM,Gunung Megang,75,Ls,17:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,7,BIB,Blimbing Pendopo,75,Ls,17:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,8,NRU,Niru,75,Ls,17:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,9,PNM,Penimur,75,Ls,17:54:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,10,PBR X6,Prabumulih Baru X6,75,Ls,18:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,11,PBM,Prabumulih,75,Ls,18:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,12,LEB,Lembak,75,Ls,18:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,13,KED,Karangenda,75,Ls,18:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,14,GLB,Glumbang,75,Ls,18:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,15,SDN,Serdang,75,Ls,18:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,16,PYK,Payakabung,75,Ls,19:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,17,POS IDR,Pos Indralaya,75,Ls,19:11:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,18,SIG,Simpang,75,Ls,19:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,19,KAS,Kramasan,75,Ls,19:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3026,Barabau,TMB-KPT,20,KPT,Kertapati,0,19:41:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,1,KPT,Kertapati,75,-,12:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,2,KAS,Kramasan,75,Ls,12:13:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,3,SIG,Simpang,75,Ls,12:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,4,POS IDR,Pos Indralaya,75,Ls,12:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,5,PYK,Payakabung,75,Ls,12:43:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,6,SDN,Serdang,75,Ls,12:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,1,GLB,Glumbang,75,Ls,13:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,8,KED,Karangenda,75,Ls,13:12:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,9,LEB,Lembak,15,Ls,13:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,10,PBM,Prabumulih,75,Ls,13:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,11,PBR X6,Prabumulih Baru X6,75,Ls,13:45:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,12,PNM,Penimur,75,Ls,13:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,13,NRU,Niru,75,Ls,14:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,14,BIB,Blimbing Pendopo,75,Ls,14:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,15,GNM,Gunung Megang,75,Ls,14:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,16,PNG,Penanggiran,75,Ls,14:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,17,UJM,Ujan Mas,75,Ls,14:48:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,18,MRL,Muara Gula,75,Ls,14:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,19,ME,Muara Enim,55,Ls,15:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3027,Barabau,KPT-TMB,20,TMB,Tanjungenim Baru,0,15:19:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,1,TMB,Tanjungenim Baru,55,-,20:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,2,ME,Muara Enim,75,Ls,20:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,3,MRL,Muara Gula,75,Ls,20:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,4,UJM,Ujan Mas,75,Ls,20:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,5,PNG,Penanggiran,75,Ls,20:54:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,6,GNM,Gunung Megang,75,Ls,21:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,7,BIB,Blimbing Pendopo,75,Ls,21:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,8,NRU,Niru,75,Ls,21:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,9,PNM,Penimur,75,Ls,21:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,10,PBR X6,Prabumulih Baru X6,75,Ls,22:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,11,PBM,Prabumulih,75,Ls,22:07:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,12,LEB,Lembak,15,Ls,22:24:00,// KA 3578 (KA 3578 —),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,13,KED,Karangenda,75,Ls,22:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,14,GLB,Glumbang,75,Ls,22:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,15,SDN,Serdang,75,Ls,22:54:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,16,PYK,Payakabung,75,Ls,23:04:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,17,POS IDR,Pos Indralaya,75,Ls,23:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,18,SIG,Simpang,75,Ls,23:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,19,KAS,Kramasan,75,Ls,23:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3028,Barabau,TMB-KPT,20,KPT,Kertapati,0,23:39:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,1,KPT,Kertapati,75,-,18:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,2,KAS,Kramasan,75,Ls,18:59:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,3,SIG,Simpang,75,Ls,19:07:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,4,POS IDR,Pos Indralaya,75,Ls,19:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,5,PYK,Payakabung,75,Ls,19:29:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,6,SDN,Serdang,75,Ls,19:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,1,GLB,Glumbang,75,Ls,19:48:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,8,KED,Karangenda,75,Ls,19:58:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,9,LEB,Lembak,75,Ls,20:07:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,10,PBM,Prabumulih,75,Ls,20:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,11,PBR X6,Prabumulih Baru X6,75,Ls,20:31:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,12,PNM,Penimur,75,Ls,20:41:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,13,NRU,Niru,75,Ls,20:51:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,14,BIB,Blimbing Pendopo,75,Ls,21:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,15,GNM,Gunung Megang,75,Ls,21:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,16,PNG,Penanggiran,75,Ls,21:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,17,UJM,Ujan Mas,75,Ls,21:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,18,MRL,Muara Gula,75,Ls,21:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,19,ME,Muara Enim,55,Ls,21:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3029,Barabau,KPT-TMB,20,TMB,Tanjungenim Baru,-,22:05:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,1,TMB,Tanjungenim Baru,55,-,06:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,2,ME,Muara Enim,75,Ls,06:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,3,MRL,Muara Gula,75,Ls,06:47:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,4,UJM,Ujan Mas,75,Ls,06:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,5,PNG,Penanggiran,75,Ls,07:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,6,GNM,Gunung Megang,75,Ls,07:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,7,BIB,Blimbing Pendopo,75,Ls,07:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,8,NRU,Niru,75,Ls,07:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,9,PNM,Penimur,75,Ls,08:07:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,10,PBR X6,Prabumulih Baru X6,75,Ls,08:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,11,PBM,Prabumulih,75,Ls,08:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,12,LEB,Lembak,75,Ls,08:39:00,// KA 3566 (KA 3566 —),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,13,KED,Karangenda,75,Ls,08:47:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,14,GLB,Glumbang,75,Ls,08:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,15,SDN,Serdang,75,Ls,09:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,16,PYK,Payakabung,75,Ls,09:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,17,POS IDR,Pos Indralaya,75,Ls,09:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,18,SIG,Simpang,75,Ls,09:39:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3050F,Baratangkas,TMB-KAS,19,KAS,Kramasan,0,09:50:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,1,KAS,Kramasan,75,-,16:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,2,SIG,Simpang,75,Ls,17:00:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,3,POS IDR,Pos Indralaya,75,Ls,17:16:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,4,PYK,Payakabung,75,Ls,17:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,5,SDN,Serdang,75,Ls,17:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,6,GLB,Glumbang,75,Ls,17:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,7,KED,Karangenda,75,Ls,17:52:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,8,LEB,Lembak,75,Ls,18:01:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,9,PBM,Prabumulih,75,Ls,18:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,10,PBR X6,Prabumulih Baru X6,75,Ls,18:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,11,PNM,Penimur,75,Ls,18:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,12,NRU,Niru,75,Ls,18:45:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,13,BIB,Blimbing Pendopo,75,Ls,18:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,14,GNM,Gunung Megang,75,Ls,19:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,15,PNG,Penanggiran,75,Ls,19:18:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,16,UJM,Ujan Mas,75,Ls,19:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,17,MRL,Muara Gula,75,Ls,19:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,18,ME,Muara Enim,55,Ls,19:46:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3051F,Baratangkas,KAS-TMB,19,TMB,Tanjungenim Baru,-,19:59:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,1,LT,Lahat,50,-,09:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,2,SCT,Sukacinta,50,Ls,09:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,3,MRP,Merapi,50,Ls,09:47:00,X KA 3331F JJ (KA 3331IF JJ X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,4,BJI,Banjarsari,50,Ls,09:58:00,X KA 3565 (KA 3565 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,5,MLI,Muaralawai,50,10:05:00,10:08:00,(KA 3333 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,6,ME,Muara Enim,50,Ls,10:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,7,MRL,Muara Gula,50,Ls,10:32:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,8,UJM,Ujan Mas,50,Ls,10:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,9,PNG,Penanggiran,50,Ls,10:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,10,GNM,Gunung Megang,50,Ls,11:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,11,BIB,Blimbing Pendopo,50,Ls,11:20:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,12,NRU,Niru,50,Ls,11:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,13,PNM,Penimur,50,Ls,11:51:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,14,PBR X6,Prabumulih Baru X6,50,Ls,12:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,15,PBM,Prabumulih,50,12:07:00,12:12:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,16,LEB,Lembak,50,Ls,12:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,17,KED,Karangenda,50,Ls,12:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,18,GLB,Glumbang,50,Ls,12:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,19,SDN,Serdang,50,Ls,13:08:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,20,PYK,Payakabung,50,Ls,13:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,21,POS IDR,Pos Indralaya,50,Ls,13:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,22,SIG,Simpang,50,Ls,13:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,23,KAS,Kramasan,50,Ls,13:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3990,Lapati,LT-KPT,24,KPT,Kertapati,-,14:01:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3991,Lapati,KPT-LT,1,KPT,Kertapati,50,-,20:37:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3991,Lapati,KPT-LT,2,KAS,Kramasan,50,Ls,20:43:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3991,Lapati,KPT-LT,3,SIG,Simpang,50,Ls,20:54:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3991,Lapati,KPT-LT,4,POS IDR,Pos Indralaya,50,Ls,21:08:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3991,Lapati,KPT-LT,5,PYK,Payakabung,50,Ls,21:15:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3991,Lapati,KPT-LT,6,SDN,Serdang,50,Ls,21:28:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3991,Lapati,KPT-LT,1,GLB,Glumbang,50,Ls,21:41:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3991,Lapati,KPT-LT,8,KED,Karangenda,50,Ls,21:52:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3991,Lapati,KPT-LT,9,LEB,Lembak,50,Ls,22:02:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3991,Lapati,KPT-LT,10,PBM,Prabumulih,50,22:24:00,22:28:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3991,Lapati,KPT-LT,11,PBR X6,Prabumulih Baru X6,50,Ls,22:33:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3991,Lapati,KPT-LT,12,PNM,Penimur,50,Ls,22:44:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3994,Tigapati,TJH-KPT,1,TJH,Tigagajah,50,-,02:00:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,2,LBT,Lubuk Batang,50,02:16:00,03:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,3,BLT,Belatung,50,Ls,03:29:00,X KA 3927F (KA 3927F X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,4,KPY,Kepayang,50,Ls,03:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,5,BIK,Blimbing Air Kaka,50,Ls,03:42:00,X KA 4049 (KA 4049 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,6,DAN,Durian,50,03:49:00,04:04:00,X KA 4051 (KA 4051 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,7,LRM,Lubuk Rukam,50,Ls,04:13:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,8,PNW,Peninjawan,50,04:25:00,04:40:00,X KA 4001 (KA 4001 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,9,TLB,Talang Baru,50,Ls,04:48:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,10,MET,Metur,50,Ls,04:57:00,X KA 3901 (KA 3901 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,11,KBU,Kotabaru,50,Ls,05:07:00,X KA 4003 (KA 4003 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,12,PGG,Pagergunung,50,05:16:00,05:33:00,X KA 4005 (KA 4005 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,13,ASM,Air Asam,50,Ls,05:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,14,SKU,Sukamerindu,50,Ls,05:51:00,X KA 4007 (KA 4007 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,15,TJR,Tanjungrambang,50,06:03:00,06:06:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,16,PBR X5,Prabumulih Baru X5,50,Ls,06:22:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,17,PBM,Prabumulih,50,06:29:00,07:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,18,LEB,Lembak,50,Ls,07:33:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,19,KED,Karangenda,50,Ls,07:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,20,GLB,Glumbang,50,Ls,07:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,21,SDN,Serdang,50,Ls,08:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,22,PYK,Payakabung,50,Ls,08:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,23,POS IDR,Pos Indralaya,50,Ls,08:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,24,SIG,Simpang,50,Ls,08:44:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,25,KAS,Kramasan,50,Ls,08:55:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3994,Tigapati,TJH-KPT,26,KPT,Kertapati,-,09:05:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3995,Tigapati,KPT-TJH,1,KPT,Kertapati,50,-,12:50:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,2,KAS,Kramasan,50,Ls,12:57:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,3,SIG,Simpang,50,Ls,13:08:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,4,POS IDR,Pos Indralaya,50,Ls,13:22:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,5,PYK,Payakabung,50,Ls,13:29:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,6,SDN,Serdang,50,Ls,13:42:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,1,GLB,Glumbang,50,Ls,13:55:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,8,KED,Karangenda,50,Ls,14:06:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,9,LEB,Lembak,50,Ls,14:16:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,10,MET,Metur,55,Ls,02:42:00,X KA 4049 (KA 4049 X),DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,11,KBU,Kotabaru,55,02:53:00,03:04:00,X KA 4051 (KA 4051 X),DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,12,PGG,Pagergunung,55,Ls,03:13:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,13,ASM,Air Asam,55,03:22:00,03:46:00,x,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,14,SKU,Sukamerindu,55,Ls,03:57:00,X KA 4003 (KA 4003 X),DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,15,TJR,Tanjungrambang,55,04:08:00,04:17:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,16,PBR X5,Prabumulih Baru X5,55,Ls,04:32:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,17,PBM,Prabumulih,75,04:39:00,05:22:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,18,LEB,Lembak,75,Ls,05:40:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,19,KED,Karangenda,75,Ls,05:48:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,20,GLB,Glumbang,75,Ls,05:58:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,21,SDN,Serdang,75,Ls,06:10:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,22,PYK,Payakabung,75,Ls,06:20:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,23,POS IDR,Pos Indralaya,75,Ls,06:25:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,24,SIG,Simpang,75,Ls,06:38:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,25,KAS,Kramasan,75,Ls,06:48:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3995,Tigapati,KPT-TJH,26,KPT,Kertapati,-,06:55:00,-,,DW KA Divre III-IV Sumsel 2026,periksa
+3911,Tijahpidada,TJH-SKN,1,TJH,Tigagajah,55,-,00:08:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,2,BTA,Baturaja,55,Ls,00:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,3,KMK,Kemelak,55,Ls,00:24:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,4,SPC,Sepancar,55,Ls,00:29:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,5,GLS,Gilas,55,Ls,00:47:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,6,SGT,Sungai Tuha,55,Ls,00:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,7,MP,Martapura,55,Ls,01:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,8,WAP,Way Pisang,55,01:16:00,01:28:00,X KA 4136 (KA 4136 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,9,WAY,Waytuba,55,Ls,01:37:00,X KA 4138 (KA 4138 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,10,TJO,Tanjungrajo,55,01:48:00,02:05:00,X KA 4140 (KA 4140 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,11,GHM,Giham,55,Ls,02:14:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,12,BBU,Blambangan Umpu,55,Ls,02:29:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,13,NGN,Negeri Agung,55,Ls,02:53:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,14,TLY,Tulung Buyut,75,Ls,03:17:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,15,NRR,Negara Ratu,75,Ls,03:30:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,16,KTP,Ketapang,75,03:43:00,04:34:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,17,CEP,Cempaka,75,Ls,04:48:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,18,KB,Kotabumi,75,Ls,04:56:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,19,CMS,Candimas,75,05:05:00,05:31:00,X KA 4104 (KA 4104 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,20,KAG,Kalibalangan,75,Ls,05:40:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,21,BBA,Blambangan Pagar,75,05:52:00,06:23:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,22,SLS,Sulusuban,75,Ls,06:34:00,X KA 3912 (KA 3912 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,23,HJP,Haji Pemanggilan,75,Ls,06:41:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,24,BKI,Bekri,75,06:53:00,07:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,25,RGS,Rengas,75,Ls,07:38:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,26,TGI,Tegineneng,75,07:48:00,08:06:00,X KA 4110F JJ (KA 4110F JJ X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,21,BTI,Branti,75,Ls,08:15:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,28,RJS,Rejosari,55,Ls,08:21:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,29,GDR,Gedung Ratu,55,08:32:00,08:44:00,X KA S8 (KAS8X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,30,LAR,Labuan Ratu,55,Ls,08:53:00,X KA 4112 (KA 4112 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,31,TNK,Tanjungkarang,45,Ls,09:00:00,X KA 4114 (KA 4114X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,32,GR,Garuntang,45,Ls,09:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3911,Tijahpidada,TJH-SKN,33,SKN,Sukamenanti,-,09:22:00,-,(KA 4116 KA 4118 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,1,SKN,Sukamenanti,45,-,04:37:00,X KA 3923,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,2,GR,Garuntang,45,Ls,04:49:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,3,TNK,Tanjungkarang,70,Ls,04:59:00,X KA 4033F JJ (KA 4033F JJ X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,4,LAR,Labuan Ratu,70,Ls,05:05:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,5,GDR,Gedung Ratu,70,Ls,05:10:00,X KA 4035F JJ (KA 4035F JJ X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,6,RJS,Rejosari,75,05:19:00,05:28:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,7,BTI,Branti,75,Ls,05:35:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,8,TGI,Tegineneng,75,05:43:00,05:53:00,X KA 4037 (KA 4037 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,9,RGS,Rengas,75,Ls,06:03:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,10,BKI,Bekri,75,Ls,06:10:00,X KA 4039 (KA 4039 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,11,HJP,Haji Pemanggilan,75,Ls,06:19:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,12,SLS,Sulusuban,75,06:28:00,06:37:00,X KA 3911 (KA 3911 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,13,BBA,Blambangan Pagar,75,Ls,06:48:00,X KA 4041 (KA 4041 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,14,KAG,Kalibalangan,75,Ls,06:57:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,15,CMS,Candimas,75,Ls,07:03:00,X KA 4043 (KA 4043 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,16,KB,Kotabumi,75,07:11:00,07:15:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,17,CEP,Cempaka,75,Ls,07:25:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,18,KTP,Ketapang,75,07:37:00,08:13:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,19,NRR,Negara Ratu,75,Ls,08:26:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,20,TLY,Tulung Buyut,60,Ls,08:36:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,21,NGN,Negeri Agung,60,Ls,08:51:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,22,BBU,Blambangan Umpu,60,Ls,09:09:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,23,GHM,Giham,60,09:23:00,09:38:00,X KA 4003,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,24,TJO,Tanjungrajo,60,09:47:00,10:43:00,X KA 2005 KA 2007 (KA 4005 KA 2007,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,25,WAY,Waytuba,60,Ls,10:54:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,26,WAP,Way Pisang,60,11:02:00,11:13:00,X KA 4009 (KA 4009 X),DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,27,MP,Martapura,60,11:26:00,11:29:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,28,SGT,Sungai Tuha,60,Ls,11:37:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,29,GLS,Gilas,60,Ls,11:42:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,30,SPC,Sepancar,60,Ls,11:58:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,31,KMK,Kemelak,60,Ls,12:02:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,32,BTA,Baturaja,60,Ls,12:10:00,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3912,Tijahpidada,SKN-TJH,33,TJH,Tigagajah,0,12:15:00,-,,DW KA Divre III-IV Sumsel 2026,terverifikasi
+3922-3923,Nitahan,NRU-PBRX6,1,NRU,Niru,75,-,16:26:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3922-3923,Nitahan,NRU-PBRX6,2,PNM,Penimur,75,Ls,16:44:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3922-3923,Nitahan,NRU-PBRX6,3,PBR X6,Prabumulih Baru X6,0,Ls,16:54:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,1,PBR X6,Prabumulih Baru X6,55,Ls,16:54:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,2,PBR X5,Prabumulih Baru X5,55,Ls,16:59:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,3,TJR,Tanjungrambang,55,17:13:00,17:22:00,X KA 3928F JJ,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,4,SKU,Sukamerindu,55,Ls,17:33:00,X KA 4108F JJ (KA 4108F JJ X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,5,ASM,Air Asam,55,17:44:00,18:07:00,X KA 4110F JJ (KA 4110F JJ X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,6,PGG,Pagergunung,55,Ls,18:16:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,7,KBU,Kotabaru,55,Ls,18:23:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,8,MET,Metur,55,Ls,18:33:00,X KA 4112 (KA 4112 X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,9,TLB,Talang Baru,55,Ls,18:42:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,10,PNW,Peninjawan,55,Ls,18:49:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,11,LRM,Lubuk Rukam,55,Ls,18:59:00,X KA 4114 (KA 4114X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,12,DAN,Durian,55,Ls,19:06:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,13,BIK,Blimbing Air Kaka,55,Ls,19:11:00,X KA 4116 (KA 4116 X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,14,KPY,Kepayang,55,Ls,19:17:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,15,BLT,Belatung,55,Ls,19:23:00,X KA 4118 (KA 4118 X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,16,LBT,Lubuk Batang,55,Ls,19:29:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,17,TJH,Tigagajah,55,19:42:00,21:00:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,18,BTA,Baturaja,55,Ls,21:06:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,19,KMK,Kemelak,55,Ls,21:16:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,20,SPC,Sepancar,55,Ls,21:21:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,21,GLS,Gilas,55,Ls,21:39:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,22,SGT,Sungai Tuha,55,Ls,21:45:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,23,MP,Martapura,55,Ls,21:54:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,24,WAP,Way Pisang,55,Ls,22:06:00,X KA 4128 (KA 4128 X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,25,WAY,Waytuba,55,22:15:00,22:27:00,X KA 4130 (KA 4130 X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,26,TJO,Tanjungrajo,55,Ls,22:38:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,217,GHM,Giham,55,Ls,22:45:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,28,BBU,Blambangan Umpu,55,Ls,23:00:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,29,NGN,Negeri Agung,55,Ls,23:24:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,30,TLY,Tulung Buyut,75,Ls,23:48:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,31,NRR,Negara Ratu,75,Ls,00:01:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,32,KTP,Ketapang,75,00:14:00,00:51:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,33,CEP,Cempaka,75,Ls,01:05:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,34,KB,Kotabumi,75,Ls,01:13:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,35,CMS,Candimas,75,Ls,01:20:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,36,KAG,Kalibalangan,75,01:29:00,01:41:00,X KA 4146 (KA 4146 X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,37,BBA,Blambangan Pagar,75,Ls,01:53:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,38,SLS,Sulusuban,75,Ls,02:02:00,X KA 4148 (KA 4148 X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,39,HJP,Haji Pemanggilan,75,02:11:00,02:29:00,X KA 4150 (KA 4150 X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,40,BKI,Bekri,75,Ls,02:41:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,41,RGS,Rengas,75,Ls,02:48:00,X KA 4100 (KA 4100 X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,42,TGI,Tegineneng,75,02:58:00,03:19:00,X KA 4102 (KA 4102 X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,43,BTI,Branti,75,Ls,03:28:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,44,RJS,Rejosari,55,Ls,03:34:00,X KA 4104 (KA 4104 X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,45,GDR,Gedung Ratu,55,Ls,03:43:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,46,LAR,Labuan Ratu,55,Ls,03:50:00,X KA 4106 (KA 4106 X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,47,TNK,Tanjungkarang,45,Ls,03:57:00,X KA 3928F JJ (KA 3928F JJ X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,48,GR,Garuntang,45,Ls,04:07:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,49,SKN,Sukamenanti,45,Ls,04:17:00,X KA 4108F JJ (KA 3912 KA 4108F JJ X),DW KA Divre III-IV Sumsel 2026,periksa
+3923,Nitahan,PBRX6-THN,50,THN,Tarahan,-,04:27:00,-,(KA 4110F JJ X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,1,THN,Tarahan,45,-,12:40:00,X KAL3911 KA 4047,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,2,SKN,Sukamenanti,45,12:51:00,13:43:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,3,GR,Garuntang,45,Ls,13:55:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,4,TNK,Tanjungkarang,70,14:07:00,14:58:00,x,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,5,LAR,Labuan Ratu,70,Ls,15:06:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,6,GDR,Gedung Ratu,70,Ls,15:11:00,X KA 4003 (KA 4003 X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,7,RJS,Rejosari,75,15:20:00,15:47:00,X KA 4005 (KA 4005 X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,8,BTI,Branti,75,Ls,15:54:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,9,TGI,Tegineneng,75,Ls,16:00:00,X KA 4007 (KA 4007 X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,10,RGS,Rengas,75,16:10:00,16:19:00,X KA 4009 (KA 4009 X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,11,BKI,Bekri,75,Ls,16:28:00,X KA S7 (KASIX),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,12,HJP,Haji Pemanggilan,75,Ls,16:37:00,X KA 4011 (KA 4011 X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,13,SLS,Sulusuban,75,16:46:00,17:41:00,X KA 4013 KA S5 (KA 4013 KA S5 X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,14,BBA,Blambangan Pagar,75,Ls,17:52:00,X KA 4015 (KA 4015 X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,15,KAG,Kalibalangan,75,Ls,18:01:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,16,CMS,Candimas,75,Ls,18:07:00,X KA 4017 (KA 4017 X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,17,KB,Kotabumi,75,18:15:00,18:18:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,18,CEP,Cempaka,75,Ls,18:28:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,19,KTP,Ketapang,75,18:40:00,18:52:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,20,NRR,Negara Ratu,75,Ls,19:05:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,21,TLY,Tulung Buyut,60,Ls,19:15:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,22,NGN,Negeri Agung,60,Ls,19:30:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,23,BBU,Blambangan Umpu,60,Ls,19:48:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,24,GHM,Giham,60,20:02:00,20:05:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,25,TJO,Tanjungrajo,60,Ls,20:12:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,26,WAY,Waytuba,60,Ls,20:21:00,X KA 4029 (KA 4029 X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,21,WAP,Way Pisang,60,Ls,20:27:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,28,MP,Martapura,60,20:38:00,20:41:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,29,SGT,Sungai Tuha,60,Ls,20:49:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,30,GLS,Gilas,60,Ls,20:54:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,31,SPC,Sepancar,60,Ls,21:10:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,32,KMK,Kemelak,60,Ls,21:14:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,33,BTA,Baturaja,60,Ls,21:22:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,34,TJH,Tigagajah,70,21:27:00,22:15:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,35,LBT,Lubuk Batang,70,22:28:00,22:31:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,36,BLT,Belatung,70,Ls,22:37:00,X KA 4039 (KA 4039 X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,37,KPY,Kepayang,70,22:44:00,23:01:00,X KA 4041 (KA 4041 X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,38,BIK,Blimbing Air Kaka,70,Ls,23:07:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,39,DAN,Durian,70,Ls,23:11:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,40,LRM,Lubuk Rukam,70,23:19:00,23:28:00,X KA 4043 (KA 4043 X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,41,PNW,Peninjawan,70,Ls,23:39:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,42,TLB,Talang Baru,70,Ls,23:44:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,43,MET,Metur,70,23:53:00,00:02:00,X KA 4045 (KA 4045 X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,44,KBU,Kotabaru,70,Ls,00:11:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,45,PGG,Pagergunung,70,Ls,00:17:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,46,ASM,Air Asam,70,Ls,00:23:00,X KA 4047 (KA 4047 X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,47,SKU,Sukamerindu,70,00:32:00,00:46:00,X KA 3927F JJ (KA 3927F JI X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,48,TJR,Tanjungrambang,70,00:57:00,01:09:00,(KA 4049 X),DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,49,PBR X5,Prabumulih Baru X5,70,Ls,01:21:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3924-3925,Nitahan,THN-PBRX6,50,PBR X6,Prabumulih Baru X6,0,Ls,01:25:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3925,Nitahan,PBRX6-NRU,1,PBR X6,Prabumulih Baru X6,15,-,01:25:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3925,Nitahan,PBRX6-NRU,2,PNM,Penimur,75,Ls,01:35:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3925,Nitahan,PBRX6-NRU,3,NRU,Niru,0,01:46:00,-,,DW KA Divre III-IV Sumsel 2026,periksa
+3926F-3927F,Nitahan,NRU-PBRX6,1,NRU,Niru,75,-,23:52:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3926F-3927F,Nitahan,NRU-PBRX6,2,PNM,Penimur,75,Ls,00:07:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3926F-3927F,Nitahan,NRU-PBRX6,3,PBR X6,Prabumulih Baru X6,0,Ls,00:17:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,1,PBR X6,Prabumulih Baru X6,55,Ls,00:17:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,2,PBR X5,Prabumulih Baru X5,55,Ls,00:22:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,3,TJR,Tanjungrambang,55,Ls,00:34:00,X KA 4124,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,4,SKU,Sukamerindu,55,Ls,00:43:00,X KA 3924 (KA 3924 X),DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,5,ASM,Air Asam,55,Ls,00:52:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,6,PGG,Pagergunung,55,01:01:00,01:34:00,x,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,7,KBU,Kotabaru,55,Ls,01:43:00,X KA 4130 (KA 4130 X),DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,8,MET,Metur,55,01:55:00,02:04:00,X KA 4132 (KA 4132 X),DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,9,TLB,Talang Baru,55,Ls,02:15:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,10,PNW,Peninjawan,55,Ls,02:22:00,X KA 3902 (KA 3902 X),DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,11,LRM,Lubuk Rukam,55,Ls,02:32:00,X KA 4134 (KA 4134 X),DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,12,DAN,Durian,55,Ls,02:39:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,13,BIK,Blimbing Air Kaka,55,02:46:00,03:07:00,X KA 4136 (KA 4136 X),DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,14,KPY,Kepayang,55,Ls,03:15:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,15,BLT,Belatung,55,03:23:00,03:45:00,x,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,16,LBT,Lubuk Batang,55,Ls,03:53:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,17,TJH,Tigagajah,55,04:06:00,04:31:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,18,BTA,Baturaja,55,Ls,04:37:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,19,KMK,Kemelak,55,Ls,04:47:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,20,SPC,Sepancar,55,Ls,04:52:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,21,GLS,Gilas,55,Ls,05:10:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,22,SGT,Sungai Tuha,55,Ls,05:16:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,23,MP,Martapura,55,Ls,05:25:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,24,WAP,Way Pisang,55,Ls,05:37:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,25,WAY,Waytuba,55,Ls,05:44:00,X KA 4148 (KA 4148 X),DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,26,TJO,Tanjungrajo,55,Ls,05:53:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,27,GHM,Giham,55,Ls,06:00:00,(KA 4150 X),DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,28,BBU,Blambangan Umpu,55,Ls,06:15:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,29,NGN,Negeri Agung,55,Ls,06:39:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,30,TLY,Tulung Buyut,75,Ls,07:03:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,31,NRR,Negara Ratu,75,Ls,07:16:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,32,KTP,Ketapang,75,07:29:00,08:21:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,33,CEP,Cempaka,75,Ls,08:35:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,34,KB,Kotabumi,75,Ls,08:43:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,35,CMS,Candimas,75,Ls,08:50:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,36,KAG,Kalibalangan,75,08:59:00,09:08:00,X KA 4110F JJ (KA 4110F JJ X),DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,37,BBA,Blambangan Pagar,75,Ls,09:20:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,38,SLS,Sulusuban,75,09:31:00,09:43:00,X KA S8 (KAS8X),DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,39,HJP,Haji Pemanggilan,75,Ls,09:52:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,40,BKI,Bekri,75,10:04:00,10:15:00,X KA 4112 (KA 4112 X),DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,41,RGS,Rengas,75,Ls,10:24:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,42,TGI,Tegineneng,75,10:34:00,11:49:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,43,BTI,Branti,75,Ls,11:58:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,44,RJS,Rejosari,55,Ls,12:04:00,X KA 4118 (KA 4118 X),DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,45,GDR,Gedung Ratu,55,12:15:00,12:25:00,X KA 4120 (KA 4120 X),DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,46,LAR,Labuan Ratu,55,Ls,12:34:00,X KA 4122 (KA 4122 X),DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,47,TNK,Tanjungkarang,45,Ls,12:41:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,48,GR,Garuntang,45,Ls,12:51:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,49,SKN,Sukamenanti,45,Ls,13:01:00,x,DW KA Divre III-IV Sumsel 2026,periksa
+3927F,Nitahan,PBRX6-THN,50,THN,Tarahan,0,13:11:00,-,(KA 4126 X),DW KA Divre III-IV Sumsel 2026,periksa
+3928F-3929F,Nitahan,THN-PBRX6,1,THN,Tarahan,45,-,03:04:00,X KA 4027 KA 4029,DW KA Divre III-IV Sumsel 2026,periksa
+3928F-3929F,Nitahan,THN-PBRX6,2,SKN,Sukamenanti,45,Ls,03:13:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3928F-3929F,Nitahan,THN-PBRX6,3,GR,Garuntang,45,Ls,03:23:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3928F-3929F,Nitahan,THN-PBRX6,4,TNK,Tanjungkarang,70,03:35:00,04:04:00,x,DW KA Divre III-IV Sumsel 2026,periksa
+3928F-3929F,Nitahan,THN-PBRX6,5,LAR,Labuan Ratu,70,Ls,04:12:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3928F-3929F,Nitahan,THN-PBRX6,6,GDR,Gedung Ratu,70,04:19:00,04:28:00,X KA 4033F JJ (KA 4033F JJ X),DW KA Divre III-IV Sumsel 2026,periksa
+3928F-3929F,Nitahan,THN-PBRX6,7,RJS,Rejosari,75,04:39:00,05:03:00,X KA 4035F JJ (KA 4035F JJ X),DW KA Divre III-IV Sumsel 2026,periksa
+3928F-3929F,Nitahan,THN-PBRX6,8,BTI,Branti,75,Ls,05:10:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3928F-3929F,Nitahan,THN-PBRX6,9,TGI,Tegineneng,75,Ls,05:16:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3928F-3929F,Nitahan,THN-PBRX6,10,RGS,Rengas,75,Ls,05:24:00,X KA 4037 (KA 4037 X),DW KA Divre III-IV Sumsel 2026,periksa
+3928F-3929F,Nitahan,THN-PBRX6,11,BKI,Bekri,75,Ls,05:31:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3928F-3929F,Nitahan,THN-PBRX6,12,HJP,Haji Pemanggilan,75,05:42:00,05:55:00,X KA 4039 (KA 4039 X),DW KA Divre III-IV Sumsel 2026,periksa
+3928F-3929F,Nitahan,THN-PBRX6,13,SLS,Sulusuban,75,Ls,06:04:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3928F-3929F,Nitahan,THN-PBRX6,14,BBA,Blambangan Pagar,75,Ls,06:13:00,X KA 3911 (KA 3911 X),DW KA Divre III-IV Sumsel 2026,periksa
+3928F-3929F,Nitahan,THN-PBRX6,15,KAG,Kalibalangan,75,06:24:00,06:38:00,X KA 4041 (KA 4041 X),DW KA Divre III-IV Sumsel 2026,periksa
+3929F,Nitahan,PBRX6-NRU,1,PBR X6,Prabumulih Baru X6,75,-,18:39:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3929F,Nitahan,PBRX6-NRU,2,PNM,Penimur,75,Ls,18:49:00,,DW KA Divre III-IV Sumsel 2026,periksa
+3929F,Nitahan,PBRX6-NRU,3,NRU,Niru,0,19:00:00,-,,DW KA Divre III-IV Sumsel 2026,periksa

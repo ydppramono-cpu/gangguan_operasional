@@ -1,0 +1,203 @@
+kode_upt,wilayah,nama_resor,jml_stasiun,km_awal,km_akhir,stasiun
+9.1,DAOP 9,Pasuruan,3,48.400,80.500,Pasuruan; Rejoso; Grati
+9.2,DAOP 9,Probolinggo,4,80.500,112.700,Bayeman; Probolinggo; Jati; Jorongan
+9.3,DAOP 9,Klakah,4,112.700,145.600,Leces; Malasan; Ranuyoso; Klakah
+9.4,DAOP 9,Tanggul,6,145.600,178.700,Randuagung; Kalibodo; Jatiroto; Sumberbaru; Tanggul; Bangsalsari
+9.5,DAOP 9,Jember,6,178.700,211.600,Petung; Rambipuji; Mangli; Jember; Arjasa; Kotok
+9.6,DAOP 9,Kalisat,5,211.600,39.300,Kalisat; Ledokombo; Sumbersalak; Sempolan; Garahan
+9.7,DAOP 9,Kalibaru,8,39.300,62.300,Mrawan; Kalibaru; Krikilan; Glenmore; Kempit; Sumberwadung; Kalisetail; Temuguruh
+9.8,DAOP 9,Rogojampi,6,62.300,18.918,Singojuruh; Rogojampi; Kabat; Banyuwangi Kota; Argopuro; Ketapang
+2.1,DAOP 2,Cibungur,2,85.500,102.100,Cibungur; Sadang
+2.2,DAOP 2,Purwakarta,4,102.100,124.300,Purwakarta; Ciganea; Sukatani; Plered
+2.3,DAOP 2,Rendeh,5,124.300,148.200,Cisomang; Cikadongdong; Rendeh; Maswati; Sasaksaat
+2.4,DAOP 2,Padalarang,3,148.200/126.100,144.800,Cilame; Tagogapu; Padalarang
+2.5,DAOP 2,Cibeber,7,58.400,91.200,Ranji; Gandasoli; Cireungas; Lampegan; Sindangresmi; Cibeber; Cilaku
+2.6,DAOP 2,Cianjur,8,91.200,126.100,Cianjur; Maleber; Tipar; Selajambe; Ciranjang; Cipeuyeum; Rajamandala; Cipatat
+2.7,DAOP 2,Ciroyom,7,144.800,159.200,Gadobangkong; Cimahi; Cimindi; Andir; Ciroyom; Bandung Gudang; Bandung
+2.8,DAOP 2,Kiaracondong,5,159.200,176.000,Cikudapateuh; Kiaracondong; Gedebage; Cimekar; Rancaekek
+2.9,DAOP 2,Cicalengka,4,176.000,202.000,Haurpugur; Cicalengka; Nagreg; Lebakjero
+2.10,DAOP 2,Cibatu,7,202.000,217.000,Leles; Karangsari; Leuwigoong; Cibatu; Pasirjengkol; Wanaraja; Garut
+2.11,DAOP 2,Ciawi,5,217.000,250.200,Warungbandrek; Bumiwaluya; Cipendeuy; Cirahayu; Ciawi
+2.12,DAOP 2,Tasikmalaya,5,250.200,283.200,Rajapolah; Indihiang; Tasikmalaya; Awipari; Manonjaya
+2.13,DAOP 2,Banjar,4,283.200,315.840,Ciamis; Bojong; Karangpucung; Banjar
+3.1,DAOP 3,Pabuaran,2,85.400,102.500,Tanjungrasa; Pabuaran
+3.2,DAOP 3,Pasirbungur,3,102.500,119.600,Pringkasap; Pasirbungur; Cikaum
+3.3,DAOP 3,Pegadenbaru,2,119.600,136.700,Pegadenbaru; Cipunegara
+3.4,DAOP 3,Haurgeulis,2,136.700,153.900,Haurgeulis; Cilegeh
+3.5,DAOP 3,Terisi,3,153.900,171.000,Kadokangabus; Terisi; Telagasari
+3.6,DAOP 3,Jatibarang,2,171.000,187.900,Jatibarang; Kertasemaya
+3.7,DAOP 3,Arjawinangun,2,187.900,205.000,Kaliwedi; Arjawinangun
+3.8,DAOP 3,Cirebon,3,205.000,220.200,Bangoduwa; Cangkring; Cirebon
+3.9,DAOP 3,Cirebon Prujakan,2,220.200,208.500,Cirebon Prujakan; Waruduwur
+3.10,DAOP 3,Babakan,1,208.500,194.000,Babakan
+3.11,DAOP 3,Tanjung,2,194.000,179.600,Losari; Tanjung
+3.12,DAOP 3,,1,179.600,165.000,Bulakamba
+3.13,DAOP 3,Brebes,1,165.000,150.740,Brebes
+3.14,DAOP 3,Sindanglaut,2,221.500,238.000,Luwung; Sindanglaut
+3.15,DAOP 3,Ciledug,2,238.000,254.700,Karangsuwung; Ciledug
+3.16,DAOP 3,Ketanggungan,2,254.700,271.400,Ketanggunganbarat; Ketanggungan
+3.17,DAOP 3,Songgom,2,271.400,287.600,Larangan; Songgom
+4.1,DAOP 4,Tegal,2,150.740,136.000,Tegal; Larangan
+4.2,DAOP 4,Pemalang,2,136.000,119.000,Surodadi; Pemalang
+4.3,DAOP 4,Petarukan,2,119.000,103.000,Petarukan; Comal
+4.4,DAOP 4,Pekalongan,2,103.000,85.700,Sragi; Pekalongan
+4.5,DAOP 4,Batang,2,85.700,69.000,Batang; Ujungnegoro
+4.6,DAOP 4,Kuripan,2,69.000,53.000,Kuripan; Plabuan
+4.7,DAOP 4,Weleri,2,53.000,37.000,Krengseng; Weleri
+4.8,DAOP 4,Kalibodri,1,37.000,21.000,Kalibodri
+4.9,DAOP 4,Kaliwungu,2,21.000,6.600,Kaliwungu; Mangkang
+4.10,DAOP 4,Semarang Poncol,3,6.600,5.000,Jerakah; Semarang Poncol; Semarang Tawang
+4.11,DAOP 4,Brumbung,2,5.000,21.000,Alastua; Brumbung
+4.12,DAOP 4,Gubug,2,21.000,37.000,Tegowanu; Gubug
+4.13,DAOP 4,Karangjati,2,37.000,54.000,Karangjati; Sedadi
+4.14,DAOP 4,Gambringan,2,54.000,17.000,Ngrombo; Gambringan
+4.15,DAOP 4,Panunggalan,2,17.000,32.000,Jambon; Panunggalan
+4.16,DAOP 4,Kradenan,2,32.000,48.000,Kradenan; Sulur
+4.17,DAOP 4,Doplang,1,48.000,63.000,Doplang
+4.18,DAOP 4,Randublatung,2,63.000,78.500,Randublatung; Wadu
+4.19,DAOP 4,Cepu,2,78.500,93.800,Kapuan; Cepu
+4.20,DAOP 4,Kedungjati,3,13.500,41.000,Tanggung; Kedungjati; Padas
+4.21,DAOP 4,Gundih,3,41.000,68.200,Telawah; Karangsono; Gundih
+4.22,DAOP 4,Ambarawa,5,0,0,Tuntang; Ambarawa; Jambu; Bedono; Secang
+5.1,DAOP 5,Slawi,3,2.500,37.400,Slawi; Balapulang; Margasari
+5.2,DAOP 5,Prupuk,2,37.400,305.000,Prupuk; Linggapura
+5.3,DAOP 5,Bumiayu,2,305.000,322.200,Bumiayu; Kretek
+5.4,DAOP 5,Legok,3,322.200,339.000,Patuguran; Legok; Karangsari
+5.5,DAOP 5,Purwokerto,2,339.000,354.900,Karanggandul; Purwokerto
+5.6,DAOP 5,Kebasen,3,354.900,377.122,Notog; Kebasen; Randegan
+5.7,DAOP 5,Langen,6,315.840,350.600,Rancakole; Langen; Cikawung; Meluwung; Cipari; Sidareja
+5.8,DAOP 5,Jeruklegi,6,350.600,386.000,Gandrungmangun; Sitinggil; Kawunganten; Kubangkangkung; Jeruklegi; Lebeng
+5.9,DAOP 5,Cilacap,6,386.000,393.500,Kasugihan; Maos; Karangkandri; Gumilir; Karangtalun; Cilacap
+5.10,DAOP 5,Kroya,3,393.500,410.700,Sikampuh; Kroya; Kemranjen
+5.11,DAOP 5,Tambak,3,410.700,428.200,Sumpiuh; Tambak; Ijo
+5.12,DAOP 5,Gombong,3,428.200,445.700,Gombong; Karanganyar; Sruweng
+5.13,DAOP 5,Kebumen,4,445.700,463.200,Soka; Kebumen; Wonosari; Kutowinangun
+5.14,DAOP 5,Kutoarjo,3,463.200,480.800,Prembun; Butuh; Kutoarjo
+6.1,DAOP 6,Jenar,1,480.800,498.000,Jenar
+6.2,DAOP 6,Wojo,3,498.000,513.900,Wojo; Kedundang; Yogyakarta International Airport
+6.3,DAOP 6,Wates,2,513.900,530.600,Wates; Sentolo
+6.4,DAOP 6,Yogyakarta,4,530.600,163.800,Rewulu; Patukan; Yogyakarta; Lempuyangan
+6.5,DAOP 6,Brambanan,2,163.800,146.800,Maguwo; Brambanan
+6.6,DAOP 6,Klaten,2,146.800,130.200,Srowot; Klaten
+6.7,DAOP 6,Delanggu,3,130.200,113.200,Ceper; Delanggu; Gawok
+6.8,DAOP 6,Solo Balapan,6,113.200,261.850,Purwosari; Solo Balapan; Solojebres; Kadipiro; Adi Soemarmo; Solokota
+6.9,DAOP 6,Sukoharjo,3,5.100,32.200,Sukoharjo; Pasarnguter; Wonogiri
+6.10,DAOP 6,Sumberlawang,4,98.200,68.200,Kalioso; Salem; Sumberlawang; Goprak
+6.11,DAOP 6,Palur,2,261.850,248.200,Palur; Kemiri
+6.12,DAOP 6,Sragen,3,248.200,233.000,Grompol; Masaran; Sragen
+6.13,DAOP 6,Kebonromo,2,233.000,221.000,Kebonromo; Kedungbanteng
+7.10,DAOP 7,Walikukun,1,221.000,203.700,Walikukun
+7.9,DAOP 7,Kedunggalar,2,203.700,187.200,Kedunggalar; Ngawi
+7.8,DAOP 7,Magetan,2,187.200,170.200,Geneng; Magetan
+7.7,DAOP 7,Madiun,2,170.200,155.000,Madiun; Babadan
+7.6,DAOP 7,Caruban,2,155.000,138.400,Caruban; Saradan
+7.5,DAOP 7,Bagor,2,138.400,121.200,Wilangan; Bagor
+7.4,DAOP 7,Nganjuk,2,121.200,104.800,Nganjuk; Sukomoro
+7.3,DAOP 7,Kertosono,3,104.800,96.000,Baron; Kertosono; Purwoasri
+7.2,DAOP 7,Jombang,2,96.000,80.400,Sembung; Jombang
+7.1,DAOP 7,Sumobito,3,80.400,64.200,Peterongan; Sumobito; Curahmalang
+7.13,DAOP 7,Kediri,5,203.000,171.300,Papar; Minggiran; Susuhan; Kediri; Ngadiluih
+7.12,DAOP 7,Tulungagung,5,171.300,137.500,Kras; Ngujang; Tulungagung; Sumbergempol; Ngunut
+7.11,DAOP 7,Blitar,5,137.500,106.000,Rejotangan; Bendosendung; Blitar; Garum; Talun
+8.1,DAOP 8,Tobo,2,93.800,111.300,Tobo; Kalitidu
+8.2,DAOP 8,Bojonegoro,1,111.300,128.200,Bojonegoro
+8.3,DAOP 8,Sumberrejo,3,128.200,145.400,Kapas; Sumberrejo; Sroyo
+8.4,DAOP 8,Babat,2,145.400,162.600,Bowerno; Babat
+8.5,DAOP 8,Sumlaran,3,162.600,179.800,Gembong; Pucuk; Sumlaran
+8.6,DAOP 8,Lamongan,4,179.800,197.100,Surabayan; Kruwul; Lamongan; Pandanan
+8.7,DAOP 8,Cerme,2,197.100,214.300,Duduk; Cerme
+8.8,DAOP 8,Kandangan,5,214.300,228.000,Benowo; Kandangan; Indro; Gresik; Tandes
+8.9,DAOP 8,Surabaya Pasarturi,9,228.000,0,Surabaya Pasarturi; Mesigit; Kalimas; ICT; Prapatkurung; Nilam; Berlian; Surabaya Kota; Segitigamesigit
+8.10,DAOP 8,Sidotopo,3,0,1.900,Sidotopo; Benteng; Baa
+8.11,DAOP 8,Surabaya Gubeng,5,1.900,17.400,Surabaya Gubeng; Ngagel; Wonokromo; Waru; Sawotratap
+8.12,DAOP 8,Sepanjang,5,17.900,45.100,Sepanjang; Kumendung; Boharan; Krian; Kedinding
+8.13,DAOP 8,Mojokerto,3,45.100,64.200,Tarik; Bangsal; Mojokerto
+8.14,DAOP 8,Sidoarjo,6,17.400,26.700,Gedangan; Banjarkemanten; Buduran; Pagerwojo; Sidoarjo; Tulangan
+8.15,DAOP 8,Bangil,5,26.700,48.400,Tanggulangin; Porong; Gununggangsir; Bangil; Wonokerto
+8.16,DAOP 8,Lawang,4,9.300,42.500,Sukorejo; Sengon; Lawang; Singosari
+8.17,DAOP 8,Malang,5,42.500,72.900,Blimbing; Malang; Malang Kotalama; Pakisaji; Kepanjen
+8.18,DAOP 8,Wlingi,7,72.900,106.000,Ngebruk; Sumberpucung; Karangkates; Pogajih; Plandangan; Kesamben; Wlingi
+1.1,DAOP 1,,3,0,3.500,Jakarta Kota; Jakartagudang; Kampungbandan
+1.2,DAOP 1,Tanjungpriuk,5,3.500,0,Ancol; Tanjungpriuk; Pasoso; JICT; Sungai Lagoa
+1.3,DAOP 1,Pasarsenen,6,2.700,11.000,Rajawali; Kemayoran; Pasarsenen; Gangsentiong; Kramat; Pondokjati
+1.4,DAOP 1,Manggarai,9,1.100,10.900,Jayakarta; Manggabesar; Sawahbesar; Juanda; Gambir; Gondangdia; Cikini; Manggarai; Matraman
+1.5,DAOP 1,Tanahabang,6,3.800,12.000,Tanahabang; Karet; Sudirmanbaru; Sudirman; Mampang; Palmerah
+1.6,DAOP 1,Duri,8,0,14.000,Duri; Angke; Grogol; Pesing; Tamankota; Bojongindah; Rawabuaya; Kalideres
+1.7,DAOP 1,Tangerang,5,14.000,19.750,Poris; Batuceper; Tanahtinggi; Tangerang; Bandara Soekarno-Hatta
+1.8,DAOP 1,Jatinegara,3,1.900,19.000,Jatinegara; Klender; Buaran
+1.9,DAOP 1,Bekasi,5,19.000,27.800,Klenderbaru; Cakung; Rawabebek; Kranji; Bekasi
+1.10,DAOP 1,Cikarang,5,27.800,44.000,Bekasitimur; Tambun; Cibitung; Telagamurni; Cikarang
+1.11,DAOP 1,Lemahabang,2,44.000,58.200,Lemahabang; Kedunggedeh
+1.12,DAOP 1,Karawang,2,58.200,71.000,Karawang; Klari
+1.13,DAOP 1,Cikampek,3,71.000,85.400,Kosambi; Dawuan; Cikampek
+1.14,DAOP 1,Pasarminggu,10,10.900,28.600,Tebet; Cawang; Durenkalibata; Pasarminggubaru; Pasarminggu; Tanjungbarat; Lentengagung; Universitas Pancasila; Universitas Indonesia; Pondokcina
+1.15,DAOP 1,Depok,2,28.600,37.200,Depokbaru; Depok
+1.16,DAOP 1,Citayam,7,37.200,51.200,Citayam; Bojonggede; Cilebut; Pondokrajeg; Cibinong; Gunungputri; Nambo
+1.17,DAOP 1,Bogor,5,51.200,15.000,Bogor; Bogorpaledang; Batutulis; Ciomas; Maseng
+1.18,DAOP 1,Cigombong,4,15.000,34.400,Cigombong; Cicurug; Cijambe; Parungkuda
+1.19,DAOP 1,Sukabumi,5,34.400,58.400,Cibadak; Karangtengah; Pondokleungsir; Cisaat; Sukabumi
+1.20,DAOP 1,Kebayoran,5,12.000,29.000,Kebayoran; Pondokranji; Jurangmangu; Sudimara; Rawabuntu
+1.21,DAOP 1,Parungpanjang,4,29.000,47.000,Serpong; Cisauk; Cicayur; Parungpanjang
+1.22,DAOP 1,Tigaraksa,6,47.000,64.000,Cilejit; Daru; Tenjo; Tigaraksa; Cikoya; Maja
+1.23,DAOP 1,Rangkasbitung,2,64.000,80.600,Citeras; Rangkasbitung
+1.24,DAOP 1,Catang,5,80.600,114.500,Jambubaru; Catang; Cikeusal; Walantaka; Serang
+1.25,DAOP 1,Cilegon,6,114.500,148.300,Karangantu; Tonjongbaru; Cilegon; Krenceng; Merak; Cigading
+I.1,DIVRE I,Medan,4,0.700,11.000,Medan; Medan Pasar; Kebon Pisang; Bandarkalipah
+I.2,DIVRE I,Ujungbaru,8,0,24.300,Glugur; Pulubrayan; Titi Papan; Kampung Besar; Labuan; SSP Pertamina; Belawan; Ujungbaru
+I.3,DIVRE I,Araskabu,5,11.000,25.000,Batangkuis; Serdang; Araskabu; Kualanamu; Pasarsore
+I.4,DIVRE I,Perbaungan,5,25.000,60.500,Lubukpakam; Perbaungan; Lidah Tanah; Bulu; Telukmengkudu
+I.5,DIVRE I,Tebingtinggi,6,60.500,83.500,Rampah; Bamban; Rambutan; Rantawaban; Tebingtinggi; Naga Kesiangan
+I.6,DIVRE I,Siantar,4,13.000,48.744,Bajalinggei; Dolokmerangir; Sinaksak; Siantar
+I.7,DIVRE I,Perlanaan,4,83.500,116.000,Laut Tador; Bandartinggi; Bahlias; Perlanaan
+I.8,DIVRE I,Seibejangkar,4,116.000,151.500,Lima Puluh; Dusun; Seibejangkar; Bunut
+I.9,DIVRE I,Kisaran,5,151.500,12.000,Kisaran; Serbangan; Kebon Sayur; Air Joman; Tanjung Balai
+I.10,DIVRE I,Telukdalam,5,12.000,46.000,Hengelo; Telukdalam; Masihi; Pulu Raja; Aekloba
+I.11,DIVRE I,Mambangmuda,6,46.000,80.000,Mambangmuda; Gunting Saga; Silurgir; Tambak Gajuk; Adiantorop; Pamenke
+I.12,DIVRE I,Rantauprapat,5,80.000,113.872,Padanghalaban; Marbau; Babussalam; Rantau Prapat Baru; Rantauprapat
+I.13,DIVRE I,Binjai,6,0.700,13.500,Binjai; Sunggal; Diski; Kuala Begumit; Pungei; Kebon Lada
+I.14,DIVRE I,Stabat,8,13.500,47.000,Kualabingei; Kampung Pantai Gemi; Stabat; Tanjung Putus; Tanjung Selamat; Kuala Pesilam; Tanjung Pura Halte; Tanjung Pura
+I.15,DIVRE I,Pangkalan Brandan,3,47.000,78.700,Gebang; Pangkalan Brandan; Besitang
+I.16,DIVRE I,Tanjunggading,3,0,20.750,Tanjunggading; Lalang; Kualatanjung
+I.17,DIVRE I,Kruengmane,6,0,11.300,Kutablang; Geurugok; Kruengmane; Bungkaih; Krueng Geukueh; Muara Satu
+II.1,DIVRE II,Padang,15,32.000,0,Pasar Usang; Duku; Bandara Internasional Minangkabau; Lubuk Buaya; Tabing; Air Tawar; Alai; Padang; Tarandam; Pulau Aie; Bukit Putus; Pelabuhan Teluk Bayur; Kampung Juar; Pauhlima; Indarung
+II.2,DIVRE II,Lubuk Alung,8,60.038,32.000,Kayutanam; Sicincin; Lubuk Alung; Pauh Kambar; Kurai Taji; Cimparuh; Pariaman; Naras
+III.1,DIVRE III,Kertapati,2,400.102,391.000,Kertapati; Kramasan
+III.2,DIVRE III,Simpang,3,391.000,380.000,Simpang; Pos Indralaya; Indralaya
+III.3,DIVRE III,Payakabung,1,380.000,370.000,Payakabung
+III.4,DIVRE III,Serdang,1,370.000,358.000,Serdang
+III.5,DIVRE III,Gelumbang,1,358.000,347.100,Gelumbang
+III.6,DIVRE III,Lembak,2,347.100,335.500,Karangenda; Lembak
+III.7,DIVRE III,Prabumulih,2,335.500,321.850,Prabumulih; Prabumulih Baru X5
+III.8,DIVRE III,Prabumulih Baru X6,1,322.275,329.400,Prabumulih Baru X6
+III.9,DIVRE III,Penimur,1,329.400,340.600,Penimur
+III.10,DIVRE III,Niru,1,340.600,352.200,Niru
+III.11,DIVRE III,Blimbing Pendopo,1,352.200,365.000,Blimbing Pendopo
+III.12,DIVRE III,Gunung Megang,2,365.000,379.000,Gunung Megang; Penanggiran
+III.13,DIVRE III,Ujan Mas,2,379.000,390.500,Ujan Mas; Muara Gula
+III.14,DIVRE III,Muaraenim,2,390.500,401.300,Muaraenim; Muaralawa
+III.15,DIVRE III,Tanjung Enim Baru,1,0,9.050,Tanjung Enim Baru
+III.16,DIVRE III,Banjarsari,2,401.300,414.300,Banjarsari; Merapi
+III.17,DIVRE III,Sukacinta,1,414.300,427.000,Sukacinta
+III.18,DIVRE III,Lahat,1,427.000,444.000,Lahat
+III.19,DIVRE III,Sukarame,5,444.000,470.000,Sukarame; Bemban; Bungamas; Muaraempayang; Paduraksa
+III.20,DIVRE III,Saungnaga,4,470.000,496.000,Sukaraja; Sungailaru; Saungnaga; Sungaiempayang
+III.21,DIVRE III,Tebingtinggi,4,496.000,522.000,Tebingtinggi; Tanjungrejo; Tebakebun; Muarasaling
+III.22,DIVRE III,Lubuk Linggau,5,522.000,549.700,Kota Padang; Lubukbinjai; Lubukblimbing; Tabapingin; Lubuk Linggau
+IV.18,DIVRE IV,Tanjungrambang,2,318.200,300.200,Tanjungrambang; Sukamerindu
+IV.17,DIVRE IV,Pagergunung,4,300.200,276.200,Air Asam; Pagergunung; Kotabaru; Metur
+IV.16,DIVRE IV,Peninjawan,4,276.200,252.000,Talangbaru; Peninjawan; Lubuk Rukam; Durian
+IV.15,DIVRE IV,Blimbing Air Kaka,3,252.000,239.200,Blimbing Air Kaka; Kepayang; Belatung
+IV.14,DIVRE IV,Baturaja,4,239.200,220.000,Lubukbatang; Tigagajah; Baturaja; Kemelak
+IV.13,DIVRE IV,Sepancar,1,220.000,207.000,Sepancar
+IV.12,DIVRE IV,Martapura,3,207.000,194.000,Gilas; Sungai Tuha; Martapura
+IV.11,DIVRE IV,Waytuba,4,194.000,171.000,Way Pisang; Waytuba; Tanjungrajo; Giham
+IV.10,DIVRE IV,Blambangan Umpu,1,171.000,159.700,Blambangan Umpu
+IV.9,DIVRE IV,Negeri Agung,1,159.700,146.400,Negeri Agung
+IV.8,DIVRE IV,Tulung Buyut,1,146.400,133.700,Tulung Buyut
+IV.7,DIVRE IV,Negara Ratu,1,133.700,122.300,Negara Ratu
+IV.6,DIVRE IV,Ketapang,1,122.300,109.000,Ketapang
+IV.5,DIVRE IV,Kotabumi,2,109.000,94.000,Cempaka; Kotabumi
+IV.4,DIVRE IV,Blambangan Pagar,4,94.000,68.000,Candimas; Kalibalangan; Blambangan Pagar; Sulusuban
+IV.3,DIVRE IV,Bekri,3,68.000,41.000,Haji Pemanggilan; Bekri; Rengas
+IV.2,DIVRE IV,Rejosari,5,41.000,15.400,Tegineneng; Branti; Rejosari; Gedungratu; Labuhanratu
+IV.1,DIVRE IV,Tanjungkarang,7,15.400,0,Tanjungkarang; Garuntang; Kilometertiga; Pidada; Panjang; Tarahan; Sukamenanti

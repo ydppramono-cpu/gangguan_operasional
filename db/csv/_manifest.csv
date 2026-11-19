@@ -1,0 +1,30 @@
+tabel,baris,kolom,berkas,sumber,kunci,sha256
+ref_jpl_1404,1404,13,1,PDF 1404 Titik Perlintasan Sebidang + penanda 190 prioritas,"No JPL, KM+HM",86878e15c9de2b429bc898aadc6d8f5d169f62c03d9adeb9e39c8e3997cace26
+ref_stasiun_dinas_ptdo2025,104,5,1,PTDO GAPEKA 2025 Bab IV,Kode stasiun,7e84400752a355c137a7387da112c76a1da748bdf32ada1149a7ba7d8e33f2a7
+ref_depo_ka_2025,19,5,1,Buku Duksar / Dinasan GAPEKA 2025,"Kode stasiun, No KA",ebbe494bc7cf647321395a2cda7b22eafc22a39dfe092b17dcabf43637f90fec
+ref_rujukan_pustaka,52,11,1,Rujukan media & ilmiah (APA),ID,f89fb753bbafe570846b2ff10df5b4795e972821ba4899b14239a79a5a68b6ef
+ref_koreksi_data,20,9,1,Log koreksi data laporan,Kunci,1a6c7275b48af082adaaf5cb8501784c746e731d01da5d2b9575147e8ab2cb80
+ref_resor_jr,202,7,1,PETA_WILAYAH 2026 (transkripsi 10 Nov 2026),kode_upt,ad027ec3f611e64dc9b602a729ad0ab091bb4d8d4f3c87112ed112f1eb0d39f5
+ref_resor_stasiun_transkripsi,697,2,1,PETA_WILAYAH 2026 (transkripsi 10 Nov 2026),kode_stasiun,39a5575f3b3729420435853e00a0d6f02e8bd109f4ab69d64e37b1ea172e597a
+ref_resor_petak,1344,3,1,"PETA_WILAYAH 2026 (transkripsi 10 Nov 2026) — tanda: b=lintas batas, t=perlu tinjau, u=ujung tak terpetakan",petak,ed6c7ebefdc7b74aeecf68e0494f80399924600fa473c6750a0486e2a85a08e5
+duksar2025_unit_siap_guna,10422,3,1,"Buku Dukungan Sarana (Duksar) GAPEKA 2025: Jawa (2 Jan 25), Sumbar (2 Jan 25), Sumsel (3 Jan 25), Sumut (2 Jan 25)",nomor_sarana,ad221e7341b852cd89f3a600d610d402a642a854956a43e80498f2b8d754e2d8
+duksar2025_lok_dipo,14,9,1,"Buku Dukungan Sarana (Duksar) GAPEKA 2025: Jawa (2 Jan 25), Sumbar (2 Jan 25), Sumsel (3 Jan 25), Sumut (2 Jan 25)",dipo,fd93dc5180146581280a88775ac7ac5e0230f78c56a0076557ed8afc37c0b4f8
+duksar2025_rekap,16,6,1,"Buku Dukungan Sarana (Duksar) GAPEKA 2025: Jawa (2 Jan 25), Sumbar (2 Jan 25), Sumsel (3 Jan 25), Sumut (2 Jan 25)","wilayah, jenis",201884ea68513cb5cfb63afb59794188078c2ffebdd39b731cf125c0eff4b09a
+peta_stasiun_koordinat,618,5,1,OSM via enwo02/train-tracker (rail tiles) — diunduh 13 Nov 2026,kode_stasiun,68c46a9f87ab315b3cbdd8d343c91ad2a6f3c6003318421eda8cf17176119203
+peta_petak_atribut_osm,635,10,1,"OSM via enwo02/train-tracker (rail tiles) — diunduh 13 Nov 2026 · © kontributor OpenStreetMap, ODbL 1.0",petak,7e6e96c328acb840bdf6ff602dd2afa04a3a03402870670685bb2fdbe67b052e
+peta_petak_geometri,591,2,1,"OSM via enwo02/train-tracker (rail tiles) — diunduh 13 Nov 2026 · © kontributor OpenStreetMap, ODbL 1.0",petak,7435074dd92eb25b757213044362c4a392fed157d2628b2bf3ac1b3a9d74143e
+peta_jalur_osm,433,4,1,"OSM via enwo02/train-tracker (rail tiles) — diunduh 13 Nov 2026 · © kontributor OpenStreetMap, ODbL 1.0",id,c692090d75a773b9e9b0a0d062c3e51124341ad92715e04e16b598416410be8e
+gapeka25_jadwal_dw,53422,12,3,GAPEKA 2025 (buku resmi; ekstraksi tools/gapeka2026),lihat kolom,5642bc2ba1be31adf7d5acde5b3dd9849291def1cfa69a27eb5f0bba13c7862d
+gapeka25_jarak_lintas,663,6,1,GAPEKA 2025 (buku resmi; ekstraksi tools/gapeka2026),lihat kolom,a2640d9aea2aa3f9aed54a49700c499a0deb78d8e2fafbc8bc20960f0021f7cc
+gapeka25_lintas_lembar,673,8,1,GAPEKA 2025 (buku resmi; ekstraksi tools/gapeka2026),lihat kolom,cfebac3bb5954b6957fdfe824f458dfd75faad338b6f55ad6f2a7d1066799fbf
+gapeka25_penomoran_ka,2708,12,1,GAPEKA 2025 (buku resmi; ekstraksi tools/gapeka2026),lihat kolom,aef62bf665c379bd9689f5e8c0ce5e4ecddd8688398e692ddbee579e10661750
+gapeka26_duksar_lok_dipo,38,7,1,GAPEKA 2026 (buku resmi; ekstraksi tools/gapeka2026),lihat kolom,63ff2e8320016242d08534ed5929e81e1532f24022c934585e2f77d01cd882a6
+gapeka26_duksar_rekap,15,6,1,GAPEKA 2026 (buku resmi; ekstraksi tools/gapeka2026),lihat kolom,5c9caa95c7e6def07da9d5a5f221fa47fc9a7dffec568dff95657ed0b78c565f
+gapeka26_jadwal_dw,56330,12,3,GAPEKA 2026 (buku resmi; ekstraksi tools/gapeka2026),lihat kolom,a786159b44cdba0940d0ecd6d9efd35fdb653caee008cd9b9093921ac116a392
+gapeka26_jarak_lintas,667,6,1,GAPEKA 2026 (buku resmi; ekstraksi tools/gapeka2026),lihat kolom,e53ad2df0f62ef3122496aa1f90bc19b6454efb6c58f87436696e2c883fb6304
+gapeka26_lintas_lembar,694,8,1,GAPEKA 2026 (buku resmi; ekstraksi tools/gapeka2026),lihat kolom,53388cae62cfdb0137b3f7483b7bf6035465ddbecf96c6c8a6288a658656a016
+gapeka26_penomoran_ka,2829,12,1,GAPEKA 2026 (buku resmi; ekstraksi tools/gapeka2026),lihat kolom,581bdb89b3f46a6d1c3384806034ee0d64da3c269f28825ff9d559e61931ceca
+duksar2026_sarana_unit,12156,11,1,Buku Duksar GAPEKA 2026,nomor_sarana,c3c2f0edaaaab0660087a7e9847ae97b399a9be9c32252b84ed04b01a144bcec
+ref_stasiun_resor_resmi,122,10,1,"data_station.csv (ekspor sistem KAI, Daop 4–6, diterima 19 Nov 2026)",kode_stasiun,ce76ba9b04bb2ca96a04cbb0a9c3e3a2318f5b849cd0772ae216877992dd662a
+sarana_karakteristik,12352,22,1,"data_characteristic_sarana.csv (SAP, diterima 19 Nov 2026); kolom uji berkala dibuang; nama kolom: maxspeed=Kecepatan Max; pjg=Panjang Equip; tgi=Tinggi Equip; lbr=Lebar Equip; bkos=Berat Kosong; bmuat=Berat Muat; bsiap=Berat Siap; kmuat=Kuat Muat; supr=Superequip; bdirj=BERAT SARANA DIRJEN; bkosdirj=Berat Kosong Dirjen; kpstd=Kapasitas Tempat Duduk; daya=KVA; kap_tangkibbm=Kapasitas Tangki BBM; mrkg=Merk Genset; mdgenset=MD Genset; kap_tangkiats=Kapasitas Tangki Atas; kap_tangkibwh=Kapasitas Tangki Bawah; td=TEMPAT DUDUK",nomor_sarana,c1ca24c2917ec62c10ffa20d16ef3dcf3b5789cb0c3ec331f87fd3dcde98766f
+master_stasiun,951,13,1,gabungan: data_station (resmi) > LIST STASIUN MASTER GAPEKA 2025 > transkripsi PETA_WILAYAH; nama lembar/DW GAPEKA; koordinat resmi > peta OSM,kode_stasiun,69e74ee775c089c62e7841d1233b4675cc7b548ff5193e3e71041396c4ad0a8f

@@ -1,0 +1,17 @@
+wilayah,jenis,siapGuna,siapOperasi,stamformasi,cadangan
+Jawa,Lokomotif,242,215,215,0
+Jawa,Krd,86,67,67,0
+Jawa,Kereta,1932,1653,1471,182
+Jawa,Gerbong,1875,1594,1191,403
+Sumsel,Lokomotif,219,196,195,1
+Sumsel,Krd,0,0,0,0
+Sumsel,Kereta,72,58,52,6
+Sumsel,Gerbong,5920,5363,5086,277
+Sumut,Lokomotif,31,26,26,0
+Sumut,Krd,18,14,14,0
+Sumut,Kereta,73,62,54,8
+Sumut,Gerbong,331,282,255,27
+Sumbar,Lokomotif,13,11,9,2
+Sumbar,Krd,11,7,7,0
+Sumbar,Kereta,14,11,10,1
+Sumbar,Gerbong,209,177,152,25

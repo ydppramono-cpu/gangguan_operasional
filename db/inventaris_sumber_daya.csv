@@ -1,0 +1,34 @@
+id,nama,jenis,lokasi,isi,status_csv,tabel_csv,langkah_berikut
+S01,KAI | Basis Data Gangguan dan Hambatan 2025–2026 · Gangguan_Induk,Google Sheets,02_DB (1HmlF2DL…),7.456 baris × 35 kolom kejadian gangguan,via mirrorCsv,gangguan_induk,Jalankan mirrorCsv di proyek KAI Data Platform Tools
+S02,Basis Data · Hambatan_Jasum,Google Sheets,02_DB (1HmlF2DL…),1.000 baris × 21 kolom,via mirrorCsv,hambatan_jasum,Jalankan mirrorCsv
+S03,Basis Data · THI,Google Sheets,02_DB (1HmlF2DL…),29.989 × 51 (resor & petak/emplasemen per bulan),via mirrorCsv,thi,Jalankan mirrorCsv
+S04,Basis Data · RHI,Google Sheets,02_DB (1HmlF2DL…),41.923 × 39 (kesehatan lokomotif harian),via mirrorCsv,rhi,Jalankan mirrorCsv
+S05,Basis Data · WKP,Google Sheets,02_DB (1HmlF2DL…),36.257 × 28 (window time),via mirrorCsv,wkp,Jalankan mirrorCsv; lokasi teks → petak perlu diurai
+S06,Basis Data · Passenger,Google Sheets,02_DB (1HmlF2DL…),4.334 × 17 pendapatan penumpang per KA per bulan,via mirrorCsv,passenger,Jalankan mirrorCsv
+S07,Basis Data · Freight,Google Sheets,02_DB (1HmlF2DL…),46.467 × 9 pendapatan barang,via mirrorCsv,freight,Jalankan mirrorCsv
+S08,Basis Data · Skema,Google Sheets,02_DB (1HmlF2DL…),49 × 4 kamus kolom,via mirrorCsv (didaftarkan 19 Nov),skema,Jalankan mirrorCsv
+S09,MASTER GAPEKA 2025 (LIST KA / STASIUN / PETAK JALAN),Google Sheets,15yHI4aO…,940 stasiun; KA; petak,via mirrorCsv,gapeka25_list_ka; gapeka25_stasiun; gapeka25_petak,LIST STASIUN juga disalin ke db/sumber
+S10,Referensi Sarana SAP (Sarana_Knowledge),Google Sheets,115j4MRj…,12.455 unit × 20 kolom,via mirrorCsv (didaftarkan 19 Nov),sarana_sap,Jalankan mirrorCsv
+S11,GAPEKA_2026_Basis_Data + Sarana_Unit,Google Sheets,02_DB,jadwal 56.330; penomoran 2.829; jarak; lintas; Duksar,sudah (lokal),gapeka26_*; duksar2026_sarana_unit,—
+S12,GAPEKA_2025_Basis_Data,Google Sheets,02_DB,jadwal 53.422; penomoran 2.708; jarak; lintas,sudah (lokal),gapeka25_*,—
+S13,KAI_Referensi_Turunan (13 tabel seed),Google Sheets,02_DB,JPL; resor; koordinat; OSM; rujukan,sudah (lokal dari seed),ref_*; peta_*,—
+S14,Master tambahan web app (M_JPL M_JADWAL M_STASIUN_OPS M_DEPO_KA M_RUJUKAN M_KOREKSI),seed .gs,src/10–12,lihat tabel,sudah (lokal),ref_jpl_1404; ref_stasiun_dinas_ptdo2025; ref_depo_ka_2025; ref_rujukan_pustaka; ref_koreksi_data,—
+S15,Duksar GAPEKA 2025,seed .gs (dari PDF),src/17_SeedDuksar.gs,unit siap guna per depo; lok per dipo; rekap,sudah (lokal),duksar2025_*,—
+S16,Peta OSM (rel; atribut petak; koordinat & elevasi stasiun),seed .gs,src/18_SeedPeta.gs,433 garis; 635 petak; 618 stasiun,sudah (lokal; geometri WKT),peta_*,Kurangi penyederhanaan ke ±3–5 m saat membangun peta P1
+S17,PETA_WILAYAH (202 UPT Resor JR),PDF → transkripsi,src/14_SeedResor.gs,stasiun & petak → resor,sudah (lokal),ref_resor_*,Cocok 117/119 dengan data resmi Daop 4–6
+S18,data_station.csv (stasiun–resor resmi Daop 4–6),CSV dari sistem KAI,db/sumber,122 stasiun; 49 resor; koordinat,sudah,ref_stasiun_resor_resmi; master_stasiun,Minta berkas yang sama untuk Daop 1–3; 7–9; Divre I–IV
+S19,data_characteristic_sarana.csv (SAP),CSV,lampiran 19 Nov,154.769 baris; 12.453 unit; 22 atribut,sudah (dipivot; tanpa uji berkala),sarana_karakteristik,—
+S20,Lembar GAPEKA 2025 & 2026,PDF grafik,01_RAW,judul lintas & urutan stasiun,sebagian (judul & sumbu → lintas_lembar),gapeka2x_lintas_lembar,Garis perjalanan di lembar tidak diekstrak (diganti Daftar Waktu)
+S21,Buku Penomoran / Kaplin / Daftar Jarak 2025 & 2026,PDF teks,01_RAW,nomor KA; kelas; jarak antar stasiun,sudah (penomoran & jarak),gapeka2x_penomoran_ka; gapeka2x_jarak_lintas,Kaplin (kapasitas lintas) belum diekstrak
+S22,Buku Daftar Waktu 2025 & 2026,PDF teks / pindai,01_RAW,jam per KA per stasiun,sudah,gapeka2x_jadwal_dw,—
+S23,Buku Duksar 2026,PDF,01_RAW,rekap; lok per dipo; nomor unit,sudah,gapeka26_duksar_*; duksar2026_sarana_unit,—
+S24,Malka Rinja 2025,PDF/berkas dalam zip Berkas_Gapeka_2025,uploads,rencana malka/rinja,belum,—,Ekstrak ke tabel (P2 antrean platform)
+S25,Gambar emplasemen Daop 9,PDF pindai 35 hal,uploads,sepur & wesel per stasiun,belum,—,Opsi A: tim mengisi Sheet M_EMPLASEMEN
+S26,PTDO GAPEKA 2025 (teks),PDF/teks,03_KNOWLEDGE,aturan dinas stasiun,sebagian (Bab IV → ref_stasiun_dinas_ptdo2025),ref_stasiun_dinas_ptdo2025,Bab lain tetap dokumen pengetahuan
+S27,Dinasan O.20; KP-DJKA 224–227/116; laporan bulanan,PDF/dokumen,03_KNOWLEDGE,regulasi & laporan,tidak perlu CSV (dokumen),—,Tetap sebagai bank pengetahuan
+S28,1404 / 190 JPL prioritas,PDF,03_KNOWLEDGE,daftar perlintasan,sudah,ref_jpl_1404,—
+S29,Realisasi perjalanan (CSV dari Excel),CSV,belum diterima,realisasi jam per KA per stasiun,belum,—,Unggah contoh ke 01_RAW/realisasi_perjalanan
+S30,Dokumen resmi jalur ganda/DDT,dokumen,belum diterima,jenis jalur per petak,belum,—,Kirim dokumen; sementara pakai tag OSM bertanda
+S31,OpenStreetMap / OpenRailwayMap,laman web (ODbL),openstreetmap.org,geometri rel & atribut,sudah (diturunkan ke peta_*),peta_*,Pembaruan berkala dari ekstrak OSM
+S32,Rujukan media & ilmiah,laman web,berbagai,52 rujukan APA,sudah,ref_rujukan_pustaka,—
+S33,Katalog_Data (442 berkas; kamus 352 kolom),Google Sheets,00_ADMIN,katalog,via mirrorCsv bila didaftarkan,—,Daftarkan di sumber_tabel.json

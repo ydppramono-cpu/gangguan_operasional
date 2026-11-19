@@ -589,3 +589,35 @@ CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.gapeka25_lintas_lembar` (
   km STRING OPTIONS(description="km"),
   berkas_lembar STRING OPTIONS(description="berkas_lembar")
 ) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/1UM8d7CvzhrXl1CeB7J7XNTaw0mcPiWA8-4_2RdZnH-c"], sheet_range = "lintas_lembar_2025!A:H", skip_leading_rows = 1, description = "Urutan stasiun + km per judul lintas Lembar GAPEKA 2025");
+
+-- skema: Kamus kolom Gangguan_Induk (kolom, nama kanonis, fungsi, aturan pengisian) (DB!Skema)
+CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.skema` (
+  kolom STRING OPTIONS(description="Kolom"),
+  nama_kanonis STRING OPTIONS(description="Nama kanonis"),
+  fungsi STRING OPTIONS(description="Fungsi"),
+  aturan_pengisian STRING OPTIONS(description="Aturan pengisian")
+) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/1HmlF2DL4KeHGVSO87aQAKu86dbfrnZohkCA7SsaL3OM"], sheet_range = "Skema!A:D", skip_leading_rows = 1, description = "Kamus kolom Gangguan_Induk (kolom, nama kanonis, fungsi, aturan pengisian)");
+
+-- sarana_sap: Referensi sarana SAP per unit: dipo, pabrikan, mulai dinas, karakteristik (JSON) (SAR!Sarana_Knowledge)
+CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.sarana_sap` (
+  asset_key STRING OPTIONS(description="asset_key"),
+  equipment_number STRING OPTIONS(description="equipment_number"),
+  no_sarana STRING OPTIONS(description="no_sarana"),
+  equipment_desc STRING OPTIONS(description="equipment_desc"),
+  catalog_profile STRING OPTIONS(description="catalog_profile"),
+  class_sarana STRING OPTIONS(description="class_sarana"),
+  class_desc STRING OPTIONS(description="class_desc"),
+  dipo_code STRING OPTIONS(description="dipo_code"),
+  dipo_name STRING OPTIONS(description="dipo_name"),
+  plant STRING OPTIONS(description="plant"),
+  lokasi_kepemilikan STRING OPTIONS(description="lokasi_kepemilikan"),
+  manuf_asset STRING OPTIONS(description="manuf_asset"),
+  manuf_model_number STRING OPTIONS(description="manuf_model_number"),
+  manuf_serial_number STRING OPTIONS(description="manuf_serial_number"),
+  kapasitas STRING OPTIONS(description="kapasitas"),
+  mulai_dinas STRING OPTIONS(description="mulai_dinas"),
+  bast_date STRING OPTIONS(description="bast_date"),
+  sys STRING OPTIONS(description="sys"),
+  usr STRING OPTIONS(description="usr"),
+  characteristics_json STRING OPTIONS(description="characteristics_json")
+) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/115j4MRjEKeUkKULyGGhF2pQ4l_OSGhnyBYmZE-pqSc0"], sheet_range = "Sarana_Knowledge!A:T", skip_leading_rows = 1, description = "Referensi sarana SAP per unit: dipo, pabrikan, mulai dinas, karakteristik (JSON)");

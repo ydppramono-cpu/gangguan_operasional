@@ -1,0 +1,941 @@
+kode_stasiun,nama_stasiun,wilayah,status
+ABL,Ambulu,Daop 9,tidak aktif
+ABR,Ambarawa,Daop 4,tidak aktif
+AC,Ancol,Daop 1,aktif
+ADT,Adiantorop,Divre 1,tidak aktif
+AGO,Argopuro,Daop 9,aktif
+AJ,Arjasa,Daop 9,aktif
+AJU,Ajung,Daop 9,tidak aktif
+AK,Angke,Daop 1,aktif
+AKB,Aekloba,Divre 1,aktif
+ALD,Alur Dua,Divre 1,tidak aktif
+AND,Andir,Daop 2,aktif
+ANK,Anyerkidul,Daop 1,tidak aktif
+ARB,Araskabu,Divre 1,aktif
+ARJ,Air Joman,Divre 1,tidak aktif
+ASM,Air Asam,Divre 4,aktif
+ATA,Alastua,Daop 4,aktif
+AW,Awipari,Daop 2,aktif
+AWN,Arjawinangun,Daop 3,aktif
+BAL,Bangsal,Daop 8,tidak aktif
+BAN,Babalan,Divre 1,tidak aktif
+BAP,Bandar Kalipah,Divre 1,aktif
+MAG,Magetan,Daop 7,aktif
+BB,Brebes,Daop 3,aktif
+BBA,Blambangan Pagar,Divre 4,aktif
+BBD,Babadan,Daop 7,aktif
+BBG,Brumbung,Daop 4,aktif
+BBK,Babakan,Daop 3,aktif
+BBN,Brambanan,Daop 6,aktif
+BBS,Babussalam,Divre 1,tidak aktif
+BBT,Babat,Daop 8,aktif
+BBU,Blambangan Umpu,Divre 4,aktif
+BD,Bandung,Daop 2,aktif
+BDN,Bedono,Daop 4,tidak aktif
+BDO,Bendosendung,Daop 7,tidak aktif
+BDR,Buduran,Daop 8,aktif
+BDT,Bandar Tinggi,Divre 1,aktif
+BDW,Bangoduwa,Daop 3,aktif
+BEM,Bemban,Divre 3,tidak aktif
+BEN,Benculuk,Daop 1,tidak aktif
+SBE,Benteng,Daop 8,aktif
+BG,Bangil,Daop 8,aktif
+BGM,Bunga Mas,Divre 3,aktif
+BGR,Bagor,Daop 7,aktif
+BH,Boharan,Daop 8,aktif
+BI,BOYOLALI,Daop 6,tidak aktif
+BIB,Blimbing Pendopo,Divre 3,aktif
+BIJ,Binjai,Divre 1,aktif
+BIK,Blimbing Air Kaka,Divre 4,aktif
+BJ,Bojonegoro,Daop 8,aktif
+BJD,Bojonggede,Daop 1,aktif
+BJG,Bojong,Daop 2,aktif
+BJI,Banjarsari,Divre 3,aktif
+BJK,Banjarkemantren,Daop 8,aktif
+BJL,Baja Linggei,Divre 1,aktif
+BJN,Banjaran,Daop 5,tidak aktif
+BJR,Banjar,Daop 2,aktif
+BKA,Bulakamba,Daop 3,tidak aktif
+BKI,Bekri,Divre 4,aktif
+BKL,BANGKALAN,Daop 8,tidak aktif
+BKN,Bakalan,Daop 4,tidak aktif
+BKP,Bukitputus,Divre 2,aktif
+BKS,Bekasi,Daop 1,aktif
+BL,Blitar,Daop 7,aktif
+BLA,Blora,Daop 4,tidak aktif
+BLI,Bahlias,Divre 1,aktif
+BLP,Balapulang,Daop 5,aktif
+BLT,Belatung,Divre 4,aktif
+BLW,Belawan,Divre 1,aktif
+BMA,Bumiayu,Daop 5,aktif
+BMB,Bamban,Divre 1,aktif
+BMG,Blimbing,Daop 8,aktif
+BMS,Bukit Mas,Divre 1,tidak aktif
+BMW,Bumiwaluya,Daop 2,aktif
+BNS,Bonosare,Daop 9,aktif
+BNW,Benowo,Daop 8,aktif
+BO,Bondowoso,Daop 9,aktif
+BOI,Bojongindah,Daop 1,aktif
+BOO,Bogor,Daop 1,aktif
+BPR,Batuceper,Daop 1,aktif
+BRN,Baron,Daop 7,aktif
+BSG,Besitang,Divre 1,aktif
+BSS,Bangsalsari,Daop 9,aktif
+BTA,Baturaja,Divre 4,aktif
+BTG,Batang,Daop 4,aktif
+BTH,Butuh,Daop 5,aktif
+BTK,Batang Kuis,Divre 1,aktif
+BTL,Batutabal,Divre 2,aktif
+BTT,Batutulis,Daop 1,aktif
+BUA,Buaran,Daop 1,aktif
+BUG,BALUNG,Daop 9,tidak aktif
+BUL,Bulu,Divre 1,tidak aktif
+BUU,Bunut,Divre 1,aktif
+KTG,Ketapang,Daop 9,aktif
+BWO,Bowerno,Daop 8,aktif
+BYM,Bayeman,Daop 9,aktif
+CA,Ciganea,Daop 2,aktif
+CAA,Cirahayu,Daop 2,aktif
+CAW,Ciawi,Daop 2,aktif
+CB,Cibatu,Daop 2,aktif
+CBB,Cibeber,Daop 2,aktif
+CBD,Cibadak,Daop 1,aktif
+Cbl,Cibakonglor,Daop 2,tidak aktif
+CBN,Cibinong,Daop 1,aktif
+CBR,Cibungur,Daop 2,aktif
+CC,Cicayur,Daop 1,aktif
+CCL,Cicalengka,Daop 2,aktif
+CCR,Cicurug,Daop 1,aktif
+CD,Cikadongdong,Daop 2,aktif
+CE,Ceper,Daop 6,aktif
+CEK,Cepu Kota,Daop 4,tidak aktif
+CEP,Cempaka,Divre 4,aktif
+CG,Cisomang,Daop 2,aktif
+CGB,Cigombong,Daop 1,aktif
+CGD,Cigading,Daop 1,aktif
+CI,Ciamis,Daop 2,aktif
+CIK,Cilaku,Daop 2,aktif
+CIR,Ciroyom,Daop 2,aktif
+CIT,Cibitung,Daop 1,aktif
+CJ,Cianjur,Daop 2,aktif
+CJE,Cijambe,Daop 1,aktif
+Cjl,Cijulang,Daop 2,tidak aktif
+CJT,Cilejit,Daop 1,aktif
+CKI,Cikini,Daop 1,aktif
+Ckj,Cikajang,Daop 2,tidak aktif
+CKL,Cikeusal,Daop 1,aktif
+CKM,Cikaum,Daop 3,aktif
+CKP,Cikampek,Daop 1,aktif
+CKR,Cikarang,Daop 1,aktif
+CKW,Cikawung,Daop 5,tidak aktif
+CKY,Cikoya,Daop 1,aktif
+CLD,Ciledug,Daop 3,aktif
+CLE,Cilame,Daop 2,aktif
+CLG,Cilegon,Daop 1,aktif
+CLH,Cilegeh,Daop 3,aktif
+CLM,Cilamaya,Daop 1,tidak aktif
+CLT,Cilebut,Daop 1,aktif
+CMD,Cimindi,Daop 2,aktif
+CME,Cerme,Daop 8,aktif
+CMI,Cimahi,Daop 2,aktif
+CMK,Cimekar,Daop 2,aktif
+CMS,Candimas,Divre 4,aktif
+CN,Cirebon,Daop 3,aktif
+CNK,Cangkring,Daop 3,aktif
+CNP,Cirebon Prujakan,Daop 3,aktif
+CO,Comal,Daop 4,aktif
+CP,Comal,Daop 5,aktif
+CPD,Cipeundeuy,Daop 2,aktif
+CPI,Cipari,Daop 5,aktif
+CPN,Cipinang,Daop 1,tidak aktif
+CPT,Cipatat,Daop 2,aktif
+CPY,Cipeuyeum,Daop 2,aktif
+CRA,Cipunegara,Daop 3,aktif
+CRB,Caruban,Daop 7,aktif
+CRG,Cireungas,Daop 2,aktif
+CRJ,Ciranjang,Daop 2,aktif
+CRM,Curahmalang,Daop 7,aktif
+CS,Ciomas,Daop 1,aktif
+CSA,Cisaat,Daop 1,aktif
+CSK,Cisauk,Daop 1,aktif
+CT,Catang,Daop 1,aktif
+CTA,Citayam,Daop 1,aktif
+CTH,Cikudapateuh,Daop 2,aktif
+CTR,Citeras,Daop 1,aktif
+CU,Cepu,Daop 4,aktif
+CUK,Cakung,Daop 1,aktif
+CW,Cawang,Daop 1,aktif
+Cwd,Ciwidey,Daop 2,tidak aktif
+DAR,Daru,Daop 1,aktif
+DD,Duduk,Daop 8,aktif
+DI,Diski,Divre 1,tidak aktif
+DL,Delanggu,Daop 6,aktif
+DM,Demak,Daop 4,tidak aktif
+DMR,Dolok Merangir,Divre 1,aktif
+DP,Depok,Daop 1,aktif
+DPB,Depokbaru,Daop 1,aktif
+DPL,Doplang,Daop 4,aktif
+DPT,DAMPIT,Daop 8,tidak aktif
+DRN,Durenkalibata,Daop 1,aktif
+DSU,Dusun,Divre 1,aktif
+DU,Duri,Daop 1,aktif
+DUK,Duku,Divre 2,aktif
+DWN,Dawuan,Daop 1,aktif
+EB,Embang,Daop 4,tidak aktif
+GB,Gombong,Daop 5,aktif
+GBA,Gebang,Divre 1,aktif
+GBG,Gebang,Daop 8,tidak aktif
+GBN,Gambringan,Daop 4,aktif
+GD,Gundih,Daop 4,aktif
+GDB,Gedebage,Daop 2,aktif
+GDD,Gondangdia,Daop 1,aktif
+GDG,Gedangan,Daop 8,aktif
+GDM,Gandrungmangun,Daop 5,aktif
+GDS,Gandasoli,Daop 2,aktif
+GEB,Gembong,Daop 8,aktif
+GG,Geneng,Daop 7,aktif
+GGA,Gunung Sangkaran,Divre 4,tidak aktif
+GHM,Giham,Divre 4,aktif
+GI,Grati,Daop 9,aktif
+GK,Gadobangkong,Daop 2,aktif
+GKP,GEMPOL KEREP,Daop 8,tidak aktif
+GL,Gelugur,Divre 1,tidak aktif
+GLB,Glumbang,Divre 3,aktif
+GLM,Glenmore,Daop 9,aktif
+GLS,Gilas,Divre 4,aktif
+GM,Gumilir,Daop 5,aktif
+GMR,Gambir,Daop 1,aktif
+GN,Gedangan,Daop 4,tidak aktif
+GNG,Gununggangsir,Daop 8,tidak aktif
+GNM,Gunung Megang,Divre 3,aktif
+GPI,Gunung Putri,Daop 1,aktif
+GPK,Goprak,Daop 6,aktif
+GPR,Gapuro,Daop 8,tidak aktif
+GRG,Grogol,Daop 1,aktif
+GRJ,Grujugan,Daop 9,aktif
+GRM,Garum,Daop 7,aktif
+GRN,Garahan,Daop 9,aktif
+GRT,Garut,Daop 2,aktif
+GS,Gresik,Daop 8,aktif
+GSG,Gunting Saga,Divre 1,tidak aktif
+GST,Gangsentiong,Daop 1,aktif
+GUB,Gubug,Daop 4,aktif
+GW,Gawok,Daop 6,aktif
+HGL,Haurgeulis,Daop 3,aktif
+HJP,Haji Pemanggilan,Divre 4,aktif
+HL,Hengelo,Divre 1,aktif
+HRP,Haurpugur,Daop 2,aktif
+IDA,Indarung,Divre 2,aktif
+Idm,Indramayu,Daop 2,tidak aktif
+IDO,Indro,Daop 8,aktif
+IDR,Indralaya,Divre 3,aktif
+IH,Indihiang,Daop 2,aktif
+IJ,Ijo,Daop 5,aktif
+IMA,Pauhlima,Divre 2,aktif
+JAKG,Jakarta Gudang,Daop 1,aktif
+JAKK,Jakarta Kota,Daop 1,aktif
+JAY,Jayakarta,Daop 1,aktif
+JBE,Jambean,Daop 4,tidak aktif
+JBN,Jambon,Daop 4,aktif
+JBU,Jambubaru,Daop 1,aktif
+JG,Jombang,Daop 7,aktif
+JI,Jati,Daop 9,tidak aktif
+JMS,Jemursari,Daop 8,aktif
+JMU,Jurangmangu,Daop 1,aktif
+JN,Jenar,Daop 6,aktif
+JNG,Jatinegara,Daop 1,aktif
+JOR,Jorongan,Daop 9,tidak aktif
+JR,Jember,Daop 9,aktif
+JRK,Jerakah,Daop 4,aktif
+JRL,Jeruklegi,Daop 5,aktif
+JTB,Jatibarang,Daop 3,aktif
+JTR,Jatiroto,Daop 9,aktif
+JTS,Jetis,Daop 4,tidak aktif
+JU,Juana,Daop 4,tidak aktif
+JUA,Juanda,Daop 1,aktif
+KA,Karanganyar,Daop 5,aktif
+KAB,Kadokangabus,Daop 3,aktif
+KAC,Kiaracondong,Daop 2,aktif
+KAD,Kp. Adiantorop,Divre 1,tidak aktif
+KAG,Kalibalangan,Divre 4,aktif
+KAJ,Kampung Juar,Divre 2,aktif
+KAP,Karang Pilang,Daop 8,tidak aktif
+KAT,Karet,Daop 1,aktif
+KB,Kotabumi,Divre 4,aktif
+KBD,Kalibodri,Daop 4,aktif
+KBR,Kalibaru,Daop 9,aktif
+KBS,Kebasen,Daop 5,aktif
+KBT,Kabat,Daop 9,tidak aktif
+KTB,Kotabaru,Divre 4,tidak aktif
+KBY,Kebayoran,Daop 1,aktif
+KCN,Kacang,Divre 2,aktif
+KD,Kediri,Daop 7,aktif
+KDA,Kandangan,Daop 8,aktif
+KDB,Kedungbanteng,Daop 6,aktif
+KDG,Kedundang,Daop 6,aktif
+KDH,Kedunggedeh,Daop 1,aktif
+KDN,Kedinding,Daop 8,aktif
+KDP,Kandang Ampat,Divre 2,aktif
+KDS,Kalideres,Daop 1,aktif
+Kdt,Kadipaten,Daop 3,tidak aktif
+KE,Karangtengah,Daop 1,aktif
+KED,Karangenda,Divre 3,aktif
+KEH,Kepuh,Daop 6,tidak aktif
+KEJ,Kedungjati,Daop 4,aktif
+KEN,Krenceng,Daop 1,aktif
+KET,Ketandan,Daop 6,tidak aktif
+KG,Kedunggalar,Daop 7,aktif
+KGB,Ketanggungan Barat,Daop 3,tidak aktif
+KGD,Karanggandul,Daop 5,aktif
+KGG,Ketanggungan,Daop 3,aktif
+KGS,Karangkates,Daop 8,tidak aktif
+KGT,Karangjati,Daop 4,aktif
+KH 2,Kasugihan,Daop 5,aktif
+KI,Kuraitaji,Divre 2,aktif
+KIM,Kalisamin,Daop 6,tidak aktif
+KIS,Kisaran,Divre 1,aktif
+KIT,Kalitidu,Daop 8,aktif
+KJ,Kemranjen,Daop 5,aktif
+KK,Klakah,Daop 9,aktif
+KKD,Karangkandri,Daop 5,aktif
+KKE,Karangkering,Daop 8,tidak aktif
+KKL,Krikilan,Daop 9,tidak aktif
+KKR,Kubu Kerambil,Divre 2,aktif
+KL,Kendal,Daop 4,tidak aktif
+KLA,Kebun Lada,Divre 1,tidak aktif
+KLB,Kalibagor,Daop 9,tidak aktif
+KLD,Klender,Daop 1,aktif
+KLDB,Klenderbaru,Daop 1,aktif
+KLG,KALI ANGET,Daop 8,tidak aktif
+KLI,Klari,Daop 1,aktif
+KLM,Kalimas,Daop 8,aktif
+KLN,Kaliwungu,Daop 4,aktif
+KLO,Kaliboto,Daop 9,tidak aktif
+KLPP,Kalilapan,Divre 4,tidak aktif
+KLS,Kalasan,Daop 6,tidak aktif
+KLT,Kalisat,Daop 9,aktif
+KLW,Kaliwedi,Daop 3,tidak aktif
+KM,Kebumen,Daop 5,aktif
+KM3,Kilometer Tiga,Divre 4,tidak aktif
+KME,Kemijen,Daop 4,tidak aktif
+KMG,Kumendung,Daop 8,tidak aktif
+KML,KAMAL,Daop 8,tidak aktif
+KMO,Kemayoran,Daop 1,aktif
+KMP,Kempit,Daop 9,tidak aktif
+KMR,Kemiri,Daop 6,aktif
+KMT,Kramat,Daop 1,aktif
+BWI,Banyuwangi Kota,Daop 9,aktif
+KNI,Kalitangi,Daop 8,tidak aktif
+KNL,Kronelan,Daop 6,tidak aktif
+KNM,Kualanamu,Divre 1,aktif
+KNN,Kradenan,Daop 4,aktif
+KNP,Karangpucung,Daop 2,aktif
+KNS,Krengseng,Daop 4,aktif
+KO,Kalioso,Daop 6,aktif
+KOA,Kebon Pisang,Divre 1,tidak aktif
+KOP,Kota Padang,Divre 3,aktif
+KOS,Kosambi,Daop 1,aktif
+KPA,Kapuan,Daop 4,aktif
+KPB,Kampungbandan,Daop 1,aktif
+KPBS,Kampung Besar,Divre 1,tidak aktif
+KPG,Kp Pantai Gemi,Divre 1,tidak aktif
+KPM,Kuala Pesilam,Divre 1,tidak aktif
+KPN,Kepanjen,Daop 8,aktif
+KPS,Kapas,Daop 8,aktif
+KPT,Kertapati,Divre 3,aktif
+KRA,Karangantu,Daop 1,aktif
+KRAI,Karangsari,Daop 2,aktif
+KRI,Kranji,Daop 1,aktif
+KRL,Karangtalun,Daop 5,aktif
+KRN,Krian,Daop 8,aktif
+KRO,Kebonromo,Daop 6,aktif
+KRP,Kuripan,Daop 4,aktif
+KRR,Karangsari,Daop 5,aktif
+KRS,Kras,Daop 7,aktif
+KRT,Kretek,Daop 5,aktif
+KRU,Kruwul,Daop 8,tidak aktif
+KRW,Karangsuwung,Daop 3,tidak aktif
+KS,Kudus,Daop 4,tidak aktif
+KSB,Kesamben,Daop 8,aktif
+KSL,Kalisetail,Daop 9,aktif
+KSO,Karangsono,Daop 4,aktif
+KSY,Kebonsayur,Divre 1,tidak aktif
+KT,Klaten,Daop 6,aktif
+KTA,Kutoarjo,Daop 5,aktif
+KTK,Kotok,Daop 9,aktif
+KTL,Kertomenanggal,Daop 8,aktif
+KTM,Kertasemaya,Daop 3,aktif
+KTN,Kayutanam,Divre 2,aktif
+KTP,Ketapang,Divre 4,aktif
+KTS,Kertosono,Daop 7,aktif
+KUG,Kuala Begumit,Divre 1,tidak aktif
+KBG,Kuala Bingei,Divre 1,aktif
+KW,Karawang,Daop 1,aktif
+KWG,Kawunganten,Daop 5,aktif
+KWN,Kutowinangun,Daop 5,aktif
+KYA,Kroya,Daop 5,aktif
+LA,Lubuk Alung,Divre 2,aktif
+LAR,Labuan Ratu,Divre 4,aktif
+LBB,Lubuk Blimbing,Divre 3,tidak aktif
+LBG,Lebeng,Daop 5,aktif
+LBJ,Lebakjero,Daop 2,aktif
+LBP,Lubuk Pakam,Divre 1,aktif
+LBR,Lb Binginbaru,Divre 3,tidak aktif
+LBT,Lubuk Batang,Divre 4,aktif
+LBU,Labuan,Divre 1,aktif
+LDO,Ledokombo,Daop 9,aktif
+LDT,Lidah Tanah,Divre 1,aktif
+LEB,Lembak,Divre 3,aktif
+LEC,Leces,Daop 9,aktif
+LG,Linggapura,Daop 5,aktif
+LGK,Legok,Daop 5,tidak aktif
+LL,Leles,Daop 2,aktif
+LLG,Lubuk Linggau,Divre 3,aktif
+LM,LUMAJANG,Daop 9,tidak aktif
+LMB,Lemahabang,Daop 1,aktif
+LMG,Lamongan,Daop 8,aktif
+LMP,Lima Puluh,Divre 1,aktif
+LN,Langen,Daop 5,aktif
+LNA,Lentengagung,Daop 1,aktif
+LO,Leuwigoong,Daop 2,aktif
+LOS,Losari,Daop 3,aktif
+LP,Lampegan,Daop 2,aktif
+LPN,Lempuyangan,Daop 6,aktif
+LR,Larangan,Daop 4,aktif
+LRA,Larangan,Daop 3,aktif
+LRM,Lubuk Rukam,Divre 4,aktif
+LT,Lahat,Divre 3,aktif
+LTD,Laut Tador,Divre 1,aktif
+LW,Lawang,Daop 8,aktif
+LWG,Luwung,Daop 3,aktif
+MA,Maos,Daop 5,aktif
+MBM,Membang Muda,Divre 1,aktif
+MBU,Marbau,Divre 1,aktif
+MDN,Medan,Divre 1,aktif
+MDNP,Medan Pasar,Divre 1,tidak aktif
+ME,Muara Enim,Divre 3,aktif
+MER,Merak,Daop 1,aktif
+MET,Metur,Divre 4,aktif
+MG,MAGELANG,Daop 6,tidak aktif
+MGB,Manggabesar,Daop 1,aktif
+MGN,Minggiran,Daop 7,aktif
+MGR,Margorejo,Daop 8,aktif
+MGS,Margasari,Daop 5,aktif
+MGT,Monggot,Daop 6,tidak aktif
+MGW,Maguwo,Daop 6,aktif
+MI,Mangli,Daop 9,aktif
+MJ,Maja,Daop 1,aktif
+MJS,MOJOSARI,Daop 8,tidak aktif
+MKG,Mangkang,Daop 4,aktif
+MKL,Muaro Kalaban,Divre 2,aktif
+MKR,MERAKURAK,Daop 8,tidak aktif
+ML,Malang,Daop 8,aktif
+MLB,Maleber,Daop 2,aktif
+MLJ,MALANG JAGALAN,Daop 8,tidak aktif
+MLK,Malangkotalama,Daop 8,aktif
+MLS,Malasan,Daop 9,aktif
+MLW,Meluwung,Daop 5,aktif
+MN,Madiun,Daop 7,aktif
+MNI,Mendaris,Divre 1,tidak aktif
+MNJ,Manonjaya,Daop 2,aktif
+MP,Martapura,Divre 4,aktif
+MPG,Mampang,Daop 1,tidak aktif
+MPY,Muara Empayang,Divre 3,tidak aktif
+MR,Mojokerto,Daop 8,aktif
+MRI,Manggarai,Daop 1,aktif
+MRL,Muara Gula,Divre 3,aktif
+MRW,Mrawan,Daop 9,aktif
+MSG,Maseng,Daop 1,aktif
+MSH,Masihi,Divre 1,tidak aktif
+MSI,Maswati,Daop 2,aktif
+MSL,Muara Saling,Divre 3,aktif
+MSR,Masaran,Daop 6,aktif
+MST,Mesigit,Daop 8,aktif
+MTL,Montelan,Daop 6,tidak aktif
+NB,Ngebruk,Daop 8,aktif
+NBO,Ngrombo,Daop 4,aktif
+NDL,Ngadiluwih,Daop 7,aktif
+NG,Nagreg,Daop 2,aktif
+NGA,Ngagel,Daop 8,aktif
+NGK,Naga Kesiangan,Divre 1,tidak aktif
+NGN,Negeri Agung,Divre 4,aktif
+NJ,Nganjuk,Daop 7,aktif
+NJG,Ngujang,Daop 7,aktif
+NMO,Nambo,Daop 1,aktif
+NPK,Ngemplak,Daop 4,tidak aktif
+NRR,Negara Ratu,Divre 4,aktif
+NRS,Naras,Divre 2,aktif
+NRU,Niru,Divre 3,aktif
+NT,Ngunut,Daop 7,aktif
+NTG,Notog,Daop 5,aktif
+NGW,Ngawi,Daop 7,aktif
+PAB,Pabuaran,Daop 3,aktif
+PAD,Pandanan,Daop 8,tidak aktif
+PAG,Plampangan,Daop 8,tidak aktif
+PAK,Pauh Kambar,Divre 2,aktif
+PAS,Pasirbungur,Daop 3,aktif
+PAT,Patuguran,Daop 5,aktif
+PB,Probolinggo,Daop 9,aktif
+PBA,Perbaungan,Divre 1,aktif
+PBD,Pangkalan Brandan,Divre 1,aktif
+PBL,PURBALINGGA,Daop 5,tidak aktif
+PBM,Prabumulih,Divre 3,aktif
+PBR,Prabumulih Baru,Divre 3,aktif
+PBRX5,Prabumulih Baru X5,Divre 3,aktif
+PBRX6,Prabumulih Baru X6,Divre 3,aktif
+PC,Pucuk,Daop 8,aktif
+PD,Padang,Divre 2,aktif
+PDJ,Pondokranji,Daop 1,aktif
+PDL,Padalarang,Daop 2,aktif
+PDR,Paduraksa,Divre 3,tidak aktif
+PDRG,Pondokrajeg,Daop 1,aktif
+PDS,Padas,Daop 4,aktif
+PE,PARE,Daop 7,tidak aktif
+PEB,Partembalan,Divre 1,tidak aktif
+PEM,P.Mandala,Divre 1,tidak aktif
+PET,Petung,Daop 9,tidak aktif
+PGB,Pegadenbaru,Daop 3,aktif
+Pgd,Pangandaran,Daop 2,tidak aktif
+PGG,Pagergunung,Divre 4,aktif
+PGJ,Pogajih,Daop 8,aktif
+Pgs,Pegangsaan,Daop 1,tidak aktif
+PHA,Padang Halaban,Divre 1,aktif
+PI,Poris,Daop 1,aktif
+PID,Pidada,Divre 4,tidak aktif
+PJI,PANJI,Daop 9,tidak aktif
+PJN,Panjang,Divre 4,tidak aktif
+PK,Pekalongan,Daop 4,aktif
+PKW,Pasarkliwon,Daop 5,tidak aktif
+PL,Palur,Daop 6,aktif
+PLB,Plabuan,Daop 4,aktif
+PLD,Plered,Daop 2,aktif
+PLM,Palmerah,Daop 1,aktif
+PLP,PALBAPANG,Daop 6,tidak aktif
+PME,Pamienke,Divre 1,aktif
+PML,Pemalang,Daop 4,aktif
+PMN,Pariaman,Divre 2,aktif
+PNG,Penanggiran,Divre 3,aktif
+PNL,Panunggalan,Daop 4,aktif
+PNM,Penimur,Divre 3,aktif
+PNR,Panarukan,Daop 9,aktif
+PNT,Pasarnguter,Daop 6,aktif
+PNW,Peninjawan,Divre 4,aktif
+PO,PONOROGO,Daop 7,tidak aktif
+POC,Pondokcina,Daop 1,aktif
+POE,Pasar Sore,Divre 1,tidak aktif
+POK,Pondokjati,Daop 1,aktif
+PON,Pondok Leungsir,Daop 1,aktif
+POSIDR,Pos Indralaya,Divre 3,aktif
+PP,Padangpanjang,Divre 2,aktif
+PPK,Prupuk,Daop 5,aktif
+PPR,Papar,Daop 7,aktif
+PR,Porong,Daop 8,aktif
+PRA,Perlanaan,Divre 1,aktif
+PRB,Prembun,Daop 5,aktif
+PRI,Pringkasap,Daop 3,aktif
+PRJ,Prajekan,Daop 9,aktif
+PRK,Parungkuda,Daop 1,aktif
+PRN,PARAKAN,Daop 9,tidak aktif
+PRP,Parungpanjang,Daop 1,aktif
+PRU,Pasar Usang,Divre 2,aktif
+PS,Pasuruan,Daop 9,aktif
+PSE,Pasarsenen,Daop 1,aktif
+PSG,Pesing,Daop 1,aktif
+PSI,Pakisaji,Daop 8,aktif
+PSM,Pasarminggu,Daop 1,aktif
+PSMB,Pasarminggubaru,Daop 1,aktif
+PSR,PASIRIAN,Daop 9,tidak aktif
+PTA,Petarukan,Daop 4,aktif
+PTN,Patukan,Daop 6,aktif
+PTR,Peterongan,Daop 7,aktif
+PUA,Pungai,Divre 1,tidak aktif
+PUB,Pulu Brayan,Divre 1,aktif
+PUR,Puluraja,Divre 1,aktif
+PW,Purwodadi,Daop 4,tidak aktif
+PWA,Purwoasri,Daop 7,aktif
+PWJ,Pagerwojo,Daop 8,aktif
+PWK,Purwakarta,Daop 2,aktif
+PWR,Purworejo,Daop 5,aktif
+PWS,Purwosari,Daop 6,aktif
+PWT,Purwokerto,Daop 5,aktif
+PYK,Payakabung,Divre 3,aktif
+PYP,Payapinang,Divre 1,tidak aktif
+RAP,Rantau Prapat,Divre 1,aktif
+RB,Rembang,Daop 4,tidak aktif
+RBG,Randublatung,Daop 4,aktif
+RBP,Rambipuji,Daop 9,aktif
+RCK,Rancaekek,Daop 2,aktif
+RCL,Rancakole,Daop 5,tidak aktif
+RDA,Randuagung,Daop 9,aktif
+RDN,Randegan,Daop 5,aktif
+Rds,Rengasdengklok,Daop 1,tidak aktif
+RGP,Rogojampi,Daop 9,aktif
+RGS,Rengas,Divre 4,aktif
+RH,Rendeh,Daop 2,aktif
+RI,Ranji,Daop 2,aktif
+RJ,Rejotangan,Daop 7,aktif
+RJP,Rajapolah,Daop 2,aktif
+RJS,Rejosari,Divre 4,aktif
+RJW,Rajawali,Daop 1,aktif
+RK,Rangkasbitung,Daop 1,aktif
+RL,Rantawlaban,Divre 1,tidak aktif
+RM,Rajamandala,Daop 2,aktif
+RMH,Rumah,Daop 8,tidak aktif
+RMT,Rambutan,Divre 1,tidak aktif
+RN,Ranuyoso,Daop 9,aktif
+RO,Rejoso,Daop 9,aktif
+RPH,Rampah,Divre 1,aktif
+RU,Rawabuntu,Daop 1,aktif
+RW,Rawabuaya,Daop 1,aktif
+RWB,Rawabebek,Daop 1,tidak aktif
+RWL,Rewulu,Daop 6,aktif
+SAD,Sadang,Daop 2,aktif
+SB,Surabayakota,Daop 8,aktif
+SBB,Sumber Baru,Daop 9,tidak aktif
+SBI,Surabaya Pasarturi,Daop 8,aktif
+SBJ,Seibejangkar,Divre 1,aktif
+SBL,Sumbergempol,Daop 7,aktif
+SBN.,Serbangan,Divre 1,tidak aktif
+SBO,Sumobito,Daop 7,aktif
+SBP,Sumberpucung,Daop 8,aktif
+SBS,Sumbersalak,Daop 9,tidak aktif
+SBT,Stabat,Divre 1,aktif
+SC,Secang,Daop 4,tidak aktif
+SCN,Sicincin,Divre 2,aktif
+SCT,Sukacinta,Divre 3,aktif
+SD,Surodadi,Daop 4,aktif
+SDA,Sidoarjo,Daop 8,aktif
+SDI,Sedadi,Daop 4,aktif
+SDM,Sudimara,Daop 1,aktif
+SDN,Serdang,Divre 3,aktif
+SDR,Sidareja,Daop 5,aktif
+SDT,Sidotopo,Daop 8,aktif
+SDU,Sindanglaut,Daop 3,aktif
+SED,Serdang,Divre 1,tidak aktif
+SEL,Sungai Laru,Divre 3,tidak aktif
+SG,Serang,Daop 1,aktif
+SGG,Songgom,Daop 3,aktif
+SGJ,Singojuruh,Daop 9,aktif
+SGR,Songgorunggi,Daop 6,tidak aktif
+SGS,Singosari,Daop 8,aktif
+SGU,Surabayagubeng,Daop 8,aktif
+SI,Sukabumi,Daop 1,aktif
+SIA,Sei Alim,Divre 1,tidak aktif
+SIG,Simpang,Divre 3,aktif
+SIL,Sitinggil,Daop 5,tidak aktif
+SIR,Siantar,Divre 1,aktif
+SIT,Situbondo,Daop 9,aktif
+SIU,Situngir,Divre 1,aktif
+SJB,Sijabut,Divre 1,tidak aktif
+SK,Solojebres,Daop 6,aktif
+SKA,Singkarak,Divre 2,aktif
+SKH,Sukoharjo,Daop 6,aktif
+SKJ,Sukorejo,Daop 8,aktif
+SKM,Sukomoro,Daop 7,aktif
+SKN,Sukamenanti,Divre 4,aktif
+SKP,Sikampuh,Daop 5,aktif
+SKT,Sasaksaat,Daop 2,aktif
+SKU,Sukamerindu,Divre 4,aktif
+SKW,Sukowono,Daop 9,aktif
+SL,Sulur,Daop 4,aktif
+Slb,Salemba,Daop 1,tidak aktif
+SLH,SLAHUNG,Daop 7,tidak aktif
+SLJ,Selajambe,Daop 2,aktif
+SLK,Solok,Divre 2,aktif
+SLM,Salem,Daop 6,aktif
+SLO,Solobalapan,Daop 6,aktif
+SBN,Surabayan,Daop 8,aktif
+SLS,Sulusuban,Divre 4,aktif
+SLW,Slawi,Daop 5,aktif
+SMB,Sembung,Daop 7,aktif
+SMC,Semarang Poncol,Daop 4,aktif
+SMG,Semarang Gudang,Daop 4,tidak aktif
+SMT,Semarang Tawang,Daop 4,aktif
+SN,Sengon,Daop 8,aktif
+SNA,Saung Naga,Divre 3,aktif
+SNI,Sungailasi,Divre 2,aktif
+SNK,Sinaksak,Divre 1,tidak aktif
+SOA,Soka,Daop 5,tidak aktif
+SPC,Sepancar,Divre 4,aktif
+SPH,Sumpiuh,Daop 5,aktif
+SPJ,Sepanjang,Daop 8,aktif
+SPL,Sempolan,Daop 9,aktif
+SR,Sragen,Daop 6,aktif
+SRD,Saradan,Daop 7,aktif
+SRI,Sragi,Daop 4,aktif
+SRJ,Sumberrejo,Daop 8,aktif
+SRM,Sukarame,Divre 3,tidak aktif
+SRP,Serpong,Daop 1,aktif
+SRW,Sruweng,Daop 5,aktif
+SS,Susuhan,Daop 7,aktif
+SSI,Sindangresmi,Daop 2,aktif
+SSPBALAS,Ssp Balas,Daop 2,tidak aktif
+SSPBANDAROLIE,Ssp Bandarolie,Divre 1,tidak aktif
+SSPBGDASAAD,Ssp Bg Dasaad,Divre 4,tidak aktif
+SSPBJW,Ssp Bjw,Daop 2,tidak aktif
+SSPBPM,Ssp B.P.M,Daop 9,tidak aktif
+SSPCIPTARIMBARAYA,Ssp Cipta Rimba Raya,Divre 1,tidak aktif
+SSPDD,Ssp Dd,Divre 4,tidak aktif
+SSPGKETARAN,Ssp G Ketaran,Divre 1,tidak aktif
+SSPGROMPOL,Ssp Grompol,Daop 6,tidak aktif
+SSPKARANGKATES,Ssp Karangkates,Daop 8,tidak aktif
+SSPLIMAUMANIS,Ssp Limau Manis,Divre 1,tidak aktif
+SSPLOBA,Ssp Loba,Divre 4,tidak aktif
+SSPMARTABA,Ssp Martaba,Divre 1,tidak aktif
+SSPMILANO,Ssp Milano,Divre 1,tidak aktif
+SSPPALA,Ssp Pala,Divre 1,tidak aktif
+SSPPB,Ssp Pb,Divre 3,tidak aktif
+SSPPENBALAS,Ssp Pen Balas,Daop 5,tidak aktif
+SSPPERTAMINAKPT,Ssp Pertamina Kertapati,Divre 3,tidak aktif
+SSPPERTAMINALBT,Ssp Pertamina Lubuk Batang,Divre 4,tidak aktif
+SSPPERTAMINALBU,Ssp Pertamina Labuan,Divre 1,tidak aktif
+SSPPERTAMINASAD,Ssp Pertamina Sadang,Daop 2,tidak aktif
+SSPPGNADIREJO,Ssp Pg Nadirejo,Daop 7,tidak aktif
+SSPPGPAGONGAN,Ssp Pg Pagongan,Daop 5,tidak aktif
+SSPPTANDALAS,Ssp Pt Andalas,Divre 4,tidak aktif
+SSPPTKRAMBI,Ssp Pt Krambi,Divre 4,tidak aktif
+SSPPTLECESPGCANDI,Ssp Pt Leces/Pg Candi,Daop 8,tidak aktif
+SSPPTLECESPGKEDAWUNG,Ssp PT Leces (PG Kedawung),Daop 9,tidak aktif
+SSPPTPUSRI,Ssp Pt Pusri,Daop 8,tidak aktif
+SSPPTTEL,Ssp Pt Tel,Divre 3,tidak aktif
+SSPPUSRIKALIGUNTING,Ssp Pusri Kaligunting,Daop 7,tidak aktif
+SSPPUTRINAGASAKTI,Ssp Putri Naga Sakti,Divre 1,tidak aktif
+SSPRMT,Ssp Rambutan,Divre 1,tidak aktif
+SSPSECERAL,Ssp Seceral,Divre 1,tidak aktif
+SSPSERAPAH,Ssp Serapah,Divre 1,tidak aktif
+SSPSTTC,Ssp Sttc,Divre 1,tidak aktif
+SSPSUMBERHARJO,Ssp Sumberharjo,Daop 4,tidak aktif
+SSPTELUKNIBUNG,Ssp Teluknibung,Divre 1,tidak aktif
+SSPTEXTIL,Ssp Textil,Divre 1,tidak aktif
+SSR,Sukasari,Daop 9,tidak aktif
+STA,Solokota,Daop 6,aktif
+STG,Sentang,Divre 1,tidak aktif
+STL,Sentolo,Daop 6,aktif
+STM,Segitigamesigit,Daop 8,aktif
+STP,Sawotratap,Daop 8,aktif
+SUA,Sukaraja,Divre 3,aktif
+SUD,Sudirman,Daop 1,aktif
+SUM,Sumberlawang,Daop 6,aktif
+SUN,Sunggal,Divre 1,tidak aktif
+SUP,Sungai Empayang,Divre 3,tidak aktif
+SUT,Sukatani,Daop 2,aktif
+SW,Sawahbesar,Daop 1,aktif
+SWD,Sumberwadung,Daop 9,aktif
+SWL,Sawahlunto,Divre 2,aktif
+SWT,Srowot,Daop 6,aktif
+SYO,Sroyo,Daop 8,tidak aktif
+TA,Tulungagung,Daop 7,aktif
+TAB,Tabing,Divre 2,aktif
+TAL,Talun,Daop 7,aktif
+TAP,Tapen,Daop 9,tidak aktif
+TAS,Tanjung Selamat,Divre 1,aktif
+TAU,Tagogapu,Daop 2,aktif
+TAY,Tayu,Daop 4,tidak aktif
+TB,Tambun,Daop 1,aktif
+TBG,Tribungan,Daop 9,tidak aktif
+TBI,Tebing Tinggi,Divre 1,aktif
+TBK,Tambak,Daop 5,aktif
+TBKN,Tabakebon,Divre 3,tidak aktif
+TBO,Tobo,Daop 8,aktif
+TBP,Tabapingin,Divre 3,tidak aktif
+TEB,Tebet,Daop 1,aktif
+TEJ,Tenjo,Daop 1,aktif
+TER,Tekaran,Daop 6,tidak aktif
+TES,Tandes,Daop 8,aktif
+TG,Tegal,Daop 4,aktif
+TGA,Tanggulangin,Daop 8,aktif
+TGG,Tanggung,Daop 4,aktif
+TGI,Tegineneng,Divre 4,aktif
+TGL,Tanggul,Daop 9,aktif
+TGN,Tanjung,Daop 3,aktif
+TGR,Temuguruh,Daop 9,aktif
+TGS,Tigaraksa,Daop 1,aktif
+TGW,Tegowanu,Daop 4,aktif
+THB,Tanahabang,Daop 1,aktif
+THN,Tarahan,Divre 4,aktif
+TI,Tebingtinggi,Divre 3,aktif
+TIL,Tangsil,Daop 9,tidak aktif
+TIS,Terisi,Daop 3,aktif
+TJH,Tigagajah,Divre 4,aktif
+TJO,Tanjungrajo,Divre 4,aktif
+TJR,Tanjungrambang,Divre 4,aktif
+TJS,Tanjungrasa,Daop 3,aktif
+TJU,Tanjung Putus,Divre 1,tidak aktif
+TKE,Teluk Mengkudu,Divre 1,aktif
+TKO,Taman Kota,Daop 1,aktif
+TKS,Tanjung Kasau,Divre 1,tidak aktif
+TLA,TELANG,Daop 8,tidak aktif
+TLP,Talang Padang,Divre 3,tidak aktif
+TLS,Telagasari,Daop 3,aktif
+TLY,Tulung Buyut,Divre 4,aktif
+TMB,Tanjungenim Baru,Divre 3,aktif
+TMN,Tamanan,Daop 9,aktif
+TN,TUBAN,Daop 8,tidak aktif
+TNB,Tanjung Balai,Divre 1,aktif
+TNG,Tangerang,Daop 1,aktif
+TNK,Tanjungkarang,Divre 4,aktif
+TNN,Tanjung Gening,Divre 3,tidak aktif
+TNT,Tanjungbarat,Daop 1,aktif
+TOA,Tambak Gapuk,Divre 1,tidak aktif
+TOJB,Tonjongbaru,Daop 1,aktif
+TPH,T. Purahalte,Divre 1,tidak aktif
+TPK,Tanjungpriuk,Daop 1,aktif
+TPKG,Tj.Priukgudang,Daop 1,aktif
+TPP,Titi Papan,Divre 1,aktif
+TPR,Tipar,Daop 2,aktif
+TPS,Titipasan,Divre 4,tidak aktif
+TPU,Tanjung Pura,Divre 1,aktif
+TRH,Toroh,Daop 4,tidak aktif
+TRK,Tarik,Daop 8,aktif
+TSM,Tasikmalaya,Daop 2,aktif
+THI,Tanah Tinggi,Daop 1,aktif
+TTR,Tanjung Terang,Divre 3,tidak aktif
+TUK,Teluk Dalam,Divre 1,aktif
+TW,Telawa,Daop 4,aktif
+UB,Ujung Baru,Divre 1,aktif
+UI,Univ. Indonesia,Daop 1,aktif
+UJ,UJANG,Daop 8,tidak aktif
+UJM,Ujan Mas,Divre 3,aktif
+UJN,Ujungnegoro,Daop 4,aktif
+UP,Univ. Pancasila,Daop 1,aktif
+WAP,Way Pisang,Divre 4,aktif
+WAY,Waytuba,Divre 4,aktif
+WB,Warungbandrek,Daop 2,aktif
+WDO,WARUNGDOWO,Daop 9,tidak aktif
+WDR,Widuri,Daop 9,tidak aktif
+WDS,Wadas,Daop 1,tidak aktif
+WDU,Wadu,Daop 4,aktif
+WDW,Waruduwur,Daop 3,aktif
+WG,Wlingi,Daop 8,aktif
+WJ,Wojo,Daop 6,aktif
+WK,Walikukun,Daop 7,aktif
+WLG,Wilangan,Daop 7,tidak aktif
+WLR,Weleri,Daop 4,aktif
+WLT,Walantaka,Daop 1,aktif
+WN,Wonokerto,Daop 8,aktif
+WNG,Wonogiri,Daop 6,aktif
+WNS,Wonosari,Daop 5,aktif
+WO,Wonokromo,Daop 8,aktif
+WON,WINONGAN,Daop 9,tidak aktif
+WR,Waru,Daop 8,aktif
+WRO,WONOREJO,Daop 9,tidak aktif
+WRS,Wirosari,Daop 4,tidak aktif
+WS,WONOSOBO,Daop 5,tidak aktif
+WT,Wates,Daop 6,aktif
+YK,Yogyakarta,Daop 6,aktif
+SKO,Sukoanyar,Daop 8,tidak aktif
+GR,Garuntang,Divre 4,aktif
+TLN,Tulangan,Daop 8,aktif
+GDR,Gedung Ratu,Divre 4,aktif
+BTI,Branti,Divre 4,aktif
+SGT,Sungai Tuha,Divre 4,aktif
+ART,Air Tuba,Divre 4,tidak aktif
+KMK,Kemelak,Divre 4,aktif
+KPY,Kepayang,Divre 4,aktif
+DAN,Durian,Divre 4,aktif
+TLB,Talang Baru,Divre 4,aktif
+KBU,Kotabaru,Divre 4,aktif
+KRM,Kruengmane,Divre 1,aktif
+BKH,Bungkaih,Divre 1,aktif
+KRG,Kruenggeukueh,Divre 1,aktif
+KH,Kasugihan,Daop 5,aktif
+RJW2,Rajawali,Daop 1,aktif
+AI,Alai,Divre 2,aktif
+AT,Air Tawar,Divre 2,aktif
+LBY,Lubuk Buaya,Divre 2,aktif
+BST,Bandara Soekarno Hatta,Daop 1,aktif
+BIM,Bandara Internasional Minangkabau,Divre 2,aktif
+SUDB,Sudirmanbaru,Daop 1,aktif
+ALU,Aerlimau,Divre 3,tidak aktif
+TBU,Tebat Agung,Divre 3,tidak aktif
+BKST,Bekasitimur,Daop 1,aktif
+LRT1,Bandara,Divre 3,aktif
+LRT2,Asrama Haji,Divre 3,aktif
+LRT3,Telkom,Divre 3,aktif
+LRT4,RSUD,Divre 3,aktif
+LRT5,POLDA,Divre 3,aktif
+LRT6,Demang Lebar Daun,Divre 3,aktif
+LRT7,Palembang Icon,Divre 3,aktif
+LRT8,Dishub Kominfo,Divre 3,aktif
+LRT9,Pasar Cinde,Divre 3,aktif
+LRT10,Jembatan Ampera,Divre 3,aktif
+LRT11,Gubernur Bestari,Divre 3,aktif
+LRT12,Jakabaring,Divre 3,aktif
+LRT13,OPI,Divre 3,aktif
+KAS,Kramasan,Divre 3,aktif
+KDO,Kadipiro,Daop 6,aktif
+SMO,Adi Soemarmo,Daop 6,aktif
+KUL,Kuala,Divre 1,tidak aktif
+BRO,Baturetno,Daop 6,tidak aktif
+TBY,Teluk Bayur,Divre 2,tidak aktif
+POO,Pasoso,Daop 1,aktif
+JICT,Jakarta International Container Terminal,Daop 1,aktif
+TLM,Telaga Murni,Daop 1,aktif
+CBI,Cambai,Divre 3,tidak aktif
+PTG,Patih Galung,Divre 3,tidak aktif
+MLI,Muaralawai,Divre 3,aktif
+TGD,Tanjung Gading,Divre 1,aktif
+LAG,Lalang,Divre 1,aktif
+KTJ,Kuala Tanjung,Divre 1,aktif
+PSJ,Pasirjengkol,Daop 2,aktif
+WNR,Wanaraja,Daop 2,aktif
+BW,Banyuwangi Baru,Daop 9,tidak aktif
+KNE,Karangasem,Daop 9,tidak aktif
+BAT,Barat,Daop 7,tidak aktif
+PA,Paron,Daop 7,tidak aktif
+TDM,Tarandam,Divre 2,aktif
+PLA,Pulau Air,Divre 2,aktif
+TEG,Tegaluar,Daop 2,aktif
+MRP,Merapi,Divre 3,aktif
+YIA,Yogyakarta International Airport,Daop 6,aktif
+MTR,Matraman,Daop 1,aktif
+KBL,Kutablang,Divre 1,aktif
+GRK,Geurogok,Divre 1,aktif
+BOP,Bogor Paledang,Daop 1,aktif
+MKS,Makassar,Daop 8,aktif
+PRO,Paranglo,Daop 8,aktif
+MDI,Mandai,Daop 8,aktif
+MRS,Maros,Daop 8,aktif
+RMG,Ramang-Ramang,Daop 8,aktif
+PKJ,Pangkajene,Daop 8,aktif
+LBK,Labakkang,Daop 8,aktif
+MRG,Marang,Daop 8,aktif
+MDL,Mandalle,Daop 8,aktif
+TNR,Tanete Rilau,Daop 8,aktif
+BRU,Barru,Daop 8,aktif
+TSI,Takalasi,Daop 8,aktif
+MSO,Mangkoso,Daop 8,aktif
+PNO,Palanro,Daop 8,aktif
+LUM,Lumpue,Daop 8,aktif
+PAR,Parepare,Daop 8,aktif
+GAR,Garongkong,Daop 8,aktif
+GNB,GNB,Divre 1,tidak aktif
+TTG,TTG,Daop 4,tidak aktif
+BNO,BNO,Daop 6,tidak aktif
+JMB,JMB,Daop 6,tidak aktif
+CPH,Cimparuh,Divre 2,aktif
+JTM,Jatimulya,Daop 1,aktif
+BEK,Bekasi Barat,Daop 1,aktif
+CK1,Cikunir1,Daop 1,aktif
+CK2,Cikunir2,Daop 1,aktif
+JTU,Jatibening Baru,Daop 1,aktif
+HAL,Halim,Daop 1,aktif
+CWG,Cawang,Daop 1,aktif
+CIL,Ciliwung,Daop 1,aktif
+CKK,Cikoko,Daop 1,aktif
+PAN,Pancoran,Daop 1,aktif
+KUA,Kuningan,Daop 1,aktif
+RAS,Rasuna Said,Daop 1,aktif
+SET,Setiabudi,Daop 1,aktif
+DKA,Dukuh Atas,Daop 1,aktif
+HAR,Harjamukti,Daop 1,aktif
+CRC,Ciracas,Daop 1,aktif
+KAM,Kampung Rambutan,Daop 1,aktif
+TMII,Taman Mini,Daop 1,aktif
+JTK,Jatake,Daop 1,tidak aktif
+TGU,Tigaraksa Baru,Daop 1,tidak aktif
+RAPB,Rantauprapat Baru,Divre 1,aktif
+DNB,Danau Bale,Divre 1,aktif
+AKN,Aek Nabara,Divre 1,aktif
+PS5,Pondok S5,Divre 1,aktif
+MUS,Muara Satu,Divre 1,aktif
