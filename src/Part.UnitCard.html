@@ -52,12 +52,52 @@
     </template>
     <template x-if="u">
       <div class="card mt">
-        <div class="card-h"><div><h3>Riwayat unit</h3><p>Gangguan (Gangguan_Induk) · perawatan (RHI) · dinasan (proksi Buku Dukungan Sarana GAPEKA 2025)</p></div><div class="spacer"></div>
-          <div class="seg sm" role="group" aria-label="Riwayat"><button :aria-pressed="ht === 'g'" @click="ht = 'g'" x-text="'Gangguan (' + u.nAll + ')'"></button><button :aria-pressed="ht === 'p'" @click="ht = 'p'">Perawatan</button><button :aria-pressed="ht === 'd'" @click="ht = 'd'">Dinasan</button><button :aria-pressed="ht === 'r'" @click="ht = 'r'" x-show="u.rhi">Tren RHI</button></div></div>
+        <div class="card-h"><div><h3>Riwayat unit</h3><p>Dinasan yang tercatat · skor RHI per bulan · KA depo · perawatan</p></div><div class="spacer"></div>
+          <div class="seg sm" role="group" aria-label="Riwayat unit">
+            <button :aria-pressed="ht === 'd'" @click="ht = 'd'" x-text="'Dinasan & gangguan (' + u.nAll + ')'"></button>
+            <button :aria-pressed="ht === 's'" @click="ht = 's'" x-show="skorRows.length">Skor per periode</button>
+            <button :aria-pressed="ht === 'k'" @click="ht = 'k'">KA depo</button>
+            <button :aria-pressed="ht === 'p'" @click="ht = 'p'">Perawatan</button></div></div>
         <div class="card-b">
-          <div x-show="ht === 'g'" class="tbl-wrap"><table class="tbl"><thead><tr><th>Tanggal</th><th>Gangguan</th><th>Wilayah</th><th>Lokasi</th><th>KA</th><th class="num">Menit</th></tr></thead><tbody>
-            <template x-for="r in u.events.slice(0, 60)" :key="r.id"><tr class="click" @click="$store.app.openEvent(r.id)"><td x-text="KAI.fmt.date(r)"></td><td x-text="String(r.sub || r.judul).replace(/^[^-]+-\s*/, '')"></td><td x-text="r.wilayah"></td><td x-text="r.lokasi || KAI.NIL"></td><td x-text="r.ka ? r.ka + (r.kaNama ? ' ' + r.kaNama : '') : KAI.NIL"></td><td class="num"><b x-text="KAI.fmt.n(r.menit)"></b></td></tr></template>
-          </tbody></table><div class="empty" x-show="!u.events.length">Belum ada gangguan tercatat untuk unit ini — rekam jejak bersih.</div></div>
+          <!-- Riwayat dinasan terpadu: satu baris per hari unit tercatat berdinas (kejadian), digabung KA, km, program, RHI hari itu, gangguan -->
+          <div x-show="ht === 'd'">
+            <p class="caption" x-show="dinasStat.n" x-text="dinasStat.n + ' hari tercatat berdinas pada kejadian · ' + dinasStat.ka + ' dengan nomor KA · ' + KAI.fmt.n(Math.round(dinasStat.km)) + ' km perjalanan KA · ' + KAI.fmt.n(dinasStat.menit) + ' menit kelambatan' + (dinasStat.batal ? ' · ' + dinasStat.batal + ' pada hari KA berstatus batal' : '')"></p>
+            <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Tanggal</th><th>No KA</th><th>Nama KA</th><th>Kelas</th><th>Relasi</th><th class="num">Km KA</th><th>Program</th><th class="num">RHI</th><th>Kategori</th><th>Gangguan</th><th class="num">Menit</th></tr></thead><tbody>
+              <template x-for="r in dinasRows.slice(0, 120)" :key="r.id"><tr class="click" @click="$store.app.openEvent(r.id)">
+                <td class="nowrap" x-text="r.tgl"></td>
+                <td><button class="link-btn" x-show="r.ka" @click.stop="$store.app.open('ka', r.ka)" x-text="r.ka"></button><span x-show="!r.ka" x-text="'–'"></span></td>
+                <td x-text="r.nama || '–'"></td><td x-text="r.kelas || '–'"></td><td class="nowrap" x-text="r.relasi || '–'"></td>
+                <td class="num" x-text="r.km != null ? KAI.fmt.d1(r.km) : '–'"></td>
+                <td :class="'st ' + r.prog.c" x-text="r.prog.t"></td>
+                <td class="num" x-text="r.hi != null ? KAI.fmt.d1(r.hi) : '–'"></td><td :class="'st ' + stCls(r.st.toUpperCase())" x-text="r.st || '–'"></td>
+                <td class="wrap" x-text="r.gangguan + (r.lokasi ? ' · ' + r.lokasi : '')"></td><td class="num"><b x-text="KAI.fmt.n(r.menit)"></b></td></tr></template>
+            </tbody></table><div class="empty" x-show="!dinasRows.length">Belum ada hari berdinas yang tercatat pada kejadian untuk unit ini.</div></div>
+            <p class="note">Baris = hari unit tercatat pada kejadian gangguan (Gangguan_Induk) beserta KA-nya. Km KA = panjang perjalanan KA penuh (Laporan Frekuensi KA 2026). Program = status KA pada tanggal itu di Laporan KA Jalan/Batal; tanggal setelah <span x-text="P ? KAI.fmt.day(P.cetak) : 'tanggal cetak'"></span> masih program. RHI dan kategori = healthy index harian unit pada tanggal itu (tab RHI, lokomotif). Menit = kelambatan kejadian. Hari lain tanpa kejadian tidak tercatat di sumber mana pun, sehingga tidak ditampilkan.</p>
+          </div>
+          <!-- Skor RHI per periode -->
+          <div x-show="ht === 's'">
+            <template x-if="ht === 's' && u.rhi"><div class="chart short" x-chart="rhiChart()"></div></template>
+            <div class="tbl-wrap mt-s"><table class="tbl"><thead><tr><th>Periode</th><th class="num">RHI</th><th>Kategori</th><th class="num">RHI rata-rata</th><th class="num">RAMS</th><th class="num">Maintenance</th><th class="num">Condition</th><th class="num">Hari H / M / D</th><th class="num">Gangguan</th><th class="num">Menit</th></tr></thead><tbody>
+              <template x-for="r in skorRows" :key="r.ym"><tr>
+                <td x-text="KAI.fmt.monOnly(r.ym) + ' ' + r.ym.slice(0, 4)"></td><td class="num"><b x-text="r.hi != null ? KAI.fmt.d1(r.hi) : '–'"></b></td><td :class="'st ' + stCls(r.st.toUpperCase())" x-text="r.st || '–'"></td>
+                <td class="num" x-text="r.avg != null ? KAI.fmt.d1(r.avg) : '–'"></td><td class="num" x-text="r.rams != null ? KAI.fmt.d1(r.rams) : '–'"></td>
+                <td class="num" x-text="r.mi != null ? KAI.fmt.d1(r.mi) : '–'"></td><td class="num" x-text="r.ci != null ? KAI.fmt.d1(r.ci) : '–'"></td>
+                <td class="num" x-text="r.hmd"></td><td class="num" x-text="r.n"></td><td class="num" x-text="KAI.fmt.n(r.menit)"></td></tr></template>
+            </tbody></table></div>
+            <p class="note">RHI dan kategori = nilai hari terakhir data bulan itu (tab RHI); rata-rata = rerata harian. Hari H/M/D = jumlah hari Healthy/Monitor/Declining. Condition kosong bila sumber hanya memuat nilai turunan.</p>
+          </div>
+          <!-- KA depo (rencana) -->
+          <div x-show="ht === 'k'">
+            <p class="caption" x-text="depoKaNote"></p>
+            <div class="tbl-wrap"><table class="tbl"><thead><tr><th>No KA</th><th>Nama KA</th><th>Kelas</th><th>Relasi</th><th class="num">Km KA</th><th class="num">Hari jalan 2026</th><th class="num">Hari batal 2026</th><th>Rangkaian (pola operasi)</th><th>Sumber</th><th class="num">Gangguan unit</th><th class="num">Menit</th></tr></thead><tbody>
+              <template x-for="r in depoKa.slice(0, 150)" :key="r.no"><tr class="click" @click="$store.app.open('ka', r.no)">
+                <td><b x-text="r.no"></b></td><td x-text="r.nama || '–'"></td><td x-text="r.kelas || '–'"></td><td class="nowrap" x-text="r.relasi || '–'"></td>
+                <td class="num" x-text="r.km != null ? KAI.fmt.d1(r.km) : '–'"></td><td class="num" x-text="r.jalan != null ? KAI.fmt.n(r.jalan) : '–'"></td><td class="num" x-text="r.batal != null ? KAI.fmt.n(r.batal) : '–'"></td>
+                <td class="wrap" x-text="r.rangkaian || '–'"></td><td x-text="r.plan ? (r.n ? 'Depo + gangguan' : 'Depo') : 'Gangguan unit'"></td>
+                <td class="num" x-text="r.n || '–'"></td><td class="num" x-text="r.n ? KAI.fmt.n(r.menit) : '–'"></td></tr></template>
+            </tbody></table><div class="empty" x-show="!depoKa.length">Tidak ada data KA untuk depo unit ini di Buku Dukungan Sarana.</div></div>
+            <p class="note">Hari jalan/batal = frekuensi 1 Jan–30 Nov 2026 (Laporan Frekuensi KA; November sebagian masih program). Rangkaian = lok dan stamformasi menurut pola operasi OMPR2 (KA penumpang yang tercantum).</p>
+          </div>
           <div x-show="ht === 'p'">
             <template x-if="u.rhi">
               <div><dl class="facts2"><div><dt>Perawatan terakhir</dt><dd x-text="u.rhi.pt || KAI.NIL"></dd></div><div><dt>Tanggal</dt><dd x-text="u.rhi.tp || KAI.NIL"></dd></div><div><dt>Permintaan perawatan terpenuhi</dt><dd x-text="u.rhi.req != null ? KAI.fmt.n(u.rhi.ok) + ' / ' + KAI.fmt.n(u.rhi.req) : KAI.NIL"></dd></div><div><dt>Data RHI per</dt><dd x-text="u.rhi.asOf || KAI.NIL"></dd></div></dl>
@@ -65,14 +105,8 @@
                   <template x-for="p in u.rhi.ptHist" :key="p.day + p.jenis"><tr><td x-text="p.day"></td><td x-text="p.jenis"></td><td x-text="p.tgl"></td></tr></template></tbody></table>
                 <p class="note">Riwayat = perubahan "perawatan terakhir" pada data RHI harian bulan terakhir. Riwayat perawatan lengkap butuh data dari sistem perawatan (SAP PM).</p></div>
             </template>
-            <template x-if="!u.rhi"><p class="note">Riwayat perawatan belum tersedia untuk <span x-text="u.kind.toLowerCase()"></span> — RHI (yang memuat perawatan terakhir) saat ini hanya lokomotif.</p></template>
+            <template x-if="!u.rhi"><p class="note">Riwayat perawatan belum tersedia untuk <span x-text="u.kind.toLowerCase()"></span>: tab RHI saat ini hanya memuat lokomotif.</p></template>
           </div>
-          <div x-show="ht === 'd'">
-            <p class="note" x-text="dinasNote"></p>
-            <div class="ka-chips"><template x-for="k in dinasKa" :key="k.no"><button class="chip" :class="k.hit && 'warn'" @click="$store.app.open('ka', k.no)" :title="k.hit ? 'KA ini tercatat pada gangguan unit' : 'KA yang dilayani depo'" x-text="k.no + (k.nama ? ' ' + k.nama : '')"></button></template></div>
-            <div class="empty" x-show="!dinasKa.length">Tidak ada data dinasan untuk depo unit ini di Buku Dukungan Sarana.</div>
-          </div>
-          <div x-show="ht === 'r'"><template x-if="u.rhi"><div class="chart" x-chart="rhiChart()"></div></template></div>
         </div>
       </div>
     </template>
@@ -153,6 +187,33 @@
               <div class="card-b"><table class="tbl"><tbody><template x-for="t in M.prof.top" :key="t.label"><tr class="click" @click="$store.app.go('telusuri', { ids: t.ids, label: M.title + ' · ' + t.label, period: 'all' })"><td x-text="t.label"></td><td class="num" x-text="t.n + '×'"></td><td class="num"><b x-text="KAI.fmt.n(t.menit)"></b></td></tr></template></tbody></table>
                 <div class="empty" x-show="!M.prof.top.length">Belum ada kejadian.</div></div></div>
           </div>
+        </div>
+
+        <!-- Program operasi KA 2026: Jalan/Batal per hari (Laporan KA Jalan/Batal), km & frekuensi, kejadian pada hari batal -->
+        <div x-show="tab === 'program'">
+          <template x-if="tab === 'program'">
+            <div x-data="vKaProg" class="card">
+              <div class="card-h"><div><h3>Program operasi 2026</h3><p x-text="sub"></p></div></div>
+              <div class="card-b">
+                <div class="empty" x-show="state === 'load'">Memuat program operasi…</div>
+                <div class="empty" x-show="state === 'none'" x-text="msg"></div>
+                <template x-if="state === 'ok'">
+                  <div>
+                    <p class="caption" x-text="story"></p>
+                    <div class="chart" :style="'height:' + (60 + months.length * 30) + 'px'" x-chart="chart()"></div>
+                    <div class="tbl-wrap mt-s"><table class="tbl"><thead><tr><th>Bulan</th><th>Nomor</th><th class="num">Hari jalan</th><th class="num">Hari batal</th><th class="num">Tidak berprogram</th><th class="num">Km jalan</th><th class="num">Kejadian</th><th class="num">Menit</th><th class="num">Kejadian di hari batal</th></tr></thead><tbody>
+                      <template x-for="r in rows" :key="r.no + r.ym"><tr>
+                        <td x-text="KAI.fmt.month(r.ym) + (r.prog ? ' (sebagian program)' : '')"></td><td x-text="r.no"></td>
+                        <td class="num"><b x-text="r.nJ"></b></td><td class="num" :class="r.nB && 'st low'" x-text="r.nB"></td><td class="num" x-text="r.nX"></td>
+                        <td class="num" x-text="r.km != null ? KAI.fmt.n(Math.round(r.km)) : '–'"></td><td class="num" x-text="r.n"></td><td class="num" x-text="KAI.fmt.n(r.menit)"></td>
+                        <td class="num" :class="r.nOnB && 'st low'" x-text="r.nOnB"></td></tr></template>
+                    </tbody></table></div>
+                    <p class="note" x-text="note"></p>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </template>
         </div>
 
         <!-- Jadwal KA di stasiun / KA melintas petak / KA di wilayah -->

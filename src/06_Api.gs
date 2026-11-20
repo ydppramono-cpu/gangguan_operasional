@@ -64,6 +64,19 @@ function apiGapeka(tahun) {
   });
 }
 
+/**
+ * Program operasi satu KA: pola Jalan/Batal harian per bulan 2026, km & frekuensi, rute stasiun (GAPEKA 2025).
+ * @param {string} no nomor KA; divalidasi pola nomor dan harus tercatat di SEED_OPS (daftar tertutup).
+ * @return {{ok: boolean, ka: Object}}
+ */
+function apiKaOps(no) {
+  return guard_(function () {
+    var s = String(no || '').toUpperCase().replace(/\s+/g, '');
+    if (!/^[A-Z]{0,2}\d{1,5}[A-Z]{0,3}$/.test(s) || !Ops.known(s)) throw new Error('Nomor KA tidak dikenal di laporan program operasi.');
+    return { ok: true, ka: Ops.kaDetail(s) };
+  });
+}
+
 function apiStatus() {
   return guard_(function () {
     var p = Store.pointer(), log = [];

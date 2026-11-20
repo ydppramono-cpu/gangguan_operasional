@@ -115,6 +115,10 @@ function runSync_(force, trigger) {
     try { ref.pend = Pendapatan.build(readPendapatan_()); }
     catch (ep) { ref.pend = { version: 1, error: String(ep && ep.message || ep), pass: [], frei: [], stats: {} }; }
 
+    // Program operasi KA (24_SeedOperasi.gs): km, status Jalan/Batal pada tanggal kejadian, pola operasi. Opsional.
+    try { ref.prog = Ops.forRef(out.rows); ref.prog.hj = Ops.hjMap(); }
+    catch (eo) { ref.prog = { error: String(eo && eo.message || eo), ka: {}, st: {}, pola: [] }; }
+
     // Pagar pengaman: jangan terbitkan bila jumlah baris turun drastis.
     if (prev && prev.meta && prev.meta.rows && out.rows.length < prev.meta.rows * 0.8) {
       throw new Error('Jumlah baris turun dari ' + prev.meta.rows + ' ke ' + out.rows.length + '. Periksa sumber; snapshot lama dipertahankan.');

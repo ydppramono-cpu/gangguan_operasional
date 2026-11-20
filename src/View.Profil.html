@@ -225,6 +225,8 @@ document.addEventListener('alpine:init', function () {
       M.facts = [['Kelas', k.kelas || KAI.NIL], ['Jenis', (k.jenis || KAI.NIL).toLowerCase()], ['Layanan', k.klas || k.layanan || KAI.NIL], ['Status', { REG: 'Reguler', FAK: 'Fakultatif', KLB: 'Luar biasa', PLB: 'PLB' }[k.jenisKa] || k.jenisKa || KAI.NIL], ['Rangkaian', k.sf || KAI.NIL]];
       if (legs.length > 1) M.facts.push(['Perjalanan', legs.map(function (l) { return l.no + ' ' + l.lintas; }).join(' → ')]);
       pred = function (r) { return !!nos[norm(r.ka)]; };
+      M.kaNos = String(k.no).split('-').map(norm).filter(Boolean).slice(0, 2);
+      if (R.prog && !R.prog.error) M.tabs.push({ id: 'program', label: 'Program operasi 2026' });
       var incBySt = {}; all.forEach(function (r) { if (r.stCode) incBySt[r.stCode] = (incBySt[r.stCode] || 0) + 1; });
       var trips = legs.length ? legs : KI.inferred ? [KI.inferred] : [];
       trips.forEach(function (tr) {
@@ -337,6 +339,80 @@ document.addEventListener('alpine:init', function () {
     return KAIInsight.analyze(ctx);
   }
 
+  /** Tab "Program operasi 2026" pada profil KA: pola Jalan/Batal harian (apiKaOps, dimuat saat tab dibuka). */
+  Alpine.data('vKaProg', function () {
+    return {
+      state: 'load', msg: '', data: [], sub: '',
+      init: function () {
+        var self = this, M = this.M, nos = (M && M.kaNos) || [];
+        KAI.data.kaOps = KAI.data.kaOps || {};
+        if (!nos.length) { this.state = 'none'; this.msg = 'Nomor KA tidak tersedia.'; return; }
+        Promise.all(nos.map(function (no) {
+          if (KAI.data.kaOps[no]) return Promise.resolve(KAI.data.kaOps[no]);
+          return KAI.api('apiKaOps', no).then(function (r) { KAI.data.kaOps[no] = r.ka; return r.ka; }).catch(function () { return null; });
+        })).then(function (L) {
+          self.data = [];
+          L.filter(Boolean).forEach(function (ka) { self.data.push(ka); (ka.varian || []).forEach(function (v) { self.data.push({ no: v.no, cetak: ka.cetak, frek: v.frek, bulan: v.bulan, rute: [], varianDari: ka.no }); }); });
+          if (!self.data.length) { self.state = 'none'; self.msg = 'KA ' + nos.join('-') + ' tidak tercantum di Laporan KA Jalan/Batal maupun Laporan Frekuensi KA 2026.'; return; }
+          self.sub = 'Laporan KA Jalan/Batal Jan–Nov 2026 · dicetak ' + KAI.fmt.day(self.data[0].cetak);
+          self.state = 'ok';
+        });
+      },
+      get cetak() { return this.data.length ? this.data[0].cetak : ''; },
+      /** Kejadian KA ini per tanggal (seluruh data, tidak terikat filter periode). */
+      get ev() {
+        var nos = {}; this.data.forEach(function (d) { nos[String(d.no).toUpperCase().replace(/[^A-Z0-9]/g, '')] = 1; });
+        var out = {}; (KAI.data.all || []).forEach(function (r) { if (!r.ka || !nos[String(r.ka).toUpperCase().replace(/[^A-Z0-9]/g, '')] || !r.date) return; var e = out[r.date] = out[r.date] || { n: 0, m: 0 }; e.n++; e.m += r.menit || 0; });
+        return out;
+      },
+      get months() { var m = {}; this.data.forEach(function (d) { d.bulan.forEach(function (b) { m[b.ym] = 1; }); }); return Object.keys(m).sort(); },
+      get rows() {
+        var ev = this.ev, cetak = this.cetak, D = this.days, out = [];
+        this.data.forEach(function (d) {
+          d.bulan.forEach(function (b) {
+            var n = 0, menit = 0, nOnB = 0, nX = b.pola.replace(/[^-]/g, '').length;
+            for (var i = 0; i < b.pola.length; i++) { var day = b.ym + '-' + (i < 9 ? '0' : '') + (i + 1), e = d.varianDari ? null : ev[day]; if (e) { n += e.n; menit += e.m; if (D[day] === 1) nOnB += e.n; } }
+            out.push({ no: d.no + (d.varianDari ? ' (varian)' : ''), ym: b.ym, nJ: b.nJ, nB: b.nB, nX: nX, km: d.frek && d.frek.km != null ? d.frek.km * b.nJ : null, n: n, menit: menit, nOnB: nOnB, prog: cetak && cetak.slice(0, 7) === b.ym });
+          });
+        });
+        return out.sort(function (a, b) { return a.ym < b.ym ? 1 : a.ym > b.ym ? -1 : a.no < b.no ? -1 : 1; });
+      },
+      /** Status gabungan per tanggal (nomor utama + varian): J bila salah satu berjalan, B bila ada yang batal, '-' selain itu. */
+      get days() {
+        var out = {}, C = { J: 2, B: 1, '-': 0 };
+        this.data.forEach(function (d) { d.bulan.forEach(function (b) { for (var i = 0; i < b.pola.length; i++) { var c = b.pola.charAt(i); if (C[c] == null) continue; var day = b.ym + '-' + (i < 9 ? '0' : '') + (i + 1); out[day] = Math.max(out[day] == null ? -1 : out[day], C[c]); } }); });
+        return out;
+      },
+      get story() {
+        var R = this.rows, D = this.days, J = 0, B = 0, n = 0, nB = 0, km = 0, ev = this.ev, vs = this.data.filter(function (d) { return d.varianDari; }).map(function (d) { return d.no; });
+        Object.keys(D).forEach(function (d) { if (D[d] === 2) J++; else if (D[d] === 1) { B++; if (ev[d]) nB += ev[d].n; } });
+        R.forEach(function (r) { n += r.n; km += r.km || 0; });
+        var f = this.data[0].frek;
+        return 'Jan–Nov 2026: ' + KAI.fmt.n(J) + ' hari berjalan dan ' + KAI.fmt.n(B) + ' hari batal' + (vs.length ? ' (termasuk perjalanan sebagai ' + vs.join(', ') + ')' : '') + (f && f.km != null ? ' · ' + KAI.fmt.d1(f.km) + ' km per perjalanan, ' + KAI.fmt.n(Math.round(km)) + ' km pada hari jalan' : '') +
+          ' · ' + n + ' kejadian tercatat' + (nB ? ', ' + nB + ' di antaranya pada hari berstatus batal' : '') + (this.data[0].rute.length ? ' · rute ' + this.data[0].rute.length + ' stasiun (GAPEKA 2025)' : '') + '.';
+      },
+      get note() {
+        return 'Satu baris per bulan per nomor KA. Hari jalan/batal = status program di Laporan KA Jalan/Batal; tanggal setelah ' + KAI.fmt.day(this.cetak) + ' masih program. ' +
+          'Varian = nomor lain bernama sama (mis. 1 → 1B) yang berjalan saat nomor utama berstatus batal; hari itu dihitung berjalan. Km jalan = km perjalanan (Laporan Frekuensi KA) × hari jalan. ' +
+          'Kejadian di hari batal = kejadian pada tanggal yang tidak memiliki perjalanan berstatus jalan; perlu dicek apakah KA dibatalkan karena gangguan atau nomor KA di laporan gangguan berbeda.';
+      },
+      chart: function () {
+        var yms = this.months, ev = this.ev, cetak = this.cetak, data = [], marks = [], D = this.days;
+        Object.keys(D).forEach(function (day) { var y = yms.indexOf(day.slice(0, 7)), i = Number(day.slice(8, 10)) - 1; if (y < 0) return; data.push([i, y, D[day]]); if (ev[day]) marks.push([i, y, ev[day].n, ev[day].m]); });
+        var days = []; for (var i = 1; i <= 31; i++) days.push(String(i));
+        var L = ['Tidak berprogram', 'Batal', 'Jalan'];
+        return { textStyle: { fontFamily: 'Inter, Arial' }, grid: { left: 8, right: 12, top: 8, bottom: 52, containLabel: true },
+          tooltip: { formatter: function (p) { var ym = yms[p.data[1]], d = ym + '-' + ('0' + (p.data[0] + 1)).slice(-2), pr = cetak && d > cetak ? ' (program)' : '';
+            return KAI.fmt.day(d) + '<br>' + (p.seriesType === 'scatter' ? '<b>' + p.data[2] + ' kejadian</b> · ' + KAI.fmt.n(p.data[3]) + ' menit' : '<b>' + L[p.data[2]] + '</b>' + pr); } },
+          xAxis: { type: 'category', data: days, splitArea: { show: false }, axisTick: { show: false }, name: 'Tanggal', nameLocation: 'middle', nameGap: 24 },
+          yAxis: { type: 'category', data: yms.map(function (y) { return KAI.fmt.mon(y); }), inverse: true, axisTick: { show: false } },
+          visualMap: { type: 'piecewise', seriesIndex: 0, orient: 'horizontal', left: 'center', bottom: 0, itemWidth: 12, itemHeight: 12, textStyle: { fontSize: 11 },
+            pieces: [{ value: 2, label: 'Jalan', color: '#D7E9DA' }, { value: 1, label: 'Batal', color: '#E8A39B' }, { value: 0, label: 'Tidak berprogram', color: '#EEF0F4' }] },
+          series: [{ type: 'heatmap', data: data, itemStyle: { borderColor: '#fff', borderWidth: 2 } },
+            { type: 'scatter', name: 'Kejadian', data: marks, symbolSize: function (v) { return Math.min(14, 6 + v[2] * 2); }, itemStyle: { color: '#F06A25' }, z: 3 }] };
+      }
+    };
+  });
   Alpine.data('vProfil', function () {
     return {
       tab: 'riwayat', basis: '12', hist: 'all', role: '', regOnly: true,

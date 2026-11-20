@@ -77,7 +77,7 @@
 
     <div class="grid g-2-1 mt">
       <div class="card">
-        <div class="card-h"><div><h3>Kejadian dengan pendapatan terekspos terbesar</h3><p>Rate = rate bulan kejadian (atau rate acuan) · klik baris untuk detail kejadian</p></div>
+        <div class="card-h"><div><h3>Kejadian dengan pendapatan terekspos terbesar</h3><p>Rate = rate KA itu sendiri, atau rate jenis KA di pulau kejadian (bulan kejadian / acuan) · klik baris untuk detail kejadian</p></div>
           <div class="spacer"></div><button class="btn sm" @click="exp()">Excel</button></div>
         <div class="card-b"><div x-table="evSpec" @row-click="$store.app.openEvent($event.detail.id)"></div></div>
       </div>
@@ -101,7 +101,7 @@
             <td><span class="chip" :class="m.partial ? 'warn' : ''" x-text="m.partial ? 'Belum lengkap → rate acuan' : 'Lengkap'"></span></td>
           </tr></template>
         </tbody></table></div>
-        <p class="note" style="padding:0 14px 12px">Rate KA penumpang = Σ pendapatan KA penumpang termatch ÷ Σ jam perjalanan KA termatch (durasi GAPEKA × hari dalam bulan; satu perjalanan GAPEKA dihitung sekali walau tercatat dengan beberapa nomor). Rate KA barang = Σ pendapatan komoditas KA termatch ÷ Σ jam semua perjalanan reguler bernama sama di GAPEKA × hari. Perjalanan fakultatif/KLB tidak dipakai karena frekuensinya tidak diketahui.</p>
+        <p class="note" style="padding:0 14px 12px">Rate KA penumpang = Σ pendapatan KA penumpang termatch ÷ Σ jam perjalanan KA termatch (durasi GAPEKA × hari jalan KA pada bulan itu menurut Laporan KA Jalan/Batal, termasuk varian bernama sama; KA yang tidak ada di laporan memakai hari kalender). Rate KA barang = Σ pendapatan komoditas KA termatch ÷ Σ jam semua perjalanan reguler bernama sama di GAPEKA × hari jalan. Rate dihitung terpisah untuk Jawa dan Sumatera; kejadian dinilai dengan rate KA itu sendiri bila pendapatannya tercatat pada bulan lengkap, selain itu rate jenis KA di pulau kejadian. Perjalanan fakultatif/KLB tidak dipakai karena frekuensinya tidak diketahui.</p>
       </div>
       <div class="card mt">
         <div class="card-h"><div><h3>Data pendapatan yang belum termatch GAPEKA</h3><p>Tidak masuk rate — perlu dilengkapi agar tidak ada yang terlewat</p></div><div class="spacer"></div>
@@ -199,10 +199,17 @@ document.addEventListener('alpine:init', function () {
       },
       get cmpRows() { var R = this.R, C = R.expoCmp; return [[R.P.short, this.E.tot], [R.prevP.short + ' (MoM)', C.prev], [R.yoyP.short + ' (YoY)', C.yoy], ['YTD ' + R.ytdP.short, C.ytd], ['YTD tahun lalu', C.ytdPrev]]; },
       get notes() {
-        var R = this.R, E = this.E, D = this.D, f = KAI.fmt, out = [], totM = KAIA.sum(R.L, function (r) { return r.menit; });
+        var R = this.R, E = this.E, D = this.D, X = this.X, f = KAI.fmt, out = [], totM = KAIA.sum(R.L, function (r) { return r.menit; });
         if (!E.tot.rp) return [{ tone: 'info', text: 'Tidak ada kejadian yang bisa dinilai pada pilihan ini.' }];
         var priced = E.tot.mP + E.tot.mB;
         out.push({ tone: priced / (totM || 1) < 0.8 ? 'warn' : 'info', text: f.d1(priced / (totM || 1) * 100) + '% dari ' + f.n(totM) + ' menit KELKA dinilai (KA penumpang/barang). Kejadian tanpa nomor KA, KA dinas, atau nomor tak dikenali tidak dihitung — angka ini batas bawah.' });
+        if (D && X && X.hasProgram && D.tot.legacy) {
+          var dl = D.tot.rp - D.tot.legacy;
+          out.push({ tone: 'info', text: 'Metode v3.16 memakai hari jalan nyata tiap KA (Laporan KA Jalan/Batal), rate milik KA itu sendiri bila tercatat, dan rate per pulau (Jawa/Sumatera dipisah). ' +
+            f.n(D.tot.mKa) + ' menit dinilai dengan rate KA sendiri. Dengan metode lama (hari kalender, rate gabungan) nilainya ' + f.rp(D.tot.legacy) + ' (' + (dl >= 0 ? 'naik ' : 'turun ') + f.rp(Math.abs(dl)) + ' dengan metode baru).' });
+        }
+        if (D && D.tot.batalN) out.push({ tone: 'warn', text: D.tot.batalN + ' kejadian jatuh pada hari KA berstatus batal di program (tanpa varian yang berjalan). Perkiraan pendapatan satu perjalanan KA tersebut: ' +
+          f.rp(D.tot.batalRp) + (D.tot.batalNoRate ? ' (' + D.tot.batalNoRate + ' tanpa data pendapatan KA)' : '') + '. Ditampilkan terpisah, tidak dijumlahkan ke pendapatan terekspos; perlu verifikasi apakah KA dibatalkan karena gangguan.' });
         if (D && D.tot.mAcuan) out.push({ tone: 'warn', text: f.n(D.tot.mAcuan) + ' menit dinilai dengan rate acuan karena data Passenger/Freight bulan tersebut belum lengkap atau belum tersedia (mis. bulan berjalan, tahun 2025).' });
         if (E.paretoTop || (D && D.paretoAll[0])) { var a = D.paretoAll, byM = a.slice().sort(function (x, y) { return y.menit - x.menit; })[0];
           if (a[0] && byM && a[0].key !== byM.key) out.push({ tone: 'info', text: 'Menit terbanyak: ' + byM.key + ' (' + f.n(byM.menit) + ' mnt), tetapi Rp terbesar: ' + a[0].key + ' (' + f.rp(a[0].rp) + ') — prioritaskan dengan Pareto Rp, bukan menit saja.' }); }

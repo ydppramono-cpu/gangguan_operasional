@@ -121,6 +121,7 @@
     R.depotList.forEach(function (d) { if (d.region) { var W = R.regions[d.region] = R.regions[d.region] || { name: d.region, st: [], segs: [] }; (W.depots = W.depots || []).push(d.id); } });
     R.kaDepot = {}; R.depotList.forEach(function (d) { d.ka.forEach(function (n) { R.kaDepot[norm(n)] = d; }); });
     R.kondisi = raw.kondisi || null;
+    R.prog = raw.prog || null;   // program operasi KA (25_Operasi.gs): km, status Jalan/Batal pada tanggal kejadian, pola operasi
     // Buku Dukungan Sarana GAPEKA: status SIAP GUNA per unit + depo induk GAPEKA, dinasan lok per depo.
     R.duksar = raw.duksar || null; R.dukUnit = {};
     if (R.duksar && R.duksar.units) Object.keys(R.duksar.units).forEach(function (k) { var o = R.duksar.units[k]; Object.keys(o).forEach(function (c) { String(o[c]).split(' ').forEach(function (no) { if (no) R.dukUnit[no] = { kind: k, depo: c }; }); }); });

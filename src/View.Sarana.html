@@ -410,36 +410,89 @@ document.addEventListener('alpine:init', function () {
   };
   Alpine.data('vUnitCard', function () {
     return mix(common, {
-      ht: 'g',
+      ht: 'd',
       get S() { return engine(this.$store.app); },
       get u() { var S = this.S; return S ? S.U[this.$store.app.params.id] || null : null; },
       get rankTxt() { var S = this.S, u = this.u; if (!S || !u) return KAI.NIL; var L = S.byKind[u.kind].units.filter(function (x) { return x.depoId === u.depoId; }).sort(function (a, b) { return b.overall - a.overall; }); return (L.indexOf(u) + 1) + ' dari ' + L.length + ' (rating)'; },
-      get dinasKa() {
-        var u = this.u, R = KAI.data.ref; if (!u || !R) return [];
-        var hits = {}; u.events.forEach(function (r) { if (r.ka) hits[String(r.ka).toUpperCase()] = 1; });
+      /** Program operasi (ref.prog, 25_Operasi.gs): km & nama KA, status Jalan/Batal pada tanggal kejadian. */
+      get P() { var R = KAI.data.ref; return R && R.prog && !R.prog.error ? R.prog : null; },
+      kaRow: function (no) {
+        var R = KAI.data.ref, n = String(no || '').toUpperCase().replace(/[^A-Z0-9]/g, ''), ki = R && (R.ka[n] || (R.kaLeg && R.kaLeg[n])) || null, P = this.P, f = P && P.ka[n];
+        var po = P && (P.pola || []).filter(function (x) { return String(x[0]).toUpperCase() === String(no || '').toUpperCase(); })[0];
+        return { no: String(no || '').toUpperCase(), nama: ki ? ki.nama : f ? f[1] : '', kelas: ki && ki.kelas ? ki.kelas : po ? String(po[3]).toLowerCase().replace(/(^|[\s(/])([a-z])/g, function (m, a, b) { return a + b.toUpperCase(); }) : '', relasi: f ? f[2] : ki && ki.o ? ki.o + '-' + ki.d : '', km: f ? f[0] : null, jalan: f ? f[3] : null, batal: f ? f[4] : null };
+      },
+      progTxt: function (no, date) {
+        var P = this.P; if (!P || !no || !date) return { t: '–', c: '' };
+        var s = P.st[String(no).toUpperCase().replace(/[^A-Z0-9]/g, '') + '|' + date], prog = P.cetak && date > P.cetak ? ' (program)' : '';
+        if (s && s.indexOf('J:') === 0) return { t: 'Jalan sebagai ' + s.slice(2) + prog, c: '' };
+        return s === 'J' ? { t: 'Jalan' + prog, c: '' } : s === 'B' ? { t: 'Batal' + prog, c: 'low' } : s === '-' ? { t: 'Tidak berprogram', c: 'mid' } : { t: 'tidak tercatat', c: 'muted' };
+      },
+      /** RHI pada tanggal tertentu dari RHI harian (rentang multi-bulan). */
+      rhiOn: function (no, date) {
+        var K = KAI.data.ref.kondisi, G = K && K.rhiDay && K.rhiDay.range, a = G && G.u[no]; if (!a || !date) return null;
+        var i = Math.round((Date.parse(date + 'T00:00:00Z') - Date.parse(G.from + 'T00:00:00Z')) / 864e5), hs = String(a[0]).split(',');
+        if (i < 0 || i >= hs.length || hs[i] === '') return null;
+        return { hi: Number(hs[i]) / 100, st: ({ H: 'Healthy', M: 'Monitor', D: 'Declining' })[String(a[1]).charAt(i)] || '' };
+      },
+      /** Riwayat dinasan terpadu: satu baris per kejadian unit (hari unit tercatat berdinas). Tanpa tebakan untuk hari lain. */
+      get dinasRows() {
+        var u = this.u, self = this; if (!u) return [];
+        return u.events.map(function (r) {
+          var k = r.ka ? self.kaRow(r.ka) : null, pr = self.progTxt(r.ka, r.date), rh = self.rhiOn(u.no, r.date);
+          return { id: r.id, date: r.date, tgl: KAI.fmt.date(r), ka: k ? k.no : '', nama: k ? (k.nama || r.kaNama || '') : '', kelas: k ? k.kelas : '', relasi: k ? k.relasi : '',
+            km: k && k.km != null ? k.km : null, prog: r.ka ? pr : { t: '–', c: '' }, hi: rh ? rh.hi : null, st: rh ? rh.st : '',
+            gangguan: String(r.sub || r.judul).replace(/^[^-]+-\s*/, ''), lokasi: r.lokasi || '', menit: r.menit };
+        });
+      },
+      get dinasStat() {
+        var L = this.dinasRows, withKa = L.filter(function (x) { return x.ka; });
+        return { n: L.length, ka: withKa.length, km: withKa.reduce(function (a, x) { return a + (x.km || 0); }, 0), menit: L.reduce(function (a, x) { return a + (x.menit || 0); }, 0),
+          batal: L.filter(function (x) { return /^Batal/.test(x.prog.t); }).length };
+      },
+      /** Skor RHI per bulan (tab RHI): RHI akhir bulan, kategori, RAMS, maintenance, condition + gangguan bulan itu. */
+      get skorRows() {
+        var u = this.u, K = KAI.data.ref.kondisi; if (!u || !K || !K.rhi) return [];
+        var ev = {}; u.events.forEach(function (r) { var ym = String(r.date || '').slice(0, 7); if (!ym) return; var e = ev[ym] = ev[ym] || { n: 0, m: 0 }; e.n++; e.m += r.menit || 0; });
+        var T = function (s) { s = String(s || ''); return s ? s.charAt(0) + s.slice(1).toLowerCase() : ''; };
+        return K.rhi.filter(function (r) { return r[0] === u.no; }).sort(function (a, b) { return a[2] < b[2] ? 1 : -1; }).map(function (r) {
+          var e = ev[r[2]] || { n: 0, m: 0 };
+          return { ym: r[2], hi: r[4], st: T(r[7]), avg: r[5], min: r[6], rams: r[11], mi: r[15], ci: r[16], hmd: r[8] + ' / ' + r[9] + ' / ' + r[10], days: r[3], n: e.n, menit: e.m };
+        });
+      },
+      /** KA yang dilayani depo unit (rencana Duksar GAPEKA) + KA pada gangguan unit — tabel, bukan dinasan harian. */
+      get depoKa() {
+        var u = this.u, R = KAI.data.ref, self = this; if (!u || !R) return [];
+        var hits = {}; u.events.forEach(function (r) { if (!r.ka) return; var k = String(r.ka).toUpperCase(), h = hits[k] = hits[k] || { n: 0, m: 0 }; h.n++; h.m += r.menit || 0; });
         var list = [];
         if (u.kind === 'Lokomotif' && R.duksar && R.duksar.lok) { var dc = (u.duk && u.duk.depo) || u.depo, L = R.duksar.lok[dc]; if (L) list = String(L.ka).split(' ').filter(Boolean); }
         else { var d = R.depot[u.depoId]; var cands = R.depotList.filter(function (x) { return x.code === (u.duk ? u.duk.depo : u.depo) && x.ka && x.ka.length; }); if (d && d.ka && d.ka.length) list = d.ka; else if (cands[0]) list = cands[0].ka; }
+        var pol = {}; ((this.P && this.P.pola) || []).forEach(function (p) { pol[String(p[0]).toUpperCase()] = p; });
         var seen = {}, out = [];
-        Object.keys(hits).forEach(function (k) { seen[k] = 1; var ki = R.ka[k.replace(/[^A-Z0-9]/g, '')]; out.push({ no: k, nama: ki ? ki.nama : '', hit: 1 }); });
-        list.forEach(function (k) { k = String(k).toUpperCase(); if (seen[k]) return; seen[k] = 1; var ki = R.ka[k.replace(/[^A-Z0-9]/g, '')]; out.push({ no: k, nama: ki ? ki.nama : '', hit: 0 }); });
-        return out.slice(0, 80);
+        function add(k, plan) {
+          k = String(k).toUpperCase(); if (seen[k]) return; seen[k] = 1;
+          var row = self.kaRow(k), h = hits[k], p = pol[k];
+          row.plan = plan; row.n = h ? h.n : 0; row.menit = h ? h.m : 0; row.rangkaian = p ? [p[10], p[11]].filter(Boolean).join(' · ') : '';
+          out.push(row);
+        }
+        Object.keys(hits).forEach(function (k) { add(k, list.indexOf(k) >= 0 || list.indexOf(k.replace(/[^A-Z0-9]/g, '')) >= 0); });
+        list.forEach(function (k) { add(k, true); });
+        return out;
       },
-      get dinasNote() {
+      get depoKaNote() {
         var u = this.u; if (!u) return '';
         var dc = (u.duk && u.duk.depo) || u.depo;
-        return 'Proksi dinasan: KA yang dilayani ' + (u.kind === 'Lokomotif' ? 'dinasan lokomotif depo ' + dc : 'depo induk rangkaian ' + dc) + ' menurut Buku Dukungan Sarana GAPEKA 2025, ditambah KA pada gangguan unit ini (oranye). Bukan catatan dinasan harian per unit.';
+        return 'Rencana: KA yang dilayani ' + (u.kind === 'Lokomotif' ? 'dinasan lokomotif depo ' + dc : 'depo induk rangkaian ' + dc) + ' menurut Buku Dukungan Sarana GAPEKA 2025, ditambah KA yang tercatat pada gangguan unit ini. Ini daftar KA depo, bukan catatan dinasan harian unit.';
       },
       rhiChart: function () {
         var u = this.u, K = KAI.data.ref.kondisi, G = K && K.rhiDay && K.rhiDay.range, a = G && G.u[u.no];
         if (!a) return { title: { text: 'RHI harian tidak tersedia', left: 'center', top: 'middle', textStyle: { fontSize: 13, color: '#6B7A90' } } };
         var hs = String(a[0]).split(','), t0 = Date.parse(G.from + 'T00:00:00Z'), days = hs.map(function (v, i) { return new Date(t0 + i * 864e5).toISOString().slice(0, 10); });
         var ev = {}; u.events.forEach(function (r) { if (r.date) ev[r.date] = (ev[r.date] || 0) + r.menit; });
-        return { textStyle: { fontFamily: 'Inter, Arial' }, tooltip: { trigger: 'axis' }, legend: { bottom: 0 }, grid: { left: 14, right: 18, top: 24, bottom: 44, containLabel: true },
+        return { textStyle: { fontFamily: 'Inter, Arial' }, tooltip: { trigger: 'axis' }, legend: { bottom: 0 }, grid: { left: 14, right: 24, top: 36, bottom: 44, containLabel: true },
           xAxis: { type: 'category', data: days.map(function (d) { return d.slice(8, 10) + '/' + d.slice(5, 7); }), name: 'Tanggal', nameLocation: 'middle', nameGap: 26 },
-          yAxis: [{ type: 'value', name: 'Healthy index', min: 50, max: 100, nameLocation: 'middle', nameGap: 34 }, { type: 'value', name: 'Menit gangguan', nameLocation: 'middle', nameGap: 36, splitLine: { show: false } }],
+          yAxis: [{ type: 'value', name: 'Healthy index', min: 50, max: 100, nameLocation: 'end', nameGap: 10, nameTextStyle: { align: 'left' } }, { type: 'value', name: 'Menit', nameLocation: 'end', nameGap: 10, nameTextStyle: { align: 'right' }, splitLine: { show: false } }],
           series: [{ name: 'Healthy index (RHI)', type: 'line', data: hs.map(function (v) { return v === '' ? null : Number(v) / 100; }), itemStyle: { color: '#17223B' }, showSymbol: false,
-              markLine: { silent: true, symbol: 'none', lineStyle: { type: 'dashed', color: '#9AA3B2' }, data: [{ yAxis: 85, name: 'HEALTHY' }, { yAxis: 70, name: 'DECLINING' }], label: { formatter: '{b}' } } },
+              markLine: { silent: true, symbol: 'none', lineStyle: { type: 'dashed', color: '#9AA3B2' }, data: [{ yAxis: 85, name: 'Healthy ≥ 85' }, { yAxis: 70, name: 'Declining < 70' }], label: { formatter: '{b}', position: 'insideEndTop', color: '#6B7A90', fontSize: 11 } } },
             { name: 'Gangguan (menit)', type: 'bar', yAxisIndex: 1, data: days.map(function (d) { return ev[d] || null; }), itemStyle: { color: '#C0392B' }, barMaxWidth: 10 }] };
       }
     });

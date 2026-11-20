@@ -5,7 +5,7 @@ Bahasa UI, komentar, commit, dan dokumentasi: **Bahasa Indonesia**. Istilah KAI 
 
 ## Aturan yang tidak boleh dilanggar
 1. **Jangan mengarang data.** Setiap angka di UI berasal dari tabel yang tercatat di `db/schema/sumber_tabel.json` atau `db/csv/_manifest.csv`. Bila data tidak ada: tampilkan "tidak tercatat"/"–", bukan perkiraan. Perkiraan wajib berlabel "perkiraan".
-2. **Seed dan CSV dibangkitkan alat**, tidak disunting tangan: `src/1x_Seed*.gs`, `src/2x_Seed*.gs`, `db/csv/*`. Ubah skrip di `tools/`, jalankan ulang, bandingkan hasil.
+2. **Seed dan CSV dibangkitkan alat**, tidak disunting tangan: `src/1x_Seed*.gs`, `src/2x_Seed*.gs` (termasuk `24_SeedOperasi.gs`), `db/csv/*`. Ubah skrip di `tools/`, jalankan ulang, bandingkan hasil.
 3. **Tanpa rahasia di repo** (repo PUBLIK). ID spreadsheet/folder masuk Script Properties; `.clasp.json` diabaikan git.
 4. **Fungsi publik server = yang boleh dipanggil browser** (tanpa akhiran `_`). Semua masukan dari browser divalidasi di server dengan daftar tertutup (contoh `apiGapeka(tahun)`).
 5. Akses web app ANYONE_ANONYMOUS (keputusan pemilik). Nama petugas di uraian kejadian boleh tampil (keputusan 19 Nov 2026). Tanggal uji berkala sarana TIDAK dipakai.
@@ -37,6 +37,7 @@ Wilayah & koridor memakai peta vektor OSM sendiri (dasar P1: `SEED_PETA`, © kon
 - `python3 tools/bigquery/gen_agregat.py` — bangkitkan `platform/Agregat.gs` dari `db/bigquery/30_agregat.sql`.
 - `npm run pack` — paket tempel editor GAS di `dist/` (Code.gs, Index.html utuh, seed terpisah).
 - `npm run csv` — ekspor ulang CSV non-Sheets ke `db/csv` (lihat docstring `tools/csv/export_csv.py`).
+- `python3 -I tools/operasi/impor_operasi.py <xlsx…>` lalu `python3 -I tools/operasi/build_operasi_seed.py` — program operasi KA (Jalan/Batal, frekuensi/km, stasiun perhentian, pola operasi) → `db/csv` → `src/24_SeedOperasi.gs`.
 Perintah proyek Claude Code: `/uji`, `/rilis`, `/data-baru`, `/fitur` (`.claude/commands`). Agen: `peninjau-data`, `peninjau-ui` (`.claude/agents`).
 
 ## Rilis

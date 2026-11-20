@@ -11,6 +11,15 @@
  *      termatch = Nama KA Freight = Nama KA GAPEKA berjenis BARANG; jam = Σ durasi SEMUA perjalanan reguler bernama itu × hari.
  *  Bulan tanpa data lengkap (bulan berjalan / sebelum data tersedia) memakai RATE ACUAN = rata-rata tertimbang bulan lengkap.
  *  Ini PENDAPATAN TEREKSPOS, bukan kerugian akuntansi.
+ *
+ *  Metode v3.16 (program operasi, ref.prog.hj):
+ *   - jumlah hari = HARI JALAN KA pada bulan itu (Laporan KA Jalan/Batal; nomor + varian bernama sama), bukan hari kalender.
+ *     KA yang tidak ada di laporan memakai hari kalender (dicatat di E.hjFallback).
+ *   - urutan rate kejadian: (1) rate KA itu sendiri pada bulan itu (pendapatan KA ÷ jam × hari jalan), (2) rate jenis KA
+ *     pada PULAU kejadian (Jawa = Daop, Sumatera = Divre), (3) rate acuan pulau, (4) rate jenis gabungan bila pulau tanpa data.
+ *   - kejadian pada hari KA berstatus batal: pendapatan satu perjalanan (pendapatan KA ÷ hari jalan) dilaporkan terpisah
+ *     sebagai PERKIRAAN, tidak dijumlahkan ke RaR.
+ *   - E.legacy menyimpan hasil metode lama (hari kalender, rate gabungan) untuk perbandingan.
  */
 (function (root) {
   function norm(s) { return String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
@@ -43,19 +52,38 @@
 
   function build(R, pend, todayYm) {
     pend = pend || { pass: [], frei: [] };
-    var E = { ok: !!(pend.pass && pend.pass.length), stats: pend.stats || {}, months: {}, unP: {}, unB: {}, viaP: {}, todayYm: todayYm || '' };
+    var E = { ok: !!(pend.pass && pend.pass.length), stats: pend.stats || {}, months: {}, unP: {}, unB: {}, viaP: {}, todayYm: todayYm || '', hjFallback: {}, hjUsed: 0 };
+    var HJ = R.prog && !R.prog.error && R.prog.hj ? R.prog.hj : null, hjI = {}, hjM = {}, sumS = {};
+    if (HJ) { HJ.keys.split(' ').forEach(function (k, i) { hjI[k] = i; }); Object.keys(HJ.m).forEach(function (ym) { hjM[ym] = HJ.m[ym].split(','); }); HJ.sum.split(' ').forEach(function (k) { if (k) sumS[k] = 1; }); }
+    /** Hari jalan KA (nomor + varian) pada bulan; tanpa data → hari kalender (src 'kalender'). */
+    function hj(no, ym) {
+      var i = hjI[norm(no)], a = hjM[ym], v = i != null && a ? a[i] : '';
+      if (v !== '' && v != null) { E.hjUsed++; return { n: +v, src: 'program' }; }
+      E.hjFallback[norm(no)] = 1; return { n: dim(ym), src: 'kalender' };
+    }
+    function pulauKa(no) { return sumS[norm(no)] ? 'Sumatera' : 'Jawa'; }
+    E.pulauOf = function (r) { var w = String(r.wilayah || ''); return /^Divre/.test(w) ? 'Sumatera' : /^Daop/.test(w) ? 'Jawa' : ''; };
+    var kaR = {}, nmR = {}, pmI = {}, bmI = {};
     /* ---- KA penumpang ---- */
     var pm = {}, pk = {}, pkG = {};
     (pend.pass || []).forEach(function (r) {
       var ym = r[0], no = r[1], rev = +r[6] || 0, L = lookup(R, no);
-      var o = pm[ym] = pm[ym] || { ym: ym, revAll: 0, rev: 0, h: 0, ka: {}, nKa: 0 };
+      var o = pm[ym] = pm[ym] || { ym: ym, revAll: 0, rev: 0, h: 0, hOld: 0, ka: {}, nKa: 0 };
       o.revAll += rev;
       var why = !L ? 'Nomor tidak ada di GAPEKA' : String(L.k.jenis || '').toUpperCase() !== 'PENUMPANG' ? 'Bukan KA penumpang di GAPEKA' : !daily(L.k) ? 'KA fakultatif/KLB (frekuensi tak diketahui)' : hoursOf(R, L.k) == null ? 'Durasi GAPEKA tidak tersedia' : '';
       if (why) { var u = E.unP[no] = E.unP[no] || { no: no, nama: r[2], rev: 0, n: 0, why: why }; u.rev += rev; u.n++; return; }
       E.viaP[L.via] = (E.viaP[L.via] || 0) + rev;
       o.rev += rev;
-      var key = norm(L.k.no);
-      if (!o.ka[key]) { o.ka[key] = 1; o.h += hoursOf(R, L.k) * dim(ym); o.nKa++; }
+      var key = norm(L.k.no), pl = pulauKa(L.k.no), oi = pmI[ym + '|' + pl] = pmI[ym + '|' + pl] || { ym: ym, rev: 0, h: 0, ka: {}, nKa: 0 };
+      oi.rev += rev;
+      var kr = kaR[ym + '|' + key] = kaR[ym + '|' + key] || { rev: 0, h: 0, hj: null, pulau: pl };
+      kr.rev += rev;
+      if (!o.ka[key]) {
+        var hh = hoursOf(R, L.k), d = hj(L.k.no, ym);
+        o.ka[key] = 1; o.h += hh * d.n; o.hOld += hh * dim(ym); o.nKa++;
+        oi.ka[key] = 1; oi.h += hh * d.n; oi.nKa++;
+        kr.h = hh * d.n; kr.hj = d;
+      }
       pk[ym + '|' + norm(no)] = 1; pkG[ym + '|' + key] = 1;
     });
     /* ---- KA barang ---- */
@@ -64,13 +92,21 @@
     var bm = {}, bn = {};
     (pend.frei || []).forEach(function (r) {
       var ym = r[0], nama = r[1], rev = +r[4] || 0, n = norm(nama);
-      var o = bm[ym] = bm[ym] || { ym: ym, revAll: 0, rev: 0, h: 0, ka: {}, nKa: 0, trips: 0 };
+      var o = bm[ym] = bm[ym] || { ym: ym, revAll: 0, rev: 0, h: 0, hOld: 0, ka: {}, nKa: 0, trips: 0 };
       o.revAll += rev;
       var ks = n ? (byName[n] || []).filter(function (k) { return daily(k) && hoursOf(R, k) != null; }) : [];
       var why = !n ? 'Tanpa nama KA (' + (r[3] || r[2] || 'komoditas') + ')' : !byName[n] ? 'Nama KA tidak ada di GAPEKA' : !ks.length ? 'Hanya perjalanan fakultatif/KLB di GAPEKA' : '';
       if (why) { var key2 = n ? nama : why; var u = E.unB[key2] = E.unB[key2] || { nama: n ? nama : '—', rev: 0, n: 0, why: why }; u.rev += rev; u.n += r[6] || 1; return; }
       o.rev += rev;
-      if (!o.ka[n]) { o.ka[n] = 1; o.nKa++; o.trips += ks.length; o.h += sum(ks, function (k) { return hoursOf(R, k); }) * dim(ym); }
+      var plB = pulauKa(ks[0].no), oiB = bmI[ym + '|' + plB] = bmI[ym + '|' + plB] || { ym: ym, rev: 0, h: 0, ka: {}, nKa: 0 };
+      oiB.rev += rev;
+      var nr = nmR[ym + '|' + n] = nmR[ym + '|' + n] || { rev: 0, h: 0, pulau: plB, trips: ks.length, hjN: 0 };
+      nr.rev += rev;
+      if (!o.ka[n]) {
+        var hNew = sum(ks, function (k) { var d = hj(k.no, ym); nr.hjN += d.n; return hoursOf(R, k) * d.n; });
+        o.ka[n] = 1; o.nKa++; o.trips += ks.length; o.h += hNew; o.hOld += sum(ks, function (k) { return hoursOf(R, k); }) * dim(ym);
+        oiB.ka[n] = 1; oiB.nKa++; oiB.h += hNew; nr.h = hNew;
+      }
       bn[ym + '|' + n] = 1;
     });
     /* ---- rate per bulan + rate acuan ---- */
@@ -80,12 +116,36 @@
       var rv = sum(full, function (y) { return m[y].rev; }), h = sum(full, function (y) { return m[y].h; });
       return { list: yms.map(function (y) { return m[y]; }), by: m, ref: h ? rv / h : null, refFrom: full[0] || '', refTo: full[full.length - 1] || '' };
     }
+    function legacy(m) {
+      var yms = Object.keys(m).sort(), full = yms.filter(function (y) { return !todayYm || y < todayYm; }), by = {};
+      yms.forEach(function (y) { by[y] = m[y].hOld ? m[y].rev / m[y].hOld : null; });
+      var rv = sum(full, function (y) { return m[y].rev; }), h = sum(full, function (y) { return m[y].hOld; });
+      return { by: by, ref: h ? rv / h : null };
+    }
+    function split(mi, pl) { var m = {}; Object.keys(mi).forEach(function (k) { var a = k.split('|'); if (a[1] === pl) m[a[0]] = mi[k]; }); return finish(m); }
+    E.LP = legacy(pm); E.LB = legacy(bm);
     E.P = finish(pm); E.B = finish(bm); E.pk = pk; E.bn = bn;
-    E.rate = function (jenis, ym) {
+    E.PI = { Jawa: split(pmI, 'Jawa'), Sumatera: split(pmI, 'Sumatera') }; E.BI = { Jawa: split(bmI, 'Jawa'), Sumatera: split(bmI, 'Sumatera') };
+    E.kaR = kaR; E.nmR = nmR; E.hj = hj; E.hasProgram = !!HJ;
+    /** Rate jenis KA per bulan; dengan pulau: rate pulau itu (bulan → acuan pulau), jatuh ke rate gabungan bila pulau tanpa data. */
+    E.rate = function (jenis, ym, pulau) {
       var S = jenis === 'PENUMPANG' ? E.P : jenis === 'BARANG' ? E.B : null; if (!S) return null;
+      var SI = pulau ? (jenis === 'PENUMPANG' ? E.PI : E.BI)[pulau] : null;
+      if (SI && SI.list.length) {
+        var oi = SI.by[ym];
+        if (oi && !oi.partial && oi.rate) return { v: oi.rate, src: 'bulan', pulau: pulau };
+        if (SI.ref) return { v: SI.ref, src: 'acuan', pulau: pulau };
+      }
       var o = S.by[ym];
       if (o && !o.partial && o.rate) return { v: o.rate, src: 'bulan' };
       return S.ref ? { v: S.ref, src: 'acuan' } : null;
+    };
+    /** Rate milik KA kejadian sendiri (bulan lengkap saja): penumpang lewat nomor, barang lewat nama. */
+    E.kaRateOf = function (r) {
+      if (todayYm && r.ym >= todayYm) return null;
+      if (r.kaJenis === 'PENUMPANG') { var L = lookup(R, r.ka), x = L && kaR[r.ym + '|' + norm(L.k.no)]; return x && x.h > 0 ? { v: x.rev / x.h, x: x } : null; }
+      if (r.kaJenis === 'BARANG') { var y = nmR[r.ym + '|' + norm(r.kaNama)]; return y && y.h > 0 ? { v: y.rev / y.h, x: y } : null; }
+      return null;
     };
     E.unmatchedP = Object.keys(E.unP).map(function (k) { return E.unP[k]; }).sort(function (a, b) { return b.rev - a.rev; });
     E.unmatchedB = Object.keys(E.unB).map(function (k) { return E.unB[k]; }).sort(function (a, b) { return b.rev - a.rev; });
@@ -97,21 +157,38 @@
     };
     E.rarOf = function (r) {
       if (r.kaJenis !== 'PENUMPANG' && r.kaJenis !== 'BARANG') return null;
-      var q = E.rate(r.kaJenis, r.ym); if (!q) return null;
+      var k = E.kaRateOf(r); if (k) return { rp: r.menit / 60 * k.v, rate: k.v, src: 'KA' };
+      var q = E.rate(r.kaJenis, r.ym, E.pulauOf(r)); if (!q) return null;
       return { rp: r.menit / 60 * q.v, rate: q.v, src: q.src };
+    };
+    /** Metode lama (sebelum v3.16): hari kalender, rate jenis gabungan. Untuk perbandingan saja. */
+    E.legacyRarOf = function (r) {
+      var S = r.kaJenis === 'PENUMPANG' ? E.LP : r.kaJenis === 'BARANG' ? E.LB : null; if (!S) return null;
+      var o = E[r.kaJenis === 'PENUMPANG' ? 'P' : 'B'].by[r.ym], v = o && !o.partial && S.by[r.ym] ? S.by[r.ym] : S.ref;
+      return v ? r.menit / 60 * v : null;
+    };
+    /** Kejadian pada hari KA berstatus batal di program: pendapatan satu perjalanan (PERKIRAAN, terpisah dari RaR). */
+    E.batalOf = function (r) {
+      var P = R.prog; if (!P || P.error || !r.ka || !r.date) return null;
+      if (P.st[norm(r.ka) + '|' + r.date] !== 'B') return null;
+      var k = E.kaRateOf(r); if (!k) return { rp: null };
+      var trips = r.kaJenis === 'BARANG' ? k.x.hjN : k.x.hj ? k.x.hj.n : 0;
+      return { rp: trips ? k.x.rev / trips : null };
     };
     return E;
   }
 
   /** Rincian RaR untuk daftar kejadian L (semua kejadian; yang tidak dinilai dihitung sebagai "tidak dinilai"). */
   function detail(E, L) {
-    var priced = [], tot = { rp: 0, p: 0, b: 0, mP: 0, mB: 0, nP: 0, nB: 0, mAll: 0, mNo: 0, nNo: 0, mAcuan: 0, mMatchP: 0, mMatchB: 0 };
+    var priced = [], tot = { rp: 0, p: 0, b: 0, mP: 0, mB: 0, nP: 0, nB: 0, mAll: 0, mNo: 0, nNo: 0, mAcuan: 0, mKa: 0, mMatchP: 0, mMatchB: 0, legacy: 0, batalN: 0, batalRp: 0, batalNoRate: 0 };
     L.forEach(function (r) {
       tot.mAll += r.menit;
+      var bt = E.batalOf ? E.batalOf(r) : null; if (bt) { tot.batalN++; if (bt.rp != null) tot.batalRp += bt.rp; else tot.batalNoRate++; }
+      var lg = E.legacyRarOf ? E.legacyRarOf(r) : null; if (lg) tot.legacy += lg;
       var x = E.rarOf(r);
       if (!x) { tot.mNo += r.menit; tot.nNo++; return; }
       priced.push({ r: r, rp: x.rp, rate: x.rate, src: x.src });
-      tot.rp += x.rp; if (x.src === 'acuan') tot.mAcuan += r.menit;
+      tot.rp += x.rp; if (x.src === 'acuan') tot.mAcuan += r.menit; if (x.src === 'KA') tot.mKa += r.menit;
       if (r.kaJenis === 'PENUMPANG') { tot.p += x.rp; tot.mP += r.menit; tot.nP++; if (E.kaMatched(r)) tot.mMatchP += r.menit; }
       else { tot.b += x.rp; tot.mB += r.menit; tot.nB++; if (E.kaMatched(r)) tot.mMatchB += r.menit; }
     });

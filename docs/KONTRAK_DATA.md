@@ -43,6 +43,19 @@ GAPEKA 2025 (berlaku 1 Feb 2025) dan 2026 (berlaku 1 Des 2026) disimpan dan dian
 atau angka selisih/efek 2025→2026. Web app memilih sumber jadwal lewat satu switch global; `apiGapeka(tahun)` menerima
 hanya `2025` atau `2026`.
 
+## 5a. Program operasi KA (sejak v3.16.0)
+Sumber: Laporan KA Jalan/Batal (Jan–Nov 2026, satu berkas per bulan), Laporan Frekuensi KA 2026, Laporan Stasiun Perhentian
+GAPEKA 2025, pola operasi OMPR2. Diimpor `tools/operasi/impor_operasi.py` → `db/csv/ka_jalan_batal_2026.csv`,
+`ka_frekuensi_2026.csv`, `stasiun_perhentian_2025.csv`, `pola_operasi_ompr2.csv` → `tools/operasi/build_operasi_seed.py`
+→ `src/24_SeedOperasi.gs` (gzip). Modul `Ops` (`25_Operasi.gs`) menghasilkan `ref.prog`:
+- `ka` { kunci KA: [km, nama, relasi, frek jalan, frek batal] } untuk nomor reguler; `pola` baris pola operasi.
+- `st` { 'KA|yyyy-mm-dd': 'J' | 'J:1B' | 'B' | '-' } hanya untuk tanggal kejadian. `J:1B` = nomor itu batal tetapi varian
+  bernama sama (nomor dasar sama) berjalan.
+- `hj` hari jalan per KA per bulan (nomor + varian) untuk mesin pendapatan; `hj.sum` = kunci KA Sumatera.
+- Status sesudah `cetak` (tanggal cetak laporan) adalah PROGRAM, bukan realisasi; tampilan wajib memberi label.
+`apiKaOps(no)` mengembalikan pola harian satu KA; nomor divalidasi pola dan harus tercatat di seed.
+Tidak ada log dinasan harian per unit sarana di sumber mana pun: riwayat dinasan unit hanya memuat hari unit tercatat pada kejadian.
+
 ## 6. Tabel agregat (`kai_agg`, dari `db/bigquery/30_agregat.sql`)
 | Tabel | Butir | Isi |
 |---|---|---|

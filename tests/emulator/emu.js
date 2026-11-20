@@ -139,6 +139,14 @@ if (require.main === module) {
   const out = {}; ['apiBootstrap()', 'apiNarratives()', 'apiRef()', 'apiStatus()', 'apiGapeka26()'].forEach(c => { out[c.replace('()', '')] = vm.runInContext(c, ctx); });
   out.apiGapeka = { __byArg: true, '2025': vm.runInContext('apiGapeka("2025")', ctx), '2026': vm.runInContext('apiGapeka("2026")', ctx), x: vm.runInContext('apiGapeka("1999")', ctx) };
   console.log('apiGapeka 2025', out.apiGapeka['2025'].ok, '2026', out.apiGapeka['2026'].ok, 'tahun tak dikenal ditolak:', out.apiGapeka.x.ok === false);
+  // apiKaOps: jawaban per nomor KA yang muncul di snapshot (+ satu nomor tak dikenal untuk uji penolakan).
+  try {
+    const core = JSON.parse(zlib.gunzipSync(Buffer.from(out.apiBootstrap.core, 'base64')).toString('utf8')), iKa = core.fields.indexOf('ka'), kas = {};
+    core.rows.forEach(r => { if (r[iKa]) kas[String(r[iKa])] = 1; });
+    out.apiKaOps = { __byArg: true, 'x;1': vm.runInContext('apiKaOps("x;1")', ctx) };
+    Object.keys(kas).forEach(k => { const v = vm.runInContext('apiKaOps(' + JSON.stringify(k) + ')', ctx); if (v.ok) out.apiKaOps[k] = v; });
+    console.log('apiKaOps', Object.keys(out.apiKaOps).length - 1, 'KA · nomor tak dikenal ditolak:', out.apiKaOps['x;1'].ok === false);
+  } catch (e) { console.log('apiKaOps dilewati:', e.message); }
   Object.entries(out).forEach(([k, v]) => console.log(k, v.ok, v.error || '', JSON.stringify(v).length));
   fs.writeFileSync(__dirname + '/api.json', JSON.stringify(out));
 }
