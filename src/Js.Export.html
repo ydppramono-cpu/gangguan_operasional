@@ -81,6 +81,38 @@ window.KAIExport = (function () {
       });
   }
 
-  return { csv: csv, xlsx: xlsx, pptx: pptx, pdf: pdf, eventColumns: eventColumns, LIB: LIB };
+  /** Tabel HTML (table.tbl) → CSV apa adanya (teks sel yang tampil), untuk tombol unduh di kepala kartu. */
+  function tableCsv(table, name) {
+    var head = [].map.call(table.querySelectorAll('thead th'), function (th) { return th.textContent.replace(/\s+/g, ' ').trim(); });
+    var rows = [].map.call(table.querySelectorAll('tbody tr'), function (tr) { return [].map.call(tr.children, function (td) { return td.textContent.replace(/\s+/g, ' ').trim(); }); })
+      .filter(function (r) { return r.length > 1 || (r[0] && r[0].length); });
+    csv(rows, head.map(function (t, i) { return { title: t || 'Kolom ' + (i + 1), get: function (r) { return r[i]; } }; }), name);
+  }
+  /** Tombol "Unduh tabel" di kepala setiap kartu yang memuat tabel (dipasang otomatis, sekali per kartu). */
+  function enhance(root) {
+    [].forEach.call((root || document).querySelectorAll('.view .card'), function (card) {
+      var h = card.querySelector(':scope > .card-h'); if (!h || h.querySelector('.card-dl')) return;
+      var t = card.querySelector('table.tbl, .tabulator'); if (!t) return;
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'btn sm ghost card-dl no-print';
+      b.title = 'Unduh tabel (CSV)'; b.setAttribute('aria-label', 'Unduh tabel CSV');
+      b.innerHTML = '<svg class="i"><use href="#i-download"/></svg><span>CSV</span>';
+      b.addEventListener('click', function () {
+        var name = ((h.querySelector('h2, h3') || {}).textContent || 'Tabel').trim();
+        var tab = card.querySelector('.tabulator');
+        var inst = tab && window.Tabulator && Tabulator.findTable ? Tabulator.findTable(tab)[0] : null;
+        if (inst) inst.download('csv', fileBase(name) + '.csv', { delimiter: ';', bom: true });
+        else { var el = card.querySelector('table.tbl'); if (el) tableCsv(el, name); }
+      });
+      h.appendChild(b);
+    });
+  }
+  // Pasang tombol unduh setiap kali isi halaman berubah (debounce agar ringan).
+  (function watch() {
+    if (typeof MutationObserver === 'undefined') return;
+    var t = null;
+    function start() { new MutationObserver(function () { clearTimeout(t); t = setTimeout(function () { enhance(document); }, 350); }).observe(document.body, { childList: true, subtree: true }); }
+    if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
+  })();
+  return { csv: csv, xlsx: xlsx, pptx: pptx, pdf: pdf, eventColumns: eventColumns, LIB: LIB, tableCsv: tableCsv, enhance: enhance };
 })();
 </script>

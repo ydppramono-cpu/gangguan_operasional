@@ -401,6 +401,25 @@ window.KAIChart = (function () {
     setTimeout(function () { inst.resize(); }, 30);
   }
 
+  /** Data di balik grafik → CSV (kategori sumbu × seri; pie: nama × nilai; scatter/heatmap: titik apa adanya). */
+  function dataCsv(opt, info) {
+    var series = [].concat(opt.series || []).filter(function (s) { return s && s.data; });
+    if (!series.length || !window.KAIExport) return;
+    var ax = [].concat(opt.xAxis || [])[0], ay = [].concat(opt.yAxis || [])[0];
+    var cat = (ax && ax.type === 'category' && ax.data) || (ay && ay.type === 'category' && ay.data) || null;
+    function val(d) { return d && typeof d === 'object' && !Array.isArray(d) ? d.value : d; }
+    var cols = [], rows = [];
+    if (cat) {
+      cols.push({ title: (ax && ax.type === 'category' ? ax.name : ay && ay.name) || 'Kategori', field: 'k' });
+      series.forEach(function (s, i) { cols.push({ title: s.name || 'Seri ' + (i + 1), field: 's' + i }); });
+      cat.forEach(function (c, j) { var r = { k: c && c.value != null ? c.value : c }; series.forEach(function (s, i) { var v = val(s.data[j]); r['s' + i] = Array.isArray(v) ? v.join(' / ') : v; }); rows.push(r); });
+    } else {
+      cols = [{ title: 'Seri', field: 's' }, { title: 'Nama', field: 'n' }, { title: 'Nilai', field: 'v' }];
+      series.forEach(function (s, i) { s.data.forEach(function (d) { var v = val(d); rows.push({ s: s.name || 'Seri ' + (i + 1), n: d && d.name != null ? d.name : '', v: Array.isArray(v) ? v.join(' / ') : v }); }); });
+    }
+    KAIExport.csv(rows, cols, 'Grafik_' + info.title);
+  }
+
   /** Direktif Alpine x-chart: grafik reaktif + bilah alat (perbesar, perkecil, atur ulang, layar besar, unduh). */
   function register(Alpine) {
     Alpine.directive('chart', function (el, d, u) {
@@ -410,7 +429,8 @@ window.KAIChart = (function () {
         '<button data-a="out" title="Perkecil" aria-label="Perkecil">' + ic('i-zout') + '</button>' +
         '<button data-a="reset" title="Atur ulang zoom" aria-label="Atur ulang zoom">' + ic('i-refresh') + '</button>' +
         '<button data-a="big" title="Tampilan besar" aria-label="Tampilan besar">' + ic('i-expand') + '</button>' +
-        '<button data-a="dl" title="Unduh PNG beserta pembacaan data" aria-label="Unduh grafik">' + ic('i-download') + '</button>';
+        '<button data-a="dl" title="Unduh PNG beserta pembacaan data" aria-label="Unduh grafik">' + ic('i-download') + '</button>' +
+        '<button data-a="csv" title="Unduh data grafik (CSV)" aria-label="Unduh data grafik CSV" class="cbar-txt">CSV</button>';
       el.parentNode.insertBefore(bar, el);
       bar.addEventListener('click', function (e) {
         var b = e.target.closest('button[data-a]'); if (!b || !inst || !cur) return;
@@ -418,6 +438,7 @@ window.KAIChart = (function () {
         if (a === 'in') zoomBy(inst, .7); else if (a === 'out') zoomBy(inst, 1 / .7);
         else if (a === 'reset') inst.dispatchAction({ type: 'dataZoom', start: 0, end: 100 });
         else if (a === 'big') enlarge(cur, contextOf(el)); else if (a === 'dl') download(inst, cur, contextOf(el));
+        else if (a === 'csv') dataCsv(cur, contextOf(el));
       });
       u.effect(function () {
         get(function (opt) {

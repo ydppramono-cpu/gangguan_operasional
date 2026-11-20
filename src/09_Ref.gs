@@ -100,7 +100,19 @@ function buildRef_(raw) {
   var hq = head(raw.depo, 'No KA');
   if (hq >= 0) {
     var q = cols(raw.depo, hq, ['Depo', 'Kode stasiun', 'Jenis', 'No KA', 'Sumber']);
-    raw.depo.slice(hq + 1).forEach(function (r) { var n = D.txt(r[q[0]]); if (n) out.depo.push([n, D.txt(r[q[1]]).toUpperCase(), D.txt(r[q[2]]), D.txt(r[q[3]]), D.txt(r[q[4]])]); });
+    var stWil = {}; out.st.forEach(function (s) { stWil[s[0]] = s[2]; });
+    raw.depo.slice(hq + 1).forEach(function (r) {
+      var n = D.txt(r[q[0]]); if (!n) return;
+      var code = D.txt(r[q[1]]).toUpperCase(), wil = stWil[code] || '', P = D.pulauWil(wil), kept = [], tolak = [];
+      // Daftar KA depo induk dibersihkan per pulau (audit 20 Nov 2026): nomor Sumatera tanpa awalan diberi awalan wilayah,
+      // nomor yang pulaunya berbeda dengan depo tidak dipakai menautkan (dicatat di kolom catatan).
+      D.txt(r[q[3]]).split(/\s*,\s*/).filter(Boolean).forEach(function (no) {
+        if (!P) { kept.push(no); return; }
+        if (P === 'Sumatera' && D.pulauKa(no) !== 'Sumatera') { var a = D.kaAwalan(no, wil); if (a) { kept.push(a); return; } }
+        var pk = D.pulauKa(no); if (!pk || pk === P) kept.push(no); else tolak.push(no);
+      });
+      out.depo.push([n, code, D.txt(r[q[2]]), kept.join(', '), D.txt(r[q[4]]) + (tolak.length ? ' · ditolak (pulau lain): ' + tolak.join(', ') : '')]);
+    });
   }
 
   // Pustaka rujukan eksternal (M_RUJUKAN): [id, jenis, apa, url, tanggal, wilayah, topik, fakta, implikasi, verifikasi]

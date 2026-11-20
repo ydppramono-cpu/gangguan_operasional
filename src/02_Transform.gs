@@ -26,7 +26,7 @@ function transformRows_(values, idx, nowYm, kor) {
   if (missing.length) throw new Error('Kolom hilang: ' + missing.join(', ') + '. Snapshot lama dipertahankan.');
   Object.keys(SOURCE_COLUMNS_OPT).forEach(function (k) { col[k] = head.indexOf(SOURCE_COLUMNS_OPT[k]); });
 
-  var rows = [], narr = {}, seen = {}, units = {};
+  var rows = [], narr = {}, seen = {}, units = {}, silang = []; // silang = sarana yang pulau unitnya ≠ pulau kejadian
   var stats = { source: 0, skipped: 0, blank: 0, incomplete: 0, corrected: 0, dateConflict: 0, noDate: 0, badMinutes: 0, dupKey: 0, saranaMatched: 0, saranaAny: 0,
     lokMatched: 0, lokAny: 0, kaMatched: 0, kaAny: 0, review: {} };
   function g(r, k) { return col[k] >= 0 ? r[col[k]] : ''; }
@@ -62,9 +62,10 @@ function transformRows_(values, idx, nowYm, kor) {
     if (kr.subgangguan) { sub = kr.subgangguan; q.push('Label dikoreksi (M_KOREKSI)'); }
     var kelas = kr.kelas || D.classify(kat, sub);
     if (kelas === 'belum') {
-      stats.incomplete++; flag('Data belum lengkap');
+      // Kategori & Subgangguan kosong: kelas diturunkan dari judul bila polanya tegas (berlabel "diturunkan"); bila tidak, tetap "belum".
       var kt = D.classifyText(judul);
-      q.push('Data belum lengkap: Kategori & Subgangguan kosong' + (kt ? ' (indikasi judul: ' + kt + ')' : ''));
+      if (kt) { kelas = kt; drv.push('kelas'); stats.kelasDiturunkan = (stats.kelasDiturunkan || 0) + 1; q.push('Kelas diturunkan dari judul (Kategori & Subgangguan kosong di sumber)'); }
+      else { stats.incomplete++; flag('Data belum lengkap'); q.push('Data belum lengkap: Kategori & Subgangguan kosong'); }
     }
     var jenis = D.assetKind(g(row, 'jenisSarana'), sub);
 
@@ -82,9 +83,16 @@ function transformRows_(values, idx, nowYm, kor) {
     if (!loc.type || loc.type === 'lain') { var lt = D.locationFromText(judul, idx) || D.locationFromText(ketTxt, idx); if (lt) { loc = lt; drv.push('lokasi'); } }
     if (loc.type) { stats.lokAny++; if (loc.matched) stats.lokMatched++; else { q.push('Lokasi tidak dikenal'); flag('Lokasi tidak dikenal'); } }
 
+    // Pulau kejadian dari wilayah sumber (Daop = Jawa, Divre = Sumatera); dipakai menolak tautan KA/sarana pulau lain.
+    var pKej = D.pulauWil(g(row, 'wilayah')) || (loc.code && idx.st[loc.code.split('-')[0]] ? D.pulauWil(idx.st[loc.code.split('-')[0]].region) : '');
     var ka = kr.ka ? D.trainNumber(kr.ka) : D.trainNumber(g(row, 'ka'));
     if (!ka) { ka = D.kaFromText(judul) || D.kaFromText(ketTxt); if (ka) drv.push('ka'); }
+    if (ka && pKej === 'Sumatera' && D.pulauKa(ka) !== 'Sumatera') { var kaA = D.kaAwalan(ka, g(row, 'wilayah')); if (kaA) { ka = kaA; drv.push('ka-awalan'); } }
     var lk = ka ? D.trainLookup(ka, idx) : null, kaInfo = lk ? lk.info : null;
+    if (kaInfo && pKej && D.pulauKa(ka) && D.pulauKa(ka) !== pKej) {
+      kaInfo = null; lk = null; stats.kaBedaPulau = (stats.kaBedaPulau || 0) + 1;
+      q.push('Nomor KA ' + ka + ' terdaftar di ' + D.pulauKa(ka) + ', kejadian di ' + pKej + ' (tidak ditautkan)'); flag('Nomor KA beda pulau');
+    }
     if (ka) { stats.kaAny++; if (kaInfo) { stats.kaMatched++; if (lk.via) { var vk = /^nomor dasar/.test(lk.via) ? 'kaViaBase' : /^nomor gabungan/.test(lk.via) ? 'kaViaJoint' : 'kaViaTimetable'; stats[vk] = (stats[vk] || 0) + 1; } } }
 
     var src = D.txt(g(row, 'sumber'));
@@ -101,6 +109,10 @@ function transformRows_(values, idx, nowYm, kor) {
     var peny = D.txt(g(row, 'penyebab'));
     if (!peny) { peny = D.causeFromText(ketTxt); if (peny) drv.push('penyebab'); }
     var jpl = D.jplNo(judul + ' ' + ketTxt + ' ' + kmTxt);
+    if (pKej && sar.length) {
+      var tgl = dt.ym ? dt.ym + '-' + ('0' + (dt.d || 1)).slice(-2) : '';
+      sar.forEach(function (c) { var pu = D.pulauUnit(idx.sar[c], c, tgl); if (pu && pu !== pKej) silang.push({ ri: rows.length, c: c, p: pKej, tgl: tgl }); });
+    }
     var rec = [
       id, dt.ym, dt.d, kelas, D.title(kat) || '', sub, judul, wil,
       jenis, sar.join('|'), D.txt(g(row, 'noSarana')).slice(0, 120),
@@ -117,6 +129,24 @@ function transformRows_(values, idx, nowYm, kor) {
     var ket = D.txt(g(row, 'ket')), tl = D.txt(g(row, 'tindak'));
     if (ket || tl) narr[id] = [ket, tl];
   }
+  // Sarana beda pulau: ≥ 2 kejadian unit yang sama di pulau lain = mutasi antarpulau (tautan dipertahankan, dicatat);
+  // hanya 1 kejadian = nomor diragukan → dilepas dari kejadian (teks asli tetap di kolom nomor sumber) dan masuk antrean verifikasi.
+  var perUnit = {};
+  silang.forEach(function (x) { var k = x.c + '|' + x.p; (perUnit[k] = perUnit[k] || []).push(x); });
+  stats.saranaMutasi = []; stats.saranaVerifikasi = [];
+  Object.keys(perUnit).forEach(function (k) {
+    var L = perUnit[k], c = L[0].c, p = L[0].p;
+    if (L.length >= 2) {
+      var t = L.map(function (x) { return x.tgl; }).filter(Boolean).sort();
+      stats.saranaMutasi.push([c, p, t[0] || '', t[t.length - 1] || '', L.length]);
+      L.forEach(function (x) { rows[x.ri][26] = (rows[x.ri][26] ? rows[x.ri][26] + '; ' : '') + 'Unit ' + c + ' tercatat mutasi ke ' + p; });
+    } else {
+      var r = rows[L[0].ri];
+      r[9] = String(r[9]).split('|').filter(function (z) { return z && z !== c; }).join('|');
+      r[26] = (r[26] ? r[26] + '; ' : '') + 'Nomor sarana ' + c + ' terdaftar di pulau lain (tidak ditautkan, perlu verifikasi)';
+      stats.saranaVerifikasi.push([r[0], c, p, L[0].tgl, idx.sar[c] ? idx.sar[c].dipo : '']);
+    }
+  });
   return { fields: CORE_FIELDS, rows: rows, units: units, narr: narr, stats: stats };
 }
 
@@ -156,7 +186,7 @@ function mastersFromValues_(kaVals, stVals, pjVals, sarVals, jdVals) {
   var hsr = headerRow(sarVals, 'no_sarana');
   if (hsr >= 0) {
     var s = sarVals[hsr].map(D.txt);
-    var sc = [s.indexOf('no_sarana'), s.indexOf('class_desc'), s.indexOf('dipo_name'), s.indexOf('equipment_desc')];
+    var sc = [s.indexOf('no_sarana'), s.indexOf('class_desc'), s.indexOf('dipo_name'), s.indexOf('equipment_desc'), s.indexOf('plant')];
     sarVals.slice(hsr + 1).forEach(function (r) { src.sarana.push(sc.map(function (i) { return i >= 0 ? r[i] : ''; })); });
   }
   return src;

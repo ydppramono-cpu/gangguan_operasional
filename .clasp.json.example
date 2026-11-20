@@ -22,6 +22,7 @@
     "src/18_SeedPeta.gs",
     "src/19_SeedGapeka26.gs", "src/20_SeedGapeka25.gs",
     "src/21_BqKolom.gs",
-    "src/22_Bq.gs"
+    "src/22_Bq.gs",
+    "src/23_SeedPulau.gs"
   ]
 }

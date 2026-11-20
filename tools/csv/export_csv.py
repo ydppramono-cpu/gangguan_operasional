@@ -54,6 +54,16 @@ for k, nm, src, key in [('jpl', 'ref_jpl_1404', 'PDF 1404 Titik Perlintasan Sebi
 
 # --- Resor (PETA_WILAYAH transkripsi) ---
 R = S['resor']; meta = {m[0]: m for m in R['meta']}
+
+ROMAWI = {'I': 1, 'II': 2, 'III': 3, 'IV': 4}
+def wil_baku(w):
+    """Nama wilayah baku 'Daop n' / 'Divre n' (audit 20 Nov 2026: sumber memakai 'DAOP 4 SEMARANG', 'Divre I Sumatera Utara', dll.)."""
+    m = re.match(r'\s*(daop|divre)\s*([0-9]+|IV|I{1,3})\b', w or '', re.I)
+    if not m:
+        return w or ''
+    n = ROMAWI.get(m.group(2).upper()) or int(m.group(2))
+    return ('Daop ' if m.group(1).lower() == 'daop' else 'Divre ') + str(n)
+
 write('ref_resor_jr', ['kode_upt', 'wilayah', 'nama_resor', 'jml_stasiun', 'km_awal', 'km_akhir', 'stasiun'], R['meta'], R['version'], 'kode_upt')
 write('ref_resor_stasiun_transkripsi', ['kode_stasiun', 'kode_upt'], list(R['st'].items()), R['version'], 'kode_stasiun')
 write('ref_resor_petak', ['petak', 'kode_upt', 'tanda'], [[p, v[0], v[1]] for p, v in R['pj'].items()], R['version'] + " — tanda: b=lintas batas, t=perlu tinjau, u=ujung tak terpetakan", 'petak')
@@ -128,7 +138,7 @@ for c in allc:
     m = meta.get(u)
     lat, lon, ks = (o['latitude'], o['longitude'], 'resmi data_station') if o and o['latitude'] else ((ps[0], ps[1], 'peta (' + (P['stSrc'][ps[3]] if ps[3] is not None and ps[3] < len(P['stSrc']) else 'interpolasi') + ')') if ps else ('', '', ''))
     ls = LS.get(c, {})
-    out.append([c, (o['station_name'] if o else ls.get('nama_stasiun') or gst.get(c) or dwn.get(c, '')), (o['daop_desc'] if o else (ls.get('wilayah') or (m[1] if m else gwil.get(c, '')))), ls.get('status', ''), u, (m[2] if m else ''),
+    out.append([c, (o['station_name'] if o else ls.get('nama_stasiun') or gst.get(c) or dwn.get(c, '')), wil_baku(o['daop_desc'] if o else (ls.get('wilayah') or (m[1] if m else gwil.get(c, '')))), ls.get('status', ''), u, (m[2] if m else ''),
                 'resmi data_station' if o else ('transkripsi PETA_WILAYAH' if c in seedst else ''), lat, lon, ks, ps[2] if ps else '',
                 int(c in ka25), int(c in ka26)])
 write('master_stasiun', ['kode_stasiun', 'nama_stasiun', 'wilayah', 'status_master', 'kode_upt', 'nama_resor', 'sumber_upt', 'lat', 'lon', 'sumber_koordinat', 'elevasi_m', 'dilayani_gapeka2025', 'dilayani_gapeka2026'],

@@ -18,7 +18,7 @@ const OUT = process.env.FLOW_DIR || __dirname + '/shots/alur'; fs.mkdirSync(OUT,
   await step('temuan-ke-telusuri', () => p.locator('a:has-text("Lihat"), button:has-text("Lihat")').filter({ hasText: /kejadian/ }).first().click(), s => s.route === 'telusuri');
   await step('baris-ke-kejadian', () => p.locator('.tabulator-row').first().click(), s => s.route === 'kejadian');
   await step('kejadian-ke-profil-lokasi', () => p.locator('dl dd button.link-btn').nth(1).click(), s => s.route === 'profil' || s.route === 'telusuri');
-  await step('kembali-ke-kejadian', () => p.click('button:has-text("Kembali")'), s => s.route === 'kejadian');
+  await step('kembali-ke-kejadian', () => p.click('.back-btn'), s => s.route === 'kejadian');
   await step('kejadian-ke-profil-wilayah', () => p.locator('dl dd button.link-btn').first().click(), s => s.route === 'profil' && /wilayah/.test(s.params));
   await step('wilayah', () => p.evaluate(() => Alpine.store('app').go('wilayah')), s => s.route === 'wilayah');
   await step('wilayah-ke-profil-lokasi', () => p.locator('main table.tbl tbody button.link-btn.plain').first().click(), s => s.route === 'profil' || s.route === 'telusuri');

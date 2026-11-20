@@ -145,7 +145,7 @@ document.addEventListener('alpine:init', function () {
       f: { mode: 'month', ym: '', from: '', to: '', h0: 0, h1: 23, cmp: 'prev', wilayah: [], kelas: [], imbas: true },
       tel: { q: '', period: 'p', kelas: '', cross: '', ids: null, label: '' },
       notif: { has: false, open: false, items: [], log: [], summary: '', timer: null },
-      busy: false, toast: null, sidebarOpen: false, sidebarMini: false, wilayahOpen: false, periodOpen: false,
+      busy: false, toast: null, sidebarOpen: false, sidebarMini: false, wilayahOpen: false, periodOpen: false, dlOpen: false, jamOpen: false, fbOpen: false,
       sq: '', sres: [], sopen: false, sidx: 0,
 
       init: function () {
@@ -365,6 +365,13 @@ document.addEventListener('alpine:init', function () {
         if (i >= 0) cur.splice(i, 1); else cur.push(w);
         this.setF({ wilayah: cur });
       },
+      /** Unduh cepat dari menu Unduh di navbar: kejadian periode aktif (sesuai filter) atau seluruh data. */
+      quickCsv: function (kind) {
+        if (!window.KAIExport) return;
+        var L = kind === 'periode' ? (this.R ? this.R.L : []) : KAI.data.all;
+        KAIExport.csv(L, KAIExport.eventColumns(), 'Kejadian_' + (kind === 'periode' && this.R ? this.R.P.short : 'semua'));
+        this.say('Mengunduh ' + KAI.fmt.n(L.length) + ' baris kejadian (CSV)');
+      },
       resetFilters: function () { this.setF({ mode: 'month', ym: this.defaultYm(), h0: 0, h1: 23, wilayah: [], kelas: [] }); },
 
       /* ---------- Pencarian global ---------- */
@@ -402,4 +409,12 @@ document.addEventListener('alpine:init', function () {
     });
   });
 })();
+
+  // Pintasan "/" → fokus ke pencarian global (kecuali sedang mengetik di kolom lain).
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+    var t = e.target, tag = t && t.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (t && t.isContentEditable)) return;
+    var g = document.getElementById('gsearch'); if (g) { e.preventDefault(); g.focus(); }
+  });
 </script>

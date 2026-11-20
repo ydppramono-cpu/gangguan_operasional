@@ -1,6 +1,6 @@
 kode_stasiun,nama_stasiun,wilayah,status_master,kode_upt,nama_resor,sumber_upt,lat,lon,sumber_koordinat,elevasi_m,dilayani_gapeka2025,dilayani_gapeka2026
 ABL,Ambulu,Daop 9,tidak aktif,,,,,,,,0,0
-ABR,Ambarawa,DAOP 4 SEMARANG,tidak aktif,4.22,Ambarawa,resmi data_station,-7.265386235,110.4013885,resmi data_station,,0,0
+ABR,Ambarawa,Daop 4,tidak aktif,4.22,Ambarawa,resmi data_station,-7.265386235,110.4013885,resmi data_station,,0,0
 AC,Ancol,Daop 1,aktif,1.2,Tanjungpriuk,transkripsi PETA_WILAYAH,-6.12811,106.8448,peta (ekadanis/stasiun_map_app),3,1,1
 ADT,Adiantorop,Divre 1,tidak aktif,I.11,Mambangmuda,transkripsi PETA_WILAYAH,,,,,0,0
 AGO,Argopuro,Daop 9,aktif,9.8,Rogojampi,transkripsi PETA_WILAYAH,-8.18359,114.3694,peta (ekadanis/stasiun_map_app),,1,1
@@ -19,7 +19,7 @@ ARJ,Air Joman,Divre 1,tidak aktif,I.9,Kisaran,transkripsi PETA_WILAYAH,,,,,0,0
 ART,Air Tuba,Divre 4,tidak aktif,,,,-4.22036,104.24447,peta (interpolasi km petak di geometri OSM),,0,0
 ASM,Air Asam,Divre 4,aktif,IV.17,Pagergunung,transkripsi PETA_WILAYAH,-3.64728,104.30058,peta (interpolasi km petak di geometri OSM),,1,1
 AT,Air Tawar,Divre 2,aktif,II.1,Padang,transkripsi PETA_WILAYAH,-0.90037,100.35076,peta (ekadanis/stasiun_map_app),,1,1
-ATA,Alastua,DAOP 4 SEMARANG,aktif,4.11,Brumbung,resmi data_station,-6.984336693,110.4758768,resmi data_station,,1,1
+ATA,Alastua,Daop 4,aktif,4.11,Brumbung,resmi data_station,-6.984336693,110.4758768,resmi data_station,,1,1
 AW,Awipari,Daop 2,aktif,2.12,Tasikmalaya,transkripsi PETA_WILAYAH,-7.3537,108.2744,peta (ekadanis/stasiun_map_app),,1,1
 AWN,Arjawinangun,Daop 3,aktif,3.7,Arjawinangun,transkripsi PETA_WILAYAH,-6.64459,108.4146,peta (ekadanis/stasiun_map_app),,1,1
 BAL,Bangsal,Daop 8,tidak aktif,8.13,Mojokerto,transkripsi PETA_WILAYAH,,,,,0,0
@@ -29,14 +29,14 @@ BAT,Barat,Daop 7,tidak aktif,,,,,,,,0,0
 BB,Brebes,Daop 3,aktif,3.13,Brebes,transkripsi PETA_WILAYAH,-6.87427,109.0434,peta (ekadanis/stasiun_map_app),,1,1
 BBA,Blambangan Pagar,Divre 4,aktif,IV.4,Blambangan Pagar,transkripsi PETA_WILAYAH,-4.89517,105.03941,peta (ekadanis/stasiun_map_app),,1,1
 BBD,Babadan,Daop 7,aktif,7.7,Madiun,transkripsi PETA_WILAYAH,-7.5871,111.5886,peta (ekadanis/stasiun_map_app),,1,1
-BBG,Brumbung,DAOP 4 SEMARANG,aktif,4.11,Brumbung,resmi data_station,-7.025622489,110.5220655,resmi data_station,,1,1
+BBG,Brumbung,Daop 4,aktif,4.11,Brumbung,resmi data_station,-7.025622489,110.5220655,resmi data_station,,1,1
 BBK,Babakan,Daop 3,aktif,3.10,Babakan,transkripsi PETA_WILAYAH,-6.8606,108.72,peta (ekadanis/stasiun_map_app),,1,1
-BBN,Brambanan,DAOP 6 YOGYAKARTA,aktif,6.5,Brambanan,resmi data_station,-7.756207033,110.5003731,resmi data_station,,1,1
+BBN,Brambanan,Daop 6,aktif,6.5,Brambanan,resmi data_station,-7.756207033,110.5003731,resmi data_station,,1,1
 BBS,Babussalam,Divre 1,tidak aktif,I.12,Rantauprapat,transkripsi PETA_WILAYAH,,,,,0,0
 BBT,Babat,Daop 8,aktif,8.4,Babat,transkripsi PETA_WILAYAH,-7.1063,112.16887,peta (DenShubi/Indonesian-Railway-),,1,1
 BBU,Blambangan Umpu,Divre 4,aktif,IV.10,Blambangan Umpu,transkripsi PETA_WILAYAH,-4.49817,104.5202,peta (ekadanis/stasiun_map_app),,1,1
 BD,Bandung,Daop 2,aktif,2.7,Ciroyom,transkripsi PETA_WILAYAH,-6.91388,107.6026,peta (ekadanis/stasiun_map_app),709,1,1
-BDN,Bedono,DAOP 4 SEMARANG,tidak aktif,4.22,Ambarawa,resmi data_station,,,,,0,0
+BDN,Bedono,Daop 4,tidak aktif,4.22,Ambarawa,resmi data_station,,,,,0,0
 BDO,Bendosendung,Daop 7,tidak aktif,7.11,Blitar,transkripsi PETA_WILAYAH,,,,,0,0
 BDR,Buduran,Daop 8,aktif,8.14,Sidoarjo,transkripsi PETA_WILAYAH,-7.42792,112.723,peta (ekadanis/stasiun_map_app),,1,1
 BDT,Bandar Tinggi,Divre 1,aktif,I.7,Perlanaan,transkripsi PETA_WILAYAH,3.28442,99.30481,peta (ekadanis/stasiun_map_app),,1,1
@@ -44,7 +44,7 @@ BDW,Bangoduwa,Daop 3,aktif,3.8,Cirebon,transkripsi PETA_WILAYAH,-6.66296,108.46,
 BEK,Bekasi Barat,Daop 1,aktif,,,,,,,,0,0
 BEM,Bemban,Divre 3,tidak aktif,III.19,Sukarame,transkripsi PETA_WILAYAH,,,,,0,0
 BEN,Benculuk,Daop 1,tidak aktif,,,,,,,,0,0
-BET,,Daop 8 Surabaya,,,,,,,,,0,0
+BET,,Daop 8,,,,,,,,,0,0
 BG,Bangil,Daop 8,aktif,8.15,Bangil,transkripsi PETA_WILAYAH,-7.599,112.7782,peta (ekadanis/stasiun_map_app),,1,1
 BGM,Bunga Mas,Divre 3,aktif,III.19,Sukarame,transkripsi PETA_WILAYAH,-3.70389,103.36806,peta (ekadanis/stasiun_map_app),,1,1
 BGR,Bagor,Daop 7,aktif,7.5,Bagor,transkripsi PETA_WILAYAH,-7.57159,111.8528,peta (ekadanis/stasiun_map_app),,1,1
@@ -76,7 +76,7 @@ BLI,Bahlias,Divre 1,aktif,I.7,Perlanaan,transkripsi PETA_WILAYAH,3.2012,99.34033
 BLP,Balapulang,Daop 5,aktif,5.1,Slawi,transkripsi PETA_WILAYAH,-7.04885,109.0982,peta (interpolasi km petak di geometri OSM),,1,1
 BLT,Belatung,Divre 4,aktif,IV.15,Blimbing Air Kaka,transkripsi PETA_WILAYAH,-4.02661,104.2288,peta (ekadanis/stasiun_map_app),,1,1
 BLW,Belawan,Divre 1,aktif,I.2,Ujungbaru,transkripsi PETA_WILAYAH,3.7782,98.68164,peta (ekadanis/stasiun_map_app),,1,1
-BMA,Bumiayu,DAOP 5 PURWOKERTO,aktif,5.3,Bumiayu,resmi data_station,-7.237229699,109.0097456,resmi data_station,,1,1
+BMA,Bumiayu,Daop 5,aktif,5.3,Bumiayu,resmi data_station,-7.237229699,109.0097456,resmi data_station,,1,1
 BMB,Bamban,Divre 1,aktif,I.5,Tebingtinggi,transkripsi PETA_WILAYAH,3.43762,99.16699,peta (ekadanis/stasiun_map_app),,1,1
 BMG,Blimbing,Daop 8,aktif,8.17,Malang,transkripsi PETA_WILAYAH,-7.93994,112.64486,peta (DenShubi/Indonesian-Railway-),,1,1
 BMS,Bukit Mas,Divre 1,tidak aktif,,,,,,,,0,0
@@ -96,8 +96,8 @@ BSG,Besitang,Divre 1,aktif,I.15,Pangkalan Brandan,transkripsi PETA_WILAYAH,4.042
 BSS,Bangsalsari,Daop 9,aktif,9.4,Tanggul,transkripsi PETA_WILAYAH,-8.203,113.5334,peta (ekadanis/stasiun_map_app),,1,1
 BST,Bandara Soekarno Hatta,Daop 1,aktif,1.7,Tangerang,transkripsi PETA_WILAYAH,-6.127,106.652,peta (sandihex86/masterdataprasarana),12,1,1
 BTA,Baturaja,Divre 4,aktif,IV.14,Baturaja,transkripsi PETA_WILAYAH,-4.1275,104.1624,peta (ekadanis/stasiun_map_app),,1,1
-BTG,Batang,DAOP 4 SEMARANG,aktif,4.5,Batang,resmi data_station,-6.909936873,109.7475779,resmi data_station,,1,1
-BTH,Butuh,DAOP 5 PURWOKERTO,aktif,5.14,Kutoarjo,resmi data_station,-7.723985848,109.8585475,resmi data_station,,1,1
+BTG,Batang,Daop 4,aktif,4.5,Batang,resmi data_station,-6.909936873,109.7475779,resmi data_station,,1,1
+BTH,Butuh,Daop 5,aktif,5.14,Kutoarjo,resmi data_station,-7.723985848,109.8585475,resmi data_station,,1,1
 BTI,Branti,Divre 4,aktif,IV.2,Rejosari,transkripsi PETA_WILAYAH,-5.25462,105.17883,peta (interpolasi km petak di geometri OSM),,1,1
 BTK,Batang Kuis,Divre 1,aktif,I.3,Araskabu,transkripsi PETA_WILAYAH,3.59424,98.75623,peta (ekadanis/stasiun_map_app),,1,1
 BTL,Batutabal,Divre 2,aktif,,,,,,,,0,0
@@ -123,7 +123,7 @@ CC,Cicayur,Daop 1,aktif,1.21,Parungpanjang,transkripsi PETA_WILAYAH,-6.32959,106
 CCL,Cicalengka,Daop 2,aktif,2.9,Cicalengka,transkripsi PETA_WILAYAH,-6.98157,107.8328,peta (ekadanis/stasiun_map_app),689,1,1
 CCR,Cicurug,Daop 1,aktif,1.18,Cigombong,transkripsi PETA_WILAYAH,-6.79041,106.7796,peta (ekadanis/stasiun_map_app),,1,1
 CD,Cikadongdong,Daop 2,aktif,2.3,Rendeh,transkripsi PETA_WILAYAH,-6.71521,107.3904,peta (ekadanis/stasiun_map_app),408,1,1
-CE,Ceper,DAOP 6 YOGYAKARTA,aktif,6.7,Delanggu,resmi data_station,-7.668854094,110.6748,resmi data_station,,1,1
+CE,Ceper,Daop 6,aktif,6.7,Delanggu,resmi data_station,-7.668854094,110.6748,resmi data_station,,1,1
 CEK,Cepu Kota,Daop 4,tidak aktif,,,,,,,,0,0
 CEP,Cempaka,Divre 4,aktif,IV.5,Kotabumi,transkripsi PETA_WILAYAH,-4.79371,104.8195,peta (ekadanis/stasiun_map_app),,1,1
 CG,Cisomang,Daop 2,aktif,2.3,Rendeh,transkripsi PETA_WILAYAH,-6.68615,107.39791,peta (sandihex86/masterdataprasarana),338,1,1
@@ -161,11 +161,11 @@ CMS,Candimas,Divre 4,aktif,IV.4,Blambangan Pagar,transkripsi PETA_WILAYAH,-4.849
 CN,Cirebon,Daop 3,aktif,3.8,Cirebon,transkripsi PETA_WILAYAH,-6.70551,108.5554,peta (ekadanis/stasiun_map_app),,1,1
 CNK,Cangkring,Daop 3,aktif,3.8,Cirebon,transkripsi PETA_WILAYAH,-6.6795,108.5008,peta (ekadanis/stasiun_map_app),,1,1
 CNP,Cirebon Prujakan,Daop 3,aktif,3.9,Cirebon Prujakan,transkripsi PETA_WILAYAH,-6.71918,108.5588,peta (ekadanis/stasiun_map_app),,1,1
-CO,Comal,DAOP 4 SEMARANG,aktif,4.3,Petarukan,resmi data_station,-6.909089735,109.5368404,resmi data_station,,1,1
-CP,Cilacap,DAOP 5 PURWOKERTO,aktif,5.9,Cilacap,resmi data_station,-7.735855131,109.0070703,resmi data_station,,1,1
+CO,Comal,Daop 4,aktif,4.3,Petarukan,resmi data_station,-6.909089735,109.5368404,resmi data_station,,1,1
+CP,Cilacap,Daop 5,aktif,5.9,Cilacap,resmi data_station,-7.735855131,109.0070703,resmi data_station,,1,1
 CPD,Cipeundeuy,Daop 2,aktif,2.11,Ciawi,transkripsi PETA_WILAYAH,-7.09357,108.1006,peta (ekadanis/stasiun_map_app),772,1,1
 CPH,Cimparuh,Divre 2,aktif,II.2,Lubuk Alung,transkripsi PETA_WILAYAH,-0.63147,100.1381,peta (interpolasi km petak di geometri OSM),,1,1
-CPI,Cipari,DAOP 5 PURWOKERTO,aktif,5.7,Langen,resmi data_station,-7.440155053,108.7611486,resmi data_station,,1,1
+CPI,Cipari,Daop 5,aktif,5.7,Langen,resmi data_station,-7.440155053,108.7611486,resmi data_station,,1,1
 CPN,Cipinang,Daop 1,tidak aktif,,,,-6.21417,106.8844,peta (ekadanis/stasiun_map_app),14,0,0
 CPT,Cipatat,Daop 2,aktif,2.6,Cianjur,transkripsi PETA_WILAYAH,-6.82208,107.3858,peta (ekadanis/stasiun_map_app),387,1,1
 CPY,Cipeuyeum,Daop 2,aktif,2.6,Cianjur,transkripsi PETA_WILAYAH,-6.81848,107.2982,peta (ekadanis/stasiun_map_app),,1,1
@@ -182,7 +182,7 @@ CT,Catang,Daop 1,aktif,1.24,Catang,transkripsi PETA_WILAYAH,-6.266,106.268,peta 
 CTA,Citayam,Daop 1,aktif,1.16,Citayam,transkripsi PETA_WILAYAH,-6.44897,106.8024,peta (ekadanis/stasiun_map_app),420,1,1
 CTH,Cikudapateuh,Daop 2,aktif,2.8,Kiaracondong,transkripsi PETA_WILAYAH,-6.91885,107.62588,peta (sandihex86/masterdataprasarana),691,1,1
 CTR,Citeras,Daop 1,aktif,1.23,Rangkasbitung,transkripsi PETA_WILAYAH,-6.33489,106.33209,peta (jeffersonsetiawan/TMConfiguration),48,1,1
-CU,Cepu,DAOP 4 SEMARANG,aktif,4.19,Cepu,resmi data_station,-7.154209796,111.5907396,resmi data_station,,1,1
+CU,Cepu,Daop 4,aktif,4.19,Cepu,resmi data_station,-7.154209796,111.5907396,resmi data_station,,1,1
 CUK,Cakung,Daop 1,aktif,1.9,Bekasi,transkripsi PETA_WILAYAH,-6.219,106.952,peta (sandihex86/masterdataprasarana),4,1,1
 CW,Cawang,Daop 1,aktif,1.14,Pasarminggu,transkripsi PETA_WILAYAH,-6.243,106.859,peta (sandihex86/masterdataprasarana),26,1,1
 CWG,Cawang,Daop 1,aktif,,,,,,,,0,0
@@ -195,13 +195,13 @@ DAR,Daru,Daop 1,aktif,1.22,Tigaraksa,transkripsi PETA_WILAYAH,-6.33789,106.4924,
 DD,Duduk,Daop 8,aktif,8.7,Cerme,transkripsi PETA_WILAYAH,-7.1546,112.5206,peta (ekadanis/stasiun_map_app),,1,1
 DI,Diski,Divre 1,tidak aktif,I.13,Binjai,transkripsi PETA_WILAYAH,,,,,0,0
 DKA,Dukuh Atas,Daop 1,aktif,,,,,,,,0,0
-DL,Delanggu,DAOP 6 YOGYAKARTA,aktif,6.7,Delanggu,resmi data_station,-7.621959278,110.7066358,resmi data_station,,1,1
+DL,Delanggu,Daop 6,aktif,6.7,Delanggu,resmi data_station,-7.621959278,110.7066358,resmi data_station,,1,1
 DM,Demak,Daop 4,tidak aktif,,,,,,,,0,0
 DMR,Dolok Merangir,Divre 1,aktif,I.6,Siantar,transkripsi PETA_WILAYAH,3.11762,99.11719,peta (ekadanis/stasiun_map_app),,1,1
 DNB,Danau Bale,Divre 1,aktif,,,,,,,,1,1
 DP,Depok,Daop 1,aktif,1.15,Depok,transkripsi PETA_WILAYAH,-6.405,106.817,peta (sandihex86/masterdataprasarana),93,1,1
 DPB,Depokbaru,Daop 1,aktif,1.15,Depok,transkripsi PETA_WILAYAH,-6.391,106.822,peta (sandihex86/masterdataprasarana),93,1,1
-DPL,Doplang,DAOP 4 SEMARANG,aktif,4.17,Doplang,resmi data_station,-7.182707745,111.2879171,resmi data_station,,1,1
+DPL,Doplang,Daop 4,aktif,4.17,Doplang,resmi data_station,-7.182707745,111.2879171,resmi data_station,,1,1
 DPT,DAMPIT,Daop 8,tidak aktif,,,,,,,,0,0
 DRN,Durenkalibata,Daop 1,aktif,1.14,Pasarminggu,transkripsi PETA_WILAYAH,-6.25568,106.855,peta (ekadanis/stasiun_map_app),26,1,1
 DSU,Dusun,Divre 1,aktif,I.8,Seibejangkar,transkripsi PETA_WILAYAH,3.12726,99.51043,peta (interpolasi km petak di geometri OSM),,1,1
@@ -210,15 +210,15 @@ DUK,Duku,Divre 2,aktif,II.1,Padang,transkripsi PETA_WILAYAH,-0.78699,100.3168,pe
 DWN,Dawuan,Daop 1,aktif,1.13,Cikampek,transkripsi PETA_WILAYAH,-6.369,107.375,peta (sandihex86/masterdataprasarana),31,1,1
 EB,Embang,Daop 4,tidak aktif,,,,,,,,0,0
 GAR,Garongkong,Daop 8,aktif,,,,,,,,0,0
-GB,Gombong,DAOP 5 PURWOKERTO,aktif,5.12,Gombong,resmi data_station,-7.610469208843255,109.5078650984377,resmi data_station,,1,1
+GB,Gombong,Daop 5,aktif,5.12,Gombong,resmi data_station,-7.610469208843255,109.5078650984377,resmi data_station,,1,1
 GBA,Gebang,Divre 1,aktif,I.15,Pangkalan Brandan,transkripsi PETA_WILAYAH,3.95691,98.37035,peta (interpolasi km petak di geometri OSM),,1,1
 GBG,Gebang,Daop 8,tidak aktif,,,,,,,,0,0
-GBN,Gambringan,DAOP 4 SEMARANG,aktif,4.14,Gambringan,resmi data_station,-7.1439138,110.9150854,resmi data_station,,1,1
-GD,Gundih,DAOP 4 SEMARANG,aktif,4.21,Gundih,resmi data_station,-7.218736628,110.8999626,resmi data_station,,1,1
+GBN,Gambringan,Daop 4,aktif,4.14,Gambringan,resmi data_station,-7.1439138,110.9150854,resmi data_station,,1,1
+GD,Gundih,Daop 4,aktif,4.21,Gundih,resmi data_station,-7.218736628,110.8999626,resmi data_station,,1,1
 GDB,Gedebage,Daop 2,aktif,2.8,Kiaracondong,transkripsi PETA_WILAYAH,-6.94092,107.69,peta (ekadanis/stasiun_map_app),672,1,1
 GDD,Gondangdia,Daop 1,aktif,1.4,Manggarai,transkripsi PETA_WILAYAH,-6.1861,106.8328,peta (ekadanis/stasiun_map_app),15,1,1
 GDG,Gedangan,Daop 8,aktif,8.14,Sidoarjo,transkripsi PETA_WILAYAH,-7.38898,112.7286,peta (ekadanis/stasiun_map_app),,1,1
-GDM,Gandrungmangun,DAOP 5 PURWOKERTO,aktif,5.8,Jeruklegi,resmi data_station,-7.527967465,108.8590653,resmi data_station,,1,1
+GDM,Gandrungmangun,Daop 5,aktif,5.8,Jeruklegi,resmi data_station,-7.527967465,108.8590653,resmi data_station,,1,1
 GDR,Gedung Ratu,Divre 4,aktif,IV.2,Rejosari,transkripsi PETA_WILAYAH,-5.3428,105.22334,peta (ekadanis/stasiun_map_app),,1,1
 GDS,Gandasoli,Daop 2,aktif,2.5,Cibeber,transkripsi PETA_WILAYAH,-6.94141,106.9922,peta (ekadanis/stasiun_map_app),580,1,1
 GEB,Gembong,Daop 8,aktif,8.5,Sumlaran,transkripsi PETA_WILAYAH,-7.10229,112.2224,peta (ekadanis/stasiun_map_app),,1,1
@@ -232,14 +232,14 @@ GL,Gelugur,Divre 1,tidak aktif,I.2,Ujungbaru,transkripsi PETA_WILAYAH,,,,,0,0
 GLB,Glumbang,Divre 3,aktif,III.5,Gelumbang,transkripsi PETA_WILAYAH,-3.24609,104.4414,peta (ekadanis/stasiun_map_app),,1,1
 GLM,Glenmore,Daop 9,aktif,9.7,Kalibaru,transkripsi PETA_WILAYAH,-8.2995,114.0494,peta (ekadanis/stasiun_map_app),,1,1
 GLS,Gilas,Divre 4,aktif,IV.12,Martapura,transkripsi PETA_WILAYAH,-4.2641,104.2852,peta (ekadanis/stasiun_map_app),,1,1
-GM,Gumilir,DAOP 5 PURWOKERTO,aktif,5.9,Cilacap,resmi data_station,-7.685180677,109.0424828,resmi data_station,,1,1
+GM,Gumilir,Daop 5,aktif,5.9,Cilacap,resmi data_station,-7.685180677,109.0424828,resmi data_station,,1,1
 GMR,Gambir,Daop 1,aktif,1.4,Manggarai,transkripsi PETA_WILAYAH,-6.1767,106.8308,peta (ekadanis/stasiun_map_app),16,1,1
 GN,Gedangan,Daop 4,tidak aktif,,,,,,,,0,0
 GNB,GNB,Divre 1,tidak aktif,,,,,,,,0,0
 GNG,Gununggangsir,Daop 8,tidak aktif,8.15,Bangil,transkripsi PETA_WILAYAH,,,,,0,0
 GNM,Gunung Megang,Divre 3,aktif,III.12,Gunung Megang,transkripsi PETA_WILAYAH,-3.45398,103.8668,peta (ekadanis/stasiun_map_app),,1,1
 GPI,Gunung Putri,Daop 1,aktif,1.16,Citayam,transkripsi PETA_WILAYAH,-6.47384,106.89248,peta (interpolasi km petak di geometri OSM),,1,1
-GPK,Goprak,DAOP 6 YOGYAKARTA,aktif,6.10,Sumberlawang,resmi data_station,-7.272808985,110.8974988,resmi data_station,,1,1
+GPK,Goprak,Daop 6,aktif,6.10,Sumberlawang,resmi data_station,-7.272808985,110.8974988,resmi data_station,,1,1
 GPR,Gapuro,Daop 8,tidak aktif,,,,,,,,0,0
 GR,Garuntang,Divre 4,aktif,IV.1,Tanjungkarang,transkripsi PETA_WILAYAH,-5.43578,105.29058,peta (interpolasi km petak di geometri OSM),,1,1
 GRG,Grogol,Daop 1,aktif,1.6,Duri,transkripsi PETA_WILAYAH,-6.16211,106.7894,peta (ekadanis/stasiun_map_app),,1,1
@@ -251,8 +251,8 @@ GRT,Garut,Daop 2,aktif,2.10,Cibatu,transkripsi PETA_WILAYAH,-7.21337,107.90355,p
 GS,Gresik,Daop 8,aktif,8.8,Kandangan,transkripsi PETA_WILAYAH,,,,,0,0
 GSG,Gunting Saga,Divre 1,tidak aktif,I.11,Mambangmuda,transkripsi PETA_WILAYAH,,,,,0,0
 GST,Gangsentiong,Daop 1,aktif,1.3,Pasarsenen,transkripsi PETA_WILAYAH,-6.186,106.851,peta (sandihex86/masterdataprasarana),7,1,1
-GUB,Gubug,DAOP 4 SEMARANG,aktif,4.12,Gubug,resmi data_station,-7.060851858,110.6694696,resmi data_station,,1,1
-GW,Gawok,DAOP 6 YOGYAKARTA,aktif,6.7,Delanggu,resmi data_station,-7.58907893,110.744464,resmi data_station,,1,1
+GUB,Gubug,Daop 4,aktif,4.12,Gubug,resmi data_station,-7.060851858,110.6694696,resmi data_station,,1,1
+GW,Gawok,Daop 6,aktif,6.7,Delanggu,resmi data_station,-7.58907893,110.744464,resmi data_station,,1,1
 HAL,Halim,Daop 1,aktif,,,,,,,,0,0
 HAR,Harjamukti,Daop 1,aktif,,,,,,,,0,0
 HGL,Haurgeulis,Daop 3,aktif,3.4,Haurgeulis,transkripsi PETA_WILAYAH,-6.45862,107.941,peta (ekadanis/stasiun_map_app),,1,1
@@ -263,28 +263,28 @@ IDA,Indarung,Divre 2,aktif,II.1,Padang,transkripsi PETA_WILAYAH,-0.94994,100.467
 IDO,Indro,Daop 8,aktif,8.8,Kandangan,transkripsi PETA_WILAYAH,-7.17698,112.66443,peta (ekadanis/stasiun_map_app),,1,1
 IDR,Indralaya,Divre 3,aktif,III.2,Simpang,transkripsi PETA_WILAYAH,-3.20819,104.6428,peta (ekadanis/stasiun_map_app),,0,0
 IH,Indihiang,Daop 2,aktif,2.12,Tasikmalaya,transkripsi PETA_WILAYAH,-7.28711,108.2012,peta (ekadanis/stasiun_map_app),384,1,1
-IJ,Ijo,DAOP 5 PURWOKERTO,aktif,5.11,Tambak,resmi data_station,-7.615193217,109.4469166,resmi data_station,,1,1
+IJ,Ijo,Daop 5,aktif,5.11,Tambak,resmi data_station,-7.615193217,109.4469166,resmi data_station,,1,1
 IMA,Pauhlima,Divre 2,aktif,II.1,Padang,transkripsi PETA_WILAYAH,-0.93785,100.435,peta (ekadanis/stasiun_map_app),,1,1
 Idm,Indramayu,Daop 2,tidak aktif,,,,,,,,0,0
 JAKG,Jakarta Gudang,Daop 1,aktif,1.1,,transkripsi PETA_WILAYAH,-6.1333,106.8194,peta (ekadanis/stasiun_map_app),,0,0
 JAKK,Jakarta Kota,Daop 1,aktif,1.1,,transkripsi PETA_WILAYAH,-6.1366,106.8166,peta (ekadanis/stasiun_map_app),4,1,1
 JAY,Jayakarta,Daop 1,aktif,1.4,Manggarai,transkripsi PETA_WILAYAH,-6.1413,106.823,peta (ekadanis/stasiun_map_app),,1,1
 JBE,Jambean,Daop 4,tidak aktif,,,,,,,,0,0
-JBN,Jambon,DAOP 4 SEMARANG,aktif,4.15,Panunggalan,resmi data_station,-7.150189384,111.0101818,resmi data_station,,1,1
+JBN,Jambon,Daop 4,aktif,4.15,Panunggalan,resmi data_station,-7.150189384,111.0101818,resmi data_station,,1,1
 JBU,Jambubaru,Daop 1,aktif,1.24,Catang,transkripsi PETA_WILAYAH,-6.30292,106.2606,peta (ekadanis/stasiun_map_app),48,1,1
 JG,Jombang,Daop 7,aktif,7.2,Jombang,transkripsi PETA_WILAYAH,-7.55818,112.23345,peta (DenShubi/Indonesian-Railway-),,1,1
 JI,Jati,Daop 9,tidak aktif,9.2,Probolinggo,transkripsi PETA_WILAYAH,,,,,0,0
 JICT,Jakarta International Container Terminal,Daop 1,aktif,,,,,,,,0,0
 JIS,Jakarta International Stadium,,,,,,,,,,0,1
-JMB,Jambu,DAOP 4 SEMARANG,tidak aktif,4.22,Ambarawa,resmi data_station,,,,,0,0
+JMB,Jambu,Daop 4,tidak aktif,4.22,Ambarawa,resmi data_station,,,,,0,0
 JMS,Jemursari,Daop 8,aktif,,,,-7.32928,112.7314,peta (ekadanis/stasiun_map_app),,1,1
 JMU,Jurangmangu,Daop 1,aktif,1.20,Kebayoran,transkripsi PETA_WILAYAH,-6.28851,106.7292,peta (ekadanis/stasiun_map_app),,1,1
-JN,Jenar,DAOP 6 YOGYAKARTA,aktif,6.1,Jenar,resmi data_station,-7.802004674,110.0006714,resmi data_station,,1,1
+JN,Jenar,Daop 6,aktif,6.1,Jenar,resmi data_station,-7.802004674,110.0006714,resmi data_station,,1,1
 JNG,Jatinegara,Daop 1,aktif,1.8,Jatinegara,transkripsi PETA_WILAYAH,-6.21509,106.86807,peta (jeffersonsetiawan/TMConfiguration),16,1,1
 JOR,Jorongan,Daop 9,tidak aktif,9.2,Probolinggo,transkripsi PETA_WILAYAH,,,,,0,0
 JR,Jember,Daop 9,aktif,9.5,Jember,transkripsi PETA_WILAYAH,-8.1651,113.7034,peta (ekadanis/stasiun_map_app),,1,1
-JRK,Jerakah,DAOP 4 SEMARANG,aktif,4.10,Semarang Poncol,resmi data_station,-6.980550424,110.3626446,resmi data_station,,1,1
-JRL,Jeruklegi,DAOP 5 PURWOKERTO,aktif,5.8,Jeruklegi,resmi data_station,-7.622728612,109.0180758,resmi data_station,,1,1
+JRK,Jerakah,Daop 4,aktif,4.10,Semarang Poncol,resmi data_station,-6.980550424,110.3626446,resmi data_station,,1,1
+JRL,Jeruklegi,Daop 5,aktif,5.8,Jeruklegi,resmi data_station,-7.622728612,109.0180758,resmi data_station,,1,1
 JTB,Jatibarang,Daop 3,aktif,3.6,Jatibarang,transkripsi PETA_WILAYAH,-6.4729,108.306,peta (ekadanis/stasiun_map_app),,1,1
 JTK,Jatake,Daop 1,tidak aktif,,,,,,,,0,1
 JTM,Jatimulya,Daop 1,aktif,,,,,,,,0,0
@@ -293,7 +293,7 @@ JTS,Jetis,Daop 4,tidak aktif,,,,,,,,0,0
 JTU,Jatibening Baru,Daop 1,aktif,,,,,,,,0,0
 JU,Juana,Daop 4,tidak aktif,,,,,,,,0,0
 JUA,Juanda,Daop 1,aktif,1.4,Manggarai,transkripsi PETA_WILAYAH,-6.16656,106.8304,peta (ekadanis/stasiun_map_app),15,1,1
-KA,Karanganyar,DAOP 5 PURWOKERTO,aktif,5.12,Gombong,resmi data_station,-7.633082856,109.5734601,resmi data_station,,1,1
+KA,Karanganyar,Daop 5,aktif,5.12,Gombong,resmi data_station,-7.633082856,109.5734601,resmi data_station,,1,1
 KAB,Kadokangabus,Daop 3,aktif,3.5,Terisi,transkripsi PETA_WILAYAH,-6.46771,108.107,peta (ekadanis/stasiun_map_app),,1,1
 KAC,Kiaracondong,Daop 2,aktif,2.8,Kiaracondong,transkripsi PETA_WILAYAH,-6.9248,107.64599,peta (sandihex86/masterdataprasarana),681,1,1
 KAD,Kp. Adiantorop,Divre 1,tidak aktif,,,,,,,,0,0
@@ -304,45 +304,45 @@ KAP,Karang Pilang,Daop 8,tidak aktif,,,,,,,,0,0
 KAS,Kramasan,Divre 3,aktif,III.1,Kertapati,transkripsi PETA_WILAYAH,-3.04793,104.73785,peta (interpolasi km petak di geometri OSM),,1,1
 KAT,Karet,Daop 1,aktif,1.5,Tanahabang,transkripsi PETA_WILAYAH,-6.20081,106.816,peta (ekadanis/stasiun_map_app),11,1,1
 KB,Kotabumi,Divre 4,aktif,IV.5,Kotabumi,transkripsi PETA_WILAYAH,-4.82172,104.88124,peta (ekadanis/stasiun_map_app),,1,1
-KBD,Kalibodri,DAOP 4 SEMARANG,aktif,4.8,Kalibodri,resmi data_station,-6.97355061,110.1482241,resmi data_station,,1,1
+KBD,Kalibodri,Daop 4,aktif,4.8,Kalibodri,resmi data_station,-6.97355061,110.1482241,resmi data_station,,1,1
 KBG,Kuala Bingei,Divre 1,aktif,I.14,Stabat,transkripsi PETA_WILAYAH,3.66359,98.46048,peta (ekadanis/stasiun_map_app),,1,1
 KBL,Kutablang,Divre 1,aktif,I.17,Kruengmane,transkripsi PETA_WILAYAH,,,,,1,1
 KBR,Kalibaru,Daop 9,aktif,9.7,Kalibaru,transkripsi PETA_WILAYAH,-8.28888,113.9844,peta (ekadanis/stasiun_map_app),,1,1
-KBS,Kebasen,DAOP 5 PURWOKERTO,aktif,5.6,Kebasen,resmi data_station,-7.530056714,109.2030218,resmi data_station,,1,1
+KBS,Kebasen,Daop 5,aktif,5.6,Kebasen,resmi data_station,-7.530056714,109.2030218,resmi data_station,,1,1
 KBT,Kabat,Daop 9,tidak aktif,9.8,Rogojampi,transkripsi PETA_WILAYAH,,,,,0,0
 KBU,Kotabaru,Divre 4,aktif,,,,-3.731,104.332,peta (interpolasi km petak di geometri OSM),,1,1
 KBY,Kebayoran,Daop 1,aktif,1.20,Kebayoran,transkripsi PETA_WILAYAH,-6.237,106.783,peta (sandihex86/masterdataprasarana),4.2,1,1
 KCN,Kacang,Divre 2,aktif,,,,,,,,0,0
 KD,Kediri,Daop 7,aktif,7.13,Kediri,transkripsi PETA_WILAYAH,-7.8172,112.0156,peta (ekadanis/stasiun_map_app),,1,1
 KDA,Kandangan,Daop 8,aktif,8.8,Kandangan,transkripsi PETA_WILAYAH,-7.25079,112.6572,peta (ekadanis/stasiun_map_app),,1,1
-KDB,Kedungbanteng,DAOP 6 YOGYAKARTA,aktif,6.13,Kebonromo,resmi data_station,-7.404891987,111.1171748,resmi data_station,,1,1
-KDG,Kedundang,DAOP 6 YOGYAKARTA,aktif,6.2,Wojo,resmi data_station,-7.878493421,110.0985378,resmi data_station,,1,1
+KDB,Kedungbanteng,Daop 6,aktif,6.13,Kebonromo,resmi data_station,-7.404891987,111.1171748,resmi data_station,,1,1
+KDG,Kedundang,Daop 6,aktif,6.2,Wojo,resmi data_station,-7.878493421,110.0985378,resmi data_station,,1,1
 KDH,Kedunggedeh,Daop 1,aktif,1.11,Lemahabang,transkripsi PETA_WILAYAH,-6.27,107.261,peta (sandihex86/masterdataprasarana),44,1,1
 KDN,Kedinding,Daop 8,aktif,8.12,Sepanjang,transkripsi PETA_WILAYAH,-7.43707,112.5526,peta (ekadanis/stasiun_map_app),,1,1
-KDO,Kadipiro,DAOP 6 YOGYAKARTA,aktif,6.8,Solo Balapan,resmi data_station,-7.530849182,110.8178964,resmi data_station,,1,1
+KDO,Kadipiro,Daop 6,aktif,6.8,Solo Balapan,resmi data_station,-7.530849182,110.8178964,resmi data_station,,1,1
 KDP,Kandang Ampat,Divre 2,aktif,,,,,,,,0,0
 KDS,Kalideres,Daop 1,aktif,1.6,Duri,transkripsi PETA_WILAYAH,-6.166,106.704,peta (sandihex86/masterdataprasarana),7,1,1
 KE,Karangtengah,Daop 1,aktif,1.19,Sukabumi,transkripsi PETA_WILAYAH,-6.8963,106.8224,peta (ekadanis/stasiun_map_app),477,1,1
 KED,Karangenda,Divre 3,aktif,III.6,Lembak,transkripsi PETA_WILAYAH,-3.30401,104.39588,peta (interpolasi km petak di geometri OSM),,1,1
 KEH,Kepuh,Daop 6,tidak aktif,,,,,,,,0,0
-KEJ,Kedungjati,DAOP 4 SEMARANG,aktif,4.20,Kedungjati,resmi data_station,-7.163653196,110.6356182,resmi data_station,,1,1
+KEJ,Kedungjati,Daop 4,aktif,4.20,Kedungjati,resmi data_station,-7.163653196,110.6356182,resmi data_station,,1,1
 KEN,Krenceng,Daop 1,aktif,1.25,Cilegon,transkripsi PETA_WILAYAH,-6.00977,106.023,peta (ekadanis/stasiun_map_app),,1,1
 KET,Ketandan,Daop 6,tidak aktif,,,,,,,,0,0
 KG,Kedunggalar,Daop 7,aktif,7.9,Kedunggalar,transkripsi PETA_WILAYAH,-7.41827,111.3068,peta (ekadanis/stasiun_map_app),,1,1
 KGB,Ketanggungan Barat,Daop 3,tidak aktif,3.16,Ketanggungan,transkripsi PETA_WILAYAH,,,,,0,0
-KGD,Karanggandul,DAOP 5 PURWOKERTO,aktif,5.5,Purwokerto,resmi data_station,-7.388314283,109.1860265,resmi data_station,,1,1
+KGD,Karanggandul,Daop 5,aktif,5.5,Purwokerto,resmi data_station,-7.388314283,109.1860265,resmi data_station,,1,1
 KGG,Ketanggungan,Daop 3,aktif,3.16,Ketanggungan,transkripsi PETA_WILAYAH,-6.93829,108.8844,peta (ekadanis/stasiun_map_app),,1,1
 KGS,Karangkates,Daop 8,tidak aktif,8.18,Wlingi,transkripsi PETA_WILAYAH,,,,,0,0
-KGT,Karangjati,DAOP 4 SEMARANG,aktif,4.13,Karangjati,resmi data_station,-7.101170509,110.779089,resmi data_station,,1,1
-KH,Kasugihan,DAOP 5 PURWOKERTO,aktif,5.9,Cilacap,resmi data_station,-7.618227045,109.1217288,resmi data_station,,1,1
+KGT,Karangjati,Daop 4,aktif,4.13,Karangjati,resmi data_station,-7.101170509,110.779089,resmi data_station,,1,1
+KH,Kasugihan,Daop 5,aktif,5.9,Cilacap,resmi data_station,-7.618227045,109.1217288,resmi data_station,,1,1
 KH 2,Kasugihan,Daop 5,aktif,5.9,Cilacap,transkripsi PETA_WILAYAH,,,,,0,0
 KI,Kuraitaji,Divre 2,aktif,II.2,Lubuk Alung,transkripsi PETA_WILAYAH,-0.63256,100.16949,peta (interpolasi km petak di geometri OSM),,1,1
 KIM,Kalisamin,Daop 6,tidak aktif,,,,,,,,0,0
 KIS,Kisaran,Divre 1,aktif,I.9,Kisaran,transkripsi PETA_WILAYAH,2.98621,99.61938,peta (ekadanis/stasiun_map_app),,1,1
 KIT,Kalitidu,Daop 8,aktif,8.1,Tobo,transkripsi PETA_WILAYAH,-7.13171,111.7674,peta (ekadanis/stasiun_map_app),,1,1
-KJ,Kemranjen,DAOP 5 PURWOKERTO,aktif,5.10,Kroya,resmi data_station,-7.621378189,109.3148942,resmi data_station,,1,1
+KJ,Kemranjen,Daop 5,aktif,5.10,Kroya,resmi data_station,-7.621378189,109.3148942,resmi data_station,,1,1
 KK,Klakah,Daop 9,aktif,9.3,Klakah,transkripsi PETA_WILAYAH,-7.99371,113.2484,peta (ekadanis/stasiun_map_app),,1,1
-KKD,Karangkandri,DAOP 5 PURWOKERTO,aktif,5.9,Cilacap,resmi data_station,-7.66560323,109.0760182,resmi data_station,,1,1
+KKD,Karangkandri,Daop 5,aktif,5.9,Cilacap,resmi data_station,-7.66560323,109.0760182,resmi data_station,,1,1
 KKE,Karangkering,Daop 8,tidak aktif,,,,,,,,0,0
 KKL,Krikilan,Daop 9,tidak aktif,9.7,Kalibaru,transkripsi PETA_WILAYAH,,,,,0,0
 KKR,Kubu Kerambil,Divre 2,aktif,,,,,,,,0,0
@@ -354,13 +354,13 @@ KLDB,Klenderbaru,Daop 1,aktif,1.9,Bekasi,transkripsi PETA_WILAYAH,-6.21759,106.9
 KLG,KALI ANGET,Daop 8,tidak aktif,,,,,,,,0,0
 KLI,Klari,Daop 1,aktif,1.12,Karawang,transkripsi PETA_WILAYAH,-6.34998,107.3454,peta (ekadanis/stasiun_map_app),23,1,1
 KLM,Kalimas,Daop 8,aktif,8.9,Surabaya Pasarturi,transkripsi PETA_WILAYAH,-7.21991,112.735,peta (ekadanis/stasiun_map_app),,1,1
-KLN,Kaliwungu,DAOP 4 SEMARANG,aktif,4.9,Kaliwungu,resmi data_station,-6.959466297,110.2547175,resmi data_station,,1,1
+KLN,Kaliwungu,Daop 4,aktif,4.9,Kaliwungu,resmi data_station,-6.959466297,110.2547175,resmi data_station,,1,1
 KLO,Kaliboto,Daop 9,tidak aktif,9.4,Tanggul,transkripsi PETA_WILAYAH,,,,,0,0
 KLPP,Kalilapan,Divre 4,tidak aktif,,,,,,,,0,0
 KLS,Kalasan,Daop 6,tidak aktif,,,,,,,,0,0
 KLT,Kalisat,Daop 9,aktif,9.6,Kalisat,transkripsi PETA_WILAYAH,-8.12701,113.8124,peta (ekadanis/stasiun_map_app),,1,1
 KLW,Kaliwedi,Daop 3,tidak aktif,3.7,Arjawinangun,transkripsi PETA_WILAYAH,,,,,0,0
-KM,Kebumen,DAOP 5 PURWOKERTO,aktif,5.13,Kebumen,resmi data_station,-7.681516816,109.662245,resmi data_station,,1,1
+KM,Kebumen,Daop 5,aktif,5.13,Kebumen,resmi data_station,-7.681516816,109.662245,resmi data_station,,1,1
 KM3,Kilometer Tiga,Divre 4,tidak aktif,IV.1,Tanjungkarang,transkripsi PETA_WILAYAH,,,,,0,0
 KME,Kemijen,Daop 4,tidak aktif,,,,,,,,0,0
 KMG,Kumendung,Daop 8,tidak aktif,8.12,Sepanjang,transkripsi PETA_WILAYAH,,,,,0,0
@@ -368,20 +368,20 @@ KMK,Kemelak,Divre 4,aktif,IV.14,Baturaja,transkripsi PETA_WILAYAH,-4.16158,104.1
 KML,KAMAL,Daop 8,tidak aktif,,,,,,,,0,0
 KMO,Kemayoran,Daop 1,aktif,1.3,Pasarsenen,transkripsi PETA_WILAYAH,-6.16187,106.8414,peta (ekadanis/stasiun_map_app),4,1,1
 KMP,Kempit,Daop 9,tidak aktif,9.7,Kalibaru,transkripsi PETA_WILAYAH,,,,,0,0
-KMR,Kemiri,DAOP 6 YOGYAKARTA,aktif,6.11,Palur,resmi data_station,-7.533809932,110.9016295,resmi data_station,,1,1
+KMR,Kemiri,Daop 6,aktif,6.11,Palur,resmi data_station,-7.533809932,110.9016295,resmi data_station,,1,1
 KMT,Kramat,Daop 1,aktif,1.3,Pasarsenen,transkripsi PETA_WILAYAH,-6.194,106.857,peta (sandihex86/masterdataprasarana),10,1,1
 KNE,Karangasem,Daop 9,tidak aktif,,,,,,,,0,0
 KNI,Kalitangi,Daop 8,tidak aktif,,,,,,,,0,0
 KNL,Kronelan,Daop 6,tidak aktif,,,,,,,,0,0
 KNM,Kualanamu,Divre 1,aktif,I.3,Araskabu,transkripsi PETA_WILAYAH,,,,,1,1
-KNN,Kradenan,DAOP 4 SEMARANG,aktif,4.16,Kradenan,resmi data_station,-7.149991239,111.1469524,resmi data_station,,1,1
+KNN,Kradenan,Daop 4,aktif,4.16,Kradenan,resmi data_station,-7.149991239,111.1469524,resmi data_station,,1,1
 KNP,Karangpucung,Daop 2,aktif,2.13,Banjar,transkripsi PETA_WILAYAH,-7.35352,108.494,peta (ekadanis/stasiun_map_app),45,1,1
-KNS,Krengseng,DAOP 4 SEMARANG,aktif,4.7,Weleri,resmi data_station,-6.9523593,110.0279898,resmi data_station,,1,1
-KO,Kalioso,DAOP 6 YOGYAKARTA,aktif,6.10,Sumberlawang,resmi data_station,-7.465970611,110.8052076,resmi data_station,,1,1
+KNS,Krengseng,Daop 4,aktif,4.7,Weleri,resmi data_station,-6.9523593,110.0279898,resmi data_station,,1,1
+KO,Kalioso,Daop 6,aktif,6.10,Sumberlawang,resmi data_station,-7.465970611,110.8052076,resmi data_station,,1,1
 KOA,Kebon Pisang,Divre 1,tidak aktif,I.1,Medan,transkripsi PETA_WILAYAH,,,,,0,0
 KOP,Kota Padang,Divre 3,aktif,III.22,Lubuk Linggau,transkripsi PETA_WILAYAH,-3.42609,102.967,peta (ekadanis/stasiun_map_app),,1,1
 KOS,Kosambi,Daop 1,aktif,1.13,Cikampek,transkripsi PETA_WILAYAH,-6.393,107.433,peta (sandihex86/masterdataprasarana),28,1,1
-KPA,Kapuan,DAOP 4 SEMARANG,aktif,4.19,Cepu,resmi data_station,-7.18903533,111.5543397,resmi data_station,,1,1
+KPA,Kapuan,Daop 4,aktif,4.19,Cepu,resmi data_station,-7.18903533,111.5543397,resmi data_station,,1,1
 KPB,Kampungbandan,Daop 1,aktif,1.1,,transkripsi PETA_WILAYAH,-6.13255,106.82636,peta (jeffersonsetiawan/TMConfiguration),3,1,1
 KPBS,Kampung Besar,Divre 1,tidak aktif,I.2,Ujungbaru,transkripsi PETA_WILAYAH,,,,,0,0
 KPG,Kp Pantai Gemi,Divre 1,tidak aktif,I.14,Stabat,transkripsi PETA_WILAYAH,,,,,0,0
@@ -397,20 +397,20 @@ KRI,Kranji,Daop 1,aktif,1.9,Bekasi,transkripsi PETA_WILAYAH,-6.2243,106.9792,pet
 KRL,Karangtalun,Daop 5,aktif,5.9,Cilacap,transkripsi PETA_WILAYAH,,,,,1,1
 KRM,Kruengmane,Divre 1,aktif,I.17,Kruengmane,transkripsi PETA_WILAYAH,5.25343,96.93132,peta (ekadanis/stasiun_map_app),,1,1
 KRN,Krian,Daop 8,aktif,8.12,Sepanjang,transkripsi PETA_WILAYAH,-7.40974,112.58666,peta (DenShubi/Indonesian-Railway-),,1,1
-KRO,Kebonromo,DAOP 6 YOGYAKARTA,aktif,6.13,Kebonromo,resmi data_station,-7.418930888,111.0639432,resmi data_station,,1,1
-KRP,Kuripan,DAOP 4 SEMARANG,aktif,4.6,Kuripan,resmi data_station,-6.923760884,109.8939925,resmi data_station,,1,1
-KRR,Karangsari,DAOP 5 PURWOKERTO,aktif,5.4,Legok,resmi data_station,-7.3822699,109.1214135,resmi data_station,,1,1
+KRO,Kebonromo,Daop 6,aktif,6.13,Kebonromo,resmi data_station,-7.418930888,111.0639432,resmi data_station,,1,1
+KRP,Kuripan,Daop 4,aktif,4.6,Kuripan,resmi data_station,-6.923760884,109.8939925,resmi data_station,,1,1
+KRR,Karangsari,Daop 5,aktif,5.4,Legok,resmi data_station,-7.3822699,109.1214135,resmi data_station,,1,1
 KRS,Kras,Daop 7,aktif,7.12,Tulungagung,transkripsi PETA_WILAYAH,-7.94868,111.96031,peta (DenShubi/Indonesian-Railway-),,1,1
-KRT,Kretek,DAOP 5 PURWOKERTO,aktif,5.3,Bumiayu,resmi data_station,-7.285538466,109.0296979,resmi data_station,,1,1
+KRT,Kretek,Daop 5,aktif,5.3,Bumiayu,resmi data_station,-7.285538466,109.0296979,resmi data_station,,1,1
 KRU,Kruwul,Daop 8,tidak aktif,8.6,Lamongan,transkripsi PETA_WILAYAH,,,,,0,0
 KRW,Karangsuwung,Daop 3,tidak aktif,3.15,Ciledug,transkripsi PETA_WILAYAH,,,,,0,0
 KS,Kudus,Daop 4,tidak aktif,,,,,,,,0,0
 KSB,Kesamben,Daop 8,aktif,8.18,Wlingi,transkripsi PETA_WILAYAH,-8.14929,112.3636,peta (ekadanis/stasiun_map_app),,1,1
 KSL,Kalisetail,Daop 9,aktif,9.7,Kalibaru,transkripsi PETA_WILAYAH,-8.30292,114.1402,peta (ekadanis/stasiun_map_app),,1,1
-KSO,Karangsono,DAOP 4 SEMARANG,aktif,4.21,Gundih,resmi data_station,-7.195996329,110.8256776,resmi data_station,,1,1
+KSO,Karangsono,Daop 4,aktif,4.21,Gundih,resmi data_station,-7.195996329,110.8256776,resmi data_station,,1,1
 KSY,Kebonsayur,Divre 1,tidak aktif,I.9,Kisaran,transkripsi PETA_WILAYAH,,,,,0,0
-KT,Klaten,DAOP 6 YOGYAKARTA,aktif,6.6,Klaten,resmi data_station,-7.712207815,110.6030185,resmi data_station,,1,1
-KTA,Kutoarjo,DAOP 5 PURWOKERTO,aktif,5.14,Kutoarjo,resmi data_station,-7.72596485,109.9071906,resmi data_station,,1,1
+KT,Klaten,Daop 6,aktif,6.6,Klaten,resmi data_station,-7.712207815,110.6030185,resmi data_station,,1,1
+KTA,Kutoarjo,Daop 5,aktif,5.14,Kutoarjo,resmi data_station,-7.72596485,109.9071906,resmi data_station,,1,1
 KTB,Kotabaru,Divre 4,tidak aktif,IV.17,Pagergunung,transkripsi PETA_WILAYAH,,,,,0,0
 KTG,Ketapang,Daop 9,aktif,9.8,Rogojampi,transkripsi PETA_WILAYAH,-4.71749,104.79851,peta (ekadanis/stasiun_map_app),,1,1
 KTJ,Kuala Tanjung,Divre 1,aktif,I.16,Tanjunggading,transkripsi PETA_WILAYAH,,,,,1,1
@@ -424,15 +424,15 @@ KUA,Kuningan,Daop 1,aktif,,,,,,,,0,0
 KUG,Kuala Begumit,Divre 1,tidak aktif,I.13,Binjai,transkripsi PETA_WILAYAH,,,,,0,0
 KUL,Kuala,Divre 1,tidak aktif,,,,,,,,0,0
 KW,Karawang,Daop 1,aktif,1.12,Karawang,transkripsi PETA_WILAYAH,-6.30518,107.3002,peta (ekadanis/stasiun_map_app),16,1,1
-KWG,Kawunganten,DAOP 5 PURWOKERTO,aktif,5.8,Jeruklegi,resmi data_station,-7.590485392,108.9194515,resmi data_station,,1,1
-KWN,Kutowinangun,DAOP 5 PURWOKERTO,aktif,5.13,Kebumen,resmi data_station,-7.715927209852035,109.73250589658889,resmi data_station,,1,1
-KYA,Kroya,DAOP 5 PURWOKERTO,aktif,5.10,Kroya,resmi data_station,-7.62983688,109.2535364,resmi data_station,,1,1
+KWG,Kawunganten,Daop 5,aktif,5.8,Jeruklegi,resmi data_station,-7.590485392,108.9194515,resmi data_station,,1,1
+KWN,Kutowinangun,Daop 5,aktif,5.13,Kebumen,resmi data_station,-7.715927209852035,109.73250589658889,resmi data_station,,1,1
+KYA,Kroya,Daop 5,aktif,5.10,Kroya,resmi data_station,-7.62983688,109.2535364,resmi data_station,,1,1
 Kdt,Kadipaten,Daop 3,tidak aktif,,,,,,,,0,0
 LA,Lubuk Alung,Divre 2,aktif,II.2,Lubuk Alung,transkripsi PETA_WILAYAH,-0.6781,100.2892,peta (ekadanis/stasiun_map_app),,1,1
 LAG,Lalang,Divre 1,aktif,I.16,Tanjunggading,transkripsi PETA_WILAYAH,,,,,1,1
 LAR,Labuan Ratu,Divre 4,aktif,IV.2,Rejosari,transkripsi PETA_WILAYAH,-5.3725,105.2524,peta (ekadanis/stasiun_map_app),,1,1
 LBB,Lubuk Blimbing,Divre 3,tidak aktif,III.22,Lubuk Linggau,transkripsi PETA_WILAYAH,,,,,0,0
-LBG,Lebeng,DAOP 5 PURWOKERTO,aktif,5.8,Jeruklegi,resmi data_station,-7.621338011,109.0763831,resmi data_station,,1,1
+LBG,Lebeng,Daop 5,aktif,5.8,Jeruklegi,resmi data_station,-7.621338011,109.0763831,resmi data_station,,1,1
 LBJ,Lebakjero,Daop 2,aktif,2.9,Cicalengka,transkripsi PETA_WILAYAH,-7.05359,107.894,peta (ekadanis/stasiun_map_app),818,1,1
 LBK,Labakkang,Daop 8,aktif,,,,,,,,0,0
 LBP,Lubuk Pakam,Divre 1,aktif,I.4,Perbaungan,transkripsi PETA_WILAYAH,3.5636,98.8786,peta (ekadanis/stasiun_map_app),,1,1
@@ -444,7 +444,7 @@ LDO,Ledokombo,Daop 9,aktif,9.6,Kalisat,transkripsi PETA_WILAYAH,-8.14056,113.875
 LDT,Lidah Tanah,Divre 1,aktif,I.4,Perbaungan,transkripsi PETA_WILAYAH,3.56299,99.0145,peta (ekadanis/stasiun_map_app),,1,1
 LEB,Lembak,Divre 3,aktif,III.6,Lembak,transkripsi PETA_WILAYAH,-3.34229,104.3418,peta (ekadanis/stasiun_map_app),,1,1
 LEC,Leces,Daop 9,aktif,9.3,Klakah,transkripsi PETA_WILAYAH,-7.84686,113.229,peta (ekadanis/stasiun_map_app),,1,1
-LG,Linggapura,DAOP 5 PURWOKERTO,aktif,5.2,Prupuk,resmi data_station,-7.184869307,109.0125569,resmi data_station,,1,1
+LG,Linggapura,Daop 5,aktif,5.2,Prupuk,resmi data_station,-7.184869307,109.0125569,resmi data_station,,1,1
 LGK,Legok,Daop 5,tidak aktif,5.4,Legok,transkripsi PETA_WILAYAH,,,,,0,0
 LL,Leles,Daop 2,aktif,2.10,Cibatu,transkripsi PETA_WILAYAH,-7.08429,107.8998,peta (ekadanis/stasiun_map_app),697,1,1
 LLG,Lubuk Linggau,Divre 3,aktif,III.22,Lubuk Linggau,transkripsi PETA_WILAYAH,-3.29327,102.8642,peta (ekadanis/stasiun_map_app),,1,1
@@ -452,13 +452,13 @@ LM,LUMAJANG,Daop 9,tidak aktif,,,,,,,,0,0
 LMB,Lemahabang,Daop 1,aktif,1.11,Lemahabang,transkripsi PETA_WILAYAH,-6.271,107.18,peta (sandihex86/masterdataprasarana),46,1,1
 LMG,Lamongan,Daop 8,aktif,8.6,Lamongan,transkripsi PETA_WILAYAH,-7.11244,112.42023,peta (DenShubi/Indonesian-Railway-),,1,1
 LMP,Lima Puluh,Divre 1,aktif,I.8,Seibejangkar,transkripsi PETA_WILAYAH,3.17322,99.41302,peta (ekadanis/stasiun_map_app),,1,1
-LN,Langen,DAOP 5 PURWOKERTO,aktif,5.7,Langen,resmi data_station,-7.359994465,108.6368055,resmi data_station,,1,1
+LN,Langen,Daop 5,aktif,5.7,Langen,resmi data_station,-7.359994465,108.6368055,resmi data_station,,1,1
 LNA,Lentengagung,Daop 1,aktif,1.14,Pasarminggu,transkripsi PETA_WILAYAH,-6.3299,106.8346,peta (ekadanis/stasiun_map_app),57,1,1
 LO,Leuwigoong,Daop 2,aktif,2.10,Cibatu,transkripsi PETA_WILAYAH,-7.10333,107.95819,peta (DenShubi/Indonesian-Railway-),,1,1
 LOS,Losari,Daop 3,aktif,3.11,Tanjung,transkripsi PETA_WILAYAH,-6.84607,108.8018,peta (ekadanis/stasiun_map_app),,1,1
 LP,Lampegan,Daop 2,aktif,2.5,Cibeber,transkripsi PETA_WILAYAH,-6.94989,107.0616,peta (ekadanis/stasiun_map_app),439,1,1
-LPN,Lempuyangan,DAOP 6 YOGYAKARTA,aktif,6.4,Yogyakarta,resmi data_station,-7.790090052,110.3754439,resmi data_station,,1,1
-LR,Larangan,DAOP 4 SEMARANG,aktif,4.1,Tegal,resmi data_station,-6.868031406,109.1858042,resmi data_station,,1,1
+LPN,Lempuyangan,Daop 6,aktif,6.4,Yogyakarta,resmi data_station,-7.790090052,110.3754439,resmi data_station,,1,1
+LR,Larangan,Daop 4,aktif,4.1,Tegal,resmi data_station,-6.868031406,109.1858042,resmi data_station,,1,1
 LRA,Larangan,Daop 3,aktif,3.17,Songgom,transkripsi PETA_WILAYAH,-6.9906,108.9488,peta (ekadanis/stasiun_map_app),,1,1
 LRM,Lubuk Rukam,Divre 4,aktif,IV.16,Peninjawan,transkripsi PETA_WILAYAH,-3.9328,104.3406,peta (ekadanis/stasiun_map_app),,1,1
 LRT1,Bandara,Divre 3,aktif,,,,,,,,0,0
@@ -479,7 +479,7 @@ LTD,Laut Tador,Divre 1,aktif,I.7,Perlanaan,transkripsi PETA_WILAYAH,3.3786,99.16
 LUM,Lumpue,Daop 8,aktif,,,,,,,,0,0
 LW,Lawang,Daop 8,aktif,8.16,Lawang,transkripsi PETA_WILAYAH,-7.83664,112.69783,peta (DenShubi/Indonesian-Railway-),,1,1
 LWG,Luwung,Daop 3,aktif,3.14,Sindanglaut,transkripsi PETA_WILAYAH,-6.77759,108.5932,peta (ekadanis/stasiun_map_app),,1,1
-MA,Maos,DAOP 5 PURWOKERTO,aktif,5.9,Cilacap,resmi data_station,-7.619099212,109.1395351,resmi data_station,,1,1
+MA,Maos,Daop 5,aktif,5.9,Cilacap,resmi data_station,-7.619099212,109.1395351,resmi data_station,,1,1
 MAG,Magetan,Daop 7,aktif,7.8,Magetan,transkripsi PETA_WILAYAH,-7.56209,111.45117,peta (ekadanis/stasiun_map_app),,1,1
 MBM,Membang Muda,Divre 1,aktif,I.11,Mambangmuda,transkripsi PETA_WILAYAH,2.56706,99.65037,peta (interpolasi km petak di geometri OSM),,1,1
 MBU,Marbau,Divre 1,aktif,I.12,Rantauprapat,transkripsi PETA_WILAYAH,2.26197,99.82087,peta (interpolasi km petak di geometri OSM),,1,1
@@ -491,17 +491,17 @@ ME,Muara Enim,Divre 3,aktif,III.14,Muaraenim,transkripsi PETA_WILAYAH,-3.65277,1
 MER,Merak,Daop 1,aktif,1.25,Cilegon,transkripsi PETA_WILAYAH,-5.93,105.997,peta (sandihex86/masterdataprasarana),3,1,1
 MET,Metur,Divre 4,aktif,IV.17,Pagergunung,transkripsi PETA_WILAYAH,-3.79102,104.3452,peta (ekadanis/stasiun_map_app),,1,1
 MG,MAGELANG,Daop 6,tidak aktif,,,,,,,,0,0
-MGA,,Daop 7 Madiun,,,,,,,,,0,0
+MGA,,Daop 7,,,,,,,,,0,0
 MGB,Manggabesar,Daop 1,aktif,1.4,Manggarai,transkripsi PETA_WILAYAH,-6.15,106.827,peta (sandihex86/masterdataprasarana),14,1,1
 MGN,Minggiran,Daop 7,aktif,7.13,Kediri,transkripsi PETA_WILAYAH,-7.72809,112.0574,peta (ekadanis/stasiun_map_app),,1,1
 MGR,Margorejo,Daop 8,aktif,,,,-7.3147,112.7344,peta (ekadanis/stasiun_map_app),,1,1
 MGS,Margasari,Daop 5,aktif,5.1,Slawi,transkripsi PETA_WILAYAH,-7.09185,109.02488,peta (interpolasi km petak di geometri OSM),,1,1
 MGT,Monggot,Daop 6,tidak aktif,,,,,,,,0,0
-MGW,Maguwo,DAOP 6 YOGYAKARTA,aktif,6.5,Brambanan,resmi data_station,-7.784733962,110.4367146,resmi data_station,,1,1
+MGW,Maguwo,Daop 6,aktif,6.5,Brambanan,resmi data_station,-7.784733962,110.4367146,resmi data_station,,1,1
 MI,Mangli,Daop 9,aktif,9.5,Jember,transkripsi PETA_WILAYAH,-8.1886,113.6552,peta (ekadanis/stasiun_map_app),,1,1
 MJ,Maja,Daop 1,aktif,1.22,Tigaraksa,transkripsi PETA_WILAYAH,-6.33231,106.39437,peta (jeffersonsetiawan/TMConfiguration),40,1,1
 MJS,MOJOSARI,Daop 8,tidak aktif,,,,,,,,0,0
-MKG,Mangkang,DAOP 4 SEMARANG,aktif,4.9,Kaliwungu,resmi data_station,-6.970975229,110.3022433,resmi data_station,,1,1
+MKG,Mangkang,Daop 4,aktif,4.9,Kaliwungu,resmi data_station,-6.970975229,110.3022433,resmi data_station,,1,1
 MKL,Muaro Kalaban,Divre 2,aktif,,,,,,,,0,0
 MKR,MERAKURAK,Daop 8,tidak aktif,,,,,,,,0,0
 MKS,Makassar,Daop 8,aktif,,,,,,,,0,0
@@ -511,7 +511,7 @@ MLI,Muaralawai,Divre 3,aktif,III.14,Muaraenim,transkripsi PETA_WILAYAH,-3.65648,
 MLJ,MALANG JAGALAN,Daop 8,tidak aktif,,,,,,,,0,0
 MLK,Malangkotalama,Daop 8,aktif,8.17,Malang,transkripsi PETA_WILAYAH,-7.99484,112.63251,peta (DenShubi/Indonesian-Railway-),,1,1
 MLS,Malasan,Daop 9,aktif,9.3,Klakah,transkripsi PETA_WILAYAH,-7.8844,113.2596,peta (ekadanis/stasiun_map_app),,1,1
-MLW,Meluwung,DAOP 5 PURWOKERTO,aktif,5.7,Langen,resmi data_station,-7.394078259,108.6995431,resmi data_station,,1,1
+MLW,Meluwung,Daop 5,aktif,5.7,Langen,resmi data_station,-7.394078259,108.6995431,resmi data_station,,1,1
 MN,Madiun,Daop 7,aktif,7.7,Madiun,transkripsi PETA_WILAYAH,-7.61841,111.525,peta (ekadanis/stasiun_map_app),,1,1
 MNI,Mendaris,Divre 1,tidak aktif,,,,,,,,0,0
 MNJ,Manonjaya,Daop 2,aktif,2.12,Tasikmalaya,transkripsi PETA_WILAYAH,-7.35318,108.30267,peta (sandihex86/masterdataprasarana),292,1,1
@@ -530,14 +530,14 @@ MSH,Masihi,Divre 1,tidak aktif,I.10,Telukdalam,transkripsi PETA_WILAYAH,,,,,0,0
 MSI,Maswati,Daop 2,aktif,2.3,Rendeh,transkripsi PETA_WILAYAH,-6.76086,107.409,peta (ekadanis/stasiun_map_app),499,1,1
 MSL,Muara Saling,Divre 3,aktif,III.21,Tebingtinggi,transkripsi PETA_WILAYAH,-3.4325,103.0416,peta (ekadanis/stasiun_map_app),,1,1
 MSO,Mangkoso,Daop 8,aktif,,,,,,,,0,0
-MSR,Masaran,DAOP 6 YOGYAKARTA,aktif,6.12,Sragen,resmi data_station,-7.467941647,110.9475773,resmi data_station,,1,1
+MSR,Masaran,Daop 6,aktif,6.12,Sragen,resmi data_station,-7.467941647,110.9475773,resmi data_station,,1,1
 MST,Mesigit,Daop 8,aktif,8.9,Surabaya Pasarturi,transkripsi PETA_WILAYAH,-7.24145,112.7271,peta (interpolasi km petak di geometri OSM),,1,1
-MSU,,Divre I Sumatera Utara,,,,,,,,,0,0
+MSU,,Divre 1,,,,,,,,,0,0
 MTL,Montelan,Daop 6,tidak aktif,,,,,,,,0,0
 MTR,Matraman,Daop 1,aktif,1.4,Manggarai,transkripsi PETA_WILAYAH,-6.21249,106.8589,peta (jeffersonsetiawan/TMConfiguration),,1,1
 MUS,Muara Satu,Divre 1,aktif,I.17,Kruengmane,transkripsi PETA_WILAYAH,,,,,1,1
 NB,Ngebruk,Daop 8,aktif,8.18,Wlingi,transkripsi PETA_WILAYAH,-8.15192,112.518,peta (ekadanis/stasiun_map_app),,1,1
-NBO,Ngrombo,DAOP 4 SEMARANG,aktif,4.14,Gambringan,resmi data_station,-7.145134746,110.900653,resmi data_station,,1,1
+NBO,Ngrombo,Daop 4,aktif,4.14,Gambringan,resmi data_station,-7.145134746,110.900653,resmi data_station,,1,1
 NDL,Ngadiluwih,Daop 7,aktif,7.13,Kediri,transkripsi PETA_WILAYAH,-7.89838,111.988,peta (ekadanis/stasiun_map_app),,1,1
 NG,Nagreg,Daop 2,aktif,2.9,Cicalengka,transkripsi PETA_WILAYAH,-7.01819,107.8862,peta (ekadanis/stasiun_map_app),848,1,1
 NGA,Ngagel,Daop 8,aktif,8.11,Surabaya Gubeng,transkripsi PETA_WILAYAH,-7.28778,112.7482,peta (ekadanis/stasiun_map_app),,1,1
@@ -552,7 +552,7 @@ NRR,Negara Ratu,Divre 4,aktif,IV.7,Negara Ratu,transkripsi PETA_WILAYAH,-4.65662
 NRS,Naras,Divre 2,aktif,II.2,Lubuk Alung,transkripsi PETA_WILAYAH,-0.5708,100.0978,peta (ekadanis/stasiun_map_app),,1,1
 NRU,Niru,Divre 3,aktif,III.10,Niru,transkripsi PETA_WILAYAH,-3.45349,104.0644,peta (ekadanis/stasiun_map_app),,1,1
 NT,Ngunut,Daop 7,aktif,7.12,Tulungagung,transkripsi PETA_WILAYAH,-8.10278,112.0122,peta (ekadanis/stasiun_map_app),,1,1
-NTG,Notog,DAOP 5 PURWOKERTO,aktif,5.6,Kebasen,resmi data_station,-7.485792185,109.2134064,resmi data_station,,1,1
+NTG,Notog,Daop 5,aktif,5.6,Kebasen,resmi data_station,-7.485792185,109.2134064,resmi data_station,,1,1
 PA,Paron,Daop 7,tidak aktif,,,,,,,,0,0
 PAB,Pabuaran,Daop 3,aktif,3.1,Pabuaran,transkripsi PETA_WILAYAH,-6.40918,107.584,peta (ekadanis/stasiun_map_app),,1,1
 PAD,Pandanan,Daop 8,tidak aktif,8.6,Lamongan,transkripsi PETA_WILAYAH,,,,,0,0
@@ -561,16 +561,16 @@ PAK,Pauh Kambar,Divre 2,aktif,II.2,Lubuk Alung,transkripsi PETA_WILAYAH,-0.65137
 PAN,Pancoran,Daop 1,aktif,,,,,,,,0,0
 PAR,Parepare,Daop 8,aktif,,,,,,,,0,0
 PAS,Pasirbungur,Daop 3,aktif,3.2,Pasirbungur,transkripsi PETA_WILAYAH,-6.42639,107.6886,peta (ekadanis/stasiun_map_app),,1,1
-PAT,Patuguran,DAOP 5 PURWOKERTO,aktif,5.4,Legok,resmi data_station,-7.328167172,109.0576457,resmi data_station,,1,1
+PAT,Patuguran,Daop 5,aktif,5.4,Legok,resmi data_station,-7.328167172,109.0576457,resmi data_station,,1,1
 PB,Probolinggo,Daop 9,aktif,9.2,Probolinggo,transkripsi PETA_WILAYAH,-7.74268,113.2158,peta (ekadanis/stasiun_map_app),,1,1
 PBA,Perbaungan,Divre 1,aktif,I.4,Perbaungan,transkripsi PETA_WILAYAH,3.56738,98.95203,peta (ekadanis/stasiun_map_app),,1,1
 PBD,Pangkalan Brandan,Divre 1,aktif,I.15,Pangkalan Brandan,transkripsi PETA_WILAYAH,4.02283,98.29059,peta (ekadanis/stasiun_map_app),,1,1
 PBL,PURBALINGGA,Daop 5,tidak aktif,,,,,,,,0,0
 PBM,Prabumulih,Divre 3,aktif,III.7,Prabumulih,transkripsi PETA_WILAYAH,-3.43298,104.2408,peta (ekadanis/stasiun_map_app),,1,1
-PBN,,Divre I Sumatera Utara,,,,,,,,,0,0
+PBN,,Divre 1,,,,,,,,,0,0
 PBR,Prabumulih Baru,Divre 3,aktif,,,,,,,,0,0
-PBR X5,Prabumulih Baru X5,Divre III Palembang,,,,,,,,,1,1
-PBR X6,Prabumulih Baru X6,Divre III Palembang,,,,,,,,,1,1
+PBR X5,Prabumulih Baru X5,Divre 3,,,,,,,,,1,1
+PBR X6,Prabumulih Baru X6,Divre 3,,,,,,,,,1,1
 PBRX5,Prabumulih Baru X5,Divre 3,aktif,III.7,Prabumulih,transkripsi PETA_WILAYAH,-3.46375,104.23563,peta (interpolasi km petak di geometri OSM),,0,0
 PBRX6,Prabumulih Baru X6,Divre 3,aktif,III.8,Prabumulih Baru X6,transkripsi PETA_WILAYAH,,,,,0,0
 PC,Pucuk,Daop 8,aktif,8.5,Sumlaran,transkripsi PETA_WILAYAH,-7.09763,112.2698,peta (DenShubi/Indonesian-Railway-),,1,1
@@ -579,7 +579,7 @@ PDJ,Pondokranji,Daop 1,aktif,1.20,Kebayoran,transkripsi PETA_WILAYAH,-6.276,106.
 PDL,Padalarang,Daop 2,aktif,2.4,Padalarang,transkripsi PETA_WILAYAH,-6.84291,107.49725,peta (sandihex86/masterdataprasarana),695,1,1
 PDR,Paduraksa,Divre 3,tidak aktif,III.19,Sukarame,transkripsi PETA_WILAYAH,,,,,0,0
 PDRG,Pondokrajeg,Daop 1,aktif,1.16,Citayam,transkripsi PETA_WILAYAH,-6.46073,106.82437,peta (jeffersonsetiawan/TMConfiguration),,1,1
-PDS,Padas,DAOP 4 SEMARANG,aktif,4.20,Kedungjati,resmi data_station,-7.17922071,110.6719217,resmi data_station,,1,1
+PDS,Padas,Daop 4,aktif,4.20,Kedungjati,resmi data_station,-7.17922071,110.6719217,resmi data_station,,1,1
 PE,PARE,Daop 7,tidak aktif,,,,,,,,0,0
 PEB,Partembalan,Divre 1,tidak aktif,,,,,,,,0,0
 PEM,P.Mandala,Divre 1,tidak aktif,,,,,,,,0,0
@@ -592,24 +592,24 @@ PI,Poris,Daop 1,aktif,1.7,Tangerang,transkripsi PETA_WILAYAH,-6.16993,106.67946,
 PID,Pidada,Divre 4,tidak aktif,IV.1,Tanjungkarang,transkripsi PETA_WILAYAH,-5.46149,105.3162,peta (ekadanis/stasiun_map_app),,0,0
 PJI,PANJI,Daop 9,tidak aktif,,,,,,,,0,0
 PJN,Panjang,Divre 4,tidak aktif,IV.1,Tanjungkarang,transkripsi PETA_WILAYAH,-5.4696,105.321,peta (ekadanis/stasiun_map_app),,0,0
-PK,Pekalongan,DAOP 4 SEMARANG,aktif,4.4,Pekalongan,resmi data_station,-6.889498766,109.6643107,resmi data_station,,1,1
+PK,Pekalongan,Daop 4,aktif,4.4,Pekalongan,resmi data_station,-6.889498766,109.6643107,resmi data_station,,1,1
 PKJ,Pangkajene,Daop 8,aktif,,,,,,,,0,0
 PKW,Pasarkliwon,Daop 5,tidak aktif,,,,,,,,0,0
-PL,Palur,DAOP 6 YOGYAKARTA,aktif,6.11,Palur,resmi data_station,-7.56793892,110.8754408,resmi data_station,,1,1
+PL,Palur,Daop 6,aktif,6.11,Palur,resmi data_station,-7.56793892,110.8754408,resmi data_station,,1,1
 PLA,Pulau Air,Divre 2,aktif,II.1,Padang,transkripsi PETA_WILAYAH,-0.95947,100.3672,peta (ekadanis/stasiun_map_app),,1,1
-PLB,Plabuan,DAOP 4 SEMARANG,aktif,4.6,Kuripan,resmi data_station,-6.919670725,109.9564702,resmi data_station,,1,1
+PLB,Plabuan,Daop 4,aktif,4.6,Kuripan,resmi data_station,-6.919670725,109.9564702,resmi data_station,,1,1
 PLD,Plered,Daop 2,aktif,2.2,Purwakarta,transkripsi PETA_WILAYAH,-6.64038,107.3914,peta (ekadanis/stasiun_map_app),257,1,1
 PLM,Palmerah,Daop 1,aktif,1.5,Tanahabang,transkripsi PETA_WILAYAH,-6.20758,106.7974,peta (ekadanis/stasiun_map_app),,1,1
 PLP,PALBAPANG,Daop 6,tidak aktif,,,,,,,,0,0
 PME,Pamienke,Divre 1,aktif,I.11,Mambangmuda,transkripsi PETA_WILAYAH,2.3771,99.75967,peta (interpolasi km petak di geometri OSM),,1,1
-PML,Pemalang,DAOP 4 SEMARANG,aktif,4.2,Pemalang,resmi data_station,-6.887324243,109.3882118,resmi data_station,,1,1
+PML,Pemalang,Daop 4,aktif,4.2,Pemalang,resmi data_station,-6.887324243,109.3882118,resmi data_station,,1,1
 PMN,Pariaman,Divre 2,aktif,II.2,Lubuk Alung,transkripsi PETA_WILAYAH,-0.62646,100.1166,peta (ekadanis/stasiun_map_app),,1,1
 PNG,Penanggiran,Divre 3,aktif,III.12,Gunung Megang,transkripsi PETA_WILAYAH,-3.48169,103.813,peta (ekadanis/stasiun_map_app),,1,1
-PNL,Panunggalan,DAOP 4 SEMARANG,aktif,4.15,Panunggalan,resmi data_station,-7.152351141,111.0606727,resmi data_station,,1,1
+PNL,Panunggalan,Daop 4,aktif,4.15,Panunggalan,resmi data_station,-7.152351141,111.0606727,resmi data_station,,1,1
 PNM,Penimur,Divre 3,aktif,III.9,Penimur,transkripsi PETA_WILAYAH,-3.44598,104.1558,peta (ekadanis/stasiun_map_app),,1,1
 PNO,Palanro,Daop 8,aktif,,,,,,,,0,0
 PNR,Panarukan,Daop 9,aktif,,,,,,,,0,0
-PNT,Pasarnguter,DAOP 6 YOGYAKARTA,aktif,6.9,Sukoharjo,resmi data_station,-7.741959265,110.87957,resmi data_station,,1,1
+PNT,Pasarnguter,Daop 6,aktif,6.9,Sukoharjo,resmi data_station,-7.741959265,110.87957,resmi data_station,,1,1
 PNW,Peninjawan,Divre 4,aktif,IV.16,Peninjawan,transkripsi PETA_WILAYAH,-3.87952,104.3766,peta (ekadanis/stasiun_map_app),,1,1
 PO,PONOROGO,Daop 7,tidak aktif,,,,,,,,0,0
 POC,Pondokcina,Daop 1,aktif,1.14,Pasarminggu,transkripsi PETA_WILAYAH,-6.369,106.832,peta (sandihex86/masterdataprasarana),74,1,1
@@ -617,14 +617,14 @@ POE,Pasar Sore,Divre 1,tidak aktif,I.3,Araskabu,transkripsi PETA_WILAYAH,,,,,0,0
 POK,Pondokjati,Daop 1,aktif,1.3,Pasarsenen,transkripsi PETA_WILAYAH,-6.20898,106.8622,peta (ekadanis/stasiun_map_app),14,1,1
 PON,Pondok Leungsir,Daop 1,aktif,1.19,Sukabumi,transkripsi PETA_WILAYAH,-6.90497,106.8532,peta (ekadanis/stasiun_map_app),537,1,1
 POO,Pasoso,Daop 1,aktif,1.2,Tanjungpriuk,transkripsi PETA_WILAYAH,,,,,0,0
-POS IDR,Pos Indralaya,Divre III Palembang,,,,,,,,,1,1
+POS IDR,Pos Indralaya,Divre 3,,,,,,,,,1,1
 POSIDR,Pos Indralaya,Divre 3,aktif,III.2,Simpang,transkripsi PETA_WILAYAH,,,,,0,0
 PP,Padangpanjang,Divre 2,aktif,,,,,,,,0,0
-PPK,Prupuk,DAOP 5 PURWOKERTO,aktif,5.2,Prupuk,resmi data_station,-7.12284312,108.9826699,resmi data_station,,1,1
+PPK,Prupuk,Daop 5,aktif,5.2,Prupuk,resmi data_station,-7.12284312,108.9826699,resmi data_station,,1,1
 PPR,Papar,Daop 7,aktif,7.13,Kediri,transkripsi PETA_WILAYAH,-7.69757,112.0796,peta (ekadanis/stasiun_map_app),,1,1
 PR,Porong,Daop 8,aktif,8.15,Bangil,transkripsi PETA_WILAYAH,-7.53839,112.70176,peta (DenShubi/Indonesian-Railway-),,1,1
 PRA,Perlanaan,Divre 1,aktif,I.7,Perlanaan,transkripsi PETA_WILAYAH,3.1756,99.36499,peta (ekadanis/stasiun_map_app),,1,1
-PRB,Prembun,DAOP 5 PURWOKERTO,aktif,5.14,Kutoarjo,resmi data_station,-7.724292778,109.7981197,resmi data_station,,1,1
+PRB,Prembun,Daop 5,aktif,5.14,Kutoarjo,resmi data_station,-7.724292778,109.7981197,resmi data_station,,1,1
 PRI,Pringkasap,Daop 3,aktif,3.2,Pasirbungur,transkripsi PETA_WILAYAH,-6.41809,107.6344,peta (ekadanis/stasiun_map_app),,1,1
 PRJ,Prajekan,Daop 9,aktif,,,,,,,,0,0
 PRK,Parungkuda,Daop 1,aktif,1.18,Cigombong,transkripsi PETA_WILAYAH,-6.8465,106.7606,peta (ekadanis/stasiun_map_app),396,1,1
@@ -641,9 +641,9 @@ PSJ,Pasirjengkol,Daop 2,aktif,2.10,Cibatu,transkripsi PETA_WILAYAH,-7.12864,107.
 PSM,Pasarminggu,Daop 1,aktif,1.14,Pasarminggu,transkripsi PETA_WILAYAH,-6.28436,106.8446,peta (ekadanis/stasiun_map_app),36,1,1
 PSMB,Pasarminggubaru,Daop 1,aktif,1.14,Pasarminggu,transkripsi PETA_WILAYAH,-6.26282,106.8518,peta (ekadanis/stasiun_map_app),29,1,1
 PSR,PASIRIAN,Daop 9,tidak aktif,,,,,,,,0,0
-PTA,Petarukan,DAOP 4 SEMARANG,aktif,4.3,Petarukan,resmi data_station,-6.897330549,109.4497299,resmi data_station,,1,1
+PTA,Petarukan,Daop 4,aktif,4.3,Petarukan,resmi data_station,-6.897330549,109.4497299,resmi data_station,,1,1
 PTG,Patih Galung,Divre 3,tidak aktif,,,,,,,,0,0
-PTN,Patukan,DAOP 6 YOGYAKARTA,aktif,6.4,Yogyakarta,resmi data_station,-7.790700845,110.3254634,resmi data_station,,1,1
+PTN,Patukan,Daop 6,aktif,6.4,Yogyakarta,resmi data_station,-7.790700845,110.3254634,resmi data_station,,1,1
 PTR,Peterongan,Daop 7,aktif,7.1,Sumobito,transkripsi PETA_WILAYAH,-7.54187,112.2792,peta (ekadanis/stasiun_map_app),,1,1
 PUA,Pungai,Divre 1,tidak aktif,I.13,Binjai,transkripsi PETA_WILAYAH,,,,,0,0
 PUB,Pulu Brayan,Divre 1,aktif,I.2,Ujungbaru,transkripsi PETA_WILAYAH,,,,,1,1
@@ -653,8 +653,8 @@ PWA,Purwoasri,Daop 7,aktif,7.3,Kertosono,transkripsi PETA_WILAYAH,-7.6474,112.10
 PWJ,Pagerwojo,Daop 8,aktif,8.14,Sidoarjo,transkripsi PETA_WILAYAH,-7.44128,112.7156,peta (ekadanis/stasiun_map_app),,1,1
 PWK,Purwakarta,Daop 2,aktif,2.2,Purwakarta,transkripsi PETA_WILAYAH,-6.55267,107.4464,peta (ekadanis/stasiun_map_app),84,1,1
 PWR,Purworejo,Daop 5,aktif,,,,,,,,0,0
-PWS,Purwosari,DAOP 6 YOGYAKARTA,aktif,6.8,Solo Balapan,resmi data_station,-7.561642859,110.7962283,resmi data_station,,1,1
-PWT,Purwokerto,DAOP 5 PURWOKERTO,aktif,5.5,Purwokerto,resmi data_station,-7.419171802,109.2219014,resmi data_station,,1,1
+PWS,Purwosari,Daop 6,aktif,6.8,Solo Balapan,resmi data_station,-7.561642859,110.7962283,resmi data_station,,1,1
+PWT,Purwokerto,Daop 5,aktif,5.5,Purwokerto,resmi data_station,-7.419171802,109.2219014,resmi data_station,,1,1
 PYK,Payakabung,Divre 3,aktif,III.3,Payakabung,transkripsi PETA_WILAYAH,-3.1991,104.6044,peta (ekadanis/stasiun_map_app),,1,1
 PYP,Payapinang,Divre 1,tidak aktif,,,,,,,,0,0
 Pgd,Pangandaran,Daop 2,tidak aktif,,,,,,,,0,0
@@ -663,12 +663,12 @@ RAP,Rantau Prapat,Divre 1,aktif,I.12,Rantauprapat,transkripsi PETA_WILAYAH,2.113
 RAPB,Rantauprapat Baru,Divre 1,aktif,I.12,Rantauprapat,transkripsi PETA_WILAYAH,2.1201,99.80847,peta (interpolasi km petak di geometri OSM),,1,1
 RAS,Rasuna Said,Daop 1,aktif,,,,,,,,0,0
 RB,Rembang,Daop 4,tidak aktif,,,,,,,,0,0
-RBG,Randublatung,DAOP 4 SEMARANG,aktif,4.18,Randublatung,resmi data_station,-7.192156971,111.3980729,resmi data_station,,1,1
+RBG,Randublatung,Daop 4,aktif,4.18,Randublatung,resmi data_station,-7.192156971,111.3980729,resmi data_station,,1,1
 RBP,Rambipuji,Daop 9,aktif,9.5,Jember,transkripsi PETA_WILAYAH,-8.20337,113.6144,peta (ekadanis/stasiun_map_app),,1,1
 RCK,Rancaekek,Daop 2,aktif,2.8,Kiaracondong,transkripsi PETA_WILAYAH,-6.96483,107.7559,peta (sandihex86/masterdataprasarana),672,1,1
 RCL,Rancakole,Daop 5,tidak aktif,5.7,Langen,transkripsi PETA_WILAYAH,,,,,0,0
 RDA,Randuagung,Daop 9,aktif,9.4,Tanggul,transkripsi PETA_WILAYAH,-8.06978,113.30501,peta (interpolasi km petak di geometri OSM),,1,1
-RDN,Randegan,DAOP 5 PURWOKERTO,aktif,5.6,Kebasen,resmi data_station,-7.569832078,109.2199106,resmi data_station,,1,1
+RDN,Randegan,Daop 5,aktif,5.6,Kebasen,resmi data_station,-7.569832078,109.2199106,resmi data_station,,1,1
 RGP,Rogojampi,Daop 9,aktif,9.8,Rogojampi,transkripsi PETA_WILAYAH,-8.3045,114.2926,peta (ekadanis/stasiun_map_app),,1,1
 RGS,Rengas,Divre 4,aktif,IV.3,Bekri,transkripsi PETA_WILAYAH,-5.133,105.1542,peta (ekadanis/stasiun_map_app),,1,1
 RH,Rendeh,Daop 2,aktif,2.3,Rendeh,transkripsi PETA_WILAYAH,-6.73613,107.39851,peta (sandihex86/masterdataprasarana),447,1,1
@@ -690,7 +690,7 @@ RPH,Rampah,Divre 1,aktif,I.5,Tebingtinggi,transkripsi PETA_WILAYAH,3.48467,99.13
 RU,Rawabuntu,Daop 1,aktif,1.20,Kebayoran,transkripsi PETA_WILAYAH,-6.31488,106.6762,peta (ekadanis/stasiun_map_app),48,1,1
 RW,Rawabuaya,Daop 1,aktif,1.6,Duri,transkripsi PETA_WILAYAH,-6.16276,106.72306,peta (jeffersonsetiawan/TMConfiguration),6,1,1
 RWB,Rawabebek,Daop 1,tidak aktif,1.9,Bekasi,transkripsi PETA_WILAYAH,-6.22065,106.96542,peta (interpolasi km petak di geometri OSM),,0,0
-RWL,Rewulu,DAOP 6 YOGYAKARTA,aktif,6.4,Yogyakarta,resmi data_station,-7.795791369,110.2841764,resmi data_station,,1,1
+RWL,Rewulu,Daop 6,aktif,6.4,Yogyakarta,resmi data_station,-7.795791369,110.2841764,resmi data_station,,1,1
 Rds,Rengasdengklok,Daop 1,tidak aktif,,,,,,,,0,0
 SAD,Sadang,Daop 2,aktif,2.1,Cibungur,transkripsi PETA_WILAYAH,-6.5107,107.45625,peta (sandihex86/masterdataprasarana),94,1,1
 SB,Surabayakota,Daop 8,aktif,8.9,Surabaya Pasarturi,transkripsi PETA_WILAYAH,-7.24302,112.74216,peta (DenShubi/Indonesian-Railway-),,1,1
@@ -708,12 +708,12 @@ SBT,Stabat,Divre 1,aktif,I.14,Stabat,transkripsi PETA_WILAYAH,3.734,98.41146,pet
 SC,Secang,Daop 4,tidak aktif,4.22,Ambarawa,transkripsi PETA_WILAYAH,,,,,0,0
 SCN,Sicincin,Divre 2,aktif,II.2,Lubuk Alung,transkripsi PETA_WILAYAH,-0.5661,100.278,peta (ekadanis/stasiun_map_app),,1,1
 SCT,Sukacinta,Divre 3,aktif,III.17,Sukacinta,transkripsi PETA_WILAYAH,-3.77838,103.6252,peta (ekadanis/stasiun_map_app),,1,1
-SD,Surodadi,DAOP 4 SEMARANG,aktif,4.2,Pemalang,resmi data_station,-6.88025222,109.2764229,resmi data_station,,1,1
+SD,Surodadi,Daop 4,aktif,4.2,Pemalang,resmi data_station,-6.88025222,109.2764229,resmi data_station,,1,1
 SDA,Sidoarjo,Daop 8,aktif,8.14,Sidoarjo,transkripsi PETA_WILAYAH,-7.45677,112.71268,peta (DenShubi/Indonesian-Railway-),,1,1
-SDI,Sedadi,DAOP 4 SEMARANG,aktif,4.13,Karangjati,resmi data_station,-7.140479017,110.8488629,resmi data_station,,1,1
+SDI,Sedadi,Daop 4,aktif,4.13,Karangjati,resmi data_station,-7.140479017,110.8488629,resmi data_station,,1,1
 SDM,Sudimara,Daop 1,aktif,1.20,Kebayoran,transkripsi PETA_WILAYAH,-6.29696,106.71228,peta (jeffersonsetiawan/TMConfiguration),26,1,1
 SDN,Serdang,Divre 3,aktif,III.4,Serdang,transkripsi PETA_WILAYAH,-3.21991,104.5232,peta (ekadanis/stasiun_map_app),,1,1
-SDR,Sidareja,DAOP 5 PURWOKERTO,aktif,5.7,Langen,resmi data_station,-7.486064058,108.8075085,resmi data_station,,1,1
+SDR,Sidareja,Daop 5,aktif,5.7,Langen,resmi data_station,-7.486064058,108.8075085,resmi data_station,,1,1
 SDT,Sidotopo,Daop 8,aktif,8.10,Sidotopo,transkripsi PETA_WILAYAH,-7.23529,112.7574,peta (ekadanis/stasiun_map_app),,1,1
 SDU,Sindanglaut,Daop 3,aktif,3.14,Sindanglaut,transkripsi PETA_WILAYAH,-6.83276,108.626,peta (ekadanis/stasiun_map_app),,1,1
 SED,Serdang,Divre 1,tidak aktif,I.3,Araskabu,transkripsi PETA_WILAYAH,,,,,0,0
@@ -734,47 +734,47 @@ SIR,Siantar,Divre 1,aktif,I.6,Siantar,transkripsi PETA_WILAYAH,2.95923,99.06299,
 SIT,Situbondo,Daop 9,aktif,,,,,,,,0,0
 SIU,Situngir,Divre 1,aktif,,,,2.49481,99.67401,peta (ekadanis/stasiun_map_app),,1,1
 SJB,Sijabut,Divre 1,tidak aktif,,,,,,,,0,0
-SK,Solojebres,DAOP 6 YOGYAKARTA,aktif,6.11,Palur,resmi data_station,-7.56208425,110.8394766,resmi data_station,,1,1
+SK,Solojebres,Daop 6,aktif,6.11,Palur,resmi data_station,-7.56208425,110.8394766,resmi data_station,,1,1
 SKA,Singkarak,Divre 2,aktif,,,,,,,,0,0
-SKH,Sukoharjo,DAOP 6 YOGYAKARTA,aktif,6.9,Sukoharjo,resmi data_station,-7.679630236,110.8433148,resmi data_station,,1,1
+SKH,Sukoharjo,Daop 6,aktif,6.9,Sukoharjo,resmi data_station,-7.679630236,110.8433148,resmi data_station,,1,1
 SKJ,Sukorejo,Daop 8,aktif,8.16,Lawang,transkripsi PETA_WILAYAH,-7.7193,112.7234,peta (ekadanis/stasiun_map_app),,1,1
 SKM,Sukomoro,Daop 7,aktif,7.4,Nganjuk,transkripsi PETA_WILAYAH,-7.6026,111.9426,peta (ekadanis/stasiun_map_app),,1,1
 SKN,Sukamenanti,Divre 4,aktif,IV.1,Tanjungkarang,transkripsi PETA_WILAYAH,-5.46706,105.323,peta (interpolasi km petak di geometri OSM),,1,1
 SKO,Sukoanyar,Daop 8,tidak aktif,,,,,,,,0,0
-SKP,Sikampuh,DAOP 5 PURWOKERTO,aktif,5.10,Kroya,resmi data_station,-7.625517911,109.1974775,resmi data_station,,1,1
+SKP,Sikampuh,Daop 5,aktif,5.10,Kroya,resmi data_station,-7.625517911,109.1974775,resmi data_station,,1,1
 SKT,Sasaksaat,Daop 2,aktif,2.3,Rendeh,transkripsi PETA_WILAYAH,-6.77917,107.4316,peta (ekadanis/stasiun_map_app),595,1,1
 SKU,Sukamerindu,Divre 4,aktif,IV.18,Tanjungrambang,transkripsi PETA_WILAYAH,-3.59434,104.27435,peta (interpolasi km petak di geometri OSM),,1,1
 SKW,Sukowono,Daop 9,aktif,,,,,,,,0,0
-SL,Sulur,DAOP 4 SEMARANG,aktif,4.16,Kradenan,resmi data_station,-7.173942275,111.2228127,resmi data_station,,1,1
+SL,Sulur,Daop 4,aktif,4.16,Kradenan,resmi data_station,-7.173942275,111.2228127,resmi data_station,,1,1
 SLH,SLAHUNG,Daop 7,tidak aktif,,,,,,,,0,0
 SLJ,Selajambe,Daop 2,aktif,2.6,Cianjur,transkripsi PETA_WILAYAH,-6.8136,107.2226,peta (ekadanis/stasiun_map_app),282,1,1
 SLK,Solok,Divre 2,aktif,,,,,,,,0,0
-SLM,Salem,DAOP 6 YOGYAKARTA,aktif,6.10,Sumberlawang,resmi data_station,-7.395492957,110.8273436,resmi data_station,,1,1
-SLO,Solobalapan,DAOP 6 YOGYAKARTA,aktif,6.8,Solo Balapan,resmi data_station,-7.557047686,110.8209817,resmi data_station,,1,1
+SLM,Salem,Daop 6,aktif,6.10,Sumberlawang,resmi data_station,-7.395492957,110.8273436,resmi data_station,,1,1
+SLO,Solobalapan,Daop 6,aktif,6.8,Solo Balapan,resmi data_station,-7.557047686,110.8209817,resmi data_station,,1,1
 SLS,Sulusuban,Divre 4,aktif,IV.4,Blambangan Pagar,transkripsi PETA_WILAYAH,-4.94641,105.0832,peta (ekadanis/stasiun_map_app),,1,1
-SLW,Slawi,DAOP 5 PURWOKERTO,aktif,5.1,Slawi,resmi data_station,-6.981785105,109.1366401,resmi data_station,,1,1
+SLW,Slawi,Daop 5,aktif,5.1,Slawi,resmi data_station,-6.981785105,109.1366401,resmi data_station,,1,1
 SMB,Sembung,Daop 7,aktif,7.2,Jombang,transkripsi PETA_WILAYAH,-7.58258,112.16716,peta (DenShubi/Indonesian-Railway-),,1,1
-SMC,Semarang Poncol,DAOP 4 SEMARANG,aktif,4.10,Semarang Poncol,resmi data_station,-6.972990121,110.4147432,resmi data_station,,1,1
+SMC,Semarang Poncol,Daop 4,aktif,4.10,Semarang Poncol,resmi data_station,-6.972990121,110.4147432,resmi data_station,,1,1
 SMG,Semarang Gudang,Daop 4,tidak aktif,,,,,,,,0,0
-SMO,Adi Soemarmo,DAOP 6 YOGYAKARTA,aktif,6.8,Solo Balapan,resmi data_station,-7.513414916,110.7479204,resmi data_station,,1,1
-SMT,Semarang Tawang,DAOP 4 SEMARANG,aktif,4.10,Semarang Poncol,resmi data_station,-6.964367883,110.4279038,resmi data_station,,1,1
+SMO,Adi Soemarmo,Daop 6,aktif,6.8,Solo Balapan,resmi data_station,-7.513414916,110.7479204,resmi data_station,,1,1
+SMT,Semarang Tawang,Daop 4,aktif,4.10,Semarang Poncol,resmi data_station,-6.964367883,110.4279038,resmi data_station,,1,1
 SN,Sengon,Daop 8,aktif,8.16,Lawang,transkripsi PETA_WILAYAH,-7.75519,112.7246,peta (ekadanis/stasiun_map_app),,1,1
 SNA,Saung Naga,Divre 3,aktif,III.20,Saungnaga,transkripsi PETA_WILAYAH,-3.62628,103.1894,peta (ekadanis/stasiun_map_app),,1,1
 SNI,Sungailasi,Divre 2,aktif,,,,,,,,0,0
 SNK,Sinaksak,Divre 1,tidak aktif,I.6,Siantar,transkripsi PETA_WILAYAH,,,,,0,0
-SNL,,Divre II Sumatera Barat,,,,,,,,,0,0
+SNL,,Divre 2,,,,,,,,,0,0
 SOA,Soka,Daop 5,tidak aktif,5.13,Kebumen,transkripsi PETA_WILAYAH,-7.67908,109.6396,peta (ekadanis/stasiun_map_app),,0,1
 SPC,Sepancar,Divre 4,aktif,IV.13,Sepancar,transkripsi PETA_WILAYAH,-4.18427,104.2104,peta (ekadanis/stasiun_map_app),,1,1
-SPH,Sumpiuh,DAOP 5 PURWOKERTO,aktif,5.11,Tambak,resmi data_station,-7.615051498,109.3611669,resmi data_station,,1,1
+SPH,Sumpiuh,Daop 5,aktif,5.11,Tambak,resmi data_station,-7.615051498,109.3611669,resmi data_station,,1,1
 SPJ,Sepanjang,Daop 8,aktif,8.12,Sepanjang,transkripsi PETA_WILAYAH,-7.34694,112.69837,peta (DenShubi/Indonesian-Railway-),,1,1
 SPL,Sempolan,Daop 9,aktif,9.6,Kalisat,transkripsi PETA_WILAYAH,-8.19257,113.8962,peta (ekadanis/stasiun_map_app),,1,1
-SR,Sragen,DAOP 6 YOGYAKARTA,aktif,6.12,Sragen,resmi data_station,-7.429219101,111.0177244,resmi data_station,,1,1
+SR,Sragen,Daop 6,aktif,6.12,Sragen,resmi data_station,-7.429219101,111.0177244,resmi data_station,,1,1
 SRD,Saradan,Daop 7,aktif,7.6,Caruban,transkripsi PETA_WILAYAH,-7.54749,111.7322,peta (ekadanis/stasiun_map_app),,1,1
-SRI,Sragi,DAOP 4 SEMARANG,aktif,4.4,Pekalongan,resmi data_station,-6.923725167,109.5709996,resmi data_station,,1,1
+SRI,Sragi,Daop 4,aktif,4.4,Pekalongan,resmi data_station,-6.923725167,109.5709996,resmi data_station,,1,1
 SRJ,Sumberrejo,Daop 8,aktif,8.3,Sumberrejo,transkripsi PETA_WILAYAH,-7.17776,112.00157,peta (DenShubi/Indonesian-Railway-),,1,1
 SRM,Sukarame,Divre 3,tidak aktif,III.19,Sukarame,transkripsi PETA_WILAYAH,,,,,0,0
 SRP,Serpong,Daop 1,aktif,1.21,Parungpanjang,transkripsi PETA_WILAYAH,-6.32019,106.6656,peta (ekadanis/stasiun_map_app),46,1,1
-SRW,Sruweng,DAOP 5 PURWOKERTO,aktif,5.12,Gombong,resmi data_station,-7.654982123,109.6030053,resmi data_station,,1,1
+SRW,Sruweng,Daop 5,aktif,5.12,Gombong,resmi data_station,-7.654982123,109.6030053,resmi data_station,,1,1
 SS,Susuhan,Daop 7,aktif,7.13,Kediri,transkripsi PETA_WILAYAH,-7.77118,112.026,peta (ekadanis/stasiun_map_app),,1,1
 SSI,Sindangresmi,Daop 2,aktif,2.5,Cibeber,transkripsi PETA_WILAYAH,-6.94909,107.11173,peta (interpolasi km petak di geometri OSM),,1,1
 SSPBALAS,Ssp Balas,Daop 2,tidak aktif,,,,,,,,0,0
@@ -816,22 +816,22 @@ SSPSUMBERHARJO,Ssp Sumberharjo,Daop 4,tidak aktif,,,,,,,,0,0
 SSPTELUKNIBUNG,Ssp Teluknibung,Divre 1,tidak aktif,,,,,,,,0,0
 SSPTEXTIL,Ssp Textil,Divre 1,tidak aktif,,,,,,,,0,0
 SSR,Sukasari,Daop 9,tidak aktif,,,,,,,,0,0
-STA,Solokota,DAOP 6 YOGYAKARTA,aktif,6.9,Sukoharjo,resmi data_station,-7.575360213,110.8363642,resmi data_station,,1,1
+STA,Solokota,Daop 6,aktif,6.9,Sukoharjo,resmi data_station,-7.575360213,110.8363642,resmi data_station,,1,1
 STG,Sentang,Divre 1,tidak aktif,,,,,,,,0,0
-STL,Sentolo,DAOP 6 YOGYAKARTA,aktif,6.3,Wates,resmi data_station,-7.832981789,110.2200469,resmi data_station,,1,1
+STL,Sentolo,Daop 6,aktif,6.3,Wates,resmi data_station,-7.832981789,110.2200469,resmi data_station,,1,1
 STM,Segitigamesigit,Daop 8,aktif,8.9,Surabaya Pasarturi,transkripsi PETA_WILAYAH,,,,,1,1
 STP,Sawotratap,Daop 8,aktif,8.11,Surabaya Gubeng,transkripsi PETA_WILAYAH,-7.3678,112.7294,peta (ekadanis/stasiun_map_app),,1,1
 SUA,Sukaraja,Divre 3,aktif,III.20,Saungnaga,transkripsi PETA_WILAYAH,-3.66339,103.2722,peta (ekadanis/stasiun_map_app),,1,1
 SUD,Sudirman,Daop 1,aktif,1.5,Tanahabang,transkripsi PETA_WILAYAH,-6.20226,106.82265,peta (jeffersonsetiawan/TMConfiguration),5.65,1,1
 SUDB,Sudirmanbaru,Daop 1,aktif,1.5,Tanahabang,transkripsi PETA_WILAYAH,-6.20143,106.81988,peta (jeffersonsetiawan/TMConfiguration),,1,1
-SUM,Sumberlawang,DAOP 6 YOGYAKARTA,aktif,6.10,Sumberlawang,resmi data_station,-7.327583251,110.8638526,resmi data_station,,1,1
+SUM,Sumberlawang,Daop 6,aktif,6.10,Sumberlawang,resmi data_station,-7.327583251,110.8638526,resmi data_station,,1,1
 SUN,Sunggal,Divre 1,tidak aktif,I.13,Binjai,transkripsi PETA_WILAYAH,,,,,0,0
 SUP,Sungai Empayang,Divre 3,tidak aktif,III.20,Saungnaga,transkripsi PETA_WILAYAH,,,,,0,0
 SUT,Sukatani,Daop 2,aktif,2.2,Purwakarta,transkripsi PETA_WILAYAH,-6.61108,107.40839,peta (sandihex86/masterdataprasarana),226,1,1
 SW,Sawahbesar,Daop 1,aktif,1.4,Manggarai,transkripsi PETA_WILAYAH,-6.16058,106.8276,peta (ekadanis/stasiun_map_app),15,1,1
 SWD,Sumberwadung,Daop 9,aktif,9.7,Kalibaru,transkripsi PETA_WILAYAH,-8.30188,114.1054,peta (ekadanis/stasiun_map_app),,1,1
 SWL,Sawahlunto,Divre 2,aktif,,,,,,,,0,0
-SWT,Srowot,DAOP 6 YOGYAKARTA,aktif,6.6,Klaten,resmi data_station,-7.741084916,110.5490856,resmi data_station,,1,1
+SWT,Srowot,Daop 6,aktif,6.6,Klaten,resmi data_station,-7.741084916,110.5490856,resmi data_station,,1,1
 SYO,Sroyo,Daop 8,tidak aktif,8.3,Sumberrejo,transkripsi PETA_WILAYAH,,,,,0,0
 Slb,Salemba,Daop 1,tidak aktif,,,,,,,,0,0
 TA,Tulungagung,Daop 7,aktif,7.12,Tulungagung,transkripsi PETA_WILAYAH,-8.06297,111.90468,peta (DenShubi/Indonesian-Railway-),,1,1
@@ -844,7 +844,7 @@ TAY,Tayu,Daop 4,tidak aktif,,,,,,,,0,0
 TB,Tambun,Daop 1,aktif,1.10,Cikarang,transkripsi PETA_WILAYAH,-6.259,107.056,peta (sandihex86/masterdataprasarana),49,1,1
 TBG,Tribungan,Daop 9,tidak aktif,,,,,,,,0,0
 TBI,Tebing Tinggi,Divre 1,aktif,I.5,Tebingtinggi,transkripsi PETA_WILAYAH,,,,,1,1
-TBK,Tambak,DAOP 5 PURWOKERTO,aktif,5.11,Tambak,resmi data_station,-7.612884159,109.4085812,resmi data_station,,1,1
+TBK,Tambak,Daop 5,aktif,5.11,Tambak,resmi data_station,-7.612884159,109.4085812,resmi data_station,,1,1
 TBKN,Tabakebon,Divre 3,tidak aktif,,,,,,,,0,0
 TBO,Tobo,Daop 8,aktif,8.1,Tobo,transkripsi PETA_WILAYAH,-7.17236,111.6552,peta (ekadanis/stasiun_map_app),,1,1
 TBP,Tabapingin,Divre 3,tidak aktif,III.22,Lubuk Linggau,transkripsi PETA_WILAYAH,,,,,0,0
@@ -856,17 +856,17 @@ TEG,Tegaluar,Daop 2,aktif,,,,,,,,0,0
 TEJ,Tenjo,Daop 1,aktif,1.22,Tigaraksa,transkripsi PETA_WILAYAH,-6.32758,106.462,peta (ekadanis/stasiun_map_app),,1,1
 TER,Tekaran,Daop 6,tidak aktif,,,,,,,,0,0
 TES,Tandes,Daop 8,aktif,8.8,Kandangan,transkripsi PETA_WILAYAH,-7.2589,112.68702,peta (DenShubi/Indonesian-Railway-),,1,1
-TG,Tegal,DAOP 4 SEMARANG,aktif,4.1,Tegal,resmi data_station,-6.867104804,109.14267,resmi data_station,,1,1
+TG,Tegal,Daop 4,aktif,4.1,Tegal,resmi data_station,-6.867104804,109.14267,resmi data_station,,1,1
 TGA,Tanggulangin,Daop 8,aktif,8.15,Bangil,transkripsi PETA_WILAYAH,-7.5069,112.70808,peta (DenShubi/Indonesian-Railway-),,1,1
 TGD,Tanjung Gading,Divre 1,aktif,I.16,Tanjunggading,transkripsi PETA_WILAYAH,,,,,1,1
-TGG,Tanggung,DAOP 4 SEMARANG,aktif,4.20,Kedungjati,resmi data_station,-7.091184545,110.6031686,resmi data_station,,1,1
+TGG,Tanggung,Daop 4,aktif,4.20,Kedungjati,resmi data_station,-7.091184545,110.6031686,resmi data_station,,1,1
 TGI,Tegineneng,Divre 4,aktif,IV.2,Rejosari,transkripsi PETA_WILAYAH,-5.20213,105.17204,peta (ekadanis/stasiun_map_app),,1,1
 TGL,Tanggul,Daop 9,aktif,9.4,Tanggul,transkripsi PETA_WILAYAH,-8.16278,113.4482,peta (ekadanis/stasiun_map_app),,1,1
 TGN,Tanjung,Daop 3,aktif,3.11,Tanjung,transkripsi PETA_WILAYAH,-6.87671,108.861,peta (ekadanis/stasiun_map_app),,1,1
 TGR,Temuguruh,Daop 9,aktif,9.7,Kalibaru,transkripsi PETA_WILAYAH,-8.30957,114.2024,peta (ekadanis/stasiun_map_app),,1,1
 TGS,Tigaraksa,Daop 1,aktif,1.22,Tigaraksa,transkripsi PETA_WILAYAH,-6.32831,106.4344,peta (ekadanis/stasiun_map_app),,1,1
 TGU,Tigaraksa Baru,Daop 1,tidak aktif,,,,,,,,0,0
-TGW,Tegowanu,DAOP 4 SEMARANG,aktif,4.12,Gubug,resmi data_station,-7.052948812,110.6025063,resmi data_station,,1,1
+TGW,Tegowanu,Daop 4,aktif,4.12,Gubug,resmi data_station,-7.052948812,110.6025063,resmi data_station,,1,1
 THB,Tanahabang,Daop 1,aktif,1.5,Tanahabang,transkripsi PETA_WILAYAH,-6.18555,106.81109,peta (jeffersonsetiawan/TMConfiguration),9,1,1
 THI,Tanah Tinggi,Daop 1,aktif,1.7,Tangerang,transkripsi PETA_WILAYAH,-6.17331,106.64657,peta (jeffersonsetiawan/TMConfiguration),,1,1
 THN,Tarahan,Divre 4,aktif,IV.1,Tanjungkarang,transkripsi PETA_WILAYAH,-5.50322,105.33587,peta (ekadanis/stasiun_map_app),,1,1
@@ -875,7 +875,7 @@ TIL,Tangsil,Daop 9,tidak aktif,,,,,,,,0,0
 TIS,Terisi,Daop 3,aktif,3.5,Terisi,transkripsi PETA_WILAYAH,-6.47009,108.1604,peta (ekadanis/stasiun_map_app),,1,1
 TJH,Tigagajah,Divre 4,aktif,IV.14,Baturaja,transkripsi PETA_WILAYAH,-4.11078,104.1688,peta (ekadanis/stasiun_map_app),,1,1
 TJO,Tanjungrajo,Divre 4,aktif,IV.11,Waytuba,transkripsi PETA_WILAYAH,-4.40759,104.4626,peta (ekadanis/stasiun_map_app),,1,1
-TJP,,Divre I Sumatera Utara,,,,,,,,,0,0
+TJP,,Divre 1,,,,,,,,,0,0
 TJR,Tanjungrambang,Divre 4,aktif,IV.18,Tanjungrambang,transkripsi PETA_WILAYAH,-3.54401,104.262,peta (ekadanis/stasiun_map_app),,1,1
 TJS,Tanjungrasa,Daop 3,aktif,3.1,Pabuaran,transkripsi PETA_WILAYAH,-6.40839,107.5406,peta (ekadanis/stasiun_map_app),,1,1
 TJU,Tanjung Putus,Divre 1,tidak aktif,I.14,Stabat,transkripsi PETA_WILAYAH,,,,,0,0
@@ -911,17 +911,17 @@ TPU,Tanjung Pura,Divre 1,aktif,I.14,Stabat,transkripsi PETA_WILAYAH,3.89961,98.4
 TRH,Toroh,Daop 4,tidak aktif,,,,,,,,0,0
 TRK,Tarik,Daop 8,aktif,8.13,Mojokerto,transkripsi PETA_WILAYAH,-7.45951,112.51969,peta (DenShubi/Indonesian-Railway-),,1,1
 TSI,Takalasi,Daop 8,aktif,,,,,,,,0,0
-TSL,,Divre I Sumatera Utara,,,,,,,,,0,0
+TSL,,Divre 1,,,,,,,,,0,0
 TSM,Tasikmalaya,Daop 2,aktif,2.12,Tasikmalaya,transkripsi PETA_WILAYAH,-7.32257,108.2242,peta (ekadanis/stasiun_map_app),324,1,1
-TTG,Tuntang,DAOP 4 SEMARANG,tidak aktif,4.22,Ambarawa,resmi data_station,-7.26080421473079,110.45409274658537,resmi data_station,,0,0
+TTG,Tuntang,Daop 4,tidak aktif,4.22,Ambarawa,resmi data_station,-7.26080421473079,110.45409274658537,resmi data_station,,0,0
 TTR,Tanjung Terang,Divre 3,tidak aktif,,,,-3.45538,103.9294,peta (ekadanis/stasiun_map_app),,0,0
 TUK,Teluk Dalam,Divre 1,aktif,I.10,Telukdalam,transkripsi PETA_WILAYAH,2.82797,99.6267,peta (ekadanis/stasiun_map_app),,1,1
-TW,Telawa,DAOP 4 SEMARANG,aktif,4.21,Gundih,resmi data_station,-7.185680533,110.7520457,resmi data_station,,1,1
+TW,Telawa,Daop 4,aktif,4.21,Gundih,resmi data_station,-7.185680533,110.7520457,resmi data_station,,1,1
 UB,Ujung Baru,Divre 1,aktif,I.2,Ujungbaru,transkripsi PETA_WILAYAH,,,,,0,0
 UI,Univ. Indonesia,Daop 1,aktif,1.14,Pasarminggu,transkripsi PETA_WILAYAH,-6.36075,106.83147,peta (jeffersonsetiawan/TMConfiguration),,1,1
 UJ,UJANG,Daop 8,tidak aktif,,,,,,,,0,0
 UJM,Ujan Mas,Divre 3,aktif,III.13,Ujan Mas,transkripsi PETA_WILAYAH,-3.53217,103.7764,peta (ekadanis/stasiun_map_app),,1,1
-UJN,Ujungnegoro,DAOP 4 SEMARANG,aktif,4.5,Batang,resmi data_station,-6.908527323,109.7891466,resmi data_station,,1,1
+UJN,Ujungnegoro,Daop 4,aktif,4.5,Batang,resmi data_station,-6.908527323,109.7891466,resmi data_station,,1,1
 UP,Univ. Pancasila,Daop 1,aktif,1.14,Pasarminggu,transkripsi PETA_WILAYAH,-6.33929,106.83418,peta (jeffersonsetiawan/TMConfiguration),57,1,1
 WAP,Way Pisang,Divre 4,aktif,IV.11,Waytuba,transkripsi PETA_WILAYAH,-4.34979,104.3868,peta (ekadanis/stasiun_map_app),,1,1
 WAY,Waytuba,Divre 4,aktif,IV.11,Waytuba,transkripsi PETA_WILAYAH,-4.37952,104.4118,peta (ekadanis/stasiun_map_app),,1,1
@@ -929,24 +929,24 @@ WB,Warungbandrek,Daop 2,aktif,2.11,Ciawi,transkripsi PETA_WILAYAH,-7.06475,108.0
 WDO,WARUNGDOWO,Daop 9,tidak aktif,,,,,,,,0,0
 WDR,Widuri,Daop 9,tidak aktif,,,,,,,,0,0
 WDS,Wadas,Daop 1,tidak aktif,,,,,,,,0,0
-WDU,Wadu,DAOP 4 SEMARANG,aktif,4.18,Randublatung,resmi data_station,-7.196107973,111.500398,resmi data_station,,1,1
+WDU,Wadu,Daop 4,aktif,4.18,Randublatung,resmi data_station,-7.196107973,111.500398,resmi data_station,,1,1
 WDW,Waruduwur,Daop 3,aktif,3.9,Cirebon Prujakan,transkripsi PETA_WILAYAH,-6.78369,108.6224,peta (ekadanis/stasiun_map_app),,1,1
 WG,Wlingi,Daop 8,aktif,8.18,Wlingi,transkripsi PETA_WILAYAH,-8.08835,112.31997,peta (DenShubi/Indonesian-Railway-),,1,1
-WJ,Wojo,DAOP 6 YOGYAKARTA,aktif,6.2,Wojo,resmi data_station,-7.861797872,110.0405868,resmi data_station,,1,1
+WJ,Wojo,Daop 6,aktif,6.2,Wojo,resmi data_station,-7.861797872,110.0405868,resmi data_station,,1,1
 WK,Walikukun,Daop 7,aktif,7.10,Walikukun,transkripsi PETA_WILAYAH,-7.39868,111.2246,peta (ekadanis/stasiun_map_app),,1,1
 WLG,Wilangan,Daop 7,tidak aktif,7.5,Bagor,transkripsi PETA_WILAYAH,-7.56122,111.8038,peta (ekadanis/stasiun_map_app),,0,1
-WLR,Weleri,DAOP 4 SEMARANG,aktif,4.7,Weleri,resmi data_station,-6.970825458,110.0696979,resmi data_station,,1,1
+WLR,Weleri,Daop 4,aktif,4.7,Weleri,resmi data_station,-6.970825458,110.0696979,resmi data_station,,1,1
 WLT,Walantaka,Daop 1,aktif,1.24,Catang,transkripsi PETA_WILAYAH,-6.1554,106.2188,peta (ekadanis/stasiun_map_app),85,1,1
 WN,Wonokerto,Daop 8,aktif,8.15,Bangil,transkripsi PETA_WILAYAH,-7.66199,112.7552,peta (ekadanis/stasiun_map_app),,1,1
-WNG,Wonogiri,DAOP 6 YOGYAKARTA,aktif,6.9,Sukoharjo,resmi data_station,-7.81569712,110.9218952,resmi data_station,,1,1
+WNG,Wonogiri,Daop 6,aktif,6.9,Sukoharjo,resmi data_station,-7.81569712,110.9218952,resmi data_station,,1,1
 WNR,Wanaraja,Daop 2,aktif,2.10,Cibatu,transkripsi PETA_WILAYAH,-7.16486,107.97671,peta (DenShubi/Indonesian-Railway-),,1,1
-WNS,Wonosari,DAOP 5 PURWOKERTO,aktif,5.13,Kebumen,resmi data_station,-7.697300349,109.7012538,resmi data_station,,1,1
+WNS,Wonosari,Daop 5,aktif,5.13,Kebumen,resmi data_station,-7.697300349,109.7012538,resmi data_station,,1,1
 WO,Wonokromo,Daop 8,aktif,8.11,Surabaya Gubeng,transkripsi PETA_WILAYAH,-7.30206,112.7394,peta (ekadanis/stasiun_map_app),,1,1
 WON,WINONGAN,Daop 9,tidak aktif,,,,,,,,0,0
 WR,Waru,Daop 8,aktif,8.11,Surabaya Gubeng,transkripsi PETA_WILAYAH,-7.35266,112.72942,peta (DenShubi/Indonesian-Railway-),,1,1
 WRO,WONOREJO,Daop 9,tidak aktif,,,,,,,,0,0
 WRS,Wirosari,Daop 4,tidak aktif,,,,,,,,0,0
 WS,WONOSOBO,Daop 5,tidak aktif,,,,,,,,0,0
-WT,Wates,DAOP 6 YOGYAKARTA,aktif,6.3,Wates,resmi data_station,-7.85943493,110.1579514,resmi data_station,,1,1
+WT,Wates,Daop 6,aktif,6.3,Wates,resmi data_station,-7.85943493,110.1579514,resmi data_station,,1,1
 YIA,Yogyakarta International Airport,Daop 6,aktif,6.2,Wojo,transkripsi PETA_WILAYAH,-7.89746,110.06132,peta (ekadanis/stasiun_map_app),,1,1
-YK,Yogyakarta,DAOP 6 YOGYAKARTA,aktif,6.4,Yogyakarta,resmi data_station,-7.788108676,110.3633776,resmi data_station,,1,1
+YK,Yogyakarta,Daop 6,aktif,6.4,Yogyakarta,resmi data_station,-7.788108676,110.3633776,resmi data_station,,1,1

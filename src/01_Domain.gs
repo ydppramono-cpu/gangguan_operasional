@@ -160,7 +160,7 @@ var Domain = (function () {
   /**
    * Indeks master dari GAPEKA + Referensi Sarana.
    * stations: [[kode, nama, wilayah]], segments: [[wilayah, lintas, a, b, jarak]], trains: [[noKa, nama, relasi, jenis]],
-   * sarana: [[no_sarana, class_desc, dipo_name, desc]]
+   * sarana: [[no_sarana, class_desc, dipo_name, desc, plant]]
    */
   function buildIndex(src) {
     var idx = { st: {}, stName: {}, seg: {}, ka: {}, sar: {} };
@@ -193,7 +193,7 @@ var Domain = (function () {
     });
     (src.sarana || []).forEach(function (r) {
       var k = key(r[0]); if (!k) return;
-      idx.sar[k] = { cls: txt(r[1]), dipo: txt(r[2]) };
+      idx.sar[k] = { cls: txt(r[1]), dipo: txt(r[2]), pulau: pulauPlant(r[4]) };
     });
     return idx;
   }
@@ -326,7 +326,45 @@ var Domain = (function () {
     return { type: '', code: '', label: '', lintas: '', matched: false };
   }
 
+  /* ---------------- Pulau (Jawa / Sumatera) — audit 20 Nov 2026 ----------------
+   * Tautan KA/sarana ke kejadian hanya sah bila pulaunya sama dengan pulau wilayah kejadian.
+   * Acuan: wilayah (Daop = Jawa, Divre = Sumatera); nomor KA Sumatera dari SEED_PULAU (Buku Penomoran 2025/2026);
+   * unit sarana: plant SAP (B… = Jawa, C… = Sumatera), dan mulai 1 Des 2026 Duksar 2026 untuk unit yang tercantum. */
+  var PUL_ = null;
+  function pulauIdx_() {
+    if (PUL_) return PUL_;
+    PUL_ = { ka: {}, ganda: {}, duk: {}, awalan: {}, berlaku26: '2026-12-01' };
+    if (typeof SEED_PULAU !== 'undefined') {
+      String(SEED_PULAU.ka || '').split(' ').forEach(function (k) { if (k) PUL_.ka[k] = 1; });
+      String(SEED_PULAU.kaGanda || '').split(' ').forEach(function (k) { if (k) PUL_.ganda[k] = 1; });
+      String(SEED_PULAU.duk26 || '').split(' ').forEach(function (k) { if (k) PUL_.duk[k] = 1; });
+      PUL_.awalan = SEED_PULAU.awalan || {}; PUL_.berlaku26 = SEED_PULAU.berlaku26 || PUL_.berlaku26;
+    }
+    return PUL_;
+  }
+  function pulauWil(w) { var r = region(w); return /^Daop /.test(r) ? 'Jawa' : /^Divre /.test(r) ? 'Sumatera' : ''; }
+  /** Pulau nomor KA (hanya bermakna untuk nomor yang dikenal LIST KA/Daftar Waktu). '' = tidak pasti (nomor dipakai dua pulau). */
+  function pulauKa(no) {
+    var k = key(no), P = pulauIdx_(); if (!k || P.ganda[k]) return '';
+    if (P.ka[k]) return 'Sumatera';
+    var m = /^(\d+)[A-Z]{1,2}$/.exec(k); if (m && P.ka[m[1]]) return 'Sumatera';
+    return 'Jawa';
+  }
+  /** Nomor KA tanpa awalan pada kejadian Sumatera (mis. "KA 7" di Divre 3) → bentuk berawalan bila ada (S7). */
+  function kaAwalan(no, wil) {
+    var k = key(no), P = pulauIdx_(), a = P.awalan[region(wil)];
+    return a && /^\d+[A-Z]?$/.test(k) && P.ka[a + k] ? a + k : '';
+  }
+  function pulauPlant(p) { var s = txt(p).toUpperCase(); return /^B\d/.test(s) ? 'Jawa' : /^C\d/.test(s) ? 'Sumatera' : ''; }
+  /** Pulau unit pada tanggal (yyyy-mm-dd atau yyyy-mm): SAP sebelum 1 Des 2026; sesudahnya Duksar 2026 untuk unit Sumatera yang tercantum. */
+  function pulauUnit(info, k, tgl) {
+    var P = pulauIdx_(), sap = info ? info.pulau || '' : '';
+    if (tgl && String(tgl) >= P.berlaku26 && P.duk[k]) return 'Sumatera';
+    return sap;
+  }
+
   return {
+    pulauWil: pulauWil, pulauKa: pulauKa, kaAwalan: kaAwalan, pulauPlant: pulauPlant, pulauUnit: pulauUnit,
     txt: txt, key: key, title: title, parseDate: parseDate, parseTanggal: parseTanggal, signature: signature, number: number, region: region,
     classify: classify, crossing: crossing, temperOther: temperOther, component: component,
     assetKind: assetKind, saranaCandidates: saranaCandidates, saranaLabel: saranaLabel,

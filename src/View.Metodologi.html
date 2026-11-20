@@ -36,7 +36,7 @@
           <dt>Skor komponen</dt><dd>Keandalan = 100 − min(100, 15 × kejadian 12 bln + menit 12 bln ÷ 20) · Usia = 100 − 2,2 × (usia − 5 th) · Kesiapan = 100 siap guna GAPEKA, 60 tidak tercantum, 30 di Balai Yasa. Usia &gt; 80 th dianggap tanggal SAP salah (tidak dinilai).</dd>
           <dt>Atribut 1–20 & rating</dt><dd>Atribut = skor ÷ 5 (gaya Football Manager). Rating = rata-rata atribut × 5.</dd>
           <dt>Kekuatan depo</dt><dd>0,35 kesehatan armada + 0,30 keandalan (gangguan per 100 unit dibanding median depo sejenis; 2× median = 0) + 0,20 porsi armada ≤ 30 th + 0,15 kesiapan GAPEKA. Peringkat hanya depo ≥ 10 unit.</dd>
-          <dt>Dinasan</dt><dd>Proksi: KA yang dilayani dinasan lok depo (lok) atau depo induk rangkaian (kereta) menurut Duksar, ditambah KA pada gangguan unit. Bukan catatan dinasan harian per unit.</dd>
+          <dt>Dinasan</dt><dd>Proksi: KA yang dilayani dinasan lok depo (lok) atau depo induk rangkaian (kereta) menurut Duksar, ditambah KA pada gangguan unit. Bukan catatan dinasan harian per unit. Sejak v3.15 daftar ini dibersihkan: deret 1–23/25 di awal tiap dipo (artefak tabel PDF) dibuang, nomor KA Sumatera tanpa awalan diberi awalan S/U/B, dan nomor yang pulaunya berbeda dengan depo ditolak.</dd>
           <dt>GAPEKA 2025 / 2026</dt><dd>GAPEKA 2025 berlaku 1 Feb 2025, GAPEKA 2026 berlaku 1 Des 2026. Keduanya tersedia dan dianalisis masing-masing (tanpa angka selisih). Switch di pojok kanan atas memilih sumber jadwal (Daftar Waktu, grafik perjalanan, KA per jam, rute KA) untuk semua menu; bawaan = versi yang berlaku hari ini. Master stasiun, petak, dan LIST KA tetap dari GAPEKA 2025.</dd>
         </dl>
       </div>
@@ -72,6 +72,26 @@
             <template x-for="q in quality" :key="q.flag"><tr class="click" @click="$store.app.go('telusuri', { ids: KAI.data.all.filter(function (r) { return r.q.indexOf(q.flag) >= 0; }).map(function (r) { return r.id; }), label: q.flag, period: 'all' })"><td x-text="q.flag"></td><td class="num" x-text="KAI.fmt.n(q.n)"></td></tr></template>
             <tr><td>Tanpa "Jam mulai" yang terbaca</td><td class="num" x-text="KAI.fmt.n(noHour)"></td></tr>
           </tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt">
+      <div class="card-h"><div><h3>Pemeriksaan pulau (Jawa / Sumatera)</h3><p>Tautan KA dan sarana hanya dipakai bila pulaunya sama dengan wilayah kejadian · unit yang tercatat ≥ 2 kali di pulau lain dianggap mutasi</p></div></div>
+      <div class="card-b">
+        <div class="kv-row">
+          <div><span>Kelas diturunkan dari judul</span><b x-text="KAI.fmt.n(pulau.turun)"></b></div>
+          <div><span>Nomor KA beda pulau (tidak ditautkan)</span><b x-text="KAI.fmt.n(pulau.kaBeda)"></b></div>
+          <div><span>Unit mutasi antarpulau</span><b x-text="KAI.fmt.n(pulau.mut.length)"></b></div>
+          <div><span>Nomor sarana perlu verifikasi</span><b x-text="KAI.fmt.n(pulau.ver.length)"></b></div>
+        </div>
+        <div class="grid g-2 mt-s">
+          <div class="tbl-x"><table class="tbl" data-unduh="mutasi_sarana_antarpulau"><caption class="cap">Mutasi antarpulau (dari bukti kejadian)</caption><thead><tr><th>Unit</th><th>Pulau</th><th>Pertama</th><th>Terakhir</th><th class="num">Kejadian</th></tr></thead><tbody>
+            <template x-for="m in pulau.mut" :key="m[0] + m[1]"><tr class="click" @click="$store.app.openUnit(m[0])"><td x-text="KAI.fmt.unit(m[0])"></td><td x-text="m[1]"></td><td x-text="m[2]"></td><td x-text="m[3]"></td><td class="num" x-text="m[4]"></td></tr></template>
+          </tbody></table><div class="empty" x-show="!pulau.mut.length">Tidak ada unit yang tercatat di pulau lain.</div></div>
+          <div class="tbl-x"><table class="tbl" data-unduh="sarana_perlu_verifikasi"><caption class="cap">Nomor sarana perlu verifikasi (dilepas dari kejadian)</caption><thead><tr><th>Tanggal</th><th>Nomor</th><th>Pulau kejadian</th><th>Depo SAP</th></tr></thead><tbody>
+            <template x-for="v in pulau.ver" :key="v[0] + v[1]"><tr class="click" @click="$store.app.openEvent(v[0])"><td x-text="v[3]"></td><td x-text="KAI.fmt.unit(v[1])"></td><td x-text="v[2]"></td><td x-text="v[4]"></td></tr></template>
+          </tbody></table><div class="empty" x-show="!pulau.ver.length">Tidak ada nomor sarana yang perlu diverifikasi.</div></div>
         </div>
       </div>
     </div>
@@ -163,6 +183,7 @@ document.addEventListener('alpine:init', function () {
       get lit() { return Object.keys(KAIInsight.LIT).map(function (k) { return KAIInsight.LIT[k]; }); },
       get rs() { return this.$store.app.refReady ? KAIRef.ensureRoutes(KAI.data.ref).stats : {}; },
       get jplStat() { var R = this.$store.app.refReady && KAI.data.ref; if (!R) return {}; return { total: R.jpl.length, p190: R.jpl.filter(function (j) { return j.p190; }).length, pair: R.jpl.filter(function (j) { return j.pairKey; }).length, seg: R.jpl.filter(function (j) { return j.segKey; }).length }; },
+      get pulau() { var s = this.meta.stats || {}; return { turun: s.kelasDiturunkan || 0, kaBeda: s.kaBedaPulau || 0, mut: s.saranaMutasi || [], ver: s.saranaVerifikasi || [] }; },
       get match() {
         var s = (this.meta.stats || {});
         return [{ label: 'Nomor sarana → Referensi Sarana', ok: s.saranaMatched, all: s.saranaAny },
