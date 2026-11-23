@@ -581,4 +581,18 @@ table.tbl caption.cap { caption-side: top; text-align: left; font-weight: 600; f
 @media (max-width: 760px) { .kv-row { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tb-actions { gap: 6px; }
   .filterbar:not(.open) > :not(.fb-toggle) { display: none !important; } .fb-toggle { display: inline-flex !important; width: 100%; justify-content: flex-start; } .fb-toggle .chev { margin-left: auto; } }
 .fb-toggle { display: none; }
+/* v3.17: sub-navigasi ruang kerja, panel Saring, filter aktif */
+.ws-sub { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 0 1 auto; }
+.ws-name { font-size: var(--fs-title); font-weight: 700; letter-spacing: -.01em; white-space: nowrap; }
+.ws-sub .seg button { white-space: nowrap; }
+.adv-pop { flex-direction: column; align-items: stretch; gap: 8px; min-width: 300px; white-space: normal; }
+.adv-row { display: flex; align-items: center; gap: 8px; }
+.adv-row.wrap { flex-wrap: wrap; }
+.adv-pop .chip[aria-pressed="false"] { opacity: .55; }
+.btn .cnt { display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--kai-navy); color: #fff; font-size: 11px; font-weight: 700; }
+.active-f { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip.on { border-color: var(--kai-navy); color: var(--kai-navy); background: var(--surface-2); }
+.sidebar-foot .nav-item.active { background: rgba(255, 255, 255, .12); }
+@media (max-width: 1600px) { .ws-name { display: none; } }
+@media (max-width: 720px) { .ws-sub { order: 10; flex: 1 1 100%; overflow-x: auto; scrollbar-width: none; } .ws-sub::-webkit-scrollbar { display: none; } }
 </style>

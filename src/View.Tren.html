@@ -29,19 +29,7 @@
       </div>
     </div>
 
-    <div class="grid g-4 mt">
-      <template x-for="k in KAIA.CLASSES" :key="k">
-        <div class="card kpi" :style="'--kpi-c:' + KAI.classColor(k)">
-          <div class="lbl" x-text="$store.app.classLabel(k)"></div>
-          <div style="display:flex;gap:18px;margin-top:6px">
-            <div><div class="note">Kejadian</div><div class="num kv-big" x-text="KAI.fmt.n(R.cls[k].n)"></div>
-              <span class="delta" :class="KAI.delta(R.cls[k].n, R.clsCmp[k].n, R.cfg.smallBase).cls" x-text="KAI.fmt.signed(R.cls[k].n - R.clsCmp[k].n) + (R.clsCmp[k].n < R.cfg.smallBase ? ' · basis kecil' : '')"></span></div>
-            <div><div class="note">Menit</div><div class="num kv-big" x-text="KAI.fmt.n(R.cls[k].menit)"></div>
-              <span class="delta" :class="KAI.delta(R.cls[k].menit, R.clsCmp[k].menit).cls" x-text="KAI.fmt.signed(R.cls[k].menit - R.clsCmp[k].menit)"></span></div>
-          </div>
-        </div>
-      </template>
-    </div>
+    <!-- Kartu per kelas dihapus (v3.17): sama dengan tabel Perbandingan di Ringkasan → Eksekutif. -->
 
     <div class="grid g-2 mt">
       <div class="card">

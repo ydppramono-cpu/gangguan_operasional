@@ -5,16 +5,15 @@
     <div class="brand-text"><div class="brand-name">Gangguan Operasional</div><div class="brand-sub" x-text="'Dashboard v' + (($store.app.config && $store.app.config.appVersion) || '3.9.0')">Dashboard</div></div>
   </button>
   <nav class="nav">
-    <template x-for="(r, i) in KAI.ROUTES.filter(function (q) { return !q.hide; })" :key="r.id">
-      <div>
-        <div class="nav-label" x-show="i === 0 || KAI.ROUTES.filter(function (q) { return !q.hide; })[i - 1].group !== r.group" x-text="r.group"></div>
-        <button class="nav-item" :class="$store.app.route === r.id && 'active'" :aria-current="$store.app.route === r.id ? 'page' : null" :title="r.title" @click="$store.app.go(r.id, r.id === 'telusuri' ? {} : null)">
-          <svg class="i"><use :href="'#' + r.icon"/></svg><span x-text="r.title"></span>
-        </button>
-      </div>
+    <!-- Lima ruang kerja (23 Nov 2026); halaman anggota tampil sebagai sub-navigasi di kepala halaman. -->
+    <template x-for="w in KAI.WORKSPACES" :key="w.id">
+      <button class="nav-item" :class="KAI.wsOf($store.app.route) === w && 'active'" :aria-current="KAI.wsOf($store.app.route) === w ? 'page' : null" :title="w.title" @click="$store.app.goWs(w)">
+        <svg class="i"><use :href="'#' + w.icon"/></svg><span x-text="w.title"></span>
+      </button>
     </template>
   </nav>
   <div class="sidebar-foot">
+    <button class="nav-item" :class="$store.app.route === 'metodologi' && 'active'" @click="$store.app.go('metodologi')" title="Metodologi & sumber data"><svg class="i"><use href="#i-info"/></svg><span>Metodologi &amp; sumber</span></button>
     <button class="nav-item" @click="$store.app.toggleMini()" :title="$store.app.sidebarMini ? 'Lebarkan menu' : 'Ciutkan menu'"><svg class="i"><use href="#i-side"/></svg><span x-text="$store.app.sidebarMini ? 'Lebarkan' : 'Ciutkan menu'"></span></button>
   </div>
 </aside>
@@ -25,7 +24,18 @@
     <div class="topbar-row">
       <button class="btn ghost sm menu-btn" @click="$store.app.sidebarOpen = true" aria-label="Buka menu"><svg class="i"><use href="#i-menu"/></svg></button>
       <button class="btn sm ghost icon-btn back-btn" @click="$store.app.back()" :disabled="!$store.app.canBack()" aria-label="Kembali" title="Kembali (Alt+←)"><svg class="i"><use href="#i-back"/></svg></button>
-      <h1 class="page-title" x-text="$store.app.routeTitle()"></h1>
+      <h1 class="page-title" x-show="!(KAI.wsOf($store.app.route) && KAI.wsOf($store.app.route).pages.length > 1)" x-text="$store.app.routeTitle()"></h1>
+      <!-- Sub-navigasi ruang kerja: halaman-halaman di ruang kerja yang sama -->
+      <template x-if="KAI.wsOf($store.app.route) && KAI.wsOf($store.app.route).pages.length > 1">
+        <div class="ws-sub" role="tablist" :aria-label="KAI.wsOf($store.app.route).title">
+          <span class="ws-name" x-text="KAI.wsOf($store.app.route).title"></span>
+          <div class="seg">
+            <template x-for="pg in KAI.wsOf($store.app.route).pages" :key="pg.id">
+              <button role="tab" :aria-selected="String($store.app.route === pg.id)" :aria-pressed="String($store.app.route === pg.id)" @click="$store.app.go(pg.id, pg.id === 'telusuri' ? {} : null)" x-text="pg.label"></button>
+            </template>
+          </div>
+        </div>
+      </template>
       <div class="gsearch" @click.outside="$store.app.sopen = false">
         <svg class="i"><use href="#i-search"/></svg>
         <input type="search" id="gsearch" class="ctl" placeholder="Cari KA, sarana, stasiun, petak, depo, JPL…" aria-label="Pencarian global (tekan /)"
@@ -90,9 +100,9 @@
       </div>
       </div>
     </div>
-    <div class="filterbar" :class="$store.app.fbOpen && 'open'" role="group" aria-label="Filter global" x-show="['kejadian', 'gapeka'].indexOf($store.app.route) < 0">
+    <div class="filterbar" :class="$store.app.fbOpen && 'open'" role="group" aria-label="Filter global" x-show="!!KAI.FILTERS[$store.app.route]">
       <button class="btn sm fb-toggle" @click="$store.app.fbOpen = !$store.app.fbOpen" :aria-expanded="String(!!$store.app.fbOpen)">
-        <svg class="i"><use href="#i-filter"/></svg><span x-text="'Saring · ' + ($store.app.R ? $store.app.R.label : '') + ($store.app.f.wilayah.length ? ' · ' + $store.app.f.wilayah.length + ' wilayah' : '')"></span><svg class="i chev"><use href="#i-chevron"/></svg>
+        <svg class="i"><use href="#i-filter"/></svg><span x-text="'Filter · ' + ($store.app.R ? $store.app.R.label : '') + ($store.app.f.wilayah.length ? ' · ' + $store.app.f.wilayah.length + ' wilayah' : '')"></span><svg class="i chev"><use href="#i-chevron"/></svg>
       </button>
       <div class="field">
         <span class="lbl">Periode</span>
@@ -119,22 +129,34 @@
           <button class="chip sm" @click="$store.app.preset('12')">12 bulan</button>
         </div>
       </div>
-      <div class="field jam-wrap" @click.outside="$store.app.jamOpen = false">
-        <button class="btn sm" @click="$store.app.jamOpen = !$store.app.jamOpen" :aria-expanded="String(!!$store.app.jamOpen)" title="Saring jam kejadian">
-          <svg class="i"><use href="#i-clock"/></svg><span x-text="($store.app.f.h0 === 0 && $store.app.f.h1 === 23) ? 'Semua jam' : (($store.app.f.h0 < 10 ? '0' : '') + $store.app.f.h0 + ':00–' + ($store.app.f.h1 < 10 ? '0' : '') + $store.app.f.h1 + ':59')"></span><svg class="i chev"><use href="#i-chevron"/></svg>
+      <!-- Saring lanjutan: jam & kelas (jarang dipakai → di panel, bukan di baris utama) -->
+      <div class="field jam-wrap" x-show="(KAI.FILTERS[$store.app.route] || {}).adv" @click.outside="$store.app.advOpen = false">
+        <button class="btn sm" @click="$store.app.advOpen = !$store.app.advOpen" :aria-expanded="String(!!$store.app.advOpen)" title="Saring jam dan kelas gangguan">
+          <svg class="i"><use href="#i-clock"/></svg><span>Jam &amp; kelas</span><span class="cnt" x-show="$store.app.advCount()" x-text="$store.app.advCount()"></span>
         </button>
-        <div class="jam-pop" x-show="$store.app.jamOpen" x-transition.opacity x-cloak>
-        <span class="lbl">Jam mulai kejadian</span>
-        <select class="ctl" aria-label="Dari jam" :value="$store.app.f.h0" @change="$store.app.setHours($event.target.value, $store.app.f.h1)">
-          <template x-for="h in 24" :key="h"><option :value="h - 1" :selected="h - 1 === $store.app.f.h0" x-text="(h - 1 < 10 ? '0' : '') + (h - 1) + ':00'"></option></template>
-        </select>
-        <span class="muted">–</span>
-        <select class="ctl" aria-label="Sampai jam" :value="$store.app.f.h1" @change="$store.app.setHours($store.app.f.h0, $event.target.value)">
-          <template x-for="h in 24" :key="h"><option :value="h - 1" :selected="h - 1 === $store.app.f.h1" x-text="(h - 1 < 10 ? '0' : '') + (h - 1) + ':59'"></option></template>
-        </select>
+        <div class="jam-pop adv-pop" x-show="$store.app.advOpen" x-transition.opacity x-cloak>
+          <span class="lbl">Jam mulai kejadian</span>
+          <div class="adv-row">
+            <select class="ctl" aria-label="Dari jam" :value="$store.app.f.h0" @change="$store.app.setHours($event.target.value, $store.app.f.h1)">
+              <template x-for="h in 24" :key="h"><option :value="h - 1" :selected="h - 1 === $store.app.f.h0" x-text="(h - 1 < 10 ? '0' : '') + (h - 1) + ':00'"></option></template>
+            </select>
+            <span class="muted">–</span>
+            <select class="ctl" aria-label="Sampai jam" :value="$store.app.f.h1" @change="$store.app.setHours($store.app.f.h0, $event.target.value)">
+              <template x-for="h in 24" :key="h"><option :value="h - 1" :selected="h - 1 === $store.app.f.h1" x-text="(h - 1 < 10 ? '0' : '') + (h - 1) + ':59'"></option></template>
+            </select>
+          </div>
+          <span class="lbl">Kelas gangguan</span>
+          <div class="adv-row wrap">
+            <template x-for="k in KAIA.CLASSES" :key="k">
+              <button class="chip" :aria-pressed="$store.app.kelasOn(k)" @click="$store.app.toggleKelas(k)">
+                <span class="sw" :style="'background:' + KAI.classColor(k)"></span><span x-text="$store.app.classLabel(k).split(',')[0]"></span>
+              </button>
+            </template>
+          </div>
+          <p class="note" x-show="$store.app.route === 'sarana'">Halaman Armada menghitung gangguan sarana; filter kelas lain tidak mengubah isinya.</p>
         </div>
       </div>
-      <div class="field">
+      <div class="field" x-show="(KAI.FILTERS[$store.app.route] || {}).cmp">
         <span class="lbl">Pembanding</span>
         <div class="seg">
           <button :aria-pressed="$store.app.f.cmp === 'prev'" @click="$store.app.setF({ cmp: 'prev' })" title="Periode sebelumnya dengan panjang sama">MoM</button>
@@ -154,14 +176,15 @@
           </template>
         </div>
       </div>
-      <div class="field" style="flex-wrap:wrap" x-show="$store.app.f.kelas.length || ['sarana', 'gapeka', 'metodologi', 'unduh'].indexOf($store.app.route) < 0">
-        <template x-for="k in KAIA.CLASSES" :key="k">
-          <button class="chip" :aria-pressed="$store.app.kelasOn(k)" :style="'color:' + KAI.classColor(k)" @click="$store.app.toggleKelas(k)">
-            <span class="sw" :style="'background:' + KAI.classColor(k)"></span><span style="color:var(--ink)" x-text="$store.app.classLabel(k).split(',')[0]"></span>
-          </button>
-        </template>
+      <!-- Filter aktif (dapat dihapus satu per satu) -->
+      <div class="active-f" x-show="$store.app.advCount()">
+        <button class="chip sm on" x-show="!($store.app.f.h0 === 0 && $store.app.f.h1 === 23)" @click="$store.app.setHours(0, 23)" :aria-label="'Hapus filter jam'"
+          x-text="'Jam ' + ($store.app.f.h0 < 10 ? '0' : '') + $store.app.f.h0 + ':00–' + ($store.app.f.h1 < 10 ? '0' : '') + $store.app.f.h1 + ':59 ×'"></button>
+        <button class="chip sm on" x-show="$store.app.f.kelas.length" @click="$store.app.setF({ kelas: [] })" aria-label="Hapus filter kelas"
+          x-text="'Kelas: ' + $store.app.f.kelas.map(function (k) { return $store.app.classLabel(k).split(',')[0]; }).join(', ') + ' ×'"></button>
       </div>
       <button class="btn sm ghost icon-btn" @click="$store.app.resetFilters()" title="Kembalikan semua filter" aria-label="Kembalikan semua filter"><svg class="i"><use href="#i-refresh"/></svg></button>
+      <button class="btn sm ghost icon-btn" @click="$store.app.copyLink()" title="Salin tautan halaman ini beserta filternya" aria-label="Salin tautan halaman ini beserta filternya"><svg class="i"><use href="#i-link"/></svg></button>
     </div>
 <div class="periodnote" x-show="$store.app.R && ['kejadian'].indexOf($store.app.route) < 0">
       <b x-text="$store.app.R && $store.app.R.label"></b>

@@ -87,9 +87,14 @@ function apiStatus() {
 }
 
 /** Konfigurasi yang aman dibagikan ke browser (tanpa ID sumber). */
+/** Alamat /exec web app untuk tombol "Salin tautan" (kosong bila tidak tersedia, mis. di emulator). */
+function appUrl_() {
+  try { return ScriptApp.getService().getUrl() || ''; } catch (e) { return ''; }
+}
+
 function clientConfig_() {
   return {
-    appName: CONFIG.APP_NAME, appVersion: CONFIG.APP_VERSION, rule: CONFIG.RULE_VERSION,
+    appName: CONFIG.APP_NAME, appVersion: CONFIG.APP_VERSION, rule: CONFIG.RULE_VERSION, url: appUrl_(),
     componentRule: CONFIG.COMPONENT_RULE_VERSION, heavy: CONFIG.THRESHOLD_HEAVY_MIN, top: CONFIG.THRESHOLD_TOP_MIN,
     smallBase: CONFIG.SMALL_BASE, ageWarn: CONFIG.AGE_WARN_YEARS, jplKm: CONFIG.JPL_MATCH_KM, rate: CONFIG.RATE_PER_HOUR, classMeta: CLASS_META,
     crossing: CROSSING_RULES.map(function (c) { return { id: c.id, label: c.label }; }),

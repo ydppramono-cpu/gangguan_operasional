@@ -32,7 +32,7 @@
             <thead><tr><th>Indikator</th><th class="num" x-text="R.P.short"></th><th class="num">MoM</th><th class="num">YoY</th><th class="num" x-text="'YTD ' + R.ytdP.short"></th><th class="num">Δ YTD</th></tr></thead>
             <tbody>
               <template x-for="r in R.cmp.rows.concat(R.cmp.cls)" :key="r.key">
-                <tr :class="/^cls-/.test(r.key) && 'sub'">
+                <tr :class="/^cls-/.test(r.key) && 'sub click'" @click="/^cls-/.test(r.key) && $store.app.go('telusuri', { kelas: r.label })" :title="/^cls-/.test(r.key) ? 'Telusuri kejadian kelas ini' : null">
                   <td><i class="cdot" x-show="/^cls-/.test(r.key)" :style="'background:' + KAI.classColor(r.label)"></i>
                     <span x-text="/^cls-/.test(r.key) ? 'Menit ' + $store.app.classLabel(r.label).split(',')[0] : r.label"></span></td>
                   <td class="num"><b x-text="r.key === 'avg' ? KAI.fmt.d1(r.cur) : KAI.fmt.n(r.cur)"></b></td>
@@ -53,15 +53,7 @@
       </div>
     </div>
 
-    <div class="grid g-4 mt">
-      <template x-for="k in KAIA.CLASSES" :key="k">
-        <button class="card kpi mini-k" :style="'--kpi-c:' + KAI.classColor(k)" @click="$store.app.go('telusuri', { kelas: k })">
-          <div class="lbl" x-text="'Kelas ' + $store.app.classLabel(k).split(',')[0].toLowerCase()"></div>
-          <div class="num mini-v"><b x-text="KAI.fmt.n(R.cls[k].menit)"></b> <small>menit</small> · <b x-text="KAI.fmt.n(R.cls[k].n)"></b> <small>kejadian</small></div>
-          <div class="deltas"><span class="delta" :class="KAI.delta(R.cls[k].menit, R.clsCmp[k].menit).cls" :title="'Menit vs ' + R.cmpLabel" x-text="'Menit ' + KAI.delta(R.cls[k].menit, R.clsCmp[k].menit).text + ' vs ' + R.cmpLabel"></span></div>
-        </button>
-      </template>
-    </div>
+    <!-- Kartu per kelas dihapus (v3.17): angkanya sama dengan baris "Menit …" pada tabel di atas; baris itu kini dapat diklik. -->
     <p class="note mt-s" x-show="R.cls.belum && R.cls.belum.n" x-text="'Data belum lengkap (kelas belum diisi): ' + KAI.fmt.n(R.cls.belum ? R.cls.belum.n : 0) + ' kejadian · ' + KAI.fmt.n(R.cls.belum ? R.cls.belum.menit : 0) + ' menit — termasuk dalam total, tidak masuk 4 kartu kelas di atas.'"></p>
 
     <div class="card mt" x-data="{ get IB() { return $store.app.R && $store.app.R.insight; } }">

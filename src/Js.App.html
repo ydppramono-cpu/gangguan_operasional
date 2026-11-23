@@ -19,8 +19,40 @@ KAI.ROUTES = [
   { id: 'metodologi', title: 'Metodologi & sumber', icon: 'i-info', group: 'Analisis' }
 ];
 KAI.HIDDEN_ROUTES = { profil: 'Profil', kejadian: 'Detail kejadian' };
+/**
+ * Lima ruang kerja (keputusan 23 Nov 2026). Menu samping = ruang kerja; halaman anggota tampil sebagai sub-navigasi di kepala.
+ * Rute lama tetap berlaku (tautan lama tidak putus).
+ */
+KAI.WORKSPACES = [
+  { id: 'ws-ringkasan', title: 'Ringkasan', icon: 'i-home', pages: [{ id: 'ringkasan', label: 'Eksekutif' }, { id: 'tren', label: 'Tren & pola' }] },
+  { id: 'ws-jaringan', title: 'Jaringan & prasarana', icon: 'i-map', pages: [{ id: 'wilayah', label: 'Wilayah & koridor' }, { id: 'perlintasan', label: 'Perlintasan & JPL' }] },
+  { id: 'ws-armada', title: 'Armada', icon: 'i-train', pages: [{ id: 'sarana', label: 'Sarana & armada' }] },
+  { id: 'ws-operasi', title: 'Operasi & pendapatan', icon: 'i-coin', pages: [{ id: 'eksposur', label: 'Pendapatan terekspos' }, { id: 'gapeka', label: 'Grafik perjalanan' }] },
+  { id: 'ws-telusuri', title: 'Telusuri', icon: 'i-list', pages: [{ id: 'telusuri', label: 'Telusuri kejadian' }] }
+];
+KAI.wsOf = function (route) { return KAI.WORKSPACES.filter(function (w) { return w.pages.some(function (p) { return p.id === route; }); })[0] || null; };
+/** Elemen filter yang berlaku per halaman (filter kontekstual). Halaman yang tidak tercantum: filterbar disembunyikan. */
+KAI.FILTERS = {
+  ringkasan: { cmp: 1, adv: 1 }, tren: { cmp: 1, adv: 1 }, wilayah: { cmp: 1, adv: 1 }, perlintasan: { cmp: 1, adv: 1 },
+  sarana: { cmp: 1, adv: 1 }, eksposur: { cmp: 1, adv: 1 }, telusuri: { adv: 1 }, profil: { cmp: 1, adv: 1 }
+};
 
 (function () {
+  /** Filter dari URL (?d0&d1 | ym, w, k, cmp, h). Nilai divalidasi bentuknya; yang tidak sah diabaikan. */
+  function urlFilters(p) {
+    var o = {}, D = /^\d{4}-\d{2}-\d{2}$/;
+    if (D.test(p.d0 || '') && D.test(p.d1 || '') && p.d0 <= p.d1) { o.mode = 'range'; o.from = p.d0; o.to = p.d1; }
+    if (p.w) o.wilayah = String(p.w).split(',').filter(function (x) { return /^(Daop|Divre) \d+$/.test(x); });
+    if (p.k) o.kelas = String(p.k).split(',').filter(function (x) { return KAIA.CLASSES.indexOf(x) >= 0; });
+    if (p.cmp === 'yoy' || p.cmp === 'prev') o.cmp = p.cmp;
+    var h = /^(\d{1,2})-(\d{1,2})$/.exec(p.h || ''); if (h && +h[1] <= +h[2] && +h[2] <= 23) { o.h0 = +h[1]; o.h1 = +h[2]; }
+    return Object.keys(o).length ? o : null;
+  }
+  function applyUrlFilters(st, o) {
+    if (o.mode === 'range') { if (o.from < st.dates.min) o.from = st.dates.min; if (o.to > st.dates.max) o.to = st.dates.max; }
+    if (o.wilayah) o.wilayah = o.wilayah.filter(function (x) { return st.wilayahList.indexOf(x) >= 0; });
+    Object.assign(st.f, o);
+  }
   var memo = { key: '', val: null }, scopeMemo = { key: '', val: null }, invMemo = { key: '', val: null };
 
   function scoped(st) {
@@ -143,6 +175,7 @@ document.addEventListener('alpine:init', function () {
       gapeka: '', gapekaBusy: false,
       route: 'ringkasan', params: {}, vtab: { wilayah: 'peringkat', sarana: 'ringkasan', fleet: 'lok' }, stack: [], months: [], dates: { min: '', max: '' }, wilayahList: [],
       f: { mode: 'month', ym: '', from: '', to: '', h0: 0, h1: 23, cmp: 'prev', wilayah: [], kelas: [], imbas: true },
+      wsLast: {}, advOpen: false,
       tel: { q: '', period: 'p', kelas: '', cross: '', ids: null, label: '' },
       notif: { has: false, open: false, items: [], log: [], summary: '', timer: null },
       busy: false, toast: null, sidebarOpen: false, sidebarMini: false, wilayahOpen: false, periodOpen: false, dlOpen: false, jamOpen: false, fbOpen: false,
@@ -163,6 +196,7 @@ document.addEventListener('alpine:init', function () {
             self.entered = true;  // tautan langsung melewati landing
           }
           if (params.ym) self._wantYm = params.ym;
+          self._wantF = urlFilters(params);
           self.load();
         };
         if (window.google && google.script && google.script.url) google.script.url.getLocation(function (loc) { start(loc.parameter); });
@@ -197,6 +231,7 @@ document.addEventListener('alpine:init', function () {
           self.f.ym = self.defaultYm();
           self.f.to = KAIA.endOf(KAIA.pMonth(self.f.ym)); if (self.f.to > self.dates.max) self.f.to = self.dates.max;
           self.f.from = KAIA.addDays(self.f.to, -6);
+          if (self._wantF) { applyUrlFilters(self, self._wantF); self._wantF = null; }
           self.ver++; self.coreReady = true;
           if (self.entered) self.phase = 'ready';
           console.info('[KAI] data siap dalam ' + Math.round(performance.now() - t0) + ' ms · ' + all.length + ' kejadian');
@@ -316,10 +351,31 @@ document.addEventListener('alpine:init', function () {
         if (same) return;
         if (!(opts && opts.replace)) { self.stack.push({ route: self.route, params: self.params, y: window.scrollY }); if (self.stack.length > 50) self.stack.shift(); }
         KAI.transition(function () { self.route = route; self.params = params || {}; window.scrollTo(0, 0); });
-        if (window.google && google.script && google.script.history) {
-          var q = { page: route }; if (params && params.type) { q.t = params.type; q.id = params.id; } else if (params && params.id) q.id = params.id;
-          google.script.history.push({ route: route, params: params || {} }, q);
-        }
+        if (route !== 'kejadian' && route !== 'profil') { var ws = KAI.wsOf(route); if (ws) { self.wsLast[ws.id] = route; } }
+        if (window.google && google.script && google.script.history) google.script.history.push({ route: route, params: params || {} }, self.urlQuery(route, params));
+      },
+      /** Buka ruang kerja: halaman terakhir yang dibuka di ruang kerja itu, atau halaman pertamanya. */
+      goWs: function (ws) { this.go(this.wsLast[ws.id] || ws.pages[0].id, null); },
+      /** Parameter URL untuk halaman + filter aktif (tautan yang bisa dibagikan). */
+      urlQuery: function (route, params) {
+        var f = this.f, q = { page: route || this.route }; params = params || (route ? {} : this.params) || {};
+        if (params.type) { q.t = params.type; q.id = params.id; } else if (params.id) q.id = params.id;
+        if ((q.page === 'sarana' || q.page === 'wilayah') && this.vtab && this.vtab[q.page]) q.tab = this.vtab[q.page];
+        if (f.mode === 'range' && f.from && f.to) { q.d0 = f.from; q.d1 = f.to; } else if (f.ym) q.ym = f.ym;
+        if (f.wilayah.length) q.w = f.wilayah.join(',');
+        if (f.kelas.length) q.k = f.kelas.join(',');
+        if (f.cmp === 'yoy') q.cmp = 'yoy';
+        if (!(f.h0 === 0 && f.h1 === 23)) q.h = f.h0 + '-' + f.h1;
+        return q;
+      },
+      /** Salin tautan halaman + filter ke papan klip. */
+      copyLink: function () {
+        var self = this, base = (self.config && self.config.url) || '', q = self.urlQuery(self.route, self.params);
+        var url = base + '?' + Object.keys(q).map(function (k) { return encodeURIComponent(k) + '=' + encodeURIComponent(q[k]); }).join('&');
+        if (!base) return self.say('Alamat web app tidak tersedia di sesi ini.');
+        var done = function () { self.say('Tautan tampilan ini disalin.'); };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, function () { window.prompt('Salin tautan:', url); });
+        else window.prompt('Salin tautan:', url);
       },
       back: function () {
         var self = this, prev = self.stack.pop();
@@ -343,7 +399,10 @@ document.addEventListener('alpine:init', function () {
         var self = this;
         KAI.transition(function () { Object.assign(self.f, patch); });
         KAI.store.set('filters3', { cmp: self.f.cmp, wilayah: self.f.wilayah, kelas: self.f.kelas, h0: self.f.h0, h1: self.f.h1 });
+        if (window.google && google.script && google.script.history && self.route !== 'kejadian') google.script.history.replace({ route: self.route, params: self.params || {} }, self.urlQuery(self.route, self.params));
       },
+      /** Jumlah filter lanjutan aktif (jam, kelas) — ditampilkan pada tombol Saring. */
+      advCount: function () { return (this.f.h0 === 0 && this.f.h1 === 23 ? 0 : 1) + (this.f.kelas.length ? 1 : 0); },
       preset: function (id) {
         var max = this.dates.max, lastFull = this.defaultYm();
         if (id === 'bulan') return this.setF({ mode: 'month', ym: lastFull });

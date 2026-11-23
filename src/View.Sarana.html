@@ -30,9 +30,8 @@
         <!-- ================= RINGKASAN ================= -->
         <div x-show="tab === 'ringkasan'">
           <p class="note story" x-text="story"></p>
-          <div class="grid g-4">
-            <div class="card kpi"><div class="lbl" x-text="'Armada ' + kind.toLowerCase() + (regs.length ? ' · ' + regs.join(', ') : '')"></div><div class="val num" x-text="KAI.fmt.n(A.n)"></div>
-              <div class="note" x-text="KAI.fmt.n(A.sg) + ' tercantum siap guna GAPEKA 2025 (' + KAI.fmt.d1(A.n ? A.sg / A.n * 100 : 0) + '%) · ' + KAI.fmt.n(A.by) + ' di Balai Yasa'"></div></div>
+          <!-- v3.17: kartu "Armada" dihapus (sama dengan kartu jenis di atas). Grafik utama di depan, lalu daftar. -->
+          <div class="grid g-3">
             <div class="card kpi" style="--kpi-c:var(--c-sarana)"><div class="lbl" x-text="'Gangguan · ' + R.P.short"></div><div class="val num" x-text="KAI.fmt.n(Pk.n)"></div>
               <div class="deltas"><span class="delta" :class="KAI.delta(Pk.n, Pp.n).cls" x-text="'MoM ' + KAI.delta(Pk.n, Pp.n).text"></span></div>
               <div class="note" x-text="KAI.fmt.n(Pk.menit) + ' menit · ' + KAI.fmt.n(Pk.units.length) + ' unit terganggu' + (Pk.noUnit ? ' · ' + Pk.noUnit + ' tanpa nomor sarana' : '')"></div></div>
@@ -43,7 +42,13 @@
           </div>
 
 
-          <div class="grid g-2-1 mt">
+          <div class="mt">
+            <div class="card">
+              <div class="card-h"><div><h3>Gangguan & durasi per bulan</h3><p x-text="'Batang = kejadian ' + kind.toLowerCase() + ' (sumbu kiri) · garis = menit per kejadian (sumbu kanan)'"></p></div></div>
+              <div class="card-b fill"><div class="chart short" x-chart="comboMonthly()"></div></div>
+            </div>
+          </div>
+          <div class="mt">
             <div class="card">
               <div class="card-h"><div><h3 x-text="'Unit berulang · ' + R.p3.label"></h3><p>≥2 kejadian dalam 3 bulan & muncul di periode aktif · klik untuk kartu unit</p></div></div>
               <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Unit</th><th class="num">Kej.</th><th class="num">Menit</th><th class="num">Usia</th><th>Kesehatan</th><th>Rincian (bulan: gangguan, menit)</th></tr></thead><tbody>
@@ -55,10 +60,6 @@
                   <td style="font-size:12.5px" x-text="u.events.map(function (e) { return KAI.fmt.monOnly(e.ym) + ': ' + (e.sub || '').replace(/^[^-]+-\s*/, '') + ' (' + KAI.fmt.n(e.menit) + ')'; }).join(' · ')"></td>
                 </tr></template>
               </tbody></table><div class="empty" x-show="!repeat.length">Tidak ada unit berulang untuk jenis ini.</div></div>
-            </div>
-            <div class="card">
-              <div class="card-h"><div><h3>Gangguan & durasi per bulan</h3><p x-text="'Batang = kejadian ' + kind.toLowerCase() + ' (sumbu kiri) · garis = menit per kejadian (sumbu kanan)'"></p></div></div>
-              <div class="card-b fill"><div class="chart" x-chart="comboMonthly()"></div></div>
             </div>
           </div>
 

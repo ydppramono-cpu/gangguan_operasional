@@ -1,6 +1,6 @@
 {
   "name": "gangguan-operasional",
-  "version": "3.16.1",
+  "version": "3.17.0",
   "private": true,
   "description": "KAI Dashboard Gangguan Operasional (Google Apps Script) + KAI Data Platform",
   "scripts": {
