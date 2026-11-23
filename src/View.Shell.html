@@ -5,9 +5,9 @@
     <div class="brand-text"><div class="brand-name">Gangguan Operasional</div><div class="brand-sub" x-text="'Dashboard v' + (($store.app.config && $store.app.config.appVersion) || '3.9.0')">Dashboard</div></div>
   </button>
   <nav class="nav">
-    <template x-for="(r, i) in KAI.ROUTES" :key="r.id">
+    <template x-for="(r, i) in KAI.ROUTES.filter(function (q) { return !q.hide; })" :key="r.id">
       <div>
-        <div class="nav-label" x-show="i === 0 || KAI.ROUTES[i - 1].group !== r.group" x-text="r.group"></div>
+        <div class="nav-label" x-show="i === 0 || KAI.ROUTES.filter(function (q) { return !q.hide; })[i - 1].group !== r.group" x-text="r.group"></div>
         <button class="nav-item" :class="$store.app.route === r.id && 'active'" :aria-current="$store.app.route === r.id ? 'page' : null" :title="r.title" @click="$store.app.go(r.id, r.id === 'telusuri' ? {} : null)">
           <svg class="i"><use :href="'#' + r.icon"/></svg><span x-text="r.title"></span>
         </button>
@@ -154,7 +154,7 @@
           </template>
         </div>
       </div>
-      <div class="field" style="flex-wrap:wrap">
+      <div class="field" style="flex-wrap:wrap" x-show="$store.app.f.kelas.length || ['sarana', 'gapeka', 'metodologi', 'unduh'].indexOf($store.app.route) < 0">
         <template x-for="k in KAIA.CLASSES" :key="k">
           <button class="chip" :aria-pressed="$store.app.kelasOn(k)" :style="'color:' + KAI.classColor(k)" @click="$store.app.toggleKelas(k)">
             <span class="sw" :style="'background:' + KAI.classColor(k)"></span><span style="color:var(--ink)" x-text="$store.app.classLabel(k).split(',')[0]"></span>

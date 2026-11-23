@@ -9,7 +9,7 @@
           <div class="uc-kind" x-text="u.kind + ' · ' + (u.cls || '')"></div>
           <div class="uc-no" x-text="KAI.fmt.unit(u.no)"></div>
           <div class="uc-chips">
-            <span class="st" :class="stCls(u.status)" x-text="u.status + (u.hiSrc === 'RHI' ? '' : ' · turunan')"></span>
+            <span class="st" :class="stCls(u.status)" x-text="KAI.fmt.st(u.status) + (u.hiSrc === 'RHI' ? '' : ' · turunan')"></span>
             <span class="chip" :class="u.inBY ? 'warn' : u.duk ? 'good' : ''" x-text="u.inBY ? 'Di Balai Yasa' : u.duk ? 'Siap guna GAPEKA · ' + u.duk.depo : 'Tidak tercantum di GAPEKA 2025'"></span>
             <span class="chip bad" x-show="u.age > ageWarn" x-text="'Usia > ' + ageWarn + ' th'"></span>
           </div>
@@ -54,7 +54,7 @@
       <div class="card mt">
         <div class="card-h"><div><h3>Riwayat unit</h3><p>Dinasan yang tercatat · skor RHI per bulan · KA depo · perawatan</p></div><div class="spacer"></div>
           <div class="seg sm" role="group" aria-label="Riwayat unit">
-            <button :aria-pressed="ht === 'd'" @click="ht = 'd'" x-text="'Dinasan & gangguan (' + u.nAll + ')'"></button>
+            <button :aria-pressed="ht === 'd'" @click="ht = 'd'" x-text="'Dinasan & gangguan (' + dinasRows.length + ')'"></button>
             <button :aria-pressed="ht === 's'" @click="ht = 's'" x-show="skorRows.length">Skor per periode</button>
             <button :aria-pressed="ht === 'k'" @click="ht = 'k'">KA depo</button>
             <button :aria-pressed="ht === 'p'" @click="ht = 'p'">Perawatan</button></div></div>
@@ -70,9 +70,9 @@
                 <td class="num" x-text="r.km != null ? KAI.fmt.d1(r.km) : '–'"></td>
                 <td :class="'st ' + r.prog.c" x-text="r.prog.t"></td>
                 <td class="num" x-text="r.hi != null ? KAI.fmt.d1(r.hi) : '–'"></td><td :class="'st ' + stCls(r.st.toUpperCase())" x-text="r.st || '–'"></td>
-                <td class="wrap" x-text="r.gangguan + (r.lokasi ? ' · ' + r.lokasi : '')"></td><td class="num"><b x-text="KAI.fmt.n(r.menit)"></b></td></tr></template>
+                <td class="wrap"><span x-text="r.gangguan"></span><small class="sub-n" x-text="[r.lokasi, r.wilayah, r.kelasKej ? 'kelas ' + r.kelasKej : ''].filter(Boolean).join(' · ')"></small></td><td class="num"><b x-text="KAI.fmt.n(r.menit)"></b></td></tr></template>
             </tbody></table><div class="empty" x-show="!dinasRows.length">Belum ada hari berdinas yang tercatat pada kejadian untuk unit ini.</div></div>
-            <p class="note">Baris = hari unit tercatat pada kejadian gangguan (Gangguan_Induk) beserta KA-nya. Km KA = panjang perjalanan KA penuh (Laporan Frekuensi KA 2026). Program = status KA pada tanggal itu di Laporan KA Jalan/Batal; tanggal setelah <span x-text="P ? KAI.fmt.day(P.cetak) : 'tanggal cetak'"></span> masih program. RHI dan kategori = healthy index harian unit pada tanggal itu (tab RHI, lokomotif). Menit = kelambatan kejadian. Hari lain tanpa kejadian tidak tercatat di sumber mana pun, sehingga tidak ditampilkan.</p>
+            <p class="note">Baris = setiap kejadian yang mencantumkan unit ini (Gangguan_Induk), terbaru di atas; klik baris untuk detail kejadian. Km KA = panjang perjalanan KA penuh (Laporan Frekuensi KA 2026). Program = status KA pada tanggal itu di Laporan KA Jalan/Batal; tanggal setelah <span x-text="P ? KAI.fmt.day(P.cetak) : 'tanggal cetak'"></span> masih program. RHI dan kategori = healthy index harian unit pada tanggal itu (tab RHI, lokomotif). Menit = kelambatan kejadian. Hari lain tanpa kejadian tidak tercatat di sumber mana pun, sehingga tidak ditampilkan.</p>
           </div>
           <!-- Skor RHI per periode -->
           <div x-show="ht === 's'">
@@ -178,8 +178,8 @@
             <div class="card"><div class="card-h"><div><h3>Pola jam kejadian</h3><p x-text="KAI.fmt.n(M.prof.hour.known) + ' kejadian berjam tercatat (seluruh data)'"></p></div></div>
               <div class="card-b fill"><div class="chart short" x-chart="tab === 'riwayat' ? KAIChart.hourBar(M.prof.hour) : null"></div></div></div>
           </div>
-          <div class="grid g-2-1 mt">
-            <div class="card"><div class="card-h"><div><h3>Riwayat gangguan</h3><p>Terbaru di atas · klik untuk detail kejadian</p></div>
+          <div class="grid mt" :class="M.type === 'sarana' ? '' : 'g-2-1'">
+            <div class="card" x-show="M.type !== 'sarana'"><div class="card-h"><div><h3>Riwayat gangguan</h3><p>Terbaru di atas · klik untuk detail kejadian</p></div>
               <div class="spacer"></div><div class="seg"><button :aria-pressed="hist === 'all'" @click="hist = 'all'">Semua</button><button :aria-pressed="hist === 'p'" @click="hist = 'p'" x-text="R.P.short"></button></div>
               <button class="btn sm" @click="exp()">Excel</button></div>
               <div class="card-b"><div x-table="histTable" @row-click="$store.app.openEvent($event.detail.id)"></div></div></div>

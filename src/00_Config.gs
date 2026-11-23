@@ -4,7 +4,7 @@
  */
 var CONFIG = {
   APP_NAME: 'Dashboard Gangguan Operasional',
-  APP_VERSION: '3.16.0',
+  APP_VERSION: '3.16.1',
   SCHEMA: 14,                 // naik bila bentuk snapshot berubah → pemicu membangun ulang otomatis
 
   // Sumber data (ID spreadsheet). Bisa ditimpa lewat Script Properties dengan nama yang sama.

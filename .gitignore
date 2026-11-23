@@ -21,3 +21,4 @@ tests/emulator/shots/
 
 # keluaran shoot.js bila dijalankan dari akar repo
 /shots/
+.scratch/

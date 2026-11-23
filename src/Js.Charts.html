@@ -251,15 +251,20 @@ window.KAIChart = (function () {
     if (g && A.y[1] && A.y[1].name && A.y[1].nameLocation === 'middle' && (g.right || 0) < 40) g.right = 40;
     return o;
   }
-  /** Zoom: geser/zoom dengan Ctrl+roda atau tombol; slider bila kategori banyak. */
-  function withZoom(o) {
+  /**
+   * Zoom. Di halaman: TANPA zoom 'inside' (zoom 'inside' menangkap roda mouse sehingga halaman tidak bisa digulir);
+   * hanya slider bila kategori > 31. Di tampilan besar (big): geser/zoom dengan Ctrl+roda dan seret.
+   */
+  function withZoom(o, big) {
     if (o.dataZoom || o.visualMap) return o;
     var A = axes(o), xa = A.x[0], ya = A.y[0], base = { type: 'inside', zoomOnMouseWheel: 'ctrl', moveOnMouseWheel: false, moveOnMouseMove: true, filterMode: 'none' };
     if (xa && xa.type === 'category') {
-      o.dataZoom = [Object.assign({ xAxisIndex: 0 }, base)];
-      if ((xa.data || []).length > 31) { o.dataZoom.push({ type: 'slider', xAxisIndex: 0, height: 16, bottom: 4, brushSelect: false, showDetail: false, borderColor: '#D8DEEA' }); o.grid.bottom = (o.grid.bottom || 0) + 24; }
-    } else if (ya && ya.type === 'category') o.dataZoom = [Object.assign({ yAxisIndex: 0 }, base)];
+      o.dataZoom = big ? [Object.assign({ xAxisIndex: 0 }, base)] : [];
+      if ((xa.data || []).length > 31) { o.dataZoom.push({ type: 'slider', xAxisIndex: 0, height: 16, bottom: 4, brushSelect: false, showDetail: false, borderColor: '#D8DEEA', zoomOnMouseWheel: false, moveOnMouseWheel: false }); o.grid.bottom = (o.grid.bottom || 0) + 24; }
+    } else if (!big) o.dataZoom = [];
+    else if (ya && ya.type === 'category') o.dataZoom = [Object.assign({ yAxisIndex: 0 }, base)];
     else o.dataZoom = [Object.assign({ xAxisIndex: 0 }, base), Object.assign({ yAxisIndex: 0 }, base)];
+    if (!o.dataZoom.length) delete o.dataZoom;
     return o;
   }
 
@@ -387,6 +392,9 @@ window.KAIChart = (function () {
     m.querySelector('h3').textContent = info.title;
     m.querySelector('.narr').textContent = describe(opt, info.title);
     var inst = echarts.init(m.querySelector('.chart'), 'kai', { renderer: 'canvas' });
+    var big = Object.assign({}, opt); if (opt.grid) big.grid = Object.assign({}, opt.grid);
+    if (big.dataZoom && !big.visualMap) { if (big.dataZoom.some(function (z) { return z.type === 'slider'; }) && big.grid) big.grid.bottom = Math.max(0, (big.grid.bottom || 0) - 24); delete big.dataZoom; }
+    withZoom(big, true); opt = big;
     inst.setOption(opt);
     function close() { inst.dispose(); m.remove(); document.removeEventListener('keydown', onKey); }
     function onKey(e) { if (e.key === 'Escape') close(); }
@@ -425,18 +433,21 @@ window.KAIChart = (function () {
     Alpine.directive('chart', function (el, d, u) {
       var get = u.evaluateLater(d.expression), inst = null, ro = null, cur = null;
       var bar = document.createElement('div'); bar.className = 'cbar no-print';
-      bar.innerHTML = '<button data-a="in" title="Perbesar (atau Ctrl + gulir pada grafik)" aria-label="Perbesar">' + ic('i-zin') + '</button>' +
-        '<button data-a="out" title="Perkecil" aria-label="Perkecil">' + ic('i-zout') + '</button>' +
-        '<button data-a="reset" title="Atur ulang zoom" aria-label="Atur ulang zoom">' + ic('i-refresh') + '</button>' +
-        '<button data-a="big" title="Tampilan besar" aria-label="Tampilan besar">' + ic('i-expand') + '</button>' +
-        '<button data-a="dl" title="Unduh PNG beserta pembacaan data" aria-label="Unduh grafik">' + ic('i-download') + '</button>' +
-        '<button data-a="csv" title="Unduh data grafik (CSV)" aria-label="Unduh data grafik CSV" class="cbar-txt">CSV</button>';
+      // Bilah alat ringkas: tampilan besar (zoom di sana) + menu ⋯ (PNG, CSV, atur ulang geser).
+      bar.innerHTML = '<button data-a="big" title="Tampilan besar (zoom & geser)" aria-label="Tampilan besar">' + ic('i-expand') + '</button>' +
+        '<div class="cbar-more"><button data-a="more" title="Unduh" aria-label="Menu unduh grafik" aria-haspopup="true" aria-expanded="false">' + ic('i-download') + '</button>' +
+        '<div class="cbar-pop" role="menu" hidden><button data-a="dl" role="menuitem">Gambar PNG + pembacaan data</button><button data-a="csv" role="menuitem">Data grafik (CSV)</button>' +
+        '<button data-a="reset" role="menuitem">Atur ulang geser</button></div></div>';
       el.parentNode.insertBefore(bar, el);
+      var pop = bar.querySelector('.cbar-pop'), more = bar.querySelector('[data-a="more"]');
+      function setPop(open) { pop.hidden = !open; more.setAttribute('aria-expanded', open ? 'true' : 'false'); }
+      document.addEventListener('click', function (e) { if (!bar.contains(e.target)) setPop(false); });
       bar.addEventListener('click', function (e) {
         var b = e.target.closest('button[data-a]'); if (!b || !inst || !cur) return;
         var a = b.dataset.a;
-        if (a === 'in') zoomBy(inst, .7); else if (a === 'out') zoomBy(inst, 1 / .7);
-        else if (a === 'reset') inst.dispatchAction({ type: 'dataZoom', start: 0, end: 100 });
+        if (a === 'more') return setPop(pop.hidden);
+        setPop(false);
+        if (a === 'reset') inst.dispatchAction({ type: 'dataZoom', start: 0, end: 100 });
         else if (a === 'big') enlarge(cur, contextOf(el)); else if (a === 'dl') download(inst, cur, contextOf(el));
         else if (a === 'csv') dataCsv(cur, contextOf(el));
       });
@@ -446,7 +457,7 @@ window.KAIChart = (function () {
           bar.style.visibility = '';
           theme(); standard(opt); withZoom(opt); cur = opt;
           var zoomable = !!opt.dataZoom && opt.dataZoom.length;
-          [].forEach.call(bar.querySelectorAll('[data-a="in"],[data-a="out"],[data-a="reset"]'), function (b) { b.style.display = zoomable ? '' : 'none'; });
+          [].forEach.call(bar.querySelectorAll('[data-a="reset"]'), function (b) { b.style.display = zoomable ? '' : 'none'; });
           if (!inst) {
             inst = echarts.init(el, 'kai', { renderer: 'canvas' });
             ro = new ResizeObserver(function () { inst && inst.resize(); }); ro.observe(el);

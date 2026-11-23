@@ -30,6 +30,8 @@ window.KAI = window.KAI || {};
     hm: function (min) { if (min == null || min < 0) return ''; var h = Math.floor(min / 60) % 24, m = Math.round(min % 60); return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m; },
     km: function (v) { if (v == null || v === '') return ''; var k = Math.floor(v), m = Math.round((v - k) * 1000); return k + '+' + (m < 100 ? (m < 10 ? '00' : '0') : '') + m; },
     age: function (a) { return a == null ? '–' : nf1.format(a) + ' th'; },
+    /** Status kesehatan untuk tampilan: HEALTHY → Healthy (nilai data tetap huruf besar). */
+    st: function (s) { s = String(s || ''); return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : ''; },
     unit: function (no) { var m = /^(CC|BB|D)(\d{3})(\d{2})(\d{2,3})$/.exec(no || ''); return m ? m[1] + ' ' + m[2] + ' ' + m[3] + ' ' + m[4] : (no || ''); }
   };
 

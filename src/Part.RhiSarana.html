@@ -10,7 +10,7 @@
             <p class="note warn-note" x-show="S.stale" x-text="staleTxt"></p>
             <div class="kpis">
               <template x-for="k in ['HEALTHY', 'MONITOR', 'DECLINING']" :key="k">
-                <div class="kpi"><span x-text="k + ' · ' + day"></span><b :style="'color:#' + sc(k)" x-text="S.byStatus[k].units + ' unit'"></b><em x-text="S.byStatus[k].g6 + ' gangguan ' + w6 + ' · ' + KAI.fmt.d1(S.byStatus[k].rate6) + ' per 100 unit'"></em></div>
+                <div class="kpi"><span x-text="KAI.fmt.st(k) + ' · ' + day"></span><b :style="'color:#' + sc(k)" x-text="S.byStatus[k].units + ' unit'"></b><em x-text="S.byStatus[k].g6 + ' gangguan ' + w6 + ' · ' + KAI.fmt.d1(S.byStatus[k].rate6) + ' per 100 unit'"></em></div>
               </template>
               <div class="kpi"><span x-text="'Gangguan lokomotif ' + R.label + ' (bernomor RHI)'"></span><b x-text="S.E.length + ' kejadian'"></b><em x-text="'saat MONITOR ' + S.atSt.MONITOR + ' · DECLINING ' + S.atSt.DECLINING + ' · tanpa nomor ' + S.miss.length"></em></div>
             </div>
@@ -24,28 +24,22 @@
               <div class="card-h"><div><h3 x-text="'Gangguan lokomotif ' + R.label + ' & status RHI pada tanggal kejadian'"></h3><p>Urut menit terbesar · klik baris untuk profil sarana</p></div></div>
               <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th class="num">Tgl</th><th>Lokomotif</th><th>Depo</th><th>Wilayah kejadian</th><th>Gangguan</th><th class="num">Menit</th><th>HI (status)</th><th class="num">RAMS</th><th>Perawatan terakhir</th></tr></thead><tbody>
                 <template x-for="e in S.E" :key="e.r.id"><tr class="click" @click="$store.app.open('sarana', e.no)">
-                  <td class="num" x-text="e.r.d"></td><td><b x-text="e.no"></b> <small x-text="e.u.tipe"></small></td><td x-text="e.u.depo || '–'"></td><td x-text="e.r.wilayah"></td><td x-text="String(e.r.sub || '').replace(/^Lokomotif\s*-\s*/i, '')"></td>
-                  <td class="num"><b x-text="KAI.fmt.n(e.r.menit)"></b></td><td><b :style="'color:#' + sc(e.at && e.at.st)" x-text="e.at ? KAI.fmt.d1(e.at.hi) + ' (' + e.at.st + ')' : '–'"></b></td><td class="num" x-text="e.at && e.at.rams != null ? e.at.rams : '–'"></td><td x-text="e.at ? (e.at.pt || '–') + (e.at.tp ? ' · ' + e.at.tp : '') : '–'"></td>
+                  <td class="num" x-text="e.r.d"></td><td><b x-text="KAI.fmt.unit(e.no)"></b> <small x-text="e.u.tipe"></small></td><td x-text="e.u.depo || '–'"></td><td x-text="e.r.wilayah"></td><td x-text="String(e.r.sub || '').replace(/^Lokomotif\s*-\s*/i, '')"></td>
+                  <td class="num"><b x-text="KAI.fmt.n(e.r.menit)"></b></td><td><b :style="'color:#' + sc(e.at && e.at.st)" x-text="e.at ? KAI.fmt.d1(e.at.hi) + ' · ' + KAI.fmt.st(e.at.st) : '–'"></b></td><td class="num" x-text="e.at && e.at.rams != null ? e.at.rams : '–'"></td><td x-text="e.at ? (e.at.pt || '–') + (e.at.tp ? ' · ' + e.at.tp : '') : '–'"></td>
                 </tr></template>
               </tbody></table></div>
             </div>
             <div class="grid g-2 mt">
               <div class="card"><div class="card-h"><div><h3 x-text="'Daftar pantau: DECLINING per ' + day"></h3><p>HI &lt; 70 pada hari terakhir data RHI</p></div></div>
                 <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Lokomotif</th><th>Depo</th><th class="num">HI</th><th class="num">Hari DECL.</th><th class="num">Reliab.</th><th class="num">Maint. idx</th><th class="num">Umur (th)</th><th class="num" x-text="'Gangg. ' + w6"></th></tr></thead><tbody>
-                  <template x-for="u in decl" :key="u.no"><tr class="click" @click="$store.app.open('sarana', u.no)"><td><b x-text="u.no"></b> <small x-text="u.tipe"></small></td><td x-text="u.depo || '–'"></td><td class="num bad-t" x-text="KAI.fmt.d1(u.hi)"></td><td class="num" x-text="u.nDecl"></td><td class="num" x-text="u.rel == null ? '–' : u.rel"></td><td class="num" x-text="KAI.fmt.d1(u.mi)"></td><td class="num" x-text="KAI.fmt.d1(u.age)"></td><td class="num" x-text="u.g6.n"></td></tr></template>
+                  <template x-for="u in decl" :key="u.no"><tr class="click" @click="$store.app.open('sarana', u.no)"><td><b x-text="KAI.fmt.unit(u.no)"></b> <small x-text="u.tipe"></small></td><td x-text="u.depo || '–'"></td><td class="num bad-t" x-text="KAI.fmt.d1(u.hi)"></td><td class="num" x-text="u.nDecl"></td><td class="num" x-text="u.rel == null ? '–' : u.rel"></td><td class="num" x-text="KAI.fmt.d1(u.mi)"></td><td class="num" x-text="KAI.fmt.d1(u.age)"></td><td class="num" x-text="u.g6.n"></td></tr></template>
                 </tbody></table></div></div>
               <div class="card"><div class="card-h"><div><h3 x-text="'Gangguan berulang ≥3 kali · ' + w6"></h3><p x-text="'Status ' + day"></p></div></div>
                 <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Lokomotif</th><th>Depo</th><th class="num">n · menit</th><th class="num" x-text="R.label"></th><th>HI (status)</th><th class="num">Reliab.</th></tr></thead><tbody>
-                  <template x-for="u in rep3" :key="u.no"><tr class="click" @click="$store.app.open('sarana', u.no)"><td><b x-text="u.no"></b> <small x-text="u.tipe"></small></td><td x-text="u.depo || '–'"></td><td class="num" x-text="u.g6.n + ' · ' + KAI.fmt.n(u.g6.menit)"></td><td class="num" x-text="u.gOkt.n"></td><td><b :style="'color:#' + sc(u.st)" x-text="KAI.fmt.d1(u.hi) + ' (' + u.st + ')'"></b></td><td class="num" x-text="u.rel == null ? '–' : u.rel"></td></tr></template>
+                  <template x-for="u in rep3" :key="u.no"><tr class="click" @click="$store.app.open('sarana', u.no)"><td><b x-text="KAI.fmt.unit(u.no)"></b> <small x-text="u.tipe"></small></td><td x-text="u.depo || '–'"></td><td class="num" x-text="u.g6.n + ' · ' + KAI.fmt.n(u.g6.menit)"></td><td class="num" x-text="u.gOkt.n"></td><td><b :style="'color:#' + sc(u.st)" x-text="KAI.fmt.d1(u.hi) + ' · ' + KAI.fmt.st(u.st)"></b></td><td class="num" x-text="u.rel == null ? '–' : u.rel"></td></tr></template>
                 </tbody></table></div></div>
             </div>
-            <div class="card mt">
-              <div class="card-h"><div><h3>Kondisi lokomotif per depo pemilik</h3><p>Depo dari master Data Sarana; wilayah dari kode depo (GAPEKA 2025)</p></div></div>
-              <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Wilayah</th><th>Depo</th><th class="num">Unit</th><th class="num">H / M / D</th><th class="num">HI rata</th><th class="num">Reliab.</th><th class="num" x-text="'Gangg. ' + R.label"></th><th class="num" x-text="w6"></th><th class="num">Per 100 unit</th></tr></thead><tbody>
-                <template x-for="d in S.depots" :key="d.id"><tr><td x-text="d.w || '–'"></td><td><b x-text="d.code + ' ' + d.name"></b></td><td class="num" x-text="d.units"></td><td class="num" x-text="d.H + ' / ' + d.M + ' / ' + d.D"></td><td class="num" x-text="KAI.fmt.d1(d.hiMean)"></td><td class="num" x-text="KAI.fmt.d1(d.relMean)"></td><td class="num" x-text="d.gOkt.n + ' · ' + KAI.fmt.n(d.gOkt.menit)"></td><td class="num" x-text="d.g6"></td><td class="num" x-text="KAI.fmt.d1(d.rate6)"></td></tr></template>
-              </tbody></table></div>
-              <p class="note" style="padding:0 14px 12px">RHI = Rolling-stock Health Index lokomotif harian (kolom “(pulih)”; pemisah desimal pada ekspor sumber hilang dan dipulihkan, cocok 100% dengan healthy_status). HEALTHY ≥ 85, MONITOR 70–&lt;85, DECLINING &lt; 70. Unit kejadian = nomor pada kolom Nomor sarana yang terdaftar di RHI; status = nilai harian pada tanggal kejadian.</p>
-            </div>
+            <p class="note mt-s">RHI = Rolling-stock Health Index lokomotif harian (kolom “(pulih)”; pemisah desimal pada ekspor sumber hilang dan dipulihkan, cocok 100% dengan healthy_status). Healthy ≥ 85, Monitor 70–&lt;85, Declining &lt; 70. Kondisi per depo ada di tab Depo &amp; Balai Yasa. Unit kejadian = nomor pada kolom Nomor sarana yang terdaftar di RHI; status = nilai harian pada tanggal kejadian.</p>
           </div>
     </template>
 </div>
