@@ -27,9 +27,9 @@ GAPEKA 2025 (berlaku 1 Feb 2025) dan 2026 (berlaku 1 Des 2026) dianalisis **masi
 Wilayah & koridor memakai peta vektor OSM sendiri (dasar P1: `SEED_PETA`, © kontributor OpenStreetMap, ODbL). Ubin OpenRailwayMap/OSM tidak dipakai (kebijakan pemakaian).
 
 ## Perintah
-- `npm run check` — ESLint + `tools/check_build.py` (include, sintaks, urutan push). Wajib lulus sebelum commit.
+- `npm run check` — ESLint + `tools/check_build.py` (include, sintaks, urutan push) + uji koordinat stasiun (`tools/peta/koreksi_koordinat.py --cek`: pulau, koordinat kembar seperti KTG/KTP Ketapang, jarak tetangga rute). Wajib lulus sebelum commit.
 - `npm run test:emu` — pipeline .gs asli di Node + semua menu di Chromium desktop/400 px (data sintetis dari seed repo; pustaka ECharts/Tabulator/Alpine di `tests/emulator/node_modules`, lihat README di sana).
-- `npm run test:marey` — invarian grafik perjalanan (label tidak tumpuk, jam tidak mundur) untuk 2025 & 2026 (membaca seed di src/).
+- `npm run test:gapeka` — data GAPEKA 2025 & 2026 untuk switch global (seed terbaca, jam tidak mundur, km lintas urut, baris jadwal lengkap). Grafik Marey dihapus v3.18.0.
 - `npm run test:switch` — switch GAPEKA global: bawaan, ganti ke 2026, kembali ke 2025 (setelah `test:emu` membangun app.html).
 - `npm run test:pulau` — aturan pulau Paket A (mutasi, nomor diragukan, awalan KA Sumatera, KA lintas pulau, kelas diturunkan, daftar depo).
 - `npm run test:akses` / `npm run test:alur` — fungsi publik terkunci; alur klik umum → rinci.

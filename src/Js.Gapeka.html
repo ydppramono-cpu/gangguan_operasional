@@ -1,0 +1,57 @@
+<script>
+/**
+ * Js.Gapeka — data GAPEKA untuk switch global (KAI.gapeka): versi, versi berlaku, muat & indeks data apiGapeka, baris jadwal.
+ * Grafik perjalanan (diagram Marey) dihapus pada v3.18.0 atas keputusan pemilik (23 Nov 2026: kurang bermanfaat);
+ * jadwal tetap dipakai untuk KA lewat, profil KA/stasiun/petak, dan pendapatan.
+ * DATA (apiGapeka(tahun) → 19_SeedGapeka26.gs / 20_SeedGapeka25.gs):
+ *   lintas[] = { id, lembar, wilayah, judul, ..., st: [[kode, nama, km], ...] } · ka[] = { no, nama, relasi, kelas, kat, f, v, src, pts: [[kode, datangDetik, berangkatDetik], ...] }
+ */
+(function (root) {
+  'use strict';
+  /* ---------------- data ---------------- */
+  /** Versi GAPEKA yang tersedia (terbaru dulu). berlaku = tanggal mulai berlaku (WIB). */
+  var VERSI = [
+    { id: '2026', label: 'GAPEKA 2026', berlaku: '2026-12-01', dasar: 'KP-DJKA 116 Tahun 2026' },
+    { id: '2025', label: 'GAPEKA 2025', berlaku: '2025-02-01', dasar: 'KP-DJKA 224–227 Tahun 2024' }
+  ];
+  /** Versi yang berlaku pada tanggal ymd (yyyy-mm-dd): yang terakhir mulai berlaku ≤ tanggal itu. */
+  function versiBerlaku(ymd) {
+    var v = VERSI.filter(function (x) { return x.berlaku <= ymd; });
+    return (v[0] || VERSI[VERSI.length - 1]).id;
+  }
+  /** Ubah data GAPEKA (ka[].pts detik) ke baris jadwal format referensi: [no, nama, relasi, sumber, "kode|datang|berangkat|ket|catatan\n..."]. */
+  function jadwalRowsOf(d) {
+    var hm = function (t) { if (t == null || t < 0) return ''; var m = Math.round(t / 60) % 1440; return ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2); };
+    return d.ka.map(function (k) {
+      var n = k.pts.length;
+      return [k.no, k.nama, k.relasi, k.src, k.pts.map(function (p, i) {
+        var ket = i === 0 ? 'A' : i === n - 1 ? 'Z' : (p[1] < 0 || p[2] < 0 || p[1] === p[2]) ? 'L' : 'H';
+        return [p[0], hm(p[1]), hm(p[2]), ket, ''].join('|');
+      }).join('\n')];
+    });
+  }
+  var cache = {};
+  function load(api, gunzip, tahun) {
+    tahun = tahun || '2026';
+    if (cache[tahun]) return Promise.resolve(cache[tahun]);
+    return api('apiGapeka', tahun).then(function (r) { return gunzip(r.gz); }).then(function (d) { cache[tahun] = index(d); cache[tahun].tahun = tahun; return cache[tahun]; });
+  }
+  function index(d) {
+    var groups = [], byLembar = {};
+    d.lintas.forEach(function (l) {
+      if (!byLembar[l.lembar]) { byLembar[l.lembar] = { lembar: l.lembar, wilayah: l.wilayah, halaman: l.halaman, berkas: l.berkas, items: [] }; groups.push(byLembar[l.lembar]); }
+      byLembar[l.lembar].items.push(l);
+    });
+    var byCode = {};
+    d.ka.forEach(function (k, i) {
+      k.idx = i;
+      k.pts.forEach(function (p) { (byCode[p[0]] = byCode[p[0]] || []).push(i); });
+    });
+    d.groups = groups; d.byCode = byCode;
+    d.lintasById = {}; d.lintas.forEach(function (l) { d.lintasById[l.id] = l; });
+    return d;
+  }
+
+  root.KAIG = { VERSI: VERSI, versiBerlaku: versiBerlaku, load: load, index: index, jadwalRowsOf: jadwalRowsOf };
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>

@@ -12,7 +12,6 @@ KAI.ROUTES = [
   { id: 'wilayah', title: 'Wilayah & koridor', icon: 'i-map', group: 'Laporan' },
   { id: 'sarana', title: 'Sarana & armada', icon: 'i-train', group: 'Laporan' },
   { id: 'eksposur', title: 'Pendapatan terekspos', icon: 'i-coin', group: 'Laporan' },
-  { id: 'gapeka', title: 'Grafik perjalanan', icon: 'i-route', group: 'Analisis' },
   { id: 'telusuri', title: 'Telusuri kejadian', icon: 'i-list', group: 'Analisis' },
   { id: 'cari', title: 'Cari & profil', icon: 'i-search', group: 'Analisis', hide: true },     // lewat kotak cari di header
   { id: 'unduh', title: 'Unduh', icon: 'i-download', group: 'Analisis', hide: true },          // lewat tombol Unduh di header
@@ -27,7 +26,7 @@ KAI.WORKSPACES = [
   { id: 'ws-ringkasan', title: 'Ringkasan', icon: 'i-home', pages: [{ id: 'ringkasan', label: 'Eksekutif' }, { id: 'tren', label: 'Tren & pola' }] },
   { id: 'ws-jaringan', title: 'Jaringan & prasarana', icon: 'i-map', pages: [{ id: 'wilayah', label: 'Wilayah & koridor' }, { id: 'perlintasan', label: 'Perlintasan & JPL' }] },
   { id: 'ws-armada', title: 'Armada', icon: 'i-train', pages: [{ id: 'sarana', label: 'Sarana & armada' }] },
-  { id: 'ws-operasi', title: 'Operasi & pendapatan', icon: 'i-coin', pages: [{ id: 'eksposur', label: 'Pendapatan terekspos' }, { id: 'gapeka', label: 'Grafik perjalanan' }] },
+  { id: 'ws-pendapatan', title: 'Pendapatan', icon: 'i-coin', pages: [{ id: 'eksposur', label: 'Pendapatan terekspos' }] },
   { id: 'ws-telusuri', title: 'Telusuri', icon: 'i-list', pages: [{ id: 'telusuri', label: 'Telusuri kejadian' }] }
 ];
 KAI.wsOf = function (route) { return KAI.WORKSPACES.filter(function (w) { return w.pages.some(function (p) { return p.id === route; }); })[0] || null; };
@@ -151,14 +150,14 @@ KAI.FILTERS = {
 
   /** KAI.gapeka — konteks versi GAPEKA global (2025 = tab M_JADWAL/seed; versi lain = data apiGapeka). */
 KAI.gapeka = {
-  valid: function (t) { return KAIM.VERSI.some(function (v) { return v.id === t; }); },
-  label: function (t) { var v = KAIM.VERSI.filter(function (x) { return x.id === t; })[0]; return v ? v.label : 'GAPEKA ' + t; },
+  valid: function (t) { return KAIG.VERSI.some(function (v) { return v.id === t; }); },
+  label: function (t) { var v = KAIG.VERSI.filter(function (x) { return x.id === t; })[0]; return v ? v.label : 'GAPEKA ' + t; },
   today: function () { return new Date().toLocaleString('sv-SE', { timeZone: 'Asia/Jakarta' }).slice(0, 10); },
-  initial: function () { var sv = KAI.store.get('gapeka.ver'); return KAI.gapeka.valid(sv) ? sv : KAIM.versiBerlaku(KAI.gapeka.today()); },
+  initial: function () { var sv = KAI.store.get('gapeka.ver'); return KAI.gapeka.valid(sv) ? sv : KAIG.versiBerlaku(KAI.gapeka.today()); },
   /** Baris jadwal untuk referensi. 2025 memakai tab M_JADWAL (sudah di raw); versi lain dimuat dari server. */
   jadwalRows: function (raw, tahun) {
     if (tahun === '2025') return Promise.resolve(raw.jadwal || []);
-    return KAIM.load(KAI.api, KAI.gunzipJson, tahun).then(function (d) { return KAIM.jadwalRowsOf(d); });
+    return KAIG.load(KAI.api, KAI.gunzipJson, tahun).then(function (d) { return KAIG.jadwalRowsOf(d); });
   }
 };
 
@@ -188,6 +187,8 @@ document.addEventListener('alpine:init', function () {
         var start = function (params) {
           params = params || {};
           // Menu lama "Kondisi prasarana & sarana" digabung: ?page=kondisi → Wilayah & koridor (tab Prasarana) atau Sarana & armada (tab RHI, ?t=sar).
+          // Grafik perjalanan (Marey) dihapus v3.18.0 → tautan lama ?page=gapeka dibuka di Wilayah & koridor (tab Rute).
+          if (params.page === 'gapeka') { params.page = 'wilayah'; self.vtab.wilayah = 'rute'; }
           if (params.page === 'kondisi') { if (params.t === 'sar' || params.tab === 'sar') { params.page = 'sarana'; self.vtab.sarana = 'rhi'; } else { params.page = 'wilayah'; self.vtab.wilayah = 'prasarana'; } params.t = ''; }
           if (params.tab && /^(peringkat|prasarana|rute|gangguan|rhi|armada|ringkasan|kesehatan|depo|unit)$/.test(params.tab)) { if (params.page === 'wilayah') self.vtab.wilayah = params.tab; if (params.page === 'sarana') self.vtab.sarana = params.tab; }
           if (params.fleet && /^(lok|ker|ger)$/.test(params.fleet)) self.vtab.fleet = params.fleet;

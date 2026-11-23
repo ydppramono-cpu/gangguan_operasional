@@ -1,7 +1,7 @@
 <script>
 /* Part.RuteData — komponen Alpine vRute untuk tab "Rute jalur" (markup: Part.Rute). Mesin: KAIRoute (Js.Rute). */
 document.addEventListener('alpine:init', function () {
-  var memoB = { k: '', v: null }, memoD = { k: '', v: null }, memoM = { k: '', v: null };
+  var memoB = { k: '', v: null }, memoD = { k: '', v: null };
   var CAT = { P: ['KA penumpang', '#252271'], K: ['KRL', '#94A3B8'], B: ['KA barang', '#F06A25'], D: ['Dinas/lok', '#B8C2D3'] };
   var REG_COL = ['#E8EDF8', '#FDEBDD', '#E3F1EE', '#F3E8F7', '#FFF4D6', '#E6F0FB'];
   function mix(a, b, t) { var p = function (h, i) { return parseInt(h.slice(1 + i * 2, 3 + i * 2), 16); }, c = [0, 1, 2].map(function (i) { return Math.round(p(a, i) + (p(b, i) - p(a, i)) * Math.max(0, Math.min(1, t))); }); return '#' + c.map(function (v) { return (v < 16 ? '0' : '') + v.toString(16); }).join(''); }
@@ -9,9 +9,7 @@ document.addEventListener('alpine:init', function () {
   Alpine.data('vRute', function () {
     return {
       id: 'utara', segKey: '', mapMode: 'ggn', kaF: 'all', kaLimit: 9999, buf: 5,
-      mCat: { P: true, K: true, B: true, D: false },
       mapModes: [['ggn', 'Gangguan'], ['ka', 'KA/hari'], ['thi', 'THI'], ['jalur', 'Ganda/tunggal']],
-      mareyCats: [['P', 'Penumpang'], ['K', 'KRL'], ['B', 'Barang'], ['D', 'Dinas']],
       init: function () { try { var s = KAI.store.get('rute1'); if (s && s.id) this.id = s.id; } catch (e) { } },
       get B() {
         var app = this.$store.app; if (!app.refReady || !KAI.data.ref) return null;
@@ -88,6 +86,7 @@ document.addEventListener('alpine:init', function () {
         if (m === 'ka') return [['sedikit KA', '#C7D2FE'], ['banyak KA', '#252271'], ['Jaringan lain', '#CBD5E1']];
         return [['0 gangguan', '#475569'], ['sedikit', '#FDBA74'], ['terbanyak', '#C0392B'], ['Jaringan lain', '#CBD5E1']];
       },
+      mapBad: function () { var R = KAI.data.ref; if (!R || !R.peta || !this.C) return []; return KAIRoute.corridorGeo(R, this.C).bad || []; },
       mapOpt: function () {
         var R = KAI.data.ref, C = this.C, D = this.D, self = this, N = KAIRoute.network(R.peta); if (!N) return null;
         var G = KAIRoute.corridorGeo(R, C), byKey = {}; D.S.forEach(function (x) { byKey[x.key] = x; });
@@ -166,34 +165,6 @@ document.addEventListener('alpine:init', function () {
         };
       },
       onDiagClick: function (p) { if (p && p.data && p.data.key) this.pickSeg(p.data.key); },
-      mareyOpt: function () {
-        var C = this.C, D = this.D, self = this, k = memoB.k + '|' + C.id;
-        if (memoM.k !== k) memoM = { k: k, v: KAIRoute.marey(KAI.data.ref, C) };
-        var M = memoM.v, anchors = [], lk = -1e9; D.ST.filter(function (s) { return s.anchor; }).forEach(function (s) { if (s.km - lk >= C.len * 0.022) { anchors.push(s); lk = s.km; } }); var names = {}; anchors.forEach(function (s) { names[Math.round(s.km * 1000)] = s.name; });
-        var series = Object.keys(CAT).filter(function (c) { return self.mCat[c]; }).map(function (c) {
-          return { name: CAT[c][0], type: 'lines', coordinateSystem: 'cartesian2d', polyline: true, silent: false, lineStyle: { color: CAT[c][1], width: c === 'K' || c === 'D' ? 0.7 : 1.1, opacity: c === 'K' ? 0.55 : 0.85 },
-            data: M.filter(function (m) { return m.jenis === c; }).map(function (m) { return { coords: m.pts, no: m.no, nama: m.nama, est: m.est }; }) };
-        });
-        var x = this.seg, mark = [];
-        if (x) {
-          mark.push([{ yAxis: x.km0, itemStyle: { color: 'rgba(37,34,113,.06)' } }, { yAxis: x.km1 }]);
-          x.gapAll.filter(function (g) { return g.dur >= 15; }).forEach(function (g) {
-            var segs = g.b <= 1440 ? [[g.a, g.b]] : [[g.a, 1440], [0, g.b - 1440]];
-            segs.forEach(function (q) { mark.push([{ xAxis: q[0], yAxis: x.km0 - (C.len * 0.004), itemStyle: { color: 'rgba(31,138,46,.28)' } }, { xAxis: q[1], yAxis: x.km1 + (C.len * 0.004) }]); });
-          });
-        }
-        series.push({ type: 'scatter', data: [], silent: true, markArea: { silent: true, data: mark } });
-        return {
-          animation: false, legend: { top: 0 }, grid: { left: 108, right: 14, top: 36, bottom: 50 },
-          tooltip: { trigger: 'item', confine: true, formatter: function (p) { return p.data && p.data.no ? '<b>KA ' + p.data.no + '</b> ' + (p.data.nama || '') + (p.data.est ? '<br><i>sebagian jam = interpolasi</i>' : '') : ''; } },
-          xAxis: { type: 'value', min: 0, max: 1440, interval: 120, axisLabel: { formatter: function (v) { return hh(v); } }, splitLine: { lineStyle: { color: '#EEF2F7' } } },
-          yAxis: { type: 'value', min: 0, max: Math.ceil(C.len), inverse: true, axisLabel: { customValues: anchors.map(function (s) { return s.km; }), formatter: function (v) { return names[Math.round(v * 1000)] || ''; }, fontSize: 10.5 },
-            axisTick: { customValues: anchors.map(function (s) { return s.km; }) }, splitLine: { show: false } },
-          dataZoom: [{ type: 'inside', xAxisIndex: 0, yAxisIndex: 0, zoomOnMouseWheel: 'ctrl', filterMode: 'none' }, { type: 'slider', xAxisIndex: 0, height: 16, bottom: 6, brushSelect: false, showDetail: false, borderColor: '#D8DEEA', filterMode: 'none' }],
-          series: series
-        };
-      },
-      onMareyClick: function (p) { if (p && p.data && p.data.no) this.$store.app.open('ka', p.data.no); },
       revOpt: function () {
         var C = this.C, B = this.B, mon = C.mon.filter(function (m) { return B.revYms.indexOf(m.ym) >= 0; });
         return {

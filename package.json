@@ -1,14 +1,14 @@
 {
   "name": "gangguan-operasional",
-  "version": "3.17.0",
+  "version": "3.18.0",
   "private": true,
   "description": "KAI Dashboard Gangguan Operasional (Google Apps Script) + KAI Data Platform",
   "scripts": {
     "lint": "eslint \"src/**/*.{gs,html}\" \"platform/**/*.gs\"",
-    "check": "npm run lint && python3 tools/check_build.py",
+    "check": "npm run lint && python3 tools/check_build.py && python3 -I tools/peta/koreksi_koordinat.py --cek",
     "pack": "python3 tools/pack.py dist",
     "test:emu": "node tests/emulator/emu.js && python3 tests/emulator/build.py && node tests/emulator/shoot.js",
-    "test:marey": "node tests/marey/test_marey.js 2025 && node tests/marey/test_marey.js 2026",
+    "test:gapeka": "node tests/gapeka/test_gapeka.js 2025 && node tests/gapeka/test_gapeka.js 2026",
     "csv": "echo 'Lihat docstring tools/csv/export_csv.py untuk argumen' && node tools/csv/dump_seeds.js ${KERJA:-/tmp}",
     "test:switch": "node tests/emulator/sw_test.js",
     "test:bq": "node tests/bq/test_bq.js",

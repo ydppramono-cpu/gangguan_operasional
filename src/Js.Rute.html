@@ -337,30 +337,6 @@
     return out;
   }
 
-  /* ---------------- Marey (grafik perjalanan) ---------------- */
-  function marey(R, C, opts) {
-    opts = opts || {};
-    var out = [];
-    C.trips.forEach(function (T) {
-      if (opts.daily !== false && !T.daily) return;
-      var k = T.k, path = k.route && k.route.path || [], tm = k.times || {}, runs = [], cur = [];
-      for (var i = 0; i < path.length; i++) {
-        var c = path[i], j = C.idx[c], x = tm[c];
-        if (j == null || !x || x.t == null) { if (cur.length > 1) runs.push(cur); cur = []; continue; }
-        if (cur.length && (x.t < cur[cur.length - 1][0] || x.t - cur[cur.length - 1][0] > 240)) { if (cur.length > 1) runs.push(cur); cur = []; }   // lompatan jam / rute berbalik → potong
-        cur.push([x.t, C.cum[j]]);
-      }
-      if (cur.length > 1) runs.push(cur);
-      runs.forEach(function (r) {
-        var base = Math.floor(r[0][0] / 1440) * 1440, pts = r.map(function (p) { return [p[0] - base, p[1]]; });
-        var o = { no: k.no, nama: k.nama, jenis: T.cat || cat(k), est: T.est, pts: pts };
-        out.push(o);
-        if (pts[pts.length - 1][0] > 1440) out.push({ no: o.no, nama: o.nama, jenis: o.jenis, est: o.est, pts: pts.map(function (p) { return [p[0] - 1440, p[1]]; }), wrap: true });
-      });
-    });
-    return out;
-  }
-
   /* ---------------- geometri peta (untuk ECharts, tanpa ubin) ---------------- */
   function decode(a) { var o = [], x = a[0], y = a[1]; o.push([x / 1e4, y / 1e4]); for (var i = 2; i < a.length; i += 2) { x += a[i]; y += a[i + 1]; o.push([x / 1e4, y / 1e4]); } return o; }
   var memoGeo = { k: null, v: null };
@@ -372,15 +348,21 @@
   }
   function corridorGeo(R, C) {
     var peta = R.peta; if (!peta) return { lines: [], gap: [] };
-    var lines = [], gap = [];
+    var lines = [], gap = [], bad = [];
     C.segs.forEach(function (s) {
       var g = peta.pg && (peta.pg[s.a + '-' + s.b] || peta.pg[s.b + '-' + s.a]);
       if (g) lines.push({ key: s.key, coords: decode(g) });
-      else { var A = peta.st[s.a], B = peta.st[s.b]; if (A && B) gap.push({ key: s.key, coords: [[A[1], A[0]], [B[1], B[0]]] }); }
+      else {
+        var A = peta.st[s.a], B = peta.st[s.b]; if (!A || !B) return;
+        // Garis lurus hanya bila jarak lurus wajar terhadap panjang petak; selebihnya koordinat diragukan (mis. nama kembar KTG/KTP) → tidak digambar.
+        var dk = 111 * Math.hypot(A[0] - B[0], (A[1] - B[1]) * Math.cos(A[0] * Math.PI / 180));
+        if (dk > Math.max(15, 3 * (s.km || 0))) { bad.push({ key: s.key, a: s.a, b: s.b, km: s.km, lurus: Math.round(dk) }); return; }
+        gap.push({ key: s.key, coords: [[A[1], A[0]], [B[1], B[0]]] });
+      }
     });
-    return { lines: lines, gap: gap };
+    return { lines: lines, gap: gap, bad: bad };
   }
 
-  root.KAIRoute = { FACTS: FACTS, cat: cat, CORR: CORR, SEC: SEC, NAT: NAT, JR_LABEL: JR_LABEL, build: build, detail: detail, marey: marey, gaps: gaps, network: network, corridorGeo: corridorGeo, decode: decode, fmt: fmt, index: index, tripsOfNo: tripsOfNo };
+  root.KAIRoute = { FACTS: FACTS, cat: cat, CORR: CORR, SEC: SEC, NAT: NAT, JR_LABEL: JR_LABEL, build: build, detail: detail, gaps: gaps, network: network, corridorGeo: corridorGeo, decode: decode, fmt: fmt, index: index, tripsOfNo: tripsOfNo };
 })(typeof window !== 'undefined' ? window : globalThis);
 </script>

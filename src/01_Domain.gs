@@ -167,7 +167,8 @@ var Domain = (function () {
     (src.stations || []).forEach(function (r) {
       var c = key(r[0]); if (!c) return;
       idx.st[c] = { code: txt(r[0]).toUpperCase(), name: title(r[1]), region: region(r[2]) };
-      idx.stName[key(r[1])] = c;
+      // Nama → DAFTAR kode: nama kembar (Ketapang KTG Daop 9 / KTP Divre 4, Larangan LR/LRA, …) tidak saling menimpa.
+      var nk = key(r[1]); if (nk) { var L = idx.stName[nk] = idx.stName[nk] || []; if (L.indexOf(c) < 0) L.push(c); }
     });
     (src.segments || []).forEach(function (r) {
       var a = key(r[2]), b = key(r[3]); if (!a || !b) return;
@@ -215,23 +216,37 @@ var Domain = (function () {
     return null;
   }
 
-  function stationCode(v, idx) {
+  /**
+   * Kode stasiun dari kode atau nama. Nama kembar diputus dengan wilayah kejadian (sama wilayah → sama pulau);
+   * bila tetap lebih dari satu kandidat, hasilnya kosong (tidak menebak).
+   */
+  function stationCode(v, idx, wil) {
     var k = key(v); if (!k) return '';
     if (idx.st[k]) return k;
-    if (idx.stName[k]) return idx.stName[k];
-    return fuzzyStation(k, idx);
+    if (idx.stName[k]) return pickByRegion(idx.stName[k], idx, wil);
+    return fuzzyStation(k, idx, wil);
+  }
+  function pickByRegion(L, idx, wil) {
+    if (L.length === 1) return L[0];
+    var w = region(wil); if (!w) return '';
+    var same = L.filter(function (c) { return idx.st[c].region === w; }); if (same.length === 1) return same[0];
+    var isl = /^Daop/.test(w) ? 'Daop' : /^Divre/.test(w) ? 'Divre' : '';
+    var sameIsl = isl ? L.filter(function (c) { return String(idx.st[c].region).indexOf(isl) === 0; }) : [];
+    return sameIsl.length === 1 ? sameIsl[0] : '';
   }
   /** Nama stasiun dengan salah ketik ringan ("BELIMBINGPENDOPO" → Blimbing Pendopo). Hanya bila kandidat terbaik tunggal. */
-  function fuzzyStation(k, idx) {
+  function fuzzyStation(k, idx, wil) {
     if (k.length < 6 || /^\d/.test(k)) return '';
     idx._fz = idx._fz || {};
-    if (idx._fz[k] !== undefined) return idx._fz[k];
-    var max = k.length >= 10 ? 2 : 1, best = '', bestD = 99, tie = false;
-    Object.keys(idx.stName).forEach(function (n) {
-      if (Math.abs(n.length - k.length) > max) return;
-      var d = lev(n, k, max); if (d < bestD) { bestD = d; best = idx.stName[n]; tie = false; } else if (d === bestD && idx.stName[n] !== best) tie = true;
-    });
-    return (idx._fz[k] = bestD <= max && !tie ? best : '');
+    if (idx._fz[k] === undefined) {
+      var max = k.length >= 10 ? 2 : 1, best = '', bestD = 99, tie = false;
+      Object.keys(idx.stName).forEach(function (n) {
+        if (Math.abs(n.length - k.length) > max) return;
+        var d = lev(n, k, max); if (d < bestD) { bestD = d; best = n; tie = false; } else if (d === bestD && n !== best) tie = true;
+      });
+      idx._fz[k] = bestD <= max && !tie ? best : '';
+    }
+    return idx._fz[k] ? pickByRegion(idx.stName[idx._fz[k]], idx, wil) : '';
   }
   function lev(a, b, cap) {
     var prev = [], cur, i, j;
@@ -280,33 +295,33 @@ var Domain = (function () {
     return m ? m[1].replace(/^[-*\s]+/, '').trim() : '';
   }
   /** Lokasi dari uraian: "petak jalan Malang (Ml) - Malangkota lama (Mlk)" atau "Sta Kesamben (Ksb)". Hanya hasil yang cocok master. */
-  function locationFromText(s, idx) {
+  function locationFromText(s, idx, wil) {
     var t = txt(s).replace(/\*/g, ' ');
     var NAME = '([A-Za-z][A-Za-z ]{1,28})\\s*(?:\\(([A-Za-z]{1,5})\\))?';
     // Nama bebas bisa diikuti kata lain ("Malangkota lama tertemper") → coba awalan kata terpanjang dulu.
     function st(name, code) {
-      var c = code ? stationCode(code, idx) : ''; if (c) return c;
+      var c = code ? stationCode(code, idx, wil) : ''; if (c) return c;
       var w = txt(name).split(/\s+/).slice(0, 4);
-      for (var n = w.length; n >= 1; n--) { c = stationCode(w.slice(0, n).join(' '), idx); if (c) return c; }
+      for (var n = w.length; n >= 1; n--) { c = stationCode(w.slice(0, n).join(' '), idx, wil); if (c) return c; }
       return '';
     }
     var pm = new RegExp('petak(?:\\s+jalan)?\\s+(?:sta\\.?\\s*)?' + NAME + '\\s*[-–]\\s*(?:sta\\.?\\s*)?' + NAME, 'i').exec(t);
     if (pm) {
       var a = st(pm[1], pm[2]), b = st(pm[3], pm[4]);
-      if (a && b && a !== b) { var l = location(a + '-' + b, '', idx); if (l.matched || l.type) return l; }
+      if (a && b && a !== b) { var l = location(a + '-' + b, '', idx, wil); if (l.matched || l.type) return l; }
     }
     var sm = new RegExp('\\b(?:sta(?:siun)?\\.?|emplasemen(?:\\s+sta\\.?)?)\\s+' + NAME + '(?=[\\s,.;)]|$)', 'i').exec(t);
-    if (sm) { var c = st(sm[1], sm[2]); if (c) return location('', c, idx); }
+    if (sm) { var c = st(sm[1], sm[2]); if (c) return location('', c, idx, wil); }
     return null;
   }
 
   /** Lokasi: petak (A–B) bila ada, selain itu stasiun. */
-  function location(petak, stasiun, idx) {
+  function location(petak, stasiun, idx, wil) {
     var p = txt(petak);
     if (p && p !== '-') {
       var parts = p.split(/\s*[-–—]\s*/).filter(Boolean);
       if (parts.length === 2) {
-        var a = stationCode(parts[0], idx), b = stationCode(parts[1], idx);
+        var a = stationCode(parts[0], idx, wil), b = stationCode(parts[1], idx, wil);
         if (a && b) {
           var seg = idx.seg[[a, b].sort().join('-')] || null;
           return { type: 'petak', code: a + '-' + b, label: idx.st[a].name + ' – ' + idx.st[b].name,
@@ -317,7 +332,7 @@ var Domain = (function () {
     }
     var s = txt(stasiun);
     if (s && s !== '-') {
-      var c = stationCode(s, idx);
+      var c = stationCode(s, idx, wil);
       if (c) return { type: 'stasiun', code: c, label: 'Sta. ' + String(idx.st[c].name).replace(/^(stasiun|sta\.?)\s+/i, ''), lintas: '', matched: true };
       // Isian bebas yang bukan nama stasiun (mis. "& Alat Pengamanan ...") tidak dijadikan lokasi.
       if (/^[A-Za-z][A-Za-z .'-]{1,23}$/.test(s)) return { type: 'stasiun', code: s.toUpperCase(), label: 'Sta. ' + title(s), lintas: '', matched: false };

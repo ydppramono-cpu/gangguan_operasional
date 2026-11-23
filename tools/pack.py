@@ -40,8 +40,8 @@ Di editor Apps Script web app:
      SeedJadwal.gs      data jadwal GAPEKA 2025
      AsetLaporan.gs     aset laporan
      SeedPeta.gs        data peta
-     SeedGapeka26.gs    data grafik perjalanan GAPEKA 2026
-     SeedGapeka25.gs    data grafik perjalanan GAPEKA 2025
+     SeedGapeka26.gs    data jadwal GAPEKA 2026 (switch GAPEKA)
+     SeedGapeka25.gs    data jadwal GAPEKA 2025 (switch GAPEKA)
      SeedOperasi.gs     program operasi KA 2026 (Jalan/Batal, km, rute, pola operasi)
      Index.html         seluruh tampilan (satu berkas utuh, tanpa include)
    appsscript.json : Project Settings > centang "Show appsscript.json", lalu samakan isinya.

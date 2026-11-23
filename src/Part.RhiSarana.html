@@ -15,9 +15,9 @@
               <div class="kpi"><span x-text="'Gangguan lokomotif ' + R.label + ' (bernomor RHI)'"></span><b x-text="S.E.length + ' kejadian'"></b><em x-text="'saat MONITOR ' + S.atSt.MONITOR + ' · DECLINING ' + S.atSt.DECLINING + ' · tanpa nomor ' + S.miss.length"></em></div>
             </div>
             <div class="grid g-2 mt">
-              <div class="card"><div class="card-h"><div><h3>Status RHI saat gangguan vs armada</h3><p x-text="'Porsi hari-unit armada ' + KAI.fmt.mon(S.rhiYm) + ' vs status pada tanggal gangguan (%)'"></p></div></div>
+              <div class="card"><div class="card-h"><div><h3>Status RHI saat gangguan vs armada</h3><p x-text="'Porsi status: seluruh hari-unit armada ' + KAI.fmt.mon(S.rhiYm) + ' dibanding status unit pada tanggal gangguan. Ruas merah lebih lebar di baris bawah = gangguan menumpuk pada unit kurang sehat.'"></p></div></div>
                 <div class="card-b fill"><div class="chart tall" x-chart="atSar()"></div></div></div>
-              <div class="card"><div class="card-h"><div><h3>Kondisi lokomotif per tipe</h3><p x-text="'Unit per status (' + day + ') · garis = gangguan ' + w6 + ' per 100 unit (sumbu kanan)'"></p></div></div>
+              <div class="card"><div class="card-h"><div><h3>Kondisi lokomotif per tipe</h3><p x-text="'Gelembung = tipe · kanan = RHI lebih baik · atas = lebih sering terganggu (' + w6 + ') · besar = jumlah unit · warna = porsi Monitor+Declining (' + day + ')'"></p></div></div>
                 <div class="card-b fill"><div class="chart tall" x-chart="tipeSar()"></div></div></div>
             </div>
             <div class="card mt">

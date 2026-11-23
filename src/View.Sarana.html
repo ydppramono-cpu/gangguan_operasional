@@ -44,7 +44,7 @@
 
           <div class="mt">
             <div class="card">
-              <div class="card-h"><div><h3>Gangguan & durasi per bulan</h3><p x-text="'Batang = kejadian ' + kind.toLowerCase() + ' (sumbu kiri) · garis = menit per kejadian (sumbu kanan)'"></p></div></div>
+              <div class="card-h"><div><h3>Gangguan & durasi per bulan</h3><p x-text="'Area = kejadian ' + kind.toLowerCase() + ' per bulan (sumbu kiri, penanda = bulan tertinggi) · garis putus = menit per kejadian (sumbu kanan)'"></p></div></div>
               <div class="card-b fill"><div class="chart short" x-chart="comboMonthly()"></div></div>
             </div>
           </div>
@@ -71,12 +71,8 @@
               </table><div class="empty" x-show="!Pk.kinds.length">Tidak ada jenis gangguan dengan ≥2 kejadian.</div></div>
             </div>
             <div class="card">
-              <div class="card-h"><div><h3>Kelompok komponen</h3><p x-text="'Menit ' + kind.toLowerCase() + ' · ' + R.P.short + ' · kata kunci ' + R.cfg.componentRule"></p></div></div>
-              <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Komponen</th><th class="num">Menit</th><th class="num">% jenis ini</th><th class="num">Semua sarana</th></tr></thead>
-                <tbody><template x-for="c in comp" :key="c.id"><tr><td x-text="c.label"></td>
-                  <td class="num bar-cell"><div class="b" :style="'width:' + (compTot ? c.v / compTot * 100 : 0) + '%;background:#FDE3D3'"></div><span x-text="KAI.fmt.n(c.v)"></span></td>
-                  <td class="num" x-text="KAI.fmt.d1(compTot ? c.v / compTot * 100 : 0)"></td><td class="num" x-text="KAI.fmt.n(c.menit)"></td></tr></template></tbody>
-              </table><div class="empty" x-show="!comp.length">Belum ada menit gangguan berkomponen pada periode ini.</div></div>
+              <div class="card-h"><div><h3>Kelompok komponen</h3><p x-text="'Luas kotak = menit ' + kind.toLowerCase() + ' · ' + R.P.short + ' · kata kunci ' + R.cfg.componentRule + ' · data per komponen lewat menu unduh grafik'"></p></div></div>
+              <div class="card-b fill"><div class="chart" x-show="comp.length" x-chart="compTree()"></div><div class="empty" x-show="!comp.length">Belum ada menit gangguan berkomponen pada periode ini.</div></div>
             </div>
           </div>
         </div>
@@ -190,6 +186,14 @@ document.addEventListener('alpine:init', function () {
       },
       get repeat() { var S = this.S, k = this.kind; return this.R.repeatUnits.filter(function (u) { return (S.U[u.unit] || {}).kind === k || (!S.U[u.unit] && u.events.some(function (e) { return S.kindOfEvent(e) === k; })); }).slice(0, 15); },
       get comp() { var k = this.kind; return this.R.comp.rows.map(function (c) { return { id: c.id, label: c.label, menit: c.menit, v: (c.byKind || {})[k] || 0 }; }).filter(function (c) { return c.v > 0; }).sort(function (a, b) { return b.v - a.v; }); },
+      /** Treemap komponen: proporsi menit langsung terlihat (menggantikan tabel batang). */
+      compTree: function () {
+        var C = this.comp.filter(function (c) { return c.v > 0; }), T = KAIA.sum(C, function (c) { return c.v; }) || 1, pal = ['#252271', '#275BC0', '#0F766E', '#E0861A', '#B45309', '#7C3AED', '#64748B', '#C0392B'];
+        return { textStyle: { fontFamily: 'Inter, Arial' }, tooltip: { formatter: function (p) { return '<b>' + p.name + '</b><br>' + KAI.fmt.n(p.value) + ' menit · ' + KAI.fmt.d1(p.value / T * 100) + '%'; } },
+          series: [{ type: 'treemap', roam: false, nodeClick: false, breadcrumb: { show: false }, left: 0, right: 0, top: 0, bottom: 0, itemStyle: { borderColor: '#fff', borderWidth: 2, gapWidth: 2 },
+            label: { show: true, formatter: function (p) { return p.name + '\n' + KAI.fmt.n(p.value) + ' mnt · ' + KAI.fmt.d1(p.value / T * 100) + '%'; }, fontSize: 12, lineHeight: 16, color: '#fff' },
+            data: C.map(function (c, i) { return { name: c.label, value: c.v, itemStyle: { color: pal[i % pal.length] } }; }) }] };
+      },
       get compTot() { return KAIA.sum(this.comp, function (c) { return c.v; }); },
       get BY() { var self = this; return this.S.byKind[this.kind].by.filter(function (u) { return self.inReg(u); }); },
       get bookRows() { var D = KAI.data.ref.duksar, k = this.kind; if (!D || !D.tot) return []; return Object.keys(D.tot).filter(function (b) { return D.tot[b][k]; }).map(function (b) { return [b, D.tot[b][k]]; }); },
@@ -208,23 +212,27 @@ document.addEventListener('alpine:init', function () {
         var n = yms.map(function (y) { return rec.filter(function (r) { return r.ym === y; }).length; }), m = yms.map(function (y, i) { var l = rec.filter(function (r) { return r.ym === y; }); return l.length ? Math.round(KAIA.sum(l, function (r) { return r.menit; }) / l.length * 10) / 10 : null; });
         return Object.assign(this.base(), { xAxis: { type: 'category', data: yms.map(function (y) { return KAI.fmt.mon(y); }), name: 'Bulan', nameLocation: 'middle', nameGap: 26 },
           yAxis: [{ type: 'value', name: 'Kejadian', nameLocation: 'middle', nameGap: 34, minInterval: 1 }, { type: 'value', name: 'Menit per kejadian', nameLocation: 'middle', nameGap: 36, splitLine: { show: false } }],
-          series: [{ name: 'Kejadian ' + k.toLowerCase(), type: 'bar', data: n, itemStyle: { color: '#275BC0' } }, { name: 'Menit per kejadian', type: 'line', yAxisIndex: 1, data: m, itemStyle: { color: '#E0861A' }, connectNulls: true }] });
+          // Area bergradasi (volume kejadian) + garis putus (keparahan rata-rata): dua ukuran entitas yang sama, dibaca bersama.
+          series: [{ name: 'Kejadian ' + k.toLowerCase(), type: 'line', smooth: 0.35, symbol: 'circle', symbolSize: 6, data: n, lineStyle: { width: 2.4, color: '#275BC0' }, itemStyle: { color: '#275BC0' },
+              areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(39,91,192,.32)' }, { offset: 1, color: 'rgba(39,91,192,.02)' }] } },
+              markPoint: { symbolSize: 34, label: { fontSize: 10, color: '#fff' }, itemStyle: { color: '#17223B' }, data: [{ type: 'max', name: 'Tertinggi' }] } },
+            { name: 'Menit per kejadian', type: 'line', yAxisIndex: 1, smooth: 0.35, data: m, symbol: 'none', lineStyle: { width: 2, type: 'dashed', color: '#E0861A' }, itemStyle: { color: '#E0861A' }, connectNulls: true }] });
       },
       comboScore: function () {
         var L = this.units, B = [['< 60', 0, 60], ['60–70', 60, 70], ['70–80', 70, 80], ['80–90', 80, 90], ['≥ 90', 90, 101]];
         var cnt = B.map(function (b) { return L.filter(function (u) { return u.health >= b[1] && u.health < b[2]; }); });
         return Object.assign(this.base(), { xAxis: { type: 'category', data: B.map(function (b) { return b[0]; }), name: 'Skor kesehatan turunan', nameLocation: 'middle', nameGap: 26 },
           yAxis: [{ type: 'value', name: 'Unit', nameLocation: 'middle', nameGap: 40 }, { type: 'value', name: 'Gangguan per 100 unit', nameLocation: 'middle', nameGap: 36, splitLine: { show: false } }],
-          series: [{ name: 'Unit', type: 'bar', data: cnt.map(function (l) { return l.length; }), itemStyle: { color: '#9AA3B2' }, label: { show: true, position: 'top' } },
-            { name: 'Gangguan 12 bln per 100 unit', type: 'line', yAxisIndex: 1, data: cnt.map(function (l) { return l.length >= 30 ? Math.round(KAIA.sum(l, function (u) { return u.n12; }) / l.length * 1000) / 10 : null; }), itemStyle: { color: '#C0392B' }, connectNulls: false }] });
+          series: [{ name: 'Unit', type: 'bar', data: cnt.map(function (l) { return l.length; }), itemStyle: { borderRadius: [8, 8, 0, 0], color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#64748B' }, { offset: 1, color: '#CBD5E1' }] } }, barMaxWidth: 46, label: { show: true, position: 'top' } },
+            { name: 'Gangguan 12 bln per 100 unit', type: 'line', yAxisIndex: 1, data: cnt.map(function (l) { return l.length >= 30 ? Math.round(KAIA.sum(l, function (u) { return u.n12; }) / l.length * 1000) / 10 : null; }), smooth: 0.3, symbolSize: 9, lineStyle: { width: 2.4 }, itemStyle: { color: '#C0392B', borderColor: '#fff', borderWidth: 2 }, connectNulls: false }] });
       },
       comboAge: function () {
         var L = this.units, B = [['< 10', 0, 10], ['10–19', 10, 20], ['20–29', 20, 30], ['30–39', 30, 40], ['≥ 40', 40, 999]];
         var cnt = B.map(function (b) { return L.filter(function (u) { return u.age != null && u.age >= b[1] && u.age < b[2]; }); });
         return Object.assign(this.base(), { xAxis: { type: 'category', data: B.map(function (b) { return b[0]; }), name: 'Usia (tahun)', nameLocation: 'middle', nameGap: 26 },
           yAxis: [{ type: 'value', name: 'Unit', nameLocation: 'middle', nameGap: 40 }, { type: 'value', name: 'Gangguan per 100 unit', nameLocation: 'middle', nameGap: 36, splitLine: { show: false } }],
-          series: [{ name: 'Unit', type: 'bar', data: cnt.map(function (l) { return l.length; }), itemStyle: { color: '#275BC0' } },
-            { name: 'Gangguan 12 bln per 100 unit', type: 'line', yAxisIndex: 1, data: cnt.map(function (l) { return l.length >= 30 ? Math.round(KAIA.sum(l, function (u) { return u.n12; }) / l.length * 1000) / 10 : null; }), itemStyle: { color: '#E0861A' }, connectNulls: false }] });
+          series: [{ name: 'Unit', type: 'bar', data: cnt.map(function (l) { return l.length; }), barMaxWidth: 46, label: { show: true, position: 'top' }, itemStyle: { borderRadius: [8, 8, 0, 0], color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#275BC0' }, { offset: 1, color: '#A9C1EE' }] } } },
+            { name: 'Gangguan 12 bln per 100 unit', type: 'line', yAxisIndex: 1, data: cnt.map(function (l) { return l.length >= 30 ? Math.round(KAIA.sum(l, function (u) { return u.n12; }) / l.length * 1000) / 10 : null; }), smooth: 0.3, symbolSize: 9, lineStyle: { width: 2.4 }, itemStyle: { color: '#E0861A', borderColor: '#fff', borderWidth: 2 }, connectNulls: false }] });
       },
       /** Kekuatan depo: batang horizontal satu sumbu (tanpa sumbu ganda); laju gangguan ditulis pada label, warna = rentang indeks (berlegenda). */
       comboDepo: function () {
@@ -232,11 +240,13 @@ document.addEventListener('alpine:init', function () {
         return Object.assign(this.base(), { legend: { show: false }, grid: { left: 8, right: 150, top: 8, bottom: 44, containLabel: true },
           yAxis: { type: 'category', inverse: true, data: D.map(function (d) { return d.code; }), axisTick: { show: false } },
           xAxis: { type: 'value', min: 0, max: 100 },
-          visualMap: { type: 'piecewise', show: true, orient: 'horizontal', left: 'center', bottom: 0, dimension: 0, itemWidth: 12, itemHeight: 12, textStyle: { fontSize: 11 },
+          visualMap: { type: 'piecewise', show: true, orient: 'horizontal', left: 'center', bottom: 0, dimension: 0, itemWidth: 12, itemHeight: 12, textStyle: { fontSize: 11 }, seriesIndex: [0, 1],
             pieces: [{ gte: 80, label: '≥ 80', color: '#1F8A2E' }, { gte: 65, lt: 80, label: '65–79', color: '#275BC0' }, { gte: 50, lt: 65, label: '50–64', color: '#E0861A' }, { lt: 50, label: '< 50', color: '#C0392B' }] },
           tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: function (ps) { var d = D[ps[0].dataIndex]; return '<b>' + d.label + '</b> · ' + (d.region || '') + '<br>Kekuatan ' + d.strength + ' (peringkat ' + d.rank + ')<br>' + KAI.fmt.n(d.n) + ' unit · kesehatan ' + KAI.fmt.d1(d.health) + '<br>Gangguan 12 bln ' + d.n12 + ' (' + KAI.fmt.d1(d.rate) + '/100 unit)'; } },
-          series: [{ name: 'Indeks kekuatan', type: 'bar', barMaxWidth: 18, data: D.map(function (d) { return d.strength; }),
-            label: { show: true, position: 'right', color: '#3A4458', fontSize: 11, formatter: function (p) { var d = D[p.dataIndex]; return d.strength + '  ·  ' + KAI.fmt.d1(d.rate) + ' gangguan/100 unit'; } } }] });
+          // Lollipop: batang tipis + titik bernilai (lebih ringan dibaca daripada batang tebal); laju gangguan di label.
+          series: [{ name: 'Indeks kekuatan', type: 'bar', barWidth: 3, data: D.map(function (d) { return d.strength; }), silent: true, itemStyle: { opacity: 0.55 } },
+            { name: 'Indeks kekuatan', type: 'scatter', symbolSize: 15, data: D.map(function (d) { return d.strength; }), z: 3, itemStyle: { borderColor: '#fff', borderWidth: 2 },
+              label: { show: true, position: 'right', distance: 10, color: '#3A4458', fontSize: 11, formatter: function (p) { var d = D[p.dataIndex]; return d.strength + '  ·  ' + KAI.fmt.d1(d.rate) + ' gangguan/100 unit'; } } }] });
       },
       get depoTable() {
         var k = this.kind, lok = k === 'Lokomotif', D = this.deps.map(function (d) {
@@ -353,18 +363,34 @@ document.addEventListener('alpine:init', function () {
           series: ['P1', 'P2', 'P3', 'P4', ''].map(function (k, i) { return { name: k || 'Lainnya', type: 'scatter', data: U.filter(function (u) { return u.pri === k; }).map(function (u) { return { value: [u.hi, u.g6.n], u: u }; }), symbolSize: 9, itemStyle: { color: PC[k], opacity: 0.85 },
             markLine: i ? undefined : { silent: true, symbol: 'none', lineStyle: { type: 'dashed', color: '#3F4D63' }, label: { formatter: '{b}' }, data: [{ xAxis: P.medHi, name: 'median ' + KAI.fmt.d1(P.medHi) }, { yAxis: 1.5, name: '≥2 = berulang' }] } }; }) };
       },
+      /** Status RHI: dua baris 100% bertumpuk (armada vs saat gangguan) — perbandingan porsi langsung terbaca, label di dalam ruas. */
       atSar: function () {
-        var S = this.S, n = S.E.length, ks = ['HEALTHY', 'MONITOR', 'DECLINING'];
-        return Object.assign(this.base(), { xAxis: { type: 'category', data: ks.map(KAI.fmt.st), name: 'Status healthy index', nameLocation: 'middle', nameGap: 26 }, yAxis: { type: 'value', name: 'Porsi (%)', nameLocation: 'middle', nameGap: 36 },
-          series: [{ name: 'Armada (hari-unit)', type: 'bar', data: ks.map(function (k) { return S.totHari ? Math.round(S.hari[k] / S.totHari * 1000) / 10 : 0; }), itemStyle: { color: '#9AA3B2' }, label: { show: true, position: 'top' } },
-            { name: 'Saat gangguan (' + n + ' kejadian)', type: 'bar', data: ks.map(function (k) { return n ? Math.round(S.atSt[k] / n * 1000) / 10 : 0; }), itemStyle: { color: '#17223B' }, label: { show: true, position: 'top' } }] });
+        var S = this.S, n = S.E.length, ks = ['HEALTHY', 'MONITOR', 'DECLINING'], rows = ['Armada (hari-unit)', 'Saat gangguan (' + n + ' kejadian)'];
+        var v = function (k) { return [S.totHari ? Math.round(S.hari[k] / S.totHari * 1000) / 10 : 0, n ? Math.round(S.atSt[k] / n * 1000) / 10 : 0]; };
+        return Object.assign(this.base(), { tooltip: { trigger: 'item', formatter: function (p) { return '<b>' + p.name + '</b><br>' + p.seriesName + ': ' + KAI.fmt.d1(p.value) + '%'; } },
+          grid: { left: 14, right: 24, top: 16, bottom: 44, containLabel: true },
+          yAxis: { type: 'category', data: rows, inverse: true, axisTick: { show: false }, axisLine: { show: false } }, xAxis: { type: 'value', max: 100, axisLabel: { formatter: '{value}%' } },
+          series: ks.map(function (k) { return { name: KAI.fmt.st(k), type: 'bar', stack: 'p', barWidth: 34, data: v(k), itemStyle: { color: '#' + SC[k], borderColor: '#fff', borderWidth: 1 },
+            label: { show: true, color: '#fff', fontWeight: 600, fontSize: 11, formatter: function (p) { return p.value >= 6 ? KAI.fmt.d1(p.value) + '%' : ''; } } }; }) });
       },
+      /**
+       * Kondisi per tipe: gelembung — x = RHI rata-rata, y = gangguan per 100 unit, ukuran = jumlah unit, warna = porsi Declining+Monitor.
+       * Garis median membagi empat kuadran; kanan-bawah = sehat & jarang terganggu, kiri-atas = prioritas.
+       */
       tipeSar: function () {
-        var T = this.S.tipe;
-        return Object.assign(this.base(), { xAxis: { type: 'category', data: T.map(function (t) { return t.tipe; }), name: 'Tipe lokomotif', nameLocation: 'middle', nameGap: 26 },
-          yAxis: [{ type: 'value', name: 'Jumlah lokomotif (unit)', nameLocation: 'middle', nameGap: 40 }, { type: 'value', name: 'Gangguan per 100 unit', nameLocation: 'middle', nameGap: 36, splitLine: { show: false } }],
-          series: ['HEALTHY', 'MONITOR', 'DECLINING'].map(function (k) { return { name: KAI.fmt.st(k), type: 'bar', stack: 's', data: T.map(function (t) { return t[k[0]]; }), itemStyle: { color: '#' + SC[k] } }; })
-            .concat([{ name: 'Gangguan ' + this.w6 + ' per 100 unit', type: 'line', yAxisIndex: 1, data: T.map(function (t) { return t.rate6; }), itemStyle: { color: '#17223B' } }]) });
+        var T = this.S.tipe.filter(function (t) { return t.hiMean != null && t.units; }), w6 = this.w6;
+        var med = function (a) { a = a.slice().sort(function (x, y) { return x - y; }); var m = a.length >> 1; return a.length ? (a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2) : 0; };
+        var mx = med(T.map(function (t) { return t.hiMean; })), my = med(T.map(function (t) { return t.rate6; })), maxU = Math.max.apply(null, T.map(function (t) { return t.units; }).concat([1]));
+        return Object.assign(this.base(), { legend: { show: false }, grid: { left: 14, right: 30, top: 36, bottom: 40, containLabel: true },
+          tooltip: { trigger: 'item', formatter: function (p) { var t = T[p.dataIndex]; return '<b>' + t.tipe + '</b> · ' + t.units + ' unit<br>RHI rata-rata ' + KAI.fmt.d1(t.hiMean) + '<br>Gangguan ' + w6 + ': ' + t.g6 + ' (' + KAI.fmt.d1(t.rate6) + ' per 100 unit)<br>Healthy ' + t.H + ' · Monitor ' + t.M + ' · Declining ' + t.D; } },
+          xAxis: { type: 'value', name: 'RHI rata-rata', nameLocation: 'middle', nameGap: 26, scale: true }, yAxis: { type: 'value', name: 'Gangguan per 100 unit', nameLocation: 'end', nameGap: 10, nameTextStyle: { align: 'left' } },
+          visualMap: { show: false, dimension: 2, min: 0, max: 100, inRange: { color: ['#1F8A2E', '#E0861A', '#C0392B'] } },
+          series: [{ type: 'scatter', data: T.map(function (t) { return [t.hiMean, t.rate6, Math.round((t.M + t.D) / t.units * 100), t.units]; }),
+            symbolSize: function (v) { return 14 + Math.sqrt(v[3] / maxU) * 46; }, itemStyle: { opacity: 0.82, borderColor: '#fff', borderWidth: 1.5 },
+            label: { show: true, formatter: function (p) { return T[p.dataIndex].tipe; }, position: 'top', color: '#17223B', fontSize: 11, fontWeight: 600 },
+            labelLayout: { hideOverlap: true },
+            markLine: { silent: true, symbol: 'none', lineStyle: { type: 'dashed', color: '#94A3B8' }, label: { fontSize: 10, color: '#64748B', position: 'insideEndTop' },
+              data: [{ xAxis: mx, label: { formatter: 'median RHI' } }, { yAxis: my, label: { formatter: 'median laju' } }] } }] });
       }
     };
   });

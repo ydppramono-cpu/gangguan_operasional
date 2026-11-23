@@ -80,9 +80,9 @@
       </div>
       <!-- Switch GAPEKA global: mengganti sumber jadwal untuk semua menu (keputusan 19 Nov 2026). -->
       <div class="seg gapeka-sw" role="group" aria-label="Sumber jadwal GAPEKA" :aria-busy="String($store.app.gapekaBusy)">
-        <template x-for="v in KAIM.VERSI.slice().reverse()" :key="v.id">
+        <template x-for="v in KAIG.VERSI.slice().reverse()" :key="v.id">
           <button type="button" :aria-pressed="String($store.app.gapeka === v.id)" :disabled="$store.app.gapekaBusy" @click="$store.app.setGapeka(v.id)"
-            :title="v.label + ' · berlaku ' + v.berlaku.split('-').reverse().join('-') + (v.id === KAIM.versiBerlaku(KAI.gapeka.today()) ? ' (berlaku hari ini)' : '')">
+            :title="v.label + ' · berlaku ' + v.berlaku.split('-').reverse().join('-') + (v.id === KAIG.versiBerlaku(KAI.gapeka.today()) ? ' (berlaku hari ini)' : '')">
             <span class="hide-md">GAPEKA </span><span x-text="v.id"></span>
           </button>
         </template>
@@ -217,8 +217,6 @@
         <?!= include('Part.RuteData'); ?>
 
         <?!= include('View.Eksposur'); ?>
-
-        <?!= include('View.Gapeka'); ?>
 
         <?!= include('View.Telusuri'); ?>
 

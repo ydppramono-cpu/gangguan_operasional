@@ -412,7 +412,7 @@ KSY,Kebonsayur,Divre 1,tidak aktif,I.9,Kisaran,transkripsi PETA_WILAYAH,,,,,0,0
 KT,Klaten,Daop 6,aktif,6.6,Klaten,resmi data_station,-7.712207815,110.6030185,resmi data_station,,1,1
 KTA,Kutoarjo,Daop 5,aktif,5.14,Kutoarjo,resmi data_station,-7.72596485,109.9071906,resmi data_station,,1,1
 KTB,Kotabaru,Divre 4,tidak aktif,IV.17,Pagergunung,transkripsi PETA_WILAYAH,,,,,0,0
-KTG,Ketapang,Daop 9,aktif,9.8,Rogojampi,transkripsi PETA_WILAYAH,-4.71749,104.79851,peta (ekadanis/stasiun_map_app),,1,1
+KTG,Ketapang,Daop 9,aktif,9.8,Rogojampi,transkripsi PETA_WILAYAH,-8.1455,114.3974,koreksi: ujung timur geometri OSM 'Jalur Kereta Api Kalisat–Ketapang' (db/csv/peta_jalur_osm.csv),,1,1
 KTJ,Kuala Tanjung,Divre 1,aktif,I.16,Tanjunggading,transkripsi PETA_WILAYAH,,,,,1,1
 KTK,Kotok,Daop 9,aktif,9.5,Jember,transkripsi PETA_WILAYAH,-8.1261,113.779,peta (ekadanis/stasiun_map_app),,1,1
 KTL,Kertomenanggal,Daop 8,aktif,,,,-7.34058,112.7294,peta (ekadanis/stasiun_map_app),,1,1

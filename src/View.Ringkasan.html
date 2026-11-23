@@ -54,7 +54,7 @@
     </div>
 
     <!-- Kartu per kelas dihapus (v3.17): angkanya sama dengan baris "Menit …" pada tabel di atas; baris itu kini dapat diklik. -->
-    <p class="note mt-s" x-show="R.cls.belum && R.cls.belum.n" x-text="'Data belum lengkap (kelas belum diisi): ' + KAI.fmt.n(R.cls.belum ? R.cls.belum.n : 0) + ' kejadian · ' + KAI.fmt.n(R.cls.belum ? R.cls.belum.menit : 0) + ' menit — termasuk dalam total, tidak masuk 4 kartu kelas di atas.'"></p>
+    <p class="note mt-s" x-show="R.cls.belum && R.cls.belum.n" x-text="'Data belum lengkap (kelas belum diisi): ' + KAI.fmt.n(R.cls.belum ? R.cls.belum.n : 0) + ' kejadian · ' + KAI.fmt.n(R.cls.belum ? R.cls.belum.menit : 0) + ' menit — termasuk dalam total, tidak masuk baris “Menit …” per kelas.'"></p>
 
     <div class="card mt" x-data="{ get IB() { return $store.app.R && $store.app.R.insight; } }">
       <div class="card-b"><?!= include('Part.Insight'); ?>

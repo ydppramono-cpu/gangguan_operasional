@@ -79,8 +79,8 @@ function transformRows_(values, idx, nowYm, kor) {
       cands.forEach(function (c) { if (sar.indexOf(c) < 0) sar.push(c); });
     }
 
-    var loc = D.location(g(row, 'petak'), g(row, 'stasiun'), idx);
-    if (!loc.type || loc.type === 'lain') { var lt = D.locationFromText(judul, idx) || D.locationFromText(ketTxt, idx); if (lt) { loc = lt; drv.push('lokasi'); } }
+    var loc = D.location(g(row, 'petak'), g(row, 'stasiun'), idx, g(row, 'wilayah'));
+    if (!loc.type || loc.type === 'lain') { var lt = D.locationFromText(judul, idx, g(row, 'wilayah')) || D.locationFromText(ketTxt, idx, g(row, 'wilayah')); if (lt) { loc = lt; drv.push('lokasi'); } }
     if (loc.type) { stats.lokAny++; if (loc.matched) stats.lokMatched++; else { q.push('Lokasi tidak dikenal'); flag('Lokasi tidak dikenal'); } }
 
     // Pulau kejadian dari wilayah sumber (Daop = Jawa, Divre = Sumatera); dipakai menolak tautan KA/sarana pulau lain.
