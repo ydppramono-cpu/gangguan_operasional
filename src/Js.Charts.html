@@ -23,7 +23,7 @@ window.KAIChart = (function () {
   var REDUCE = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function k(v) { return v >= 1000 ? KAI.fmt.d1(v / 1000) + 'k' : KAI.fmt.n(v); }
-  var CLASS_LABEL = { operasional: 'Operasional, pelayanan & keamanan', sarana: 'Sarana', alam: 'Alam', prasarana: 'Prasarana', belum: 'Data belum lengkap' };
+  var CLASS_LABEL = { operasional: 'Operasional, pelayanan & keamanan', sarana: 'Sarana', alam: 'Alam', prasarana: 'Prasarana', belum: 'Belum terkelas' };
 
   /** Grafik garis per kelas. metric: 'n' | 'menit'. Pencilan diberi anotasi, tidak dibuang. */
   function trend(model, metric) {
@@ -236,12 +236,23 @@ window.KAIChart = (function () {
     return o;
   }
   /** Standar untuk SEMUA grafik: angka Indonesia (koma desimal, titik ribuan) pada label data & tooltip; legenda tidak menimpa bilah alat. */
-  function standard(o) {
+  /** Legenda tanpa panah gulir: perkiraan lebar butir (teks 6,4 px/huruf + ikon 34 px); muat → satu baris; tidak muat → dibungkus. */
+  function fitLegend(o, w) {
+    var L = o.legend; if (L.type === 'scroll' && L._keep) return;
+    var names = L.data ? L.data.map(function (d) { return typeof d === 'object' ? d.name : d; }) : (o.series || []).map(function (sr) { return sr.name; }).filter(Boolean);
+    if (!names.length) return;
+    var est = names.reduce(function (n, t) { return n + String(t).length * 6.4 + 34; }, 0), rows = Math.max(1, Math.ceil(est / Math.max(200, w - 16)));
+    L.type = 'plain'; L.left = L.left == null ? 0 : L.left; L.right = 0; L.itemGap = 12;
+    var g = o.grid && !Array.isArray(o.grid) ? o.grid : null;
+    if (L.bottom != null) { if (g && rows > 1) g.bottom = (g.bottom || 0) + (rows - 1) * 20; }
+    else if (g) g.top = Math.max(g.top || 0, 14 + rows * 20 + (g.top && g.top > 34 ? g.top - 34 : 0));
+  }
+  function standard(o, w) {
     // Standar angka Indonesia (koma desimal, titik ribuan) untuk label data & tooltip yang belum diberi format.
     var idn = function (v) { v = Array.isArray(v) ? v[v.length - 1] : v && typeof v === 'object' ? v.value : v; if (v == null || v === '' || isNaN(v)) return v == null ? '–' : v; return Math.abs(v % 1) > 0 ? KAI.fmt.d1(v) : KAI.fmt.n(v); };
     (o.series || []).forEach(function (sr) { if (sr.label && sr.label.show && !sr.label.formatter) sr.label.formatter = function (p) { return idn(p.value); }; });
     if (o.tooltip && !o.tooltip.formatter && !o.tooltip.valueFormatter) o.tooltip.valueFormatter = idn;
-    if (o.legend && !Array.isArray(o.legend)) { o.legend.type = o.legend.type || 'scroll'; }   // bilah alat kini di luar kanvas → legenda boleh memakai lebar penuh
+    if (o.legend && !Array.isArray(o.legend)) fitLegend(o, w || 520);   // v3.19: tanpa panah gulir legenda — membungkus, pindah ke bawah bila panjang
     // Sumbu nilai: angka Indonesia; ruang untuk nama sumbu vertikal (containLabel tidak menghitung nama sumbu).
     var A = axes(o), g = o.grid && !Array.isArray(o.grid) ? o.grid : null;
     A.x.concat(A.y).forEach(function (ax) { if (ax && ax.type === 'value') { ax.axisLabel = ax.axisLabel || {}; if (!ax.axisLabel.formatter) ax.axisLabel.formatter = function (v) { return Number(v).toLocaleString('id-ID', { maximumFractionDigits: 2 }); };
@@ -321,7 +332,7 @@ window.KAIChart = (function () {
     document.body.appendChild(div);
     var inst = echarts.init(div, 'kai', { renderer: 'canvas' });
     var o = Object.assign({}, option, { animation: false, dataZoom: [] });
-    standard(o);
+    standard(o, w);
     if (o.series) o.series = o.series.map(function (s) { return Object.assign({}, s, { animation: false }); });
     inst.setOption(o);
     var url = inst.getDataURL({ type: type || 'png', pixelRatio: 2, backgroundColor: '#fff' });
@@ -455,7 +466,7 @@ window.KAIChart = (function () {
         get(function (opt) {
           if (!opt || !window.echarts) { bar.style.visibility = 'hidden'; return; }
           bar.style.visibility = '';
-          theme(); standard(opt); withZoom(opt); cur = opt;
+          theme(); standard(opt, el.clientWidth); withZoom(opt); cur = opt;
           var zoomable = !!opt.dataZoom && opt.dataZoom.length;
           [].forEach.call(bar.querySelectorAll('[data-a="reset"]'), function (b) { b.style.display = zoomable ? '' : 'none'; });
           if (!inst) {

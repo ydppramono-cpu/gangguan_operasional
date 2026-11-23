@@ -245,9 +245,11 @@
   }
 
   /** Prasarana: THI per UPT JR & wilayah (bulan THI ≤ ym), gangguan kelas prasarana dan WKP jalan rel, bulan laporan & jendela data THI (mis. Mei–Okt). */
-  function pras(recs, K, ym, regions) {
+  function pras(recs, K, ym, regions, opts) {
     var X = prep(K); if (!X || !X.thiYms.length) return null;
     var tym = X.thiYms.filter(function (y) { return y <= ym; }).pop() || X.thiYms[X.thiYms.length - 1], first = X.thiYms[0];
+    // opts.months: jendela N bulan THI terakhir ≤ bulan laporan (dashboard: 3). Tanpa opts = seluruh data THI (laporan PPT/PDF tetap).
+    if (opts && opts.months) { var upto = X.thiYms.filter(function (y) { return y <= tym; }); first = upto[Math.max(0, upto.length - opts.months)] || first; }
     var inReg = function (w) { return !regions || !regions.length || regions.indexOf(w) >= 0; };
     var G6 = recs.filter(function (r) { return r.kelas === 'prasarana' && r.ym >= first && r.ym <= ym; });
     G6.forEach(function (r) { var q = resor2(r, K); r._resor = q.id; r._resorAll = q.all; r._pk = prasKind(r); });

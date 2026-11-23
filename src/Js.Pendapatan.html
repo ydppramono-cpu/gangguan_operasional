@@ -6,7 +6,8 @@
  *  Rate KA penumpang (bulan) = Σ pendapatan KA penumpang termatch ÷ Σ jam perjalanan KA termatch
  *      termatch = nomor KA Passenger ditemukan di GAPEKA (persis / bagian nomor gabungan / nomor dasar varian)
  *      jam perjalanan = durasi GAPEKA (jam datang − jam berangkat) × jumlah hari bulan; satu perjalanan GAPEKA dihitung sekali
- *      KA fakultatif/KLB/tambahan tidak dipakai (PLB pengganti jalur reguler dipakai) karena frekuensi jalannya tidak diketahui.
+ *      KA fakultatif/KLB/tambahan dipakai bila hari jalannya tercatat di Laporan KA Jalan/Batal (v3.19); selain itu tidak dipakai.
+ *      Nomor yang tidak ada di GAPEKA dicocokkan ke KA penumpang bernama sama, arah sama (dan relasi sama bila tercatat).
  *  Rate KA barang (bulan) = Σ pendapatan komoditas KA termatch ÷ Σ jam perjalanan KA barang termatch (rate harian campuran)
  *      termatch = Nama KA Freight = Nama KA GAPEKA berjenis BARANG; jam = Σ durasi SEMUA perjalanan reguler bernama itu × hari.
  *  Bulan tanpa data lengkap (bulan berjalan / sebelum data tersedia) memakai RATE ACUAN = rata-rata tertimbang bulan lengkap.
@@ -66,20 +67,32 @@
     var kaR = {}, nmR = {}, pmI = {}, bmI = {};
     /* ---- KA penumpang ---- */
     var pm = {}, pk = {}, pkG = {};
+    // Cadangan pencocokan: nomor tidak ada di GAPEKA (mis. 7043A, 30A) → KA penumpang GAPEKA bernama sama, arah (ganjil/genap) sama,
+    // dan bila Laporan Frekuensi memuat relasinya: stasiun ujung sama. Durasi dari KA itu; hari jalan dari nomor aslinya (program).
+    var byNm = null;
+    function passByName(nama, no) {
+      if (!byNm) { byNm = {}; Object.keys(R.ka).forEach(function (k) { var x = R.ka[k], nm = norm(x.nama); if (nm && String(x.jenis || '').toUpperCase() === 'PENUMPANG' && daily(x)) (byNm[nm] = byNm[nm] || []).push(x); }); }
+      var L = byNm[norm(nama)] || [], d = +(/\d+/.exec(String(no)) || [0])[0] % 2, f = R.prog && R.prog.ka ? R.prog.ka[norm(no)] : null;
+      var rel = f && f[2] ? String(f[2]).toUpperCase().split(/\s*-\s*/) : null;
+      L = L.filter(function (x) { return +(/\d+/.exec(String(x.no)) || [0])[0] % 2 === d; });
+      if (rel && rel.length === 2) { var L2 = L.filter(function (x) { return String(x.o).toUpperCase() === rel[0] && String(x.d).toUpperCase() === rel[1]; }); if (L2.length) L = L2; }
+      return L.length ? { k: L[0], via: 'nama & arah sama' } : null;
+    }
     (pend.pass || []).forEach(function (r) {
-      var ym = r[0], no = r[1], rev = +r[6] || 0, L = lookup(R, no);
+      var ym = r[0], no = r[1], rev = +r[6] || 0, L = lookup(R, no) || passByName(r[2], no);
+      var progN = !!(HJ && hjI[norm(no)] != null && hjM[ym] && hjM[ym][hjI[norm(no)]] !== '');   // hari jalan nomor ini tercatat di program operasi
       var o = pm[ym] = pm[ym] || { ym: ym, revAll: 0, rev: 0, h: 0, hOld: 0, ka: {}, nKa: 0 };
       o.revAll += rev;
-      var why = !L ? 'Nomor tidak ada di GAPEKA' : String(L.k.jenis || '').toUpperCase() !== 'PENUMPANG' ? 'Bukan KA penumpang di GAPEKA' : !daily(L.k) ? 'KA fakultatif/KLB (frekuensi tak diketahui)' : hoursOf(R, L.k) == null ? 'Durasi GAPEKA tidak tersedia' : '';
+      var why = !L ? 'Nomor tidak ada di GAPEKA' : String(L.k.jenis || '').toUpperCase() !== 'PENUMPANG' ? 'Bukan KA penumpang di GAPEKA' : !daily(L.k) && !progN ? 'KA fakultatif/KLB tanpa catatan hari jalan' : hoursOf(R, L.k) == null ? 'Durasi GAPEKA tidak tersedia' : '';
       if (why) { var u = E.unP[no] = E.unP[no] || { no: no, nama: r[2], rev: 0, n: 0, why: why }; u.rev += rev; u.n++; return; }
       E.viaP[L.via] = (E.viaP[L.via] || 0) + rev;
       o.rev += rev;
-      var key = norm(L.k.no), pl = pulauKa(L.k.no), oi = pmI[ym + '|' + pl] = pmI[ym + '|' + pl] || { ym: ym, rev: 0, h: 0, ka: {}, nKa: 0 };
+      var key = norm(/^nama/.test(L.via) || progN ? no : L.k.no), pl = pulauKa(L.k.no), oi = pmI[ym + '|' + pl] = pmI[ym + '|' + pl] || { ym: ym, rev: 0, h: 0, ka: {}, nKa: 0 };
       oi.rev += rev;
       var kr = kaR[ym + '|' + key] = kaR[ym + '|' + key] || { rev: 0, h: 0, hj: null, pulau: pl };
       kr.rev += rev;
       if (!o.ka[key]) {
-        var hh = hoursOf(R, L.k), d = hj(L.k.no, ym);
+        var hh = hoursOf(R, L.k), d = hj(progN ? no : L.k.no, ym);
         o.ka[key] = 1; o.h += hh * d.n; o.hOld += hh * dim(ym); o.nKa++;
         oi.ka[key] = 1; oi.h += hh * d.n; oi.nKa++;
         kr.h = hh * d.n; kr.hj = d;

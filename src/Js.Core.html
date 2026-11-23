@@ -161,6 +161,28 @@ window.KAI = window.KAI || {};
   };
 
   K.debounce = function (fn, ms) { var t; return function () { var a = arguments, s = this; clearTimeout(t); t = setTimeout(function () { fn.apply(s, a); }, ms); }; };
+  /**
+   * Penjaga kerapian (v3.19): baris dt/dd di daftar .kv yang isinya kosong ("belum ada data", "tidak tersedia", "–", kosong)
+   * disembunyikan otomatis; daftar memberi catatan jumlah isian yang disembunyikan. Pola sama dipakai pemeriksa emulator.
+   */
+  K.EMPTY_RE = /^\s*(–|-|—|belum ada data.*|tidak tersedia.*|tidak tercatat|n\/a|null|undefined|nan)?\s*$/i;
+  K.tidy = function (root) {
+    (root || document).querySelectorAll('dl.kv').forEach(function (dl) {
+      if (dl.hasAttribute('data-keep')) return;
+      var n = 0;
+      dl.querySelectorAll(':scope > dd').forEach(function (dd) {
+        var dt = dd.previousElementSibling, empty = !dd.querySelector('svg,canvas,img,input,button,.tag,.chip') && K.EMPTY_RE.test(dd.textContent || '');
+        dd.classList.toggle('kv-empty', empty); if (dt && dt.tagName === 'DT') dt.classList.toggle('kv-empty', empty); if (empty) n++;
+      });
+      var note = dl.nextElementSibling && dl.nextElementSibling.classList.contains('kv-hid') ? dl.nextElementSibling : null;
+      if (n && !note) { note = document.createElement('p'); note.className = 'kv-hid'; dl.after(note); }
+      if (note) { var tx = n ? n + ' isian tanpa data di sumber disembunyikan' : ''; if (note.textContent !== tx) note.textContent = tx; if (note.hidden !== !n) note.hidden = !n; }
+    });
+  };
+  if (typeof MutationObserver !== 'undefined') document.addEventListener('DOMContentLoaded', function () {
+    var run = K.debounce(function () { K.tidy(); }, 120);
+    new MutationObserver(run).observe(document.body, { childList: true, subtree: true, characterData: true });
+  });
   K.classColor = function (k) { return { operasional: '#0F766E', sarana: '#275BC0', alam: '#B45309', prasarana: '#64748B', belum: '#9AA3B2' }[k] || '#5B6475'; };
 })(window.KAI);
 </script>

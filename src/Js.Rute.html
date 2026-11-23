@@ -219,7 +219,7 @@
     var byKey = {}; S.forEach(function (x) { byKey[x.key] = x; });
     /* stasiun */
     var ST = C.path.map(function (c, i) {
-      var s = R.st[c] || { name: c }, pt = peta && peta.st ? peta.st[c] : null;
+      var s = R.st[c] || { name: c }, pt = stAt(peta, c, (C.segs[i] || C.segs[i - 1] || {}).region || s.region);
       return { code: c, name: s.name || c, region: s.region || '', km: C.cum[i], i: i, anchor: C.anchors.indexOf(c) >= 0, lat: pt ? pt[0] : null, lon: pt ? pt[1] : null, z: pt ? pt[2] : null, src: pt ? pt[3] : null,
         resor: K.resor && K.resor.st ? K.resor.st[c] || '' : '', g: [], wk: [], sec: {}, nat: {} };
     });
@@ -346,6 +346,12 @@
     (peta.ln || []).forEach(function (l) { (l[0] ? v.el : v.ne).push(decode(l[2])); });
     memoGeo = { k: peta, v: v }; return v;
   }
+  /** Koordinat stasiun sesuai wilayah petak: kode kembar (TBK Tambak Daop 5/Divre 1, LR Larangan Daop 4/lembar Daop 3) memakai SEED_PETA.stP. */
+  function stAt(peta, c, reg) {
+    if (!peta || !peta.st) return null;
+    var P = peta.stP && peta.stP[c]; if (!P) return peta.st[c] || null;
+    return P[reg] || P[/^Divre/.test(reg || '') ? 'Sumatera' : 'Jawa'] || peta.st[c] || null;
+  }
   function corridorGeo(R, C) {
     var peta = R.peta; if (!peta) return { lines: [], gap: [] };
     var lines = [], gap = [], bad = [];
@@ -353,7 +359,7 @@
       var g = peta.pg && (peta.pg[s.a + '-' + s.b] || peta.pg[s.b + '-' + s.a]);
       if (g) lines.push({ key: s.key, coords: decode(g) });
       else {
-        var A = peta.st[s.a], B = peta.st[s.b]; if (!A || !B) return;
+        var A = stAt(peta, s.a, s.region), B = stAt(peta, s.b, s.region); if (!A || !B) return;
         // Garis lurus hanya bila jarak lurus wajar terhadap panjang petak; selebihnya koordinat diragukan (mis. nama kembar KTG/KTP) → tidak digambar.
         var dk = 111 * Math.hypot(A[0] - B[0], (A[1] - B[1]) * Math.cos(A[0] * Math.PI / 180));
         if (dk > Math.max(15, 3 * (s.km || 0))) { bad.push({ key: s.key, a: s.a, b: s.b, km: s.km, lurus: Math.round(dk) }); return; }
@@ -363,6 +369,6 @@
     return { lines: lines, gap: gap, bad: bad };
   }
 
-  root.KAIRoute = { FACTS: FACTS, cat: cat, CORR: CORR, SEC: SEC, NAT: NAT, JR_LABEL: JR_LABEL, build: build, detail: detail, gaps: gaps, network: network, corridorGeo: corridorGeo, decode: decode, fmt: fmt, index: index, tripsOfNo: tripsOfNo };
+  root.KAIRoute = { FACTS: FACTS, cat: cat, CORR: CORR, SEC: SEC, NAT: NAT, JR_LABEL: JR_LABEL, build: build, detail: detail, gaps: gaps, network: network, corridorGeo: corridorGeo, stAt: stAt, decode: decode, fmt: fmt, index: index, tripsOfNo: tripsOfNo };
 })(typeof window !== 'undefined' ? window : globalThis);
 </script>

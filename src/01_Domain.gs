@@ -268,10 +268,47 @@ var Domain = (function () {
     { kelas: 'prasarana', re: /wesel|persinyalan|\bsinyal\b|track (merah|circuit)|rel (patah|spaten)|goyangan|jalan rel|\blaa\b|catenary|jembatan|axle counter|interlocking|kecrotan|bantalan/i },
     { kelas: 'sarana', re: /lokomotif|\blok\b|tenaga (lemah|hilang)|motoring|pembangkit|rem ikat|pengereman|kompresor|\bkrl\b.*gangguan|gangguan.*\b(krl|krd|kereta|gerbong)\b|roda (benjol|aus)|\bac\b/i }
   ];
-  function classifyText(judul) {
-    var s = txt(judul);
-    for (var i = 0; i < TEXT_CLASS.length; i++) if (TEXT_CLASS[i].re.test(s)) return TEXT_CLASS[i].kelas;
-    return '';
+  // Gejala operasional/keamanan: dipakai HANYA bila judul & uraian tidak menyebut penyebab alam/prasarana/sarana.
+  var OPS_TEXT = /tidak bisa berangkat tepat|\btbbt\b|tertemper|temperan|pelemparan|dilempar|langsiran|menunggu (persilangan|susulan|masinis|kru|penumpang|lok)|penumpang (sakit|meninggal|pingsan)|orang (tertemper|tertabrak)|kendaraan (tertemper|tertabrak|mogok)|perjalanan .*tertahan|tertahan sinyal masuk|pengaturan perjalanan|kepadatan jalur/i;
+  /**
+   * Kelas dari teks bila Kategori & Subgangguan kosong. Urutan: judul (alam → prasarana → sarana), lalu uraian/penyebab
+   * (pola yang sama), lalu gejala operasional (OPS_TEXT). Hasil berlabel "diturunkan"; tidak cocok → '' (tetap "belum terkelas").
+   * @return {string} kelas ('' bila tidak tegas) — pemanggil mencatat sumbernya lewat classifyTextSrc.
+   */
+  function classifyText(judul, uraian) { return classifyTextSrc(judul, uraian).kelas; }
+  function classifyTextSrc(judul, uraian) {
+    var a = txt(judul), b = txt(uraian), i;
+    for (i = 0; i < TEXT_CLASS.length; i++) if (TEXT_CLASS[i].re.test(a)) return { kelas: TEXT_CLASS[i].kelas, src: 'judul' };
+    for (i = 0; i < TEXT_CLASS.length; i++) if (b && TEXT_CLASS[i].re.test(b)) return { kelas: TEXT_CLASS[i].kelas, src: 'uraian' };
+    if (OPS_TEXT.test(a) || (b && OPS_TEXT.test(b))) return { kelas: 'operasional', src: 'gejala operasional' };
+    return { kelas: '', src: '' };
+  }
+  /* ---- Kelas terdekat (keputusan pemilik 24 Nov 2026: tidak ada lagi "belum terkelas") ----
+   * Kejadian yang Kategori, Subgangguan, dan pola teksnya tidak tegas diberi kelas PALING MIRIP:
+   * Naive Bayes multinomial (Laplace 1) atas kata judul + uraian, dilatih dari kejadian yang kelasnya berasal dari
+   * Kategori/Subgangguan sumber pada snapshot yang sama. Ciri tambahan: ada nomor sarana, ada JPL, lokasi petak/stasiun.
+   * Hasil selalu berlabel "diturunkan" (tanda *) beserta tingkat keyakinan; tidak ada kata sama sekali → kelas terbanyak (bawaan). */
+  var STOP = /^(dan|yang|di|ke|dari|pada|untuk|dengan|ka|km|jam|mnt|menit|ada|oleh|ini|itu|tsb|tersebut|sta|st|stasiun|petak|antara|akibat|karena|sehingga|kereta|api|gangguan|terlambat|kelambatan|wib|tgl|tanggal|no|nomor|lintas|jalur|hari|pukul|sekitar|telah|sudah|masih|dalam|atas|bawah|saat|setelah|sebelum|dapat|tidak|bisa)$/;
+  function tokens(s) {
+    return txt(s).toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(function (w) { return w.length >= 3 && !/^\d+$/.test(w) && !STOP.test(w); });
+  }
+  function classModel() { return { n: {}, w: {}, tot: {}, vocab: {}, docs: 0 }; }
+  function classLearn(M, kelas, words) {
+    M.docs++; M.n[kelas] = (M.n[kelas] || 0) + 1; var W = M.w[kelas] = M.w[kelas] || {};
+    words.forEach(function (w) { W[w] = (W[w] || 0) + 1; M.tot[kelas] = (M.tot[kelas] || 0) + 1; M.vocab[w] = 1; });
+  }
+  /** @return {{kelas:string, p:number, src:string}} p = peluang posterior kelas terpilih (0–1). */
+  function classNearest(M, words) {
+    var K = Object.keys(M.n), V = Object.keys(M.vocab).length || 1, best = null, sc = {};
+    if (!K.length) return { kelas: 'operasional', p: 0, src: 'bawaan' };
+    var known = words.filter(function (w) { return M.vocab[w]; });
+    K.forEach(function (k) {
+      var v = Math.log(M.n[k] / M.docs), W = M.w[k] || {}, T = M.tot[k] || 0;
+      known.forEach(function (w) { v += Math.log(((W[w] || 0) + 1) / (T + V)); });
+      sc[k] = v; if (best === null || v > sc[best]) best = k;
+    });
+    var mx = sc[best], z = 0; K.forEach(function (k) { z += Math.exp(sc[k] - mx); });
+    return { kelas: best, p: 1 / z, src: known.length ? 'kemiripan teks' : 'bawaan (kelas terbanyak)' };
   }
   function kaFromText(s) {
     var m = /\b(?:KA|PLB|KLB)\s*\.?\s*([A-Z]?\d{1,5}[A-Z]{0,2})\b/i.exec(txt(s));
@@ -384,7 +421,7 @@ var Domain = (function () {
     classify: classify, crossing: crossing, temperOther: temperOther, component: component,
     assetKind: assetKind, saranaCandidates: saranaCandidates, saranaLabel: saranaLabel,
     trainNumber: trainNumber, buildIndex: buildIndex, location: location, stationCode: stationCode,
-    classifyText: classifyText, kaFromText: kaFromText, timeFromText: timeFromText, kmFromText: kmFromText, saranaFromText: saranaFromText,
+    classifyText: classifyText, classifyTextSrc: classifyTextSrc, tokens: tokens, classModel: classModel, classLearn: classLearn, classNearest: classNearest, kaFromText: kaFromText, timeFromText: timeFromText, kmFromText: kmFromText, saranaFromText: saranaFromText,
     causeFromText: causeFromText, locationFromText: locationFromText,
     parseTime: parseTime, parseKm: parseKm, jplNo: jplNo, trainLookup: trainLookup, kaTypeFrom: kaTypeFrom
   };

@@ -41,7 +41,8 @@ window.KAITable = (function () {
             el.classList.toggle('no-pager', !ps);
             t = new Tabulator(el, {
               data: spec.data, columns: spec.columns.map(function (c) { return Object.assign({ tooltip: true }, c.hozAlign === 'right' && !c.sorter ? { sorter: 'number', headerHozAlign: 'right' } : {}, !c.formatter ? { formatter: cellFmt } : {}, c); }),
-              layout: 'fitColumns', height: spec.height || false, rowHeight: 36,
+              layout: 'fitColumns', height: spec.height || false, rowHeight: 40,
+              groupBy: spec.groupBy || false, groupHeader: spec.groupHeader, groupStartOpen: spec.groupStartOpen == null ? true : spec.groupStartOpen,
               placeholder: spec.empty || 'Tidak ada data untuk filter ini.', selectableRows: false, index: spec.index || 'id',
               initialSort: spec.initialSort || [], columnDefaults: { headerTooltip: true, resizable: true, vertAlign: 'middle' },
               pagination: !!ps, paginationMode: 'local', paginationSize: ps || 25, paginationSizeSelector: [10, 25, 50, 100],
@@ -66,10 +67,10 @@ window.KAITable = (function () {
   function rows(id) { var t = registry[id]; return t ? t.getData('active') : []; }
 
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
-  var badgeKelas = function (c) { var d = c.getData(); return '<span class="badge k" style="--c:' + KAI.classColor(d.kelas) + '"' + (d._d && d._d.kelas ? ' title="Kelas ditentukan dari judul karena Kategori & Subgangguan kosong"' : '') + '>' + esc(c.getValue()) + (d._d && d._d.kelas ? ' *' : '') + '</span>'; };
+  var badgeKelas = function (c) { var d = c.getData(); return '<span class="badge k" style="--c:' + KAI.classColor(d.kelas) + '"' + (d._d && d._d.kelas ? ' title="Kelas diturunkan (Kategori & Subgangguan kosong di sumber): pola teks tegas atau kelas terdekat menurut kemiripan kata — rincian di kolom Kualitas"' : '') + '>' + esc(c.getValue()) + (d._d && d._d.kelas ? ' *' : '') + '</span>'; };
   var menitFmt = function (c) { return '<b>' + KAI.fmt.n(c.getValue()) + '</b>'; };
   var fmtNum = function (cell) { return KAI.fmt.n(cell.getValue()); };
-  var CLASS_SHORT = { operasional: 'Operasional', sarana: 'Sarana', alam: 'Alam', prasarana: 'Prasarana', belum: 'Belum lengkap' };
+  var CLASS_SHORT = { operasional: 'Operasional', sarana: 'Sarana', alam: 'Alam', prasarana: 'Prasarana', belum: 'Belum terkelas' };
 
   /**
    * Kolom baku daftar kejadian — SAMA di semua halaman (Telusuri, Ringkasan, Perlintasan, Eksposur, profil):

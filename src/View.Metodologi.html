@@ -22,7 +22,7 @@
           <dt>Status petak</dt><dd>P1 = gangguan prasarana ≥ 2 & (THI &lt; 70 atau WKP jalan rel ≤ 1) · P2 = gangguan tanpa WKP jalan rel · P3 = THI &lt; 70 tanpa gangguan. WKP dipetakan ke petak dari teks lokasi (petak, rentang stasiun, atau emplasemen; 97% baris).</dd>
           <dt>Peta & profil fisik</dt><dd>Geometri OpenStreetMap (ODbL) dari ubin github.com/enwo02/train-tracker, garis pantai Natural Earth — tertanam di aplikasi, tanpa ubin & kunci API. Koordinat stasiun: sandihex86/masterdataprasarana, DenShubi/Indonesian-Railway-, jeffersonsetiawan/TMConfiguration, ekadanis/stasiun_map_app; diuji ≤ 1,5 km dari rel, sisanya interpolasi km. Jembatan/terowongan/elektrifikasi/vmax hanya dari petak yang panjang OSM-nya cocok ±25%.</dd>
           <dt>Landai</dt><dd>Beda elevasi stasiun (m_stasiun) ÷ jarak = landai rata-rata (‰), bukan landai penentu. Elevasi yang landainya &gt; 40‰ ke semua tetangga dibuang (salah ketik sumber).</dd>
-          <dt>Belum ada data</dt><dd>Persinyalan, jenis rel/bantalan, demografi: tidak ada di sumber aplikasi → ditulis "belum ada data", tidak diperkirakan.</dd>
+          <dt>Isian tanpa sumber</dt><dd>Persinyalan, jenis rel/bantalan, demografi tidak ada di sumber aplikasi → tidak diperkirakan. Baris profil yang isinya kosong disembunyikan otomatis, dengan catatan jumlah isian yang disembunyikan (v3.19).</dd>
         </dl>
       </div>
     </div>
@@ -46,7 +46,7 @@
       <div class="card-b">
         <dl class="kv">
           <dt>Kolom kosong</dt><dd>Tidak ada sel kosong. Bila kolom sumber kosong, nilai diturunkan dari judul/uraian hanya dengan pola tegas (nomor KA "Ka 39"/"Plb 167B", jam "Waktu: 08.35", lokasi "petak jalan Malang (Ml) – Malangkota Lama (Mlk)" atau "Sta Kesamben (Ksb)", KM "km 50+4/5", nomor lokomotif, penyebab "Penyebab: …", depo dari Referensi Sarana, wilayah dari lokasi). Nilai turunan bergaris bawah titik oranye dan bertooltip. Bila tidak ada pola, ditulis "Tidak tercatat" — tidak ada nilai karangan.</dd>
-          <dt>Kelas tanpa subgangguan</dt><dd>Bila Kategori dan Subgangguan sama-sama kosong, kelas ditentukan dari kata kunci judul (mis. "wesel", "LAA" → prasarana; "lokomotif", "tenaga lemah" → sarana; "gempa", "banjir" → alam), diberi tanda *.</dd>
+          <dt>Kelas tanpa subgangguan</dt><dd>Bila Kategori dan Subgangguan sama-sama kosong: (1) kata kunci tegas di judul, lalu uraian (mis. "wesel", "LAA" → prasarana; "lokomotif", "tenaga lemah" → sarana; "gempa", "banjir" → alam; "tertemper", "TBBT" → operasional); (2) bila tetap tidak tegas → <b>kelas terdekat</b>: kelas yang kata-katanya paling mirip dengan kejadian berkelas sumber pada data yang sama (Naive Bayes, keyakinan dicatat di kolom Kualitas; &lt; 60% masuk daftar periksa). Semua kelas turunan bertanda *. Tidak ada lagi kelompok "belum terkelas" (keputusan 24 Nov 2026).</dd>
           <dt>Eksposur</dt><dd>Hanya kejadian dengan nomor KA di kolom sumber yang dinilai. Nomor KA hasil turunan uraian ditampilkan di tabel, tetapi tidak dihitung ke eksposur (kelompok "nomor KA hanya dari uraian").</dd>
           <dt>Top 3 & jenis gangguan</dt><dd>Bawaan: "Alam - Imbas Gempa bumi" dan "Alam - Gempa bumi" digabung menjadi "Gempa bumi"; "Gangguan Tenaga Lemah" (JASUM) dan "Lokomotif - Gangguan Tenaga Lemah" digabung menjadi "Tenaga Lemah". Tombol "Pisah per subgangguan" di halaman Tren menampilkan rincian asli.</dd>
           <dt>Selisih dengan laporan v2</dt><dd>Laporan September 2026 v2 tidak memuat baris yang uraiannya bersambung ke baris berikutnya (mis. PLB 167B, 15 Sep, 2 menit) sehingga menulis 318 kejadian/14.375 menit; data mencatat 319/14.377. Laporan juga menggolongkan Gempa lintas Kts–Tal (27 Jun) sebagai operasional. Dashboard mengikuti data sumber.</dd>
@@ -80,7 +80,7 @@
       <div class="card-h"><div><h3>Pemeriksaan pulau (Jawa / Sumatera)</h3><p>Tautan KA dan sarana hanya dipakai bila pulaunya sama dengan wilayah kejadian · unit yang tercatat ≥ 2 kali di pulau lain dianggap mutasi</p></div></div>
       <div class="card-b">
         <div class="kv-row">
-          <div><span>Kelas diturunkan dari judul</span><b x-text="KAI.fmt.n(pulau.turun)"></b></div>
+          <div><span>Kelas diturunkan (teks / kelas terdekat)</span><b x-text="KAI.fmt.n(pulau.turun)"></b></div>
           <div><span>Nomor KA beda pulau (tidak ditautkan)</span><b x-text="KAI.fmt.n(pulau.kaBeda)"></b></div>
           <div><span>Unit mutasi antarpulau</span><b x-text="KAI.fmt.n(pulau.mut.length)"></b></div>
           <div><span>Nomor sarana perlu verifikasi</span><b x-text="KAI.fmt.n(pulau.ver.length)"></b></div>

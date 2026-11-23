@@ -207,7 +207,7 @@ DRN,Durenkalibata,Daop 1,aktif,1.14,Pasarminggu,transkripsi PETA_WILAYAH,-6.2556
 DSU,Dusun,Divre 1,aktif,I.8,Seibejangkar,transkripsi PETA_WILAYAH,3.12726,99.51043,peta (interpolasi km petak di geometri OSM),,1,1
 DU,Duri,Daop 1,aktif,1.6,Duri,transkripsi PETA_WILAYAH,-6.155,106.801,peta (sandihex86/masterdataprasarana),4,1,1
 DUK,Duku,Divre 2,aktif,II.1,Padang,transkripsi PETA_WILAYAH,-0.78699,100.3168,peta (ekadanis/stasiun_map_app),,1,1
-DWN,Dawuan,Daop 1,aktif,1.13,Cikampek,transkripsi PETA_WILAYAH,-6.369,107.375,peta (sandihex86/masterdataprasarana),31,1,1
+DWN,Dawuan,Daop 1,aktif,1.13,Cikampek,transkripsi PETA_WILAYAH,-6.39295,107.4327,"koreksi: km 54,342 lembar GAPEKA 2025 Daop 1 lintas Bekasi–Cikampek di antara Klari (KLI) dan Cikampek (CKP), menyusuri rel OSM",31,1,1
 EB,Embang,Daop 4,tidak aktif,,,,,,,,0,0
 GAR,Garongkong,Daop 8,aktif,,,,,,,,0,0
 GB,Gombong,Daop 5,aktif,5.12,Gombong,resmi data_station,-7.610469208843255,109.5078650984377,resmi data_station,,1,1
@@ -380,7 +380,7 @@ KNS,Krengseng,Daop 4,aktif,4.7,Weleri,resmi data_station,-6.9523593,110.0279898,
 KO,Kalioso,Daop 6,aktif,6.10,Sumberlawang,resmi data_station,-7.465970611,110.8052076,resmi data_station,,1,1
 KOA,Kebon Pisang,Divre 1,tidak aktif,I.1,Medan,transkripsi PETA_WILAYAH,,,,,0,0
 KOP,Kota Padang,Divre 3,aktif,III.22,Lubuk Linggau,transkripsi PETA_WILAYAH,-3.42609,102.967,peta (ekadanis/stasiun_map_app),,1,1
-KOS,Kosambi,Daop 1,aktif,1.13,Cikampek,transkripsi PETA_WILAYAH,-6.393,107.433,peta (sandihex86/masterdataprasarana),28,1,1
+KOS,Kosambi,Daop 1,aktif,1.13,Cikampek,transkripsi PETA_WILAYAH,-6.36823,107.37305,"koreksi: km 47,371 lembar GAPEKA 2025 Daop 1 lintas Bekasi–Cikampek di antara Klari (KLI) dan Cikampek (CKP), menyusuri rel OSM",28,1,1
 KPA,Kapuan,Daop 4,aktif,4.19,Cepu,resmi data_station,-7.18903533,111.5543397,resmi data_station,,1,1
 KPB,Kampungbandan,Daop 1,aktif,1.1,,transkripsi PETA_WILAYAH,-6.13255,106.82636,peta (jeffersonsetiawan/TMConfiguration),3,1,1
 KPBS,Kampung Besar,Divre 1,tidak aktif,I.2,Ujungbaru,transkripsi PETA_WILAYAH,,,,,0,0
@@ -475,7 +475,7 @@ LRT7,Palembang Icon,Divre 3,aktif,,,,,,,,0,0
 LRT8,Dishub Kominfo,Divre 3,aktif,,,,,,,,0,0
 LRT9,Pasar Cinde,Divre 3,aktif,,,,,,,,0,0
 LT,Lahat,Divre 3,aktif,III.18,Lahat,transkripsi PETA_WILAYAH,-3.78967,103.5376,peta (ekadanis/stasiun_map_app),,1,1
-LTD,Laut Tador,Divre 1,aktif,I.7,Perlanaan,transkripsi PETA_WILAYAH,3.3786,99.16882,peta (ekadanis/stasiun_map_app),,1,1
+LTD,Laut Tador,Divre 1,aktif,I.7,Perlanaan,transkripsi PETA_WILAYAH,3.28254,99.26026,"koreksi: km 114,433 lembar GAPEKA 2025 Divre I di antara Bamban (BMB) dan Bandar Tinggi (BDT), menyusuri rel OSM",,1,1
 LUM,Lumpue,Daop 8,aktif,,,,,,,,0,0
 LW,Lawang,Daop 8,aktif,8.16,Lawang,transkripsi PETA_WILAYAH,-7.83664,112.69783,peta (DenShubi/Indonesian-Railway-),,1,1
 LWG,Luwung,Daop 3,aktif,3.14,Sindanglaut,transkripsi PETA_WILAYAH,-6.77759,108.5932,peta (ekadanis/stasiun_map_app),,1,1
@@ -843,7 +843,7 @@ TAU,Tagogapu,Daop 2,aktif,2.4,Padalarang,transkripsi PETA_WILAYAH,-6.81099,107.4
 TAY,Tayu,Daop 4,tidak aktif,,,,,,,,0,0
 TB,Tambun,Daop 1,aktif,1.10,Cikarang,transkripsi PETA_WILAYAH,-6.259,107.056,peta (sandihex86/masterdataprasarana),49,1,1
 TBG,Tribungan,Daop 9,tidak aktif,,,,,,,,0,0
-TBI,Tebing Tinggi,Divre 1,aktif,I.5,Tebingtinggi,transkripsi PETA_WILAYAH,,,,,1,1
+TBI,Tebing Tinggi,Divre 1,aktif,I.5,Tebingtinggi,transkripsi PETA_WILAYAH,3.32178,99.16666,"koreksi: km 102,149 lembar GAPEKA 2025 Divre I di antara Bamban (BMB) dan Bandar Tinggi (BDT), menyusuri rel OSM",,1,1
 TBK,Tambak,Daop 5,aktif,5.11,Tambak,resmi data_station,-7.612884159,109.4085812,resmi data_station,,1,1
 TBKN,Tabakebon,Divre 3,tidak aktif,,,,,,,,0,0
 TBO,Tobo,Daop 8,aktif,8.1,Tobo,transkripsi PETA_WILAYAH,-7.17236,111.6552,peta (ekadanis/stasiun_map_app),,1,1

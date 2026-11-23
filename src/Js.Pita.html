@@ -1,0 +1,85 @@
+<script>
+/**
+ * Js.Pita — "pita temuan" (v3.19, keputusan 24 Nov 2026): temuan & tindakan menempel di bawah grafik/tabel sumbernya.
+ * Pemakaian: <div x-pita="'tren:jam'"></div> di akhir .card. Isi dari $store.app.R.insight (KAIInsight.analyze).
+ * Terlipat bawaan: "Temuan 2 · Tindakan 1"; klik → daftar ringkas. Klik temuan → kartu disorot & seri grafik (bila hl) disorot.
+ * Pemetaan sumber temuan (src.label di Js.Insight) → kunci pita "rute:kartu". Sumber tanpa pita hanya tampil di Sorotan Ringkasan.
+ */
+window.KAIPita = (function () {
+  var MAP = {
+    'Tabel MoM · YoY · YTD': 'ringkasan:mom', 'Kartu KPI kejadian berat': 'ringkasan:mom',
+    'Daftar kejadian terlama': 'ringkasan:besar',
+    'Matriks frekuensi × kelambatan': 'tren:matriks', 'Grafik tren per kelas': 'tren:bulan',
+    'Grafik sebaran jam': 'tren:jam', 'Grafik harian': 'tren:harian', 'Daftar kejadian (Subgangguan)': 'tren:top3',
+    'Lokasi per wilayah': 'wilayah:lokasi', 'Inventaris JPL': 'perlintasan:jpl', 'Inventaris JPL (status penjagaan)': 'perlintasan:jpl',
+    'Tabel sarana berulang': 'sarana:berulang', 'Armada per kelompok usia': 'sarana:usia'
+  };
+  function keyOf(f) { return f && f.src ? MAP[f.src.label] || '' : ''; }
+  function of(IB, key) { return IB ? IB.findings.filter(function (f) { return keyOf(f) === key; }) : []; }
+  /** Sorotan Ringkasan: 3 temuan terpenting (tindakan dulu, lalu nada terburuk). */
+  var RANK = { bad: 0, warn: 1, info: 2, good: 3 };
+  function top(IB, n) {
+    if (!IB) return [];
+    return IB.findings.slice().sort(function (a, b) { return (a.rec ? 0 : 1) - (b.rec ? 0 : 1) || RANK[a.tone] - RANK[b.tone]; }).slice(0, n || 3);
+  }
+  /** Buka halaman sumber temuan lalu gulir ke pitanya (terbuka). */
+  function go(f) {
+    var k = keyOf(f), app = Alpine.store('app');
+    if (!k) { if (f.src && f.src.route) app.go(f.src.route); return; }
+    var route = k.split(':')[0];
+    var focus = function (tries) {
+      var el = document.querySelector('[data-pita="' + k + '"]');
+      if (!el) { if (tries > 0) setTimeout(function () { focus(tries - 1); }, 250); return; }
+      el.dispatchEvent(new CustomEvent('pita-open', { detail: f.id }));
+    };
+    if (app.route !== route) app.go(route);
+    setTimeout(function () { focus(16); }, 120);
+  }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  document.addEventListener('alpine:init', function () {
+    Alpine.directive('pita', function (el, d, u) {
+      var key = u.evaluateLater(d.expression), open = false, sel = null, K = '';
+      el.classList.add('pita');
+      function card() { return el.closest('.card') || el.parentElement; }
+      function highlight(f) {
+        var c = card(); if (!c) return;
+        c.classList.remove('pita-focus'); void c.offsetWidth; c.classList.add('pita-focus');
+        setTimeout(function () { c.classList.remove('pita-focus'); }, 2200);
+        if (f && f.hl) c.querySelectorAll('.chart').forEach(function (ch) {
+          var inst = window.echarts && echarts.getInstanceByDom(ch); if (!inst) return;
+          inst.dispatchAction({ type: 'downplay' }); inst.dispatchAction(Object.assign({ type: 'highlight' }, f.hl));
+        });
+      }
+      function render() {
+        var IB = Alpine.store('app').R && Alpine.store('app').R.insight, L = of(IB, K);
+        el.hidden = !L.length; if (!L.length) { el.innerHTML = ''; return; }
+        var nR = L.filter(function (f) { return f.rec; }).length, worst = L.slice().sort(function (a, b) { return RANK[a.tone] - RANK[b.tone]; })[0].tone;
+        var h = '<button type="button" class="pita-h t-' + worst + '" aria-expanded="' + open + '"><svg class="i"><use href="#i-bulb"/></svg><b>Temuan ' + L.length + '</b>' +
+          (nR ? '<span>· Tindakan ' + nR + '</span>' : '') + '<em>' + esc(L[0].head) + (L.length > 1 ? ' +' + (L.length - 1) : '') + '</em><svg class="i chev"><use href="#i-chevron"/></svg></button>';
+        if (open) {
+          h += '<ul class="pita-l">' + L.map(function (f) {
+            return '<li class="t-' + f.tone + (sel === f.id ? ' on' : '') + '" data-id="' + f.id + '"><button type="button" class="pita-f" data-id="' + f.id + '"><b>' + esc(f.metric) + '</b> ' + esc(f.head) + '</button>' +
+              '<p>' + esc(f.text) + '</p>' +
+              (f.rec ? '<div class="pita-r"><span class="pid r">' + esc(f.rec.no) + '</span><b>' + esc(f.rec.title) + '</b><ol>' + f.rec.actions.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('') + '</ol>' +
+                (f.rec.lit && f.rec.lit.length && window.KAIInsight ? '<div class="pita-lit">' + f.rec.lit.map(function (id) { var x = KAIInsight.LIT[id]; return x ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener" title="' + esc(x.inti) + '">' + esc(x.cite) + '</a>' : ''; }).join(' · ') + '</div>' : '') + '</div>' : '') +
+              (f.ids && f.ids.length ? '<button type="button" class="link-btn sm pita-k" data-id="' + f.id + '">Lihat ' + f.ids.length + ' kejadian →</button>' : '') + '</li>';
+          }).join('') + '</ul>';
+        }
+        el.innerHTML = h;
+        el._L = L;
+      }
+      el.addEventListener('click', function (e) {
+        var b = e.target.closest('button'); if (!b) return;
+        var f = (el._L || []).filter(function (x) { return x.id === b.dataset.id; })[0];
+        if (b.classList.contains('pita-h')) { open = !open; render(); return; }
+        if (b.classList.contains('pita-k') && f) { Alpine.store('app').go('telusuri', { ids: f.ids, label: f.id + ' · ' + f.head, period: 'all' }); return; }
+        if (b.classList.contains('pita-f') && f) { sel = sel === f.id ? null : f.id; render(); highlight(f); }
+      });
+      el.addEventListener('pita-open', function (e) { open = true; sel = e.detail; render(); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); highlight((el._L || []).filter(function (x) { return x.id === sel; })[0]); });
+      u.effect(function () { key(function (k) { K = k; el.dataset.pita = k; var a = Alpine.store('app'); void (a.R && a.R.insight); render(); }); });
+    });
+  });
+  return { MAP: MAP, keyOf: keyOf, of: of, top: top, go: go };
+})();
+</script>

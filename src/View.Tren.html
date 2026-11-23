@@ -9,6 +9,7 @@
       <div class="card">
         <div class="card-h"><div><h3>Total kelambatan per bulan</h3><p>Menit (Total Andil Kelka) per kelas · pencilan diberi tanda, tidak dibuang</p></div></div>
         <div class="card-b fill"><div class="chart" x-chart="KAIChart.trend(R.trend, 'menit')" @chart-click="drillMonth($event.detail)"></div></div>
+<div x-pita="'tren:bulan'"></div>
       </div>
     </div>
 
@@ -16,12 +17,14 @@
       <div class="card-h"><div><h3 x-text="'Per hari · ' + R.label"></h3><p>Kelambatan bertumpuk per kelas · hanya kejadian dengan tanggal hari · klik batang untuk menelusuri hari itu</p></div>
         <div class="spacer"></div><div class="seg"><button :aria-pressed="dm === 'menit'" @click="dm = 'menit'">Menit</button><button :aria-pressed="dm === 'n'" @click="dm = 'n'">Kejadian</button></div></div>
       <div class="card-b"><div class="chart short" x-chart="R.daily ? KAIChart.daily(R.daily, dm) : null" @chart-click="drillDay($event.detail)"></div></div>
+<div x-pita="'tren:harian'"></div>
     </div>
 
     <div class="grid g-2 mt">
       <div class="card">
         <div class="card-h"><div><h3>Pola jam</h3><p x-text="KAI.fmt.n(R.hour.known) + ' dari ' + KAI.fmt.n(R.hour.total) + ' kejadian punya jam mulai terbaca · klik jam untuk memfilter'"></p></div></div>
         <div class="card-b fill"><div class="chart" x-chart="KAIChart.hourBar(R.hour)" @chart-click="$store.app.setHours($event.detail.dataIndex, $event.detail.dataIndex); $store.app.say('Filter jam diubah ke ' + $event.detail.name + ':00–' + $event.detail.name + ':59. Klik &quot;Atur ulang&quot; untuk kembali.')"></div></div>
+<div x-pita="'tren:jam'"></div>
       </div>
       <div class="card">
         <div class="card-h"><div><h3>Hari × jam</h3><p>Jumlah kejadian per hari dalam minggu dan jam · warna makin oranye = makin padat</p></div></div>
@@ -39,6 +42,7 @@
       <div class="card">
         <div class="card-h"><div><h3 x-text="'Matriks ' + R.label"></h3><p>Garis putus = median 4 kelas; median membagi tinggi/rendah secara relatif, bukan target kinerja</p></div></div>
         <div class="card-b fill"><div class="chart tall" x-chart="KAIChart.matrix(R.mat, R.matAxis)" @chart-click="$store.app.go('telusuri', { kelas: $event.detail.data.kelas })"></div></div>
+<div x-pita="'tren:matriks'"></div>
       </div>
     </div>
 
@@ -47,6 +51,7 @@
       <span class="note">Varian "Imbas …" dan "Gangguan …" tanpa awalan aset digabung ke jenis induknya, sama seperti laporan bulanan.</span>
       <span class="spacer"></span>
       <div class="seg" role="group" aria-label="Penggabungan varian"><button :aria-pressed="$store.app.f.imbas !== false" @click="$store.app.setF({ imbas: true })">Gabung varian</button><button :aria-pressed="$store.app.f.imbas === false" @click="$store.app.setF({ imbas: false })">Pisah per subgangguan</button></div>
+      <div x-pita="'tren:top3'" class="pita-strip"></div>
     </div>
     <div class="grid g-2 mt">
       <template x-for="k in KAIA.CLASSES" :key="k">

@@ -94,7 +94,7 @@
     var bc = KAIA.byClassOf(L), dom = KAIA.CLASSES.slice().sort(function (a, b) { return bc[b].menit - bc[a].menit; })[0];
     if (bc[dom].menit && ctx.kind !== 'sarana') add({ tone: 'info', area: 'Umum', src: src('Grafik tren per kelas', 'tren', 'Komposisi kelas'), metric: pctTxt(share(bc[dom].menit, S.menit)),
       head: 'Kelas terbesar: ' + KAIChart.CLASS_LABEL[dom].split(',')[0].toLowerCase(), text: F.n(bc[dom].n) + ' kejadian, ' + F.n(bc[dom].menit) + ' menit.',
-      ids: ids(L.filter(function (r) { return r.kelas === dom; })) });
+      ids: ids(L.filter(function (r) { return r.kelas === dom; })), hl: { seriesName: KAIChart.CLASS_LABEL[dom] } });
     // 5. Kejadian berat
     var hv = L.filter(function (r) { return r.menit >= cfg.heavy; });
     if (hv.length) add({ tone: share(sumM(hv), S.menit) > 0.5 ? 'warn' : 'info', area: 'Umum', src: src('Kartu KPI kejadian berat', 'ringkasan', 'Riwayat gangguan'),
@@ -114,7 +114,7 @@
       for (var h = 0; h < 24; h++) { var s3 = H.n[h] + H.n[(h + 1) % 24] + H.n[(h + 2) % 24]; if (s3 > best.s) best = { s: s3, h: h }; }
       var sh3 = share(best.s, H.known), win = pad2(best.h) + ':00–' + pad2((best.h + 2) % 24) + ':59';
       var fj = add({ tone: sh3 >= 0.3 ? 'warn' : 'info', area: 'Operasional', src: src('Grafik sebaran jam', 'tren', 'Sebaran jam'), metric: pctTxt(sh3),
-        head: 'Jam rawan ' + win, text: 'Memuat ' + pctTxt(sh3) + ' kejadian berjam tercatat (rata-rata jendela 3 jam = 12,5%).' });
+        head: 'Jam rawan ' + win, text: 'Memuat ' + pctTxt(sh3) + ' kejadian berjam tercatat (rata-rata jendela 3 jam = 12,5%).', hl: { seriesIndex: 0, dataIndex: [best.h, (best.h + 1) % 24, (best.h + 2) % 24] } });
       if (sh3 >= 0.3) fj.rec = { area: 'Operasional', title: 'Siagakan sumber daya pada jam rawan',
         actions: ['Tempatkan lok/teknisi siaga dan petugas pengamanan pada jam & lokasi ini.', 'Jadwalkan pekerjaan perawatan di luar jam rawan.'], lit: [] };
       var dmax = H.dowN.indexOf(Math.max.apply(null, H.dowN)), dated = KAIA.sum(H.dowN);

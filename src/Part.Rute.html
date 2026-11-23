@@ -144,8 +144,6 @@
             <dt>Wilayah</dt><dd x-text="C.regions.map(function (r) { return r.region; }).join(' → ')"></dd>
             <dt>UPT Resor JR</dt><dd x-text="P.resor.length ? P.resor.length + ' resor (' + P.resor.join(', ') + ')' : 'belum ada data'"></dd>
             <dt>Perlintasan</dt><dd x-text="KAI.fmt.n(P.jpl) + ' JPL terdaftar di petak koridor'"></dd>
-            <dt>Persinyalan</dt><dd class="muted">belum ada data di sumber aplikasi</dd>
-            <dt>Material rel/bantalan</dt><dd class="muted">belum ada data jenis (THI hanya memuat indeks kondisi material)</dd>
           </dl></div></div>
         <div class="card"><div class="card-h"><div><h3>Bangunan & elektrifikasi</h3><p x-text="'OpenStreetMap · cakupan ' + KAI.fmt.d1(P.osmCov * 100) + '% panjang koridor (petak cocok ±25%)'"></p></div></div>
           <div class="card-b"><dl class="kv">

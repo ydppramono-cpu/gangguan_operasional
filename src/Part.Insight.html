@@ -13,7 +13,7 @@
   <!-- Pasangan temuan → tindakan -->
   <div class="pairs" x-show="IB && IB.pairs.length">
     <div class="pairs-h"><span>Temuan dari data</span><span></span><span>Tindakan yang disarankan</span></div>
-    <template x-for="p in (IB ? IB.pairs : []).slice(0, allP ? 30 : 4)" :key="p.id">
+    <template x-for="p in (IB ? IB.pairs : []).slice(0, allP ? 30 : 2)" :key="p.id">
       <article class="pair" :class="'t-' + p.tone">
         <div class="pf">
           <div class="pf-top">
@@ -46,15 +46,15 @@
         </div>
       </article>
     </template>
-    <button class="link-btn sm more" x-show="IB && IB.pairs.length > 4" @click="allP = !allP" x-text="allP ? 'Ringkas' : 'Tampilkan semua ' + IB.pairs.length + ' pasangan temuan → tindakan'"></button>
+    <button class="link-btn sm more" x-show="IB && IB.pairs.length > 2" @click="allP = !allP" x-text="allP ? 'Ringkas' : 'Tampilkan semua ' + IB.pairs.length + ' pasangan temuan → tindakan'"></button>
   </div>
   <div class="note pad" x-show="IB && IB.findings.length && !IB.pairs.length">Tidak ada temuan yang memicu tindakan pada pilihan ini.</div>
 
   <!-- Konteks: temuan informatif tanpa tindakan khusus -->
   <div class="ctx" x-show="IB && IB.context.length">
-    <div class="ctx-h">Konteks lain <span class="note">(tidak memicu tindakan khusus)</span></div>
-    <div class="ctx-grid">
-      <template x-for="c in (IB ? IB.context : []).slice(0, allC ? 30 : 6)" :key="c.id">
+    <button type="button" class="ctx-h ctx-tg" @click="allC = !allC" :aria-expanded="allC"><svg class="i"><use href="#i-chevron"/></svg>Konteks lain (<span x-text="IB ? IB.context.length : 0"></span>) <span class="note">tidak memicu tindakan khusus</span></button>
+    <div class="ctx-grid" x-show="allC" x-transition.opacity>
+      <template x-for="c in (IB ? IB.context : []).slice(0, 30)" :key="c.id">
         <div class="ctx-c" :class="'t-' + c.tone">
           <div class="pf-top">
             <span class="pid" x-text="c.id"></span>
@@ -65,6 +65,5 @@
         </div>
       </template>
     </div>
-    <button class="link-btn sm more" x-show="IB && IB.context.length > 6" @click="allC = !allC" x-text="allC ? 'Ringkas' : 'Semua konteks (' + IB.context.length + ')'"></button>
   </div>
 </div>

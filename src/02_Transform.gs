@@ -26,7 +26,7 @@ function transformRows_(values, idx, nowYm, kor) {
   if (missing.length) throw new Error('Kolom hilang: ' + missing.join(', ') + '. Snapshot lama dipertahankan.');
   Object.keys(SOURCE_COLUMNS_OPT).forEach(function (k) { col[k] = head.indexOf(SOURCE_COLUMNS_OPT[k]); });
 
-  var rows = [], narr = {}, seen = {}, units = {}, silang = []; // silang = sarana yang pulau unitnya ≠ pulau kejadian
+  var rows = [], narr = {}, seen = {}, units = {}, silang = [], pend = [], learn = []; // pend = kejadian tanpa kelas tegas → kelas terdekat // silang = sarana yang pulau unitnya ≠ pulau kejadian
   var stats = { source: 0, skipped: 0, blank: 0, incomplete: 0, corrected: 0, dateConflict: 0, noDate: 0, badMinutes: 0, dupKey: 0, saranaMatched: 0, saranaAny: 0,
     lokMatched: 0, lokAny: 0, kaMatched: 0, kaAny: 0, review: {} };
   function g(r, k) { return col[k] >= 0 ? r[col[k]] : ''; }
@@ -62,11 +62,11 @@ function transformRows_(values, idx, nowYm, kor) {
     if (kr.subgangguan) { sub = kr.subgangguan; q.push('Label dikoreksi (M_KOREKSI)'); }
     var kelas = kr.kelas || D.classify(kat, sub);
     if (kelas === 'belum') {
-      // Kategori & Subgangguan kosong: kelas diturunkan dari judul bila polanya tegas (berlabel "diturunkan"); bila tidak, tetap "belum".
-      var kt = D.classifyText(judul);
-      if (kt) { kelas = kt; drv.push('kelas'); stats.kelasDiturunkan = (stats.kelasDiturunkan || 0) + 1; q.push('Kelas diturunkan dari judul (Kategori & Subgangguan kosong di sumber)'); }
-      else { stats.incomplete++; flag('Data belum lengkap'); q.push('Data belum lengkap: Kategori & Subgangguan kosong'); }
-    }
+      // Kategori & Subgangguan kosong: kelas diturunkan dari judul bila polanya tegas (berlabel "diturunkan"); bila tidak, kelas terdekat (setelah loop).
+      var kts = D.classifyTextSrc(judul, ketTxt), kt = kts.kelas;
+      if (kt) { kelas = kt; drv.push('kelas'); stats.kelasDiturunkan = (stats.kelasDiturunkan || 0) + 1; stats.kelasSumber = stats.kelasSumber || {}; stats.kelasSumber[kts.src] = (stats.kelasSumber[kts.src] || 0) + 1; q.push('Kelas diturunkan dari ' + kts.src + ' (Kategori & Subgangguan kosong di sumber)'); }
+      else { pend.push({ ri: rows.length, words: D.tokens(both), sar: !!D.txt(g(row, 'noSarana')) }); }
+    } else if (!kr.kelas) learn.push([kelas, D.tokens(both).concat(D.txt(g(row, 'noSarana')) ? ['__sarana__'] : [])]);
     var jenis = D.assetKind(g(row, 'jenisSarana'), sub);
 
     var cands = D.saranaCandidates(g(row, 'noSarana')), sar = [];
@@ -128,6 +128,20 @@ function transformRows_(values, idx, nowYm, kor) {
     rows.push(rec);
     var ket = D.txt(g(row, 'ket')), tl = D.txt(g(row, 'tindak'));
     if (ket || tl) narr[id] = [ket, tl];
+  }
+  // Kelas terdekat untuk kejadian yang Kategori, Subgangguan & pola teksnya tidak tegas (keputusan 24 Nov 2026).
+  if (pend.length) {
+    var M = D.classModel(); learn.forEach(function (x) { D.classLearn(M, x[0], x[1]); });
+    stats.kelasSumber = stats.kelasSumber || {}; stats.kelasTerdekat = pend.length;
+    pend.forEach(function (x) {
+      var w = x.words.slice(); if (x.sar) w.push('__sarana__');
+      var c = D.classNearest(M, w), r = rows[x.ri];
+      r[3] = c.kelas; r[33] = r[33] ? r[33] + ',kelas' : 'kelas';
+      if (c.kelas === 'sarana') r[22] = '';
+      stats.kelasDiturunkan = (stats.kelasDiturunkan || 0) + 1; stats.kelasSumber[c.src] = (stats.kelasSumber[c.src] || 0) + 1;
+      if (c.p < 0.6) { stats.kelasRagu = (stats.kelasRagu || 0) + 1; flag('Kelas terdekat (keyakinan < 60%)'); }
+      r[26] = (r[26] ? r[26] + '; ' : '') + 'Kelas diturunkan: ' + c.src + ' (keyakinan ' + Math.round(c.p * 100) + '%; Kategori & Subgangguan kosong di sumber)';
+    });
   }
   // Sarana beda pulau: ≥ 2 kejadian unit yang sama di pulau lain = mutasi antarpulau (tautan dipertahankan, dicatat);
   // hanya 1 kejadian = nomor diragukan → dilepas dari kejadian (teks asli tetap di kolom nomor sumber) dan masuk antrean verifikasi.

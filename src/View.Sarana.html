@@ -60,6 +60,7 @@
                   <td style="font-size:12.5px" x-text="u.events.map(function (e) { return KAI.fmt.monOnly(e.ym) + ': ' + (e.sub || '').replace(/^[^-]+-\s*/, '') + ' (' + KAI.fmt.n(e.menit) + ')'; }).join(' · ')"></td>
                 </tr></template>
               </tbody></table><div class="empty" x-show="!repeat.length">Tidak ada unit berulang untuk jenis ini.</div></div>
+              <div x-pita="'sarana:berulang'"></div>
             </div>
           </div>
 
@@ -95,7 +96,7 @@
                 <div class="card"><div class="card-h"><div><h3>Skor turunan × laju gangguan</h3><p>Batang = unit per kelas skor (sumbu kiri) · garis = gangguan 12 bln per 100 unit (sumbu kanan; kelompok &lt; 30 unit tidak digaris — basis kecil)</p></div></div>
                   <div class="card-b fill"><div class="chart tall" x-chart="comboScore()"></div></div></div>
                 <div class="card"><div class="card-h"><div><h3>Usia armada × laju gangguan</h3><p x-text="'Unit per kelompok usia · garis = gangguan 12 bln per 100 unit (kelompok < 30 unit tidak digaris) · ' + kind.toLowerCase()"></p></div></div>
-                  <div class="card-b fill"><div class="chart tall" x-chart="comboAge()"></div></div></div>
+                  <div class="card-b fill"><div class="chart tall" x-chart="comboAge()"></div></div><div x-pita="'sarana:usia'"></div></div>
               </div>
               <div class="card mt"><div class="card-h"><div><h3 x-text="'Daftar pantau ' + kind.toLowerCase() + ': skor turunan terendah'"></h3><p>Diurutkan dari skor terendah · klik untuk kartu unit</p></div></div>
                 <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Unit</th><th>Kelas</th><th>Depo (SAP)</th><th class="num">Usia</th><th class="num">Gangguan 12 bln</th><th class="num">Menit</th><th>GAPEKA 2025</th><th class="num">Skor</th></tr></thead><tbody>
@@ -249,24 +250,29 @@ document.addEventListener('alpine:init', function () {
               label: { show: true, position: 'right', distance: 10, color: '#3A4458', fontSize: 11, formatter: function (p) { var d = D[p.dataIndex]; return d.strength + '  ·  ' + KAI.fmt.d1(d.rate) + ' gangguan/100 unit'; } } }] });
       },
       get depoTable() {
+        // Golongan baris: Depo (berperingkat) · Balai Yasa (unit sedang perawatan berat, tidak diperingkat) · unit tanpa depo di SAP.
+        var GRP = { depo: '1 · Depo', by: '2 · Balai Yasa (sedang perawatan, tidak diperingkat)', none: '3 · Unit tanpa depo di SAP (perlu dilengkapi di sumber)' };
+        var grpOf = function (d) { return !d.code || /tidak tercatat/i.test(d.label) ? GRP.none : /^balai yasa|^\s*BY/i.test(d.label) ? GRP.by : GRP.depo; };
         var k = this.kind, lok = k === 'Lokomotif', D = this.deps.map(function (d) {
-          return { id: d.id, rank: d.rank || 999, depo: d.label, code: d.code, region: d.region || '–', n: d.n, sg: d.sg, gsg: d.gapekaSG, by: d.by, age: d.ageMed, oldPct: d.n ? d.old / d.n * 100 : 0, health: d.health, rhi: d.rhiMean,
-            HMD: d.H + ' / ' + d.M + ' / ' + d.Dc, n12: d.n12, rate: d.rate, strength: d.strength, so: d.dinas ? d.dinas.so : null, km: d.dinas ? d.dinas.kmHari : null, ka: d.dinas ? String(d.dinas.ka).split(' ').filter(Boolean).length : null,
+          var g = grpOf(d);
+          return { id: d.id, grp: g, rank: g === GRP.depo ? (d.rank || 999) : 999, depo: g === GRP.none ? 'Depo tidak tercatat di SAP' : d.label, code: d.code, region: d.region || '–', n: d.n, sg: d.sg, gsg: d.gapekaSG, by: d.by, age: d.ageMed, oldPct: d.n ? d.old / d.n * 100 : 0, health: d.health, rhi: d.rhiMean,
+            HMD: d.H + ' / ' + d.M + ' / ' + d.Dc, n12: d.n12, rate: d.rate, strength: g === GRP.depo ? d.strength : null, so: d.dinas ? d.dinas.so : null, km: d.dinas ? d.dinas.kmHari : null, ka: d.dinas ? String(d.dinas.ka).split(' ').filter(Boolean).length : null,
             top: d.top.map(function (u) { return KAI.fmt.unit(u.no); }).join(', ') };
         });
         var N = function (c) { var v = c.getValue(); return v == null ? '–' : KAI.fmt.n(v); }, D1 = function (c) { var v = c.getValue(); return v == null ? '–' : KAI.fmt.d1(v); };
         var cols = [{ title: '#', field: 'rank', width: 56, hozAlign: 'right', formatter: function (c) { var v = c.getValue(); return v >= 999 ? '–' : v; } },
           { title: 'Depo', field: 'depo', minWidth: 190, formatter: function (c) { var v = String(c.getValue() || ''); return '<b title="' + KAITable.esc(v) + '">' + KAITable.esc(v.replace(/^Depo (Lokomotif|Kereta|Gerbong) /i, '')) + '</b>'; } }, { title: 'Wilayah', field: 'region', width: 90 },
-          { title: 'Kekuatan', field: 'strength', width: 120, formatter: function (c) { var v = c.getValue(), col = v >= 80 ? '#1F8A2E' : v >= 65 ? '#275BC0' : v >= 50 ? '#E0861A' : '#C0392B'; return '<span class="meter"><i style="width:' + v + '%;background:' + col + '"></i></span><b>' + v + '</b>'; } },
+          { title: 'Kekuatan', field: 'strength', width: 120, formatter: function (c) { var v = c.getValue(); if (v == null) return '<span class="muted">–</span>'; var col = v >= 80 ? '#1F8A2E' : v >= 65 ? '#275BC0' : v >= 50 ? '#E0861A' : '#C0392B'; return '<span class="meter"><i style="width:' + v + '%;background:' + col + '"></i></span><b>' + v + '</b>'; } },
           { title: 'Unit SAP', field: 'n', hozAlign: 'right', width: 84, formatter: N }, { title: 'SG GAPEKA', headerTooltip: 'Tercantum siap guna di Buku Dukungan Sarana GAPEKA 2025', field: 'sg', hozAlign: 'right', width: 100, formatter: N },
           { title: 'Usia median', field: 'age', hozAlign: 'right', width: 96, formatter: function (c) { return KAI.fmt.age(c.getValue()); } },
           { title: '% > 30 th', field: 'oldPct', hozAlign: 'right', width: 86, formatter: D1 },
-          { title: lok ? 'RHI rata-rata' : 'Skor turunan', field: 'health', hozAlign: 'right', width: 104, formatter: D1 },
+          { title: lok ? 'RHI rata-rata' : 'Skor turunan', field: 'health', hozAlign: 'right', width: 118, formatter: D1 },
           { title: lok ? 'H / M / D' : 'B / P / Pr', headerTooltip: lok ? 'HEALTHY / MONITOR / DECLINING (RHI)' : 'Baik / Pantau / Prioritas (skor turunan)', field: 'HMD', width: 110 },
           { title: 'Gangg. 12 bln', field: 'n12', hozAlign: 'right', width: 108, formatter: N }, { title: 'Per 100 unit', field: 'rate', hozAlign: 'right', width: 92, formatter: D1 }];
         if (lok) cols = cols.concat([{ title: 'SO dinasan', field: 'so', hozAlign: 'right', width: 90, formatter: N }, { title: 'Km/lok/hari', field: 'km', hozAlign: 'right', width: 96, formatter: N }, { title: 'KA dilayani', field: 'ka', hozAlign: 'right', width: 92, formatter: N }]);
         cols.push({ title: 'Unit terberat 12 bln', field: 'top', minWidth: 200 });
-        return { id: 'depo-' + k, index: 'id', data: D, columns: cols, pageSize: 15, initialSort: [{ column: 'rank', dir: 'asc' }] };
+        return { id: 'depo-' + k, index: 'id', data: D, columns: cols, pageSize: 0, height: 560, initialSort: [{ column: 'rank', dir: 'asc' }],
+          groupBy: 'grp', groupHeader: function (v, n) { return v.replace(/^\d · /, '') + ' <span class="muted">· ' + n + '</span>'; } };
       },
       get unitRows() {
         var q = String(this.q || '').toUpperCase().trim();
@@ -320,7 +326,7 @@ document.addEventListener('alpine:init', function () {
       get regs() { return (this.$store.app.f.wilayah || []).slice(); },
       get byUpt() { return this.regs.length === 1; },
       get scopeLabel() { return this.regs.length ? this.regs.join(', ') : 'KAI'; },
-      get P() { var k = 'p|' + this.$store.app.ver + '|' + this.R.ym + '|' + this.regs.join(','); if (memo[k] === undefined) memo[k] = this.ok ? KAIK.pras(KAI.data.all, this.K, this.R.ym, this.regs) : null; return memo[k]; },
+      get P() { var k = 'p|' + this.$store.app.ver + '|' + this.R.ym + '|' + this.regs.join(','); if (memo[k] === undefined) memo[k] = this.ok ? KAIK.pras(KAI.data.all, this.K, this.R.ym, this.regs, { months: 3 }) : null; return memo[k]; },
       get S() { var k = 's|' + this.$store.app.ver + '|' + this.R.ym + '|' + this.regs.join(','); if (memo[k] === undefined) memo[k] = this.ok && this.K.rhiDay ? KAIK.sar(KAI.data.all, this.K, KAI.data.ref, this.R.ym, this.regs) : null; return memo[k]; },
       get win() { return KAI.fmt.mon(this.P.first).split(' ')[0] + '–' + KAI.fmt.mon(this.R.ym); },
       get w6() { return KAI.fmt.mon(this.S.first).split(' ')[0] + '–' + KAI.fmt.mon(this.R.ym); },

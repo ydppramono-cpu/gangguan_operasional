@@ -52,7 +52,8 @@ var SOURCE_COLUMNS_OPT = { tanggalKejadian: 'Tanggal kejadian' };
 /**
  * Aturan 4 kelas K5-2026.11 — SAMA dengan pipeline laporan Claude (standar_pelaporan_gangguan, keputusan 3 & 5 Nov 2026).
  * Urutan: (1) Kategori gangguan; (2) awalan Subgangguan; (3) sisanya Operasional.
- * Kategori & Subgangguan kosong → 'belum' (Data belum lengkap), tidak ditebak dari judul.
+ * Kategori & Subgangguan kosong → kelas diturunkan (v3.19, keputusan 24 Nov 2026): pola teks tegas (Domain.classifyTextSrc),
+ * bila tidak ada → kelas terdekat menurut kemiripan kata (Domain.classNearest). Selalu bertanda * dan berketerangan keyakinan.
  */
 var CLASS_BY_KATEGORI = { 'alam': 'alam', 'sarana': 'sarana', 'jalan & jembatan': 'prasarana', 'sintelis': 'prasarana', 'prasarana': 'prasarana', 'laa': 'prasarana' };
 var CLASS_RULES = [
@@ -71,7 +72,7 @@ var CLASS_META = {
   sarana: { label: 'Sarana', short: 'Sarana', color: '#275BC0' },
   alam: { label: 'Alam', short: 'Alam', color: '#B45309' },
   prasarana: { label: 'Prasarana', short: 'Prasarana', color: '#64748B' },
-  belum: { label: 'Data belum lengkap', short: 'Belum lengkap', color: '#9AA3B2' }
+  belum: { label: 'Belum terkelas (kategori kosong, teks tidak tegas)', short: 'Belum terkelas', color: '#9AA3B2' }
 };
 
 /** Jenis kejadian perlintasan sebidang (urutan = prioritas pencocokan ke Subgangguan). */

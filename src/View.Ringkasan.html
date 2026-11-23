@@ -23,6 +23,22 @@
       </template>
     </div>
 
+    <!-- Sorotan (v3.19): 3 temuan terpenting; tiap sorotan melompat ke grafik sumbernya (pita temuan terbuka). Daftar lengkap terlipat. -->
+    <div class="sorot mt" x-data="{ all: false, get IB() { return $store.app.R && $store.app.R.insight; } }" x-show="IB && IB.findings.length">
+      <div class="sorot-row">
+        <span class="sorot-t"><svg class="i"><use href="#i-bulb"/></svg>Sorotan</span>
+        <template x-for="f in KAIPita.top(IB, 3)" :key="f.id">
+          <button type="button" class="sorot-c" :class="'t-' + f.tone" @click="KAIPita.go(f)" :title="f.text + (f.rec ? ' — Tindakan: ' + f.rec.title : '')">
+            <b x-text="f.metric"></b><span x-text="f.head"></span><em x-text="f.rec ? 'Tindakan: ' + f.rec.title : (f.src ? f.src.label : '')"></em>
+          </button>
+        </template>
+        <button type="button" class="link-btn sm" @click="all = !all" :aria-expanded="all" x-text="all ? 'Tutup' : 'Semua ' + IB.findings.length + ' temuan'"></button>
+      </div>
+      <div class="card mt-s" x-show="all" x-transition.opacity><div class="card-b"><?!= include('Part.Insight'); ?>
+</div>
+        <div class="card-f" x-show="!$store.app.refReady">Temuan usia sarana &amp; JPL muncul setelah data referensi termuat.</div></div>
+    </div>
+
     <div class="grid g-2-1 mt">
       <div class="card">
         <div class="card-h"><div><h3>Perbandingan MoM · YoY · YTD</h3>
@@ -46,6 +62,7 @@
           </table>
           <p class="note" style="margin:10px 0 0">Merah = memburuk (naik), hijau = membaik (turun). Arahkan kursor ke persentase untuk melihat angka pembanding.</p>
         </div>
+        <div x-pita="'ringkasan:mom'"></div>
       </div>
       <div class="card">
         <div class="card-h"><div><h3>Matriks prioritas</h3><p x-text="'Frekuensi × kelambatan per kelas · area oranye = sering & dampak tinggi (di atas kedua median) · klik gelembung untuk menelusuri'"></p></div></div>
@@ -54,18 +71,13 @@
     </div>
 
     <!-- Kartu per kelas dihapus (v3.17): angkanya sama dengan baris "Menit …" pada tabel di atas; baris itu kini dapat diklik. -->
-    <p class="note mt-s" x-show="R.cls.belum && R.cls.belum.n" x-text="'Data belum lengkap (kelas belum diisi): ' + KAI.fmt.n(R.cls.belum ? R.cls.belum.n : 0) + ' kejadian · ' + KAI.fmt.n(R.cls.belum ? R.cls.belum.menit : 0) + ' menit — termasuk dalam total, tidak masuk baris “Menit …” per kelas.'"></p>
 
-    <div class="card mt" x-data="{ get IB() { return $store.app.R && $store.app.R.insight; } }">
-      <div class="card-b"><?!= include('Part.Insight'); ?>
-</div>
-      <div class="card-f" x-show="!$store.app.refReady">Temuan usia sarana &amp; JPL muncul setelah data referensi termuat.</div>
-    </div>
 
     <div class="card mt">
       <div class="card-h"><div><h3>Kejadian terbesar</h3><p x-text="'50 kejadian dengan kelambatan terlama · ' + R.label + ' · klik baris untuk detail'"></p></div>
         <button class="btn sm" @click="$store.app.go('telusuri', {})">Semua kejadian<svg class="i"><use href="#i-arrow"/></svg></button></div>
       <div class="card-b"><div x-table="KAITable.eventSpec('ring-big', biggest, { sort: [{ column: 'menit', dir: 'desc' }] })" @row-click="$store.app.openEvent($event.detail.id)"></div></div>
+      <div x-pita="'ringkasan:besar'"></div>
     </div>
   </section>
 </template>
