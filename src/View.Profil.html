@@ -506,7 +506,7 @@ document.addEventListener('alpine:init', function () {
         var cols;
         if (M.type === 'petak') cols = [{ title: 'KA', field: 'no', width: 80 }, { title: 'Nama', field: 'nama', minWidth: 150 }, { title: 'Kelas', field: 'kelas', width: 120 },
           { title: 'Relasi', field: 'relasi', width: 100 }, { title: 'Arah', field: 'arah', minWidth: 170 }, { title: 'Jam di awal petak', field: 'tA', width: 120, sorter: function (a, b, ra, rb) { return (ra.getData().jam || 0) - (rb.getData().jam || 0); } },
-          { title: 'Jam di akhir petak', field: 'tB', width: 120 }, { title: 'Ket.', field: 'ket', width: 92 }];
+          { title: 'Jam di akhir petak', field: 'tB', width: 120 }, { title: 'Keterangan', field: 'ket', width: 92 }];
         else cols = [{ title: 'KA', field: 'no', width: 76 }, { title: 'Nama', field: 'nama', minWidth: 150 }].concat(M.sched.wil ? [{ title: 'Stasiun', field: 'stasiun', width: 130 }] : [])
           .concat([{ title: 'Kelas', field: 'kelas', width: 116 }, { title: 'Relasi', field: 'relasi', width: 96 },
           { title: 'Keterangan', field: 'keterangan', width: 130 }, { title: 'Datang', field: 'datang', width: 74 }, { title: 'Berangkat', field: 'berangkat', width: 84 },

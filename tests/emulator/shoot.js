@@ -2,7 +2,7 @@ const { chromium } = require('playwright'); const fs = require('fs');
 const L = process.env.LIBS_DIR || require('path').resolve(__dirname, 'node_modules') + '/';
 const MAP = [[/echarts@[\d.]+\/dist\/echarts\.min\.js/, L + 'echarts/dist/echarts.min.js'], [/tabulator-tables@[\d.]+\/dist\/js\/tabulator\.min\.js/, L + 'tabulator-tables/dist/js/tabulator.min.js'],
   [/tabulator-tables@[\d.]+\/dist\/css\/tabulator\.min\.css/, L + 'tabulator-tables/dist/css/tabulator.min.css'], [/alpinejs@[\d.]+\/dist\/cdn\.min\.js/, L + 'alpinejs/dist/cdn.min.js']];
-const routes = (process.argv[2] || 'ringkasan,tren,perlintasan,wilayah,sarana,eksposur,telusuri,cari,unduh,metodologi,batubara,bb-capaian,bb-siklus').split(',');
+const routes = (process.argv[2] || 'ringkasan,tren,perlintasan,wilayah,sarana,eksposur,telusuri,cari,unduh,metodologi,mutu,batubara,bb-capaian,bb-siklus').split(',');
 const widths = (process.env.W || '1440,400').split(',').map(Number);
 (async () => {
   const b = await chromium.launch(); process.chdir(__dirname); fs.mkdirSync('shots', { recursive: true }); const rep = {};

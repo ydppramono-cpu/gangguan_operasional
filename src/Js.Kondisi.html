@@ -203,9 +203,9 @@
    *  v3.7 — definisi laporan "THI × WKP × gangguan prasarana" dan "RHI × gangguan sarana" (sama untuk dashboard & unduhan)
    * ===================================================================================================== */
   // Komponen THI kandidat "komponen terendah" (label seperti pada laporan)
-  var COMP2 = [['rel', 'Mat. Rel dan Sambungan Las (30%)'], ['pelat', 'Mat. Sambungan Pelat (20%)'], ['penambat', 'Mat. Penambat (15%)'], ['wesel', 'Mat. Wesel (15%)'],
-    ['balas', 'Mat. Balas/Plinth (10%)'], ['bantalan', 'Mat. Bantalan (10%)'], ['badan', 'Kons. Badan Jalan dan Lereng (50%)'], ['drainase', 'Kons. Drainase (30%)'],
-    ['lingk', 'Kons. Lingkungan (20%)'], ['geo', 'Geometri'], ['mi', 'Maint. idx']];
+  var COMP2 = [['rel', 'Material Rel dan Sambungan Las (30%)'], ['pelat', 'Material Sambungan Pelat (20%)'], ['penambat', 'Material Penambat (15%)'], ['wesel', 'Material Wesel (15%)'],
+    ['balas', 'Material Balas/Plinth (10%)'], ['bantalan', 'Material Bantalan (10%)'], ['badan', 'Konstruksi Badan Jalan dan Lereng (50%)'], ['drainase', 'Konstruksi Drainase (30%)'],
+    ['lingk', 'Konstruksi Lingkungan (20%)'], ['geo', 'Geometri'], ['mi', 'Maintenance index']];
   var WKP_JR2 = { rel: 1, wesel: 1, bantalan: 1, geometri: 1 };          // WKP jalan rel = rel/las, wesel, bantalan/penambat, geometri (MTT/KPJR/listring)
   var RE_JRW = /^jalan rel\b|track wesel|rel patah|rel spaten|goyangan|wesel/i;  // gangguan prasarana kelompok jalan rel & wesel
   var RE_SIN = /^(persinyalan|komunikasi)\s*-/i;                          // kelompok persinyalan & komunikasi

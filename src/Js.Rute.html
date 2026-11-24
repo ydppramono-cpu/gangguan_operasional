@@ -320,19 +320,19 @@
       var jr = Object.keys(x.gJr).sort(function (p, q) { return x.gJr[q] - x.gJr[p]; })[0];
       var job = jr === 'wesel' ? 'perawatan wesel' : jr === 'track' ? 'pemeriksaan sirkuit track & isolasi rel' : jr === 'jembatan' ? 'pemeriksaan jembatan' : 'jalan rel (geometri, bantalan/penambat, las)';
       var used = x.wk.map(function (w) { return hm(w[9]); }).filter(function (v) { return v != null; }), uMed = used.length ? med(used) : null;
-      var why = x.gN + ' gangguan prasarana (' + Math.round(x.gM) + ' menit, 12 bln)' + (x.thi ? ' · THI ' + x.thi.hi + ' ' + (x.thi.grade || '') + ' (' + x.thi.ym + ')' : ' · THI petak tidak tersedia') + ' · WKP jalan rel ' + x.wkJR + 'x (13 bln)' + (uMed != null ? ', median mulai program ' + fmt(uMed) : '');
+      var why = x.gN + ' gangguan prasarana (' + Math.round(x.gM) + ' menit, 12 bulan)' + (x.thi ? ' · THI ' + x.thi.hi + ' ' + (x.thi.grade || '') + ' (' + x.thi.ym + ')' : ' · THI petak tidak tersedia') + ' · WKP jalan rel ' + x.wkJR + 'x (13 bulan)' + (uMed != null ? ', median mulai program ' + fmt(uMed) : '');
       var on = /^tidak/.test(where) ? '; ' + where : ' pada ' + where;
       var act = x.wkJR >= 12 ? 'WKP sudah rutin (' + x.wkJR + 'x) namun gangguan & kondisi belum membaik → evaluasi mutu pekerjaan dan beralih ke perbaikan permanen (' + job + ', penggantian komponen)' + on + '.'
         : 'Tambah WKP ' + job + on + '.';
       out.push({ kind: 'wkp', pri: x.flag, key: x.key, title: x.nmA + ' – ' + x.nmB + ' (' + x.key + ')', why: why, act: act });
     });
     var clash = S.filter(function (x) { return x.wkClash >= 3; }).sort(function (a, b) { return b.wkClash - a.wkClash; }).slice(0, 4);
-    clash.forEach(function (x) { out.push({ kind: 'jadwal', pri: 'P2', key: x.key, title: x.nmA + ' – ' + x.nmB, why: x.wkClash + ' dari ' + x.wkProg + ' program WKP di petak tunggal ini (13 bln) jam programnya dilalui ≥ 2 KA terjadwal GAPEKA', act: 'Geser program WKP ke ' + (x.best ? fmt(x.best.a) + '–' + fmt(x.best.b) : 'jendela yang dibuka lewat rekayasa pola operasi') + ' agar tidak memotong lintasan KA terjadwal.' }); });
+    clash.forEach(function (x) { out.push({ kind: 'jadwal', pri: 'P2', key: x.key, title: x.nmA + ' – ' + x.nmB, why: x.wkClash + ' dari ' + x.wkProg + ' program WKP di petak tunggal ini (13 bulan) jam programnya dilalui ≥ 2 KA terjadwal GAPEKA', act: 'Geser program WKP ke ' + (x.best ? fmt(x.best.a) + '–' + fmt(x.best.b) : 'jendela yang dibuka lewat rekayasa pola operasi') + ' agar tidak memotong lintasan KA terjadwal.' }); });
     var sec = prof.sec.slice().sort(function (a, b) { return b.n - a.n; })[0];
-    if (sec) out.push({ kind: 'keamanan', pri: 'P2', title: sec.label + ' — ' + sec.n + ' kejadian 12 bln', why: 'Titik terbanyak: ' + sec.top.map(function (t) { return t.label + ' (' + t.n + ')'; }).join(', '),
+    if (sec) out.push({ kind: 'keamanan', pri: 'P2', title: sec.label + ' — ' + sec.n + ' kejadian 12 bulan', why: 'Titik terbanyak: ' + sec.top.map(function (t) { return t.label + ' (' + t.n + ')'; }).join(', '),
       act: sec.k === 'orang' ? 'Sterilisasi jalur & pagar pembatas di titik terbanyak, patroli bersama Polsuska/aparat setempat, sosialisasi warga.' : sec.k === 'batu' ? 'Patroli & CCTV pada titik terbanyak, edukasi sekolah sekitar, laporkan ke Polsuska; prioritaskan kaca film/lapis pengaman pada rangkaian lintas ini.' : 'Koordinasi pengamanan dengan aparat & pemda di titik terbanyak; pengawasan aset (kabel, komponen) rawan.' });
     var nat = prof.nat.slice().sort(function (a, b) { return b.n - a.n; })[0];
-    if (nat) out.push({ kind: 'alam', pri: 'P2', title: nat.label + ' — ' + nat.n + ' kejadian 12 bln', why: 'Titik terbanyak: ' + nat.top.map(function (t) { return t.label + ' (' + t.n + ')'; }).join(', '),
+    if (nat) out.push({ kind: 'alam', pri: 'P2', title: nat.label + ' — ' + nat.n + ' kejadian 12 bulan', why: 'Titik terbanyak: ' + nat.top.map(function (t) { return t.label + ' (' + t.n + ')'; }).join(', '),
       act: nat.k === 'banjir' ? 'Perkuat drainase & peninggian badan jalan pada titik banjir berulang; pasang sensor muka air dan SOP batas operasi saat hujan lebat.' : nat.k === 'tanah' ? 'Survei geoteknik lereng/badan jalan, pasang dinding penahan/bronjong, inspeksi setelah hujan lebat.' : nat.k === 'pohon' ? 'Pemangkasan vegetasi ruang bebas jalur secara terjadwal sebelum musim hujan.' : nat.k === 'selip' ? 'Tinjau pasir/sanding lokomotif & batas tonase di tanjakan pada lintas ini.' : 'Perkuat proteksi petir/pentanahan peralatan sinyal pada titik terdampak.' });
     return out;
   }

@@ -6,9 +6,23 @@
         <div class="note" x-text="'Dibangun ' + KAI.fmt.time(meta.builtAt) + ' · sumber diubah ' + KAI.fmt.time(meta.sourceUpdatedAt)"></div></div>
       <div class="card kpi" :style="'--kpi-c:' + (st && !st.ok ? 'var(--bad)' : 'var(--good)')"><div class="lbl">Sinkronisasi terakhir</div>
         <div class="val" style="font-size:15px;line-height:1.35" x-text="st ? st.message : 'Belum ada catatan'"></div>
-        <div class="note" x-text="st ? KAI.fmt.time(st.at) + ' · ' + st.trigger + ' · ' + Math.round(st.ms / 1000) + ' dtk · otomatis tiap 15 menit bila sumber berubah' : ''"></div></div>
+        <div class="note" x-text="st ? KAI.fmt.time(st.at) + ' · ' + st.trigger + ' · ' + Math.round(st.ms / 1000) + ' detik · otomatis tiap 15 menit bila sumber berubah' : ''"></div></div>
       <div class="card kpi"><div class="lbl">Cakupan</div><div class="val num" style="font-size:20px" x-text="KAI.fmt.n(meta.rows) + ' kejadian'"></div>
         <div class="note" x-text="KAI.fmt.day($store.app.dates.min) + ' s.d. ' + KAI.fmt.day($store.app.dates.max) + ' · aturan ' + meta.rule"></div></div>
+    </div>
+
+    <div class="card mt" x-data="{ L: KAI.perf.list(), d: function (v) { return v == null ? '–' : KAI.fmt.d1(v / 1000) + ' detik'; } }">
+      <div class="card-h"><div><h3>Waktu muat di perangkat ini</h3><p>Diukur di browser ini, 10 kali buka terakhir. Disimpan lokal, tidak dikirim ke mana pun. Waktu dihitung sejak alamat dibuka.</p></div></div>
+      <div class="card-b tbl-wrap">
+        <p class="note" x-show="!L.length">Belum ada catatan. Muat ulang halaman sekali, lalu buka Metodologi lagi.</p>
+        <table class="tbl sm" x-show="L.length" data-no-csv><thead><tr><th>Waktu buka</th><th class="num">Halaman dirakit server</th><th class="num">Halaman diterima</th><th class="num">Skrip siap</th><th class="num">Pustaka grafik/tabel</th><th class="num">Data inti (server / total)</th><th class="num">Layar pertama</th><th class="num">Referensi & GAPEKA</th></tr></thead>
+          <tbody><template x-for="(r, i) in L" :key="i"><tr>
+            <td x-text="KAI.fmt.time(r.at) + ' · ' + (r.ua || '')"></td>
+            <td class="num" x-text="d(r.render)"></td><td class="num" x-text="d(r.html) + (r.kb ? ' · ' + KAI.fmt.n(r.kb) + ' KB' : '')"></td><td class="num" x-text="d(r.dcl)"></td><td class="num" x-text="d(r.libs)"></td>
+            <td class="num" x-text="r.api && r.api.apiBootstrap ? d(r.api.apiBootstrap.srv) + ' / ' + d(r.api.apiBootstrap.total) : '–'"></td>
+            <td class="num" x-text="d(r.layar) + (r.masuk === false ? ' (dari beranda)' : '')"></td><td class="num" x-text="d(r.ref)"></td></tr></template></tbody></table>
+        <p class="note mt-s">Cara membaca: bagian terbesar menunjukkan apa yang perlu dipercepat — perakitan di server (Apps Script), unduhan halaman (jaringan), atau pengolahan data di perangkat. "Data inti server" = lama kerja server membaca snapshot; sisanya antrean Apps Script dan jaringan.</p>
+      </div>
     </div>
 
     <div class="card mt">
@@ -44,7 +58,7 @@
           <dt>Sumber</dt><dd>Referensi Sarana SAP (unit, depo, mulai dinas, spesifikasi) · Buku Dukungan Sarana GAPEKA 2025 Jawa, Sumbar, Sumsel, Sumut (nomor sarana siap guna per depo induk, dinasan lok, km/lok/hari) · RHI lokomotif harian · Gangguan_Induk (nomor sarana pertama).</dd>
           <dt>Siap guna GAPEKA</dt><dd>Nomor sarana diekstrak dari PDF Duksar dan dicocokkan ke SAP: 499 lokomotif, 1.975 kereta, 7.948 gerbong tercantum. Unit SAP yang tidak tercantum ditandai "tidak tercantum" (bisa konservasi, rusak berat, atau baru).</dd>
           <dt>Kesehatan</dt><dd>Lokomotif = healthy index RHI (≥ 85 HEALTHY, 70–85 MONITOR, &lt; 70 DECLINING). Kereta & gerbong: RHI resmi belum tersedia → skor turunan = 0,35 usia + 0,45 keandalan + 0,20 kesiapan (Baik ≥ 80, Pantau 60–80, Prioritas &lt; 60). Indikator internal, bukan RHI.</dd>
-          <dt>Skor komponen</dt><dd>Keandalan = 100 − min(100, 15 × kejadian 12 bln + menit 12 bln ÷ 20) · Usia = 100 − 2,2 × (usia − 5 th) · Kesiapan = 100 siap guna GAPEKA, 60 tidak tercantum, 30 di Balai Yasa. Usia &gt; 80 th dianggap tanggal SAP salah (tidak dinilai).</dd>
+          <dt>Skor komponen</dt><dd>Keandalan = 100 − min(100, 15 × kejadian 12 bulan + menit 12 bulan ÷ 20) · Usia = 100 − 2,2 × (usia − 5 th) · Kesiapan = 100 siap guna GAPEKA, 60 tidak tercantum, 30 di Balai Yasa. Usia &gt; 80 th dianggap tanggal SAP salah (tidak dinilai).</dd>
           <dt>Atribut 1–20 & rating</dt><dd>Atribut = skor ÷ 5 (gaya Football Manager). Rating = rata-rata atribut × 5.</dd>
           <dt>Kekuatan depo</dt><dd>0,35 kesehatan armada + 0,30 keandalan (gangguan per 100 unit dibanding median depo sejenis; 2× median = 0) + 0,20 porsi armada ≤ 30 th + 0,15 kesiapan GAPEKA. Peringkat hanya depo ≥ 10 unit.</dd>
           <dt>Dinasan</dt><dd>Proksi: KA yang dilayani dinasan lok depo (lok) atau depo induk rangkaian (kereta) menurut Duksar, ditambah KA pada gangguan unit. Bukan catatan dinasan harian per unit. Sejak v3.15 daftar ini dibersihkan: deret 1–23/25 di awal tiap dipo (artefak tabel PDF) dibuang, nomor KA Sumatera tanpa awalan diberi awalan S/U/B, dan nomor yang pulaunya berbeda dengan depo ditolak.</dd>

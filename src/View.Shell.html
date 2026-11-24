@@ -74,7 +74,7 @@
               <div class="bell-it" :class="it.isNew && 'new'">
                 <div class="bell-it-h"><b x-text="KAI.fmt.time(it.at)"></b><span class="tag" x-text="it.kind === 'aplikasi' ? 'Versi aplikasi' : it.kind === 'awal' ? 'Data awal' : 'Pembaruan data'"></span><span class="tag good" x-show="it.isNew">Baru</span></div>
                 <div class="note" x-text="KAI.fmt.n(it.rows) + ' kejadian · ' + (it.kind === 'awal' ? 'snapshot pertama' : (it.dRows >= 0 ? '+' : '') + KAI.fmt.n(it.dRows) + ' kejadian, ' + (it.dMenit >= 0 ? '+' : '') + KAI.fmt.n(it.dMenit) + ' menit')"></div>
-                <div class="note" x-show="it.months && it.months.length" x-text="'Bulan berubah: ' + (it.months || []).slice(0, 4).map(function (m) { return KAI.fmt.mon(m.ym) + ' (' + (m.dn >= 0 ? '+' : '') + m.dn + ' kej.)'; }).join(', ') + (it.monthsChanged > 4 ? ', +' + (it.monthsChanged - 4) + ' bulan lain' : '')"></div>
+                <div class="note" x-show="it.months && it.months.length" x-text="'Bulan berubah: ' + (it.months || []).slice(0, 4).map(function (m) { return KAI.fmt.mon(m.ym) + ' (' + (m.dn >= 0 ? '+' : '') + m.dn + ' kejadian)'; }).join(', ') + (it.monthsChanged > 4 ? ', +' + (it.monthsChanged - 4) + ' bulan lain' : '')"></div>
               </div>
             </template>
             <div class="note" style="padding:10px" x-show="!$store.app.notif.log.length">Belum ada catatan pembaruan. Riwayat muncul setelah sinkronisasi berikutnya.</div>
@@ -222,6 +222,7 @@
         <?!= include('View.Eksposur'); ?>
 
         <?!= include('View.Telusuri'); ?>
+        <?!= include('View.Mutu'); ?>
 
         <?!= include('View.Cari'); ?>
 

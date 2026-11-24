@@ -94,7 +94,7 @@
     <template x-if="engine"><div>   <!-- x-if: isi dievaluasi hanya setelah data pendapatan termuat -->
       <div class="card mt">
         <div class="card-h"><div><h3>Rate pendapatan per jam (diperbarui otomatis dari agregat)</h3><p x-text="'Rate acuan (bulan lengkap ' + KAI.fmt.mon(X.P.refFrom) + '–' + KAI.fmt.mon(X.P.refTo) + '): penumpang ' + KAI.fmt.rp(X.P.ref) + '/jam · barang ' + KAI.fmt.rp(X.B.ref) + '/jam'"></p></div></div>
-        <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Bulan</th><th class="num">Rate KA pnp (Rp/jam)</th><th class="num">Cakupan pendapatan pnp</th><th class="num">Perjalanan</th><th class="num">Rate KA barang (Rp/jam)</th><th class="num">Cakupan pendapatan barang</th><th class="num">KA barang (perjalanan)</th><th>Status</th></tr></thead><tbody>
+        <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Bulan</th><th class="num">Rate KA penumpang (Rp/jam)</th><th class="num">Cakupan pendapatan penumpang</th><th class="num">Perjalanan</th><th class="num">Rate KA barang (Rp/jam)</th><th class="num">Cakupan pendapatan barang</th><th class="num">KA barang (perjalanan)</th><th>Status</th></tr></thead><tbody>
           <template x-for="m in rateRows" :key="m.ym"><tr>
             <td x-text="KAI.fmt.mon(m.ym)"></td><td class="num"><b x-text="m.p ? KAI.fmt.n(Math.round(m.p.rate)) : '–'"></b></td><td class="num" x-text="m.p ? KAI.fmt.d1(m.p.cov * 100) + '%' : '–'"></td><td class="num" x-text="m.p ? m.p.nKa : '–'"></td>
             <td class="num"><b x-text="m.b ? KAI.fmt.n(Math.round(m.b.rate)) : '–'"></b></td><td class="num" x-text="m.b ? KAI.fmt.d1(m.b.cov * 100) + '%' : '–'"></td><td class="num" x-text="m.b ? m.b.nKa + ' (' + m.b.trips + ' perj.)' : '–'"></td>
@@ -190,10 +190,10 @@ document.addEventListener('alpine:init', function () {
       get cards() {
         var R = this.R, E = this.E, C = R.expoCmp, f = KAI.fmt, D = this.D, X = this.X, qP = X && X.rate('PENUMPANG', R.ym), qB = X && X.rate('BARANG', R.ym);
         return [
-          { id: 't', label: 'Pendapatan terekspos (Gross RaR)', val: f.rp(E.tot.rp), raw: E.tot.rp, prev: C.prev.rp, yoy: C.yoy.rp, color: 'var(--c-alam)', note: 'YTD ' + f.rp(C.ytd.rp) + ' (' + KAI.delta(C.ytd.rp, C.ytdPrev.rp).text + ' vs YTD thn lalu)' },
-          { id: 'p', label: 'KA penumpang', val: f.rp(E.tot.p), raw: E.tot.p, prev: C.prev.p, yoy: C.yoy.p, color: 'var(--kai-navy)', note: f.n(E.tot.nP) + ' kej. · ' + f.n(E.tot.mP) + ' menit' + (D ? ' · KA termatch ' + f.d1(D.tot.covP * 100) + '% menit' : '') },
-          { id: 'b', label: 'KA barang', val: f.rp(E.tot.b), raw: E.tot.b, prev: C.prev.b, yoy: C.yoy.b, color: 'var(--kai-orange)', note: f.n(E.tot.nB) + ' kej. · ' + f.n(E.tot.mB) + ' menit' + (D ? ' · KA termatch ' + f.d1(D.tot.covB * 100) + '% menit' : '') },
-          { id: 'r', label: 'Rate dipakai ' + KAI.fmt.mon(R.ym), val: qP ? (qP.v / 1e6).toFixed(1).replace('.', ',') + ' · ' + (qB.v / 1e6).toFixed(1).replace('.', ',') + ' jt/jam' : f.n(R.cfg.rate.PENUMPANG / 1e6) + ' · ' + f.n(R.cfg.rate.BARANG / 1e6) + ' jt/jam', raw: null, prev: null, color: 'var(--c-prasarana)',
+          { id: 't', label: 'Pendapatan terekspos (Gross RaR)', val: f.rp(E.tot.rp), raw: E.tot.rp, prev: C.prev.rp, yoy: C.yoy.rp, color: 'var(--c-alam)', note: 'YTD ' + f.rp(C.ytd.rp) + ' (' + KAI.delta(C.ytd.rp, C.ytdPrev.rp).text + ' vs YTD tahun lalu)' },
+          { id: 'p', label: 'KA penumpang', val: f.rp(E.tot.p), raw: E.tot.p, prev: C.prev.p, yoy: C.yoy.p, color: 'var(--kai-navy)', note: f.n(E.tot.nP) + ' kejadian · ' + f.n(E.tot.mP) + ' menit' + (D ? ' · KA termatch ' + f.d1(D.tot.covP * 100) + '% menit' : '') },
+          { id: 'b', label: 'KA barang', val: f.rp(E.tot.b), raw: E.tot.b, prev: C.prev.b, yoy: C.yoy.b, color: 'var(--kai-orange)', note: f.n(E.tot.nB) + ' kejadian · ' + f.n(E.tot.mB) + ' menit' + (D ? ' · KA termatch ' + f.d1(D.tot.covB * 100) + '% menit' : '') },
+          { id: 'r', label: 'Rate dipakai ' + KAI.fmt.mon(R.ym), val: qP ? (qP.v / 1e6).toFixed(1).replace('.', ',') + ' · ' + (qB.v / 1e6).toFixed(1).replace('.', ',') + ' juta/jam' : f.n(R.cfg.rate.PENUMPANG / 1e6) + ' · ' + f.n(R.cfg.rate.BARANG / 1e6) + ' juta/jam', raw: null, prev: null, color: 'var(--c-prasarana)',
             note: qP ? 'Penumpang · barang (' + (qP.src === 'acuan' ? 'rate acuan — data bulan ini belum lengkap' : 'rate bulan berjalan') + ')' : 'Rate tetap cadangan' }
         ];
       },

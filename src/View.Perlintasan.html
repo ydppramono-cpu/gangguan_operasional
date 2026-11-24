@@ -36,7 +36,7 @@
               <div><span>Tidak dijaga</span><b class="bad-t" x-text="KAI.fmt.n(S.unguarded)"></b></div>
               <div><span>Terpetakan ke petak</span><b x-text="KAI.fmt.d1(S.mapped / S.master * 100) + '%'"></b></div>
               <div><span>Kejadian tertaut JPL</span><b x-text="KAI.fmt.n(S.linked) + ' / ' + KAI.fmt.n(S.total)"></b></div>
-              <div><span>Titik berulang (12 bln)</span><b class="bad-t" x-text="KAI.fmt.n(S.repeat12)"></b></div>
+              <div><span>Titik berulang (12 bulan)</span><b class="bad-t" x-text="KAI.fmt.n(S.repeat12)"></b></div>
             </div>
           </template>
           <p class="note" style="margin:10px 0 0">Kejadian ditautkan ke JPL bila petaknya sama dan nomor JPL disebut di laporan, atau selisih KM ≤ <span x-text="String(R.cfg.jplKm).replace('.', ',')"></span> km. Daftar 1.404 bukan seluruh JPL nasional — titik di luar daftar tetap diinventaris dari laporan.</p>
@@ -46,7 +46,7 @@
     </div>
 
     <div class="card mt">
-      <div class="card-h"><div><h3>Titik perlintasan & JPL</h3><p x-text="'Kolom “Periode” mengikuti ' + R.label + '; “12 bln” = 12 bulan s.d. akhir periode · klik baris untuk profil JPL/petak'"></p></div>
+      <div class="card-h"><div><h3>Titik perlintasan & JPL</h3><p x-text="'Kolom “Periode” mengikuti ' + R.label + '; “12 bulan” = 12 bulan s.d. akhir periode · klik baris untuk profil JPL/petak'"></p></div>
         <div class="spacer"></div>
         <div class="seg"><button :aria-pressed="mode === 'titik'" @click="mode = 'titik'">Titik kejadian</button><button :aria-pressed="mode === 'master'" @click="mode = 'master'">JPL program</button><button :aria-pressed="mode === 'p190'" @click="mode = 'p190'">190 prioritas</button></div>
         <select class="ctl sm" x-model="jaga" aria-label="Status jaga"><option value="">Semua status</option><option value="tidak dijaga">Tidak dijaga</option><option value="dijaga">Dijaga</option><option value="tidak tercatat">Tidak tercatat</option></select>
@@ -64,7 +64,7 @@
         <div class="card-b">
           <table class="tbl"><tbody>
             <template x-for="x in R.crossDetail.repeat" :key="x.lokasi + x.wilayah">
-              <tr class="click" @click="x.segKey ? $store.app.open('petak', x.segKey) : $store.app.go('telusuri', { ids: x.ids, label: x.lokasi, period: 'all' })"><td><b x-text="x.lokasi"></b><div class="note" x-text="x.wilayah"></div></td><td class="num" x-text="x.n + ' kej. · ' + KAI.fmt.n(x.menit) + ' menit'"></td></tr>
+              <tr class="click" @click="x.segKey ? $store.app.open('petak', x.segKey) : $store.app.go('telusuri', { ids: x.ids, label: x.lokasi, period: 'all' })"><td><b x-text="x.lokasi"></b><div class="note" x-text="x.wilayah"></div></td><td class="num" x-text="x.n + ' kejadian · ' + KAI.fmt.n(x.menit) + ' menit'"></td></tr>
             </template>
           </tbody></table>
           <div class="empty" x-show="!R.crossDetail.repeat.length">Tidak ada lokasi berulang pada periode ini.</div>
@@ -79,7 +79,7 @@
         <div class="card-b">
           <table class="tbl"><tbody>
             <template x-for="x in R.crossYtd.repeat" :key="x.lokasi + x.wilayah">
-              <tr class="click" @click="x.segKey ? $store.app.open('petak', x.segKey) : $store.app.go('telusuri', { ids: x.ids, label: x.lokasi + ' (YTD)', period: 'all' })"><td><b x-text="x.lokasi"></b><div class="note" x-text="x.wilayah"></div></td><td class="num" x-text="x.n + ' kej. · ' + KAI.fmt.n(x.menit) + ' menit'"></td></tr>
+              <tr class="click" @click="x.segKey ? $store.app.open('petak', x.segKey) : $store.app.go('telusuri', { ids: x.ids, label: x.lokasi + ' (YTD)', period: 'all' })"><td><b x-text="x.lokasi"></b><div class="note" x-text="x.wilayah"></div></td><td class="num" x-text="x.n + ' kejadian · ' + KAI.fmt.n(x.menit) + ' menit'"></td></tr>
             </template>
           </tbody></table>
         </div>
@@ -142,7 +142,7 @@ document.addEventListener('alpine:init', function () {
           { title: 'KA/hari', field: 'ka', hozAlign: 'right', width: 88, headerTooltip: 'Perjalanan KA per hari yang melewati petak (jadwal GAPEKA terpilih di pojok kanan atas)',
             formatter: function (c) { var v = c.getValue(); return v === '' || v == null ? '<span class="muted" title="Petak tidak tercatat, jadi KA/hari tidak dapat dihitung">–</span>' : KAI.fmt.n(v); } },
           { title: 'Periode', field: 'nP', hozAlign: 'right', width: 86 },
-          { title: '12 bln', field: 'n12', hozAlign: 'right', width: 80, formatter: function (c) { var v = c.getValue(); return v >= 2 ? '<b style="color:var(--bad)">' + v + '</b>' : v; } },
+          { title: '12 bulan', field: 'n12', hozAlign: 'right', width: 80, formatter: function (c) { var v = c.getValue(); return v >= 2 ? '<b style="color:var(--bad)">' + v + '</b>' : v; } },
           { title: 'Semua', field: 'n', hozAlign: 'right', width: 80 },
           { title: 'Menit', field: 'menit', hozAlign: 'right', width: 86, formatter: function (c) { return KAI.fmt.n(c.getValue()); } },
           { title: 'Terakhir', field: 'last', width: 104 }
@@ -158,7 +158,7 @@ document.addEventListener('alpine:init', function () {
       exp: function (kind) {
         var cols = [{ title: 'Titik', field: 'titik' }, { title: 'Sumber', field: 'src' }, { title: 'Wilayah', field: 'wilayah' }, { title: 'Alamat', field: 'alamat' }, { title: 'KM', field: 'km' },
           { title: 'Status jaga', field: 'jaga' }, { title: 'Prioritas 190', field: 'p190' }, { title: 'Lebar (m)', field: 'lebar' }, { title: 'KA/hari', field: 'ka' },
-          { title: 'Kejadian periode', field: 'nP' }, { title: 'Kejadian 12 bln', field: 'n12' }, { title: 'Kejadian semua', field: 'n' }, { title: 'Menit semua', field: 'menit' }, { title: 'Terakhir', field: 'last' }];
+          { title: 'Kejadian periode', field: 'nP' }, { title: 'Kejadian 12 bulan', field: 'n12' }, { title: 'Kejadian semua', field: 'n' }, { title: 'Menit semua', field: 'menit' }, { title: 'Terakhir', field: 'last' }];
         var name = 'Inventaris_JPL_' + this.mode;
         if (kind === 'csv') KAIExport.csv(this.rows, cols, name);
         else KAIExport.xlsx([{ name: 'Inventaris JPL', columns: cols, rows: this.rows }], name, this.$store.app.meta).catch(function (e) { Alpine.store('app').say(e.message, true); });

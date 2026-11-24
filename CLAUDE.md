@@ -21,6 +21,11 @@ Rincian: `docs/ARSITEKTUR.md`, kontrak data: `docs/KONTRAK_DATA.md`.
 Ruang kerja Batubara menggantikan aplikasi WTT lama: Capaian · Siklus & terminal · Papan skenario + profil terminal/relasi/rangkaian (`bb-profil`).
 Data: Script Property `BB_DB_ID` (DB Batubara, hanya baca; REAL_GANGGUAN tidak dibaca) → `28_BatubaraSync.gs` (`Bb.sync`, `apiBatubaraPart`, `syncBatubaraNow`). Rumus WTT di `Js.BbData` (`BBK`), UI di `Js.BbUi`. Papan skenario: `Js.Simulasi` (`KAISim`: antrean terminal, KLB + `findSlots`, `backtest`) + `Js.Skenario`. Data realisasi asli tidak masuk repo; uji pakai `tools/batubara/fixture_sintetis.py`. Uji: `npm run test:sim`.
 
+## Mutu data & waktu muat (v3.22)
+Halaman `mutu` (ruang kerja Telusuri): skor kelengkapan per Daop/Divre dari kolom Gangguan_Induk + catatan kualitas (`q`) dan isian turunan (`drv`) — `Js.Mutu` (`KAIMutu`, fungsi murni, `npm run test:mutu`). Isian wajib = tanggal, kategori & subgangguan, menit, lokasi, jam; lainnya pelengkap. `02_Transform` menandai "Menit kosong" (data lama: label jujur "Menit 0 atau kosong").
+Waktu muat: `guard_` menambah `_ms` (lama kerja server) ke tiap respons API; `doGet` mengganti `__KAI_RENDER_MS__`; `KAI.perf` menyimpan 10 kali buka terakhir di localStorage (tidak dikirim) → kartu "Waktu muat di perangkat ini" di Metodologi. Lazy-load diputuskan setelah ada angka produksi.
+Teks UI & laporan PPT: satuan dan istilah ditulis lengkap (jam, menit, ton, kejadian, kegiatan, juta, miliar) — jangan menambah singkatan baru.
+
 ## Kelas & temuan (v3.19)
 Kategori & Subgangguan kosong → kelas diturunkan (pola teks, lalu kelas terdekat), bertanda * + keyakinan; tidak ada kelas "belum". Temuan tampil sebagai pita di bawah grafik sumbernya (`Js.Pita` MAP: src.label → `rute:kartu`); Ringkasan = 3 sorotan. Bantuan: `Js.Help` (tur, panduan, glosarium, FAQ).
 

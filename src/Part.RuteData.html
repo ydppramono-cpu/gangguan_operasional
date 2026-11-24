@@ -27,7 +27,7 @@ document.addEventListener('alpine:init', function () {
       pick: function (id) { this.id = id; this.segKey = ''; try { KAI.store.set('rute1', { id: id }); } catch (e) { } },
       pickSeg: function (k) { this.segKey = this.segKey === k ? '' : k; },
       flagCls: function (f) { return f === 'P1' ? 't-bad' : f === 'P2' ? 'warn' : f === 'P3' ? 't-info' : ''; },
-      tallyTxt: function (o, list) { var t = list.filter(function (g) { return o[g[0]]; }).map(function (g) { return g[1] + ' ' + o[g[0]]; }); return t.length ? t.join(' · ') : 'tidak ada kejadian 12 bln'; },
+      tallyTxt: function (o, list) { var t = list.filter(function (g) { return o[g[0]]; }).map(function (g) { return g[1] + ' ' + o[g[0]]; }); return t.length ? t.join(' · ') : 'tidak ada kejadian 12 bulan'; },
       gapTxt: function (x) {
         var g = x.gapAll[0]; if (!g) return 'tidak ada';
         var t = hh(g.a) + '–' + hh(g.b) + ' (' + Math.round(g.dur) + ' menit)';
@@ -127,7 +127,7 @@ document.addEventListener('alpine:init', function () {
       onMapClick: function (p) { if (p && p.data && p.data.key) this.pickSeg(p.data.key); else if (p && p.seriesId === 'st') this.$store.app.open('stasiun', p.data.code); },
       diagOpt: function () {
         var D = this.D, C = this.C, self = this, S = D.S;
-        var rows = [['reg', 'Daop/Divre'], ['jalur', 'Jalur'], ['ka', 'KA/hari'], ['ggn', 'Ggn prasarana'], ['wkp', 'WKP'], ['thi', 'THI petak'], ['sec', 'Keamanan'], ['nat', 'Alam']];
+        var rows = [['reg', 'Daop/Divre'], ['jalur', 'Jalur'], ['ka', 'KA/hari'], ['ggn', 'Gangguan prasarana'], ['wkp', 'WKP'], ['thi', 'THI petak'], ['sec', 'Keamanan'], ['nat', 'Alam']];
         var mx = {}; ['ka', 'ggn', 'wkp', 'sec', 'nat'].forEach(function (k) { mx[k] = Math.max.apply(null, S.map(function (x) { return val(x, k) || 0; }).concat([1])); });
         function val(x, k) { return k === 'ka' ? x.nTrip : k === 'ggn' ? x.gN : k === 'wkp' ? x.wkN : k === 'sec' ? x.secN : k === 'nat' ? x.natN : k === 'thi' ? (x.thi ? x.thi.hi : null) : null; }
         var regIdx = {}, ri = 0; C.bands.forEach(function (b) { if (regIdx[b.region] == null) regIdx[b.region] = ri++; });
@@ -187,7 +187,7 @@ document.addEventListener('alpine:init', function () {
           xAxis: { type: 'value', axisLabel: { formatter: function (v) { return KAI.fmt.n(v / 1e9); } }, name: 'Rp miliar', nameLocation: 'middle', nameGap: 26 },
           yAxis: { type: 'category', data: L.map(function (r) { return (r.jenis === 'BARANG' ? r.nama : r.no + ' ' + r.nama).slice(0, 26); }), axisLabel: { width: 170, overflow: 'truncate' } },
           series: [{ type: 'bar', barMaxWidth: 16, data: L.map(function (r) { return { value: r.revA, id: r.id, itemStyle: { color: r.jenis === 'BARANG' ? '#F06A25' : '#252271', borderRadius: [0, 4, 4, 0] } }; }),
-            label: { show: true, position: 'right', fontSize: 11, formatter: function (p) { return KAI.fmt.d1(p.value / 1e9) + ' M'; } } }]
+            label: { show: true, position: 'right', fontSize: 11, formatter: function (p) { return KAI.fmt.d1(p.value / 1e9) + ' miliar'; } } }]
         };
       },
       elevOpt: function () {

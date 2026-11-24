@@ -572,7 +572,8 @@ table.tbl caption.cap { caption-side: top; text-align: left; font-weight: 600; f
   .filterbar:not(.open) > :not(.fb-toggle) { display: none !important; } .fb-toggle { display: inline-flex !important; width: 100%; justify-content: flex-start; } .fb-toggle .chev { margin-left: auto; } }
 .fb-toggle { display: none; }
 /* v3.17: sub-navigasi ruang kerja, panel Saring, filter aktif */
-.ws-sub { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 0 1 auto; }
+.ws-sub { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 0 0 auto; }
+.ws-sub ~ .gsearch { min-width: 120px; }
 .ws-name { font-size: var(--fs-title); font-weight: 700; letter-spacing: -.01em; white-space: nowrap; }
 .ws-sub .seg button { white-space: nowrap; }
 .adv-pop { flex-direction: column; align-items: stretch; gap: 8px; min-width: 300px; white-space: normal; }
@@ -584,6 +585,7 @@ table.tbl caption.cap { caption-side: top; text-align: left; font-weight: 600; f
 .chip.on { border-color: var(--kai-navy); color: var(--kai-navy); background: var(--surface-2); }
 .sidebar-foot .nav-item.active { background: rgba(255, 255, 255, .12); }
 @media (max-width: 1600px) { .ws-name { display: none; } }
+@media (min-width: 721px) and (max-width: 1180px) { .topbar-row:has(.ws-sub) { flex-wrap: wrap; height: auto; padding-top: 8px; padding-bottom: 8px; } .topbar-row .ws-sub { order: 10; flex: 1 1 100%; } }
 @media (max-width: 720px) { .ws-sub { order: 10; flex: 1 1 100%; overflow-x: auto; scrollbar-width: none; } .ws-sub::-webkit-scrollbar { display: none; } }
 
 /* ===================== v3.18 — penyegaran tampilan & keseragaman =====================
@@ -798,6 +800,8 @@ html { scroll-behavior: smooth; }
 .sk-real { align-items: center; padding-top: 10px; border-top: 1px solid var(--line-soft); }
 .sk-chk input { vertical-align: -2px; margin-right: 4px; } .sk-chk > span:last-child { display: inline-flex; align-items: center; height: 30px; font-size: 13px; }
 .sk-cmp .tbl th, .sk-cmp .tbl td { padding: 6px 8px; white-space: normal; } .sk-cmp .tbl td:first-child { min-width: 0; }
+.mutu-t th.pel, .mutu-t td.pel, .pel-t { color: var(--muted); } .mutu-t th { white-space: normal; min-width: 84px; vertical-align: bottom; } .mutu-t tr.sel td { background: var(--surface-2); }
+.chip-chk { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-sm); margin-left: 6px; }
 .sk-q input { width: 230px; } .sk-qrow { gap: 6px; flex-wrap: wrap; }
 .sk-slots { gap: 6px; flex-wrap: wrap; }
 .sk-bt { display: grid; gap: 2px; padding: 8px 12px; border-radius: 10px; background: #ECFDF3; border: 1px solid #ABEFC6; font-size: 12.5px; }

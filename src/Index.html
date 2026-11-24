@@ -17,6 +17,7 @@
 
   <!-- Pustaka inti (versi dikunci) dimuat berurutan setelah halaman siap, Alpine terakhir.
        Tiap pustaka punya CDN cadangan: bila jaringan kantor memblokir satu CDN, CDN berikutnya dicoba. -->
+  <script>window.KAI_T0 = { render: Number('__KAI_RENDER_MS__') || null, libs0: performance.now() };</script>
   <script>
   (function () {
     var LIBS = [
@@ -31,7 +32,7 @@
       document.head.appendChild(s);
     }
     function next(k) {
-      if (k >= LIBS.length) return;
+      if (k >= LIBS.length) { window.KAI_T0.libs = performance.now(); return; }
       one(LIBS[k], 0, function () { next(k + 1); }, function (u) {
         var b = document.getElementById('lib-fail'); if (b) { b.style.display = 'block'; b.querySelector('code').textContent = u.split('/')[4] || u; }
       });
@@ -80,6 +81,8 @@
   <?!= include('Js.BbData'); ?>
 
   <?!= include('Js.BbUi'); ?>
+
+  <?!= include('Js.Mutu'); ?>
 
   <?!= include('Js.Table'); ?>
 

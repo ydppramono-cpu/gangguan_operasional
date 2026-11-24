@@ -89,17 +89,17 @@
                 <span x-text="'Tab RHI di database baru memuat lokomotif (' + KAI.fmt.n(S.byKind.Lokomotif.withRhi) + ' unit). Kolom RHI ' + kind.toLowerCase() + ' akan terisi otomatis begitu datanya ditambahkan. Sementara itu dipakai skor kesehatan turunan (usia, keandalan 12 bulan, kesiapan GAPEKA) — indikator internal, bukan RHI.'"></span>
               </div>
               <div class="grid g-4 mt">
-                <template x-for="b in dbands" :key="b.k"><div class="card kpi" :style="'--kpi-c:' + b.c"><div class="lbl" x-text="b.k + ' · skor turunan ' + b.r"></div><div class="val num" x-text="KAI.fmt.n(b.n)"></div><div class="note" x-text="KAI.fmt.d1(A.n ? b.n / A.n * 100 : 0) + '% armada · ' + KAI.fmt.n(b.g) + ' gangguan 12 bln'"></div></div></template>
+                <template x-for="b in dbands" :key="b.k"><div class="card kpi" :style="'--kpi-c:' + b.c"><div class="lbl" x-text="b.k + ' · skor turunan ' + b.r"></div><div class="val num" x-text="KAI.fmt.n(b.n)"></div><div class="note" x-text="KAI.fmt.d1(A.n ? b.n / A.n * 100 : 0) + '% armada · ' + KAI.fmt.n(b.g) + ' gangguan 12 bulan'"></div></div></template>
                 <div class="card kpi"><div class="lbl">RHI resmi</div><div class="val num">–</div><div class="note">0 unit · menunggu data</div></div>
               </div>
               <div class="grid g-2 mt">
-                <div class="card"><div class="card-h"><div><h3>Skor turunan × laju gangguan</h3><p>Batang = unit per kelas skor (sumbu kiri) · garis = gangguan 12 bln per 100 unit (sumbu kanan; kelompok &lt; 30 unit tidak digaris — basis kecil)</p></div></div>
+                <div class="card"><div class="card-h"><div><h3>Skor turunan × laju gangguan</h3><p>Batang = unit per kelas skor (sumbu kiri) · garis = gangguan 12 bulan per 100 unit (sumbu kanan; kelompok &lt; 30 unit tidak digaris — basis kecil)</p></div></div>
                   <div class="card-b fill"><div class="chart tall" x-chart="comboScore()"></div></div></div>
-                <div class="card"><div class="card-h"><div><h3>Usia armada × laju gangguan</h3><p x-text="'Unit per kelompok usia · garis = gangguan 12 bln per 100 unit (kelompok < 30 unit tidak digaris) · ' + kind.toLowerCase()"></p></div></div>
+                <div class="card"><div class="card-h"><div><h3>Usia armada × laju gangguan</h3><p x-text="'Unit per kelompok usia · garis = gangguan 12 bulan per 100 unit (kelompok < 30 unit tidak digaris) · ' + kind.toLowerCase()"></p></div></div>
                   <div class="card-b fill"><div class="chart tall" x-chart="comboAge()"></div></div><div x-pita="'sarana:usia'"></div></div>
               </div>
               <div class="card mt"><div class="card-h"><div><h3 x-text="'Daftar pantau ' + kind.toLowerCase() + ': skor turunan terendah'"></h3><p>Diurutkan dari skor terendah · klik untuk kartu unit</p></div></div>
-                <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Unit</th><th>Kelas</th><th>Depo (SAP)</th><th class="num">Usia</th><th class="num">Gangguan 12 bln</th><th class="num">Menit</th><th>GAPEKA 2025</th><th class="num">Skor</th></tr></thead><tbody>
+                <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Unit</th><th>Kelas</th><th>Depo (SAP)</th><th class="num">Usia</th><th class="num">Gangguan 12 bulan</th><th class="num">Menit</th><th>GAPEKA 2025</th><th class="num">Skor</th></tr></thead><tbody>
                   <template x-for="u in watch" :key="u.no"><tr class="click" @click="$store.app.openUnit(u.no)"><td><b x-text="KAI.fmt.unit(u.no)"></b></td><td x-text="u.cls"></td><td x-text="u.depoLabel"></td><td class="num" :title="u.ageBad ? 'Tanggal mulai dinas SAP tidak wajar — periksa data' : ''" x-text="u.ageBad ? 'periksa (' + KAI.fmt.age(u.ageRaw) + ')' : KAI.fmt.age(u.age)"></td><td class="num" x-text="u.n12"></td><td class="num" x-text="KAI.fmt.n(u.m12)"></td>
                     <td x-text="u.inBY ? 'Di Balai Yasa' : u.duk ? 'Siap guna · ' + u.duk.depo : 'Tidak tercantum'"></td><td class="num"><span class="st" :class="stCls(u.status)" x-text="KAI.fmt.d1(u.health)"></span></td></tr></template>
                 </tbody></table></div></div>
@@ -225,7 +225,7 @@ document.addEventListener('alpine:init', function () {
         return Object.assign(this.base(), { xAxis: { type: 'category', data: B.map(function (b) { return b[0]; }), name: 'Skor kesehatan turunan', nameLocation: 'middle', nameGap: 26 },
           yAxis: [{ type: 'value', name: 'Unit', nameLocation: 'middle', nameGap: 40 }, { type: 'value', name: 'Gangguan per 100 unit', nameLocation: 'middle', nameGap: 36, splitLine: { show: false } }],
           series: [{ name: 'Unit', type: 'bar', data: cnt.map(function (l) { return l.length; }), itemStyle: { borderRadius: [8, 8, 0, 0], color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#64748B' }, { offset: 1, color: '#CBD5E1' }] } }, barMaxWidth: 46, label: { show: true, position: 'top' } },
-            { name: 'Gangguan 12 bln per 100 unit', type: 'line', yAxisIndex: 1, data: cnt.map(function (l) { return l.length >= 30 ? Math.round(KAIA.sum(l, function (u) { return u.n12; }) / l.length * 1000) / 10 : null; }), smooth: 0.3, symbolSize: 9, lineStyle: { width: 2.4 }, itemStyle: { color: '#C0392B', borderColor: '#fff', borderWidth: 2 }, connectNulls: false }] });
+            { name: 'Gangguan 12 bulan per 100 unit', type: 'line', yAxisIndex: 1, data: cnt.map(function (l) { return l.length >= 30 ? Math.round(KAIA.sum(l, function (u) { return u.n12; }) / l.length * 1000) / 10 : null; }), smooth: 0.3, symbolSize: 9, lineStyle: { width: 2.4 }, itemStyle: { color: '#C0392B', borderColor: '#fff', borderWidth: 2 }, connectNulls: false }] });
       },
       comboAge: function () {
         var L = this.units, B = [['< 10', 0, 10], ['10–19', 10, 20], ['20–29', 20, 30], ['30–39', 30, 40], ['≥ 40', 40, 999]];
@@ -233,7 +233,7 @@ document.addEventListener('alpine:init', function () {
         return Object.assign(this.base(), { xAxis: { type: 'category', data: B.map(function (b) { return b[0]; }), name: 'Usia (tahun)', nameLocation: 'middle', nameGap: 26 },
           yAxis: [{ type: 'value', name: 'Unit', nameLocation: 'middle', nameGap: 40 }, { type: 'value', name: 'Gangguan per 100 unit', nameLocation: 'middle', nameGap: 36, splitLine: { show: false } }],
           series: [{ name: 'Unit', type: 'bar', data: cnt.map(function (l) { return l.length; }), barMaxWidth: 46, label: { show: true, position: 'top' }, itemStyle: { borderRadius: [8, 8, 0, 0], color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#275BC0' }, { offset: 1, color: '#A9C1EE' }] } } },
-            { name: 'Gangguan 12 bln per 100 unit', type: 'line', yAxisIndex: 1, data: cnt.map(function (l) { return l.length >= 30 ? Math.round(KAIA.sum(l, function (u) { return u.n12; }) / l.length * 1000) / 10 : null; }), smooth: 0.3, symbolSize: 9, lineStyle: { width: 2.4 }, itemStyle: { color: '#E0861A', borderColor: '#fff', borderWidth: 2 }, connectNulls: false }] });
+            { name: 'Gangguan 12 bulan per 100 unit', type: 'line', yAxisIndex: 1, data: cnt.map(function (l) { return l.length >= 30 ? Math.round(KAIA.sum(l, function (u) { return u.n12; }) / l.length * 1000) / 10 : null; }), smooth: 0.3, symbolSize: 9, lineStyle: { width: 2.4 }, itemStyle: { color: '#E0861A', borderColor: '#fff', borderWidth: 2 }, connectNulls: false }] });
       },
       /** Kekuatan depo: batang horizontal satu sumbu (tanpa sumbu ganda); laju gangguan ditulis pada label, warna = rentang indeks (berlegenda). */
       comboDepo: function () {
@@ -243,7 +243,7 @@ document.addEventListener('alpine:init', function () {
           xAxis: { type: 'value', min: 0, max: 100 },
           visualMap: { type: 'piecewise', show: true, orient: 'horizontal', left: 'center', bottom: 0, dimension: 0, itemWidth: 12, itemHeight: 12, textStyle: { fontSize: 11 }, seriesIndex: [0, 1],
             pieces: [{ gte: 80, label: '≥ 80', color: '#1F8A2E' }, { gte: 65, lt: 80, label: '65–79', color: '#275BC0' }, { gte: 50, lt: 65, label: '50–64', color: '#E0861A' }, { lt: 50, label: '< 50', color: '#C0392B' }] },
-          tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: function (ps) { var d = D[ps[0].dataIndex]; return '<b>' + d.label + '</b> · ' + (d.region || '') + '<br>Kekuatan ' + d.strength + ' (peringkat ' + d.rank + ')<br>' + KAI.fmt.n(d.n) + ' unit · kesehatan ' + KAI.fmt.d1(d.health) + '<br>Gangguan 12 bln ' + d.n12 + ' (' + KAI.fmt.d1(d.rate) + '/100 unit)'; } },
+          tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: function (ps) { var d = D[ps[0].dataIndex]; return '<b>' + d.label + '</b> · ' + (d.region || '') + '<br>Kekuatan ' + d.strength + ' (peringkat ' + d.rank + ')<br>' + KAI.fmt.n(d.n) + ' unit · kesehatan ' + KAI.fmt.d1(d.health) + '<br>Gangguan 12 bulan ' + d.n12 + ' (' + KAI.fmt.d1(d.rate) + '/100 unit)'; } },
           // Lollipop: batang tipis + titik bernilai (lebih ringan dibaca daripada batang tebal); laju gangguan di label.
           series: [{ name: 'Indeks kekuatan', type: 'bar', barWidth: 3, data: D.map(function (d) { return d.strength; }), silent: true, itemStyle: { opacity: 0.55 } },
             { name: 'Indeks kekuatan', type: 'scatter', symbolSize: 15, data: D.map(function (d) { return d.strength; }), z: 3, itemStyle: { borderColor: '#fff', borderWidth: 2 },
@@ -268,9 +268,9 @@ document.addEventListener('alpine:init', function () {
           { title: '% > 30 th', field: 'oldPct', hozAlign: 'right', width: 86, formatter: D1 },
           { title: lok ? 'RHI rata-rata' : 'Skor turunan', field: 'health', hozAlign: 'right', width: 118, formatter: D1 },
           { title: lok ? 'H / M / D' : 'B / P / Pr', headerTooltip: lok ? 'HEALTHY / MONITOR / DECLINING (RHI)' : 'Baik / Pantau / Prioritas (skor turunan)', field: 'HMD', width: 110 },
-          { title: 'Gangg. 12 bln', field: 'n12', hozAlign: 'right', width: 108, formatter: N }, { title: 'Per 100 unit', field: 'rate', hozAlign: 'right', width: 92, formatter: D1 }];
+          { title: 'Gangguan 12 bulan', field: 'n12', hozAlign: 'right', width: 108, formatter: N }, { title: 'Per 100 unit', field: 'rate', hozAlign: 'right', width: 92, formatter: D1 }];
         if (lok) cols = cols.concat([{ title: 'SO dinasan', field: 'so', hozAlign: 'right', width: 90, formatter: N }, { title: 'Km/lok/hari', field: 'km', hozAlign: 'right', width: 96, formatter: N }, { title: 'KA dilayani', field: 'ka', hozAlign: 'right', width: 92, formatter: N }]);
-        cols.push({ title: 'Unit terberat 12 bln', field: 'top', minWidth: 200 });
+        cols.push({ title: 'Unit terberat 12 bulan', field: 'top', minWidth: 200 });
         return { id: 'depo-' + k, index: 'id', data: D, columns: cols, pageSize: 0, height: 560, initialSort: [{ column: 'rank', dir: 'asc' }],
           groupBy: 'grp', groupHeader: function (v, n) { return v.replace(/^\d · /, '') + ' <span class="muted">· ' + n + '</span>'; } };
       },
@@ -287,12 +287,12 @@ document.addEventListener('alpine:init', function () {
           { title: 'Unit', field: 'label', width: 140, formatter: function (c) { return '<b>' + c.getValue() + '</b>'; } }, { title: 'Kelas', field: 'cls', width: 120 }, { title: 'Depo (SAP)', field: 'depo', minWidth: 150 }, { title: 'GAPEKA 2025', field: 'gapeka', width: 150 },
           { title: 'Usia', field: 'age', hozAlign: 'right', width: 80, formatter: function (c) { var v = c.getValue(); return v == null ? KAI.NIL : v > 30 ? '<span class="badge bad">' + KAI.fmt.age(v) + '</span>' : KAI.fmt.age(v); } },
           { title: 'Kesehatan', field: 'health', hozAlign: 'right', width: 150, formatter: function (c) { var d = c.getData(); return '<span class="st ' + self.stCls(d.status) + '">' + KAI.fmt.d1(d.health) + ' · ' + (d.src === 'RHI' ? KAI.fmt.st(d.status) : 'turunan') + '</span>'; } },
-          { title: 'Kej. 12 bln', field: 'n12', hozAlign: 'right', width: 92 }, { title: 'Menit 12 bln', field: 'm12', hozAlign: 'right', width: 100, formatter: function (c) { return KAI.fmt.n(c.getValue()); } },
+          { title: 'Kej. 12 bulan', field: 'n12', hozAlign: 'right', width: 92 }, { title: 'Menit 12 bulan', field: 'm12', hozAlign: 'right', width: 100, formatter: function (c) { return KAI.fmt.n(c.getValue()); } },
           { title: 'Rating', field: 'overall', hozAlign: 'right', width: 86, formatter: function (c) { return '<b>' + c.getValue() + '</b>'; } }, { title: 'Gangguan terakhir', field: 'last', width: 130 }] };
       },
       exportUnits: function () {
         var cols = [{ title: 'Unit', field: 'no' }, { title: 'Kelas', field: 'cls' }, { title: 'Depo (SAP)', field: 'depo' }, { title: 'Wilayah', field: 'region' }, { title: 'GAPEKA 2025', field: 'gapeka' }, { title: 'Usia (th)', field: 'age' },
-          { title: 'Kesehatan', field: 'health' }, { title: 'Sumber kesehatan', field: 'src' }, { title: 'Status', field: 'status' }, { title: 'Kejadian 12 bln', field: 'n12' }, { title: 'Menit 12 bln', field: 'm12' }, { title: 'Rating', field: 'overall' }];
+          { title: 'Kesehatan', field: 'health' }, { title: 'Sumber kesehatan', field: 'src' }, { title: 'Status', field: 'status' }, { title: 'Kejadian 12 bulan', field: 'n12' }, { title: 'Menit 12 bulan', field: 'm12' }, { title: 'Rating', field: 'overall' }];
         KAIExport.xlsx([{ name: this.kind, columns: cols, rows: this.unitRows }], 'Armada_' + this.kind + '_' + this.R.P.short, this.$store.app.meta).catch(function (e) { Alpine.store('app').say(e.message, true); });
       }
     };
@@ -341,7 +341,7 @@ document.addEventListener('alpine:init', function () {
       get decl() { return this.S.units.filter(function (u) { return u.st === 'DECLINING'; }).sort(function (a, b) { return a.hi - b.hi; }); },
       get rep3() { return this.S.units.filter(function (u) { return u.g6.n >= 3; }).sort(function (a, b) { return b.g6.n - a.g6.n || b.g6.menit - a.g6.menit; }); },
       gc: function (g) { return GC[g] || '17223B'; }, sc: function (s) { return SC[s] || '17223B'; },
-      uptCols: [['id', 'UPT JR'], ['w', 'Wilayah'], ['hi', 'THI', 1], ['dhi', 'Δ sejak awal', 1], ['low', 'Komponen terendah'], ['g6', 'Gangguan pras. (n · menit)', 1], ['wkp6', 'WKP JR (keg · >prog · lebih · andil)', 1], ['lok', 'Lokasi gangguan terbanyak'], ['pri', 'Prioritas']],
+      uptCols: [['id', 'UPT JR'], ['w', 'Wilayah'], ['hi', 'THI', 1], ['dhi', 'Δ sejak awal', 1], ['low', 'Komponen terendah'], ['g6', 'Gangguan prasarana (n · menit)', 1], ['wkp6', 'WKP JR (kegiatan · melebihi program · menit lebih · andil)', 1], ['lok', 'Lokasi gangguan terbanyak'], ['pri', 'Prioritas']],
       sortBy: function (k) { this.sortD = this.sortK === k ? -this.sortD : -1; this.sortK = k; },
       get uptRows() {
         var q = this.pri, k = this.sortK, d = this.sortD, P = this.P;
@@ -364,7 +364,7 @@ document.addEventListener('alpine:init', function () {
       quadPra: function () {
         var P = this.P, U = this.uptHi;
         return { textStyle: { fontFamily: 'Inter, Arial' }, grid: { left: 12, right: 24, top: 34, bottom: 34, containLabel: true }, legend: { top: 0 },
-          tooltip: { formatter: function (p) { var u = p.data.u; return '<b>' + u.id + ' ' + u.code + '</b> · ' + u.w + '<br>THI ' + KAI.fmt.d1(u.hi) + ' (' + u.grade + ')<br>Gangguan: ' + u.g6.n + ' kej. · ' + KAI.fmt.n(u.g6.menit) + ' menit<br>WKP >prog: ' + u.wkp6.over + '<br>Terendah: ' + (u.low ? u.low.label + ' ' + KAI.fmt.d1(u.low.v) : '–') + '<br>Prioritas: ' + (u.pri || '—'); } },
+          tooltip: { formatter: function (p) { var u = p.data.u; return '<b>' + u.id + ' ' + u.code + '</b> · ' + u.w + '<br>THI ' + KAI.fmt.d1(u.hi) + ' (' + u.grade + ')<br>Gangguan: ' + u.g6.n + ' kejadian · ' + KAI.fmt.n(u.g6.menit) + ' menit<br>WKP melebihi program: ' + u.wkp6.over + '<br>Terendah: ' + (u.low ? u.low.label + ' ' + KAI.fmt.d1(u.low.v) : '–') + '<br>Prioritas: ' + (u.pri || '—'); } },
           xAxis: { type: 'value', min: 40, max: 100, name: 'THI →', nameLocation: 'middle', nameGap: 26 }, yAxis: { type: 'value', name: 'Gangguan prasarana (kejadian)', nameLocation: 'middle', nameGap: 34, minInterval: 1 },
           series: ['P1', 'P2', 'P3', 'P4', ''].map(function (k, i) { return { name: k || 'Lainnya', type: 'scatter', data: U.filter(function (u) { return u.pri === k; }).map(function (u) { return { value: [u.hi, u.g6.n], u: u }; }), symbolSize: 9, itemStyle: { color: PC[k], opacity: 0.85 },
             markLine: i ? undefined : { silent: true, symbol: 'none', lineStyle: { type: 'dashed', color: '#3F4D63' }, label: { formatter: '{b}' }, data: [{ xAxis: P.medHi, name: 'median ' + KAI.fmt.d1(P.medHi) }, { yAxis: 1.5, name: '≥2 = berulang' }] } }; }) };

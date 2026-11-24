@@ -45,7 +45,7 @@ window.KAIChart = (function () {
     return {
       grid: { left: 52, right: 28, top: outliers.length ? 58 : 40, bottom: 32 },
       legend: { top: 0, left: 0 },
-      tooltip: { trigger: 'axis', valueFormatter: function (v) { return KAI.fmt.n(v) + (metric === 'menit' ? ' menit' : ' kej.'); } },
+      tooltip: { trigger: 'axis', valueFormatter: function (v) { return KAI.fmt.n(v) + (metric === 'menit' ? ' menit' : ' kejadian'); } },
       xAxis: { type: 'category', data: model.yms.map(KAI.fmt.mon), boundaryGap: false },
       yAxis: { type: 'value', max: cap || null, axisLabel: { formatter: k } },
       series: series, animation: !REDUCE,
@@ -72,7 +72,7 @@ window.KAIChart = (function () {
             label: { show: true, formatter: k(p.menit), color: '#fff', fontWeight: 600, fontSize: 11 } };
         }),
         markLine: { silent: true, symbol: 'none', lineStyle: { type: 'dashed', color: '#8C95A8' }, label: { color: C.axis, fontSize: 11 },
-          data: [{ xAxis: m.medN, label: { formatter: 'median ' + KAI.fmt.d1(m.medN) + ' kej.', position: 'end' } },
+          data: [{ xAxis: m.medN, label: { formatter: 'median ' + KAI.fmt.d1(m.medN) + ' kejadian', position: 'end' } },
                  { yAxis: m.medMenit, label: { formatter: 'median ' + KAI.fmt.n(m.medMenit) + ' menit', position: 'insideEndTop' } }] },
         markArea: { silent: true, itemStyle: { color: 'rgba(240,106,37,.07)' }, label: { show: false },   // keterangan area ditulis di subjudul kartu agar tidak tertutup gelembung
           data: [[{ name: 'Sering · dampak tinggi', xAxis: m.medN, yAxis: m.medMenit }, { xAxis: xMax, yAxis: yMax }]] }
@@ -112,7 +112,7 @@ window.KAIChart = (function () {
     var days = model.days.map(function (d) { return +d.slice(8, 10) + '/' + (+d.slice(5, 7)); });
     return {
       grid: { left: 48, right: 16, top: 34, bottom: 28 }, legend: { top: 0, left: 0 },
-      tooltip: { trigger: 'axis', valueFormatter: function (v) { return KAI.fmt.n(v) + (metric === 'menit' ? ' menit' : ' kej.'); } },
+      tooltip: { trigger: 'axis', valueFormatter: function (v) { return KAI.fmt.n(v) + (metric === 'menit' ? ' menit' : ' kejadian'); } },
       xAxis: { type: 'category', data: days, axisLabel: { hideOverlap: true } }, yAxis: { type: 'value', axisLabel: { formatter: k } },
       series: KAIA.CLASSES.map(function (c) { return { name: CLASS_LABEL[c], type: 'bar', stack: 'k', data: model.series[c][metric], color: KAI.classColor(c), barMaxWidth: 22, kelas: c }; }),
       animation: !REDUCE
@@ -125,7 +125,7 @@ window.KAIChart = (function () {
     return {
       grid: { left: 44, right: 50, top: 30, bottom: 26 }, legend: { top: 0, left: 'center' },
       tooltip: { trigger: 'axis' },
-      xAxis: { type: 'category', data: hrs }, yAxis: [{ type: 'value', name: 'kej.', nameTextStyle: { color: C.axis } }, { type: 'value', name: 'menit', axisLabel: { formatter: k }, splitLine: { show: false }, nameTextStyle: { color: C.axis } }],
+      xAxis: { type: 'category', data: hrs }, yAxis: [{ type: 'value', name: 'kejadian', nameTextStyle: { color: C.axis } }, { type: 'value', name: 'menit', axisLabel: { formatter: k }, splitLine: { show: false }, nameTextStyle: { color: C.axis } }],
       series: [{ name: 'Kejadian', type: 'bar', data: H.n, color: C.navy, barMaxWidth: 18, itemStyle: { borderRadius: [3, 3, 0, 0] } },
         { name: 'Menit', type: 'line', yAxisIndex: 1, data: H.menit, color: C.orange, smooth: false, symbol: 'none', lineStyle: { width: 2 } }],
       animation: !REDUCE
@@ -167,7 +167,7 @@ window.KAIChart = (function () {
       xAxis: { type: 'category', data: bands.map(function (b) { return b + (b === 'Tidak diketahui' ? '' : ' th'); }), axisLabel: { interval: 0 } },
       yAxis: [{ type: 'value', name: 'unit', axisLabel: { formatter: k }, nameTextStyle: { color: C.axis } }, { type: 'value', name: 'per 100 unit', splitLine: { show: false }, nameTextStyle: { color: C.axis } }],
       series: [{ name: 'Unit', type: 'bar', data: units.map(function (v, i) { return { value: v, itemStyle: { color: /30|40/.test(bands[i]) ? C.orange : C.navy, borderRadius: [4, 4, 0, 0] } }; }), barMaxWidth: 46 },
-        { name: 'Gangguan per 100 unit (12 bln)', type: 'line', yAxisIndex: 1, data: rate.map(function (v) { return v == null ? null : Math.round(v * 10) / 10; }), color: C.sarana, symbolSize: 8, lineStyle: { width: 2.5 } }],
+        { name: 'Gangguan per 100 unit (12 bulan)', type: 'line', yAxisIndex: 1, data: rate.map(function (v) { return v == null ? null : Math.round(v * 10) / 10; }), color: C.sarana, symbolSize: 8, lineStyle: { width: 2.5 } }],
       animation: !REDUCE
     };
   }
@@ -177,7 +177,7 @@ window.KAIChart = (function () {
     var rev = rows.slice().reverse();
     return {
       grid: { left: 8, right: 30, top: 30, bottom: 6, containLabel: true }, legend: { top: 0, left: 0 },
-      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return KAI.fmt.n(v) + (metric === 'menit' ? ' menit' : ' kej.'); } },
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return KAI.fmt.n(v) + (metric === 'menit' ? ' menit' : ' kejadian'); } },
       xAxis: { type: 'value', axisLabel: { formatter: k } }, yAxis: { type: 'category', data: rev.map(function (r) { return r.label; }) },
       series: KAIA.CLASSES.map(function (c) { return { name: CLASS_LABEL[c], type: 'bar', stack: 's', color: KAI.classColor(c), barMaxWidth: 16, data: rev.map(function (r) { return r.cls[c][metric]; }) }; }),
       animation: !REDUCE
@@ -189,7 +189,7 @@ window.KAIChart = (function () {
     return {
       grid: { left: 44, right: 50, top: 30, bottom: 26 }, legend: { top: 0, left: 'center' }, tooltip: { trigger: 'axis' },
       xAxis: { type: 'category', data: rows.map(function (r) { return KAI.fmt.mon(r.ym); }) },
-      yAxis: [{ type: 'value', minInterval: 1, name: 'kej.', nameTextStyle: { color: C.axis } }, { type: 'value', name: 'menit', axisLabel: { formatter: k }, splitLine: { show: false }, nameTextStyle: { color: C.axis } }],
+      yAxis: [{ type: 'value', minInterval: 1, name: 'kejadian', nameTextStyle: { color: C.axis } }, { type: 'value', name: 'menit', axisLabel: { formatter: k }, splitLine: { show: false }, nameTextStyle: { color: C.axis } }],
       series: [{ name: 'Kejadian', type: 'bar', data: rows.map(function (r) { return r.n; }), color: C.navy, barMaxWidth: 22, itemStyle: { borderRadius: [3, 3, 0, 0] } },
         { name: 'Menit', type: 'line', yAxisIndex: 1, data: rows.map(function (r) { return r.menit; }), color: C.orange, symbolSize: 6 }],
       animation: !REDUCE
@@ -202,7 +202,7 @@ window.KAIChart = (function () {
       grid: { left: 64, right: 16, top: 34, bottom: 28 }, legend: { top: 0, left: 'center' },
       tooltip: { trigger: 'axis', valueFormatter: function (v) { return KAI.fmt.rp(v); } },
       xAxis: { type: 'category', data: m.yms.map(KAI.fmt.mon) },
-      yAxis: { type: 'value', axisLabel: { formatter: function (v) { return v >= 1e9 ? KAI.fmt.d1(v / 1e9) + ' M' : v >= 1e6 ? KAI.fmt.n(v / 1e6) + ' jt' : KAI.fmt.n(v); } } },
+      yAxis: { type: 'value', axisLabel: { formatter: function (v) { return v >= 1e9 ? KAI.fmt.d1(v / 1e9) + ' miliar' : v >= 1e6 ? KAI.fmt.n(v / 1e6) + ' juta' : KAI.fmt.n(v); } } },
       series: [{ name: 'KA penumpang', type: 'bar', stack: 'e', data: m.p.map(function (v, i) { return { value: Math.round(v), itemStyle: { opacity: m.yms[i] === focusYm ? 1 : .75 } }; }), color: C.navy, barMaxWidth: 34 },
         { name: 'KA barang', type: 'bar', stack: 'e', data: m.b.map(function (v, i) { return { value: Math.round(v), itemStyle: { opacity: m.yms[i] === focusYm ? 1 : .75 } }; }), color: C.orange, barMaxWidth: 34 }],
       animation: !REDUCE

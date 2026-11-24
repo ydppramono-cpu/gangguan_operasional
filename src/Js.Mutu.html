@@ -1,0 +1,70 @@
+<script>
+/**
+ * Js.Mutu — mutu data Gangguan_Induk per Daop/Divre untuk umpan balik ke tim input.
+ * Sumber: kolom asli + catatan kualitas (q) dan isian turunan (drv) yang dibuat 02_Transform saat sinkron. Tidak menebak apa pun.
+ * WAJIB (masuk skor kelengkapan): tanggal sah, kategori & subgangguan, menit, lokasi dikenal, jam kejadian.
+ * PELENGKAP (ditampilkan, tidak masuk skor): nomor KA di kolom, nomor sarana dikenal, penyebab, wilayah.
+ * Skor = baris tanpa masalah wajib ÷ semua baris wilayah itu (periode & saringan global).
+ * Fungsi murni (diuji di Node: tests/server/test_mutu.js).
+ */
+(function (root) {
+  'use strict';
+  var has = function (r, re) { return !!r.q && re.test(r.q); };
+  var drv = function (r, k) { return !!(r.drvSet && r.drvSet[k]); };
+  /** Daftar periksa. menit0 = data lama tanpa penanda "Menit kosong": yang bisa dikenali hanya menit 0 atau kosong. */
+  function checks(menitFlag) {
+    return [
+      { k: 'tanggal', label: 'Tanggal bermasalah', wajib: true, saran: 'Periksa Tanggal kejadian dan kolom Bulan/Tahun (bertentangan, tidak sah, atau di masa depan).',
+        test: function (r) { return has(r, /Tanggal (bertentangan|di masa depan|tidak valid)/); } },
+      { k: 'kategori', label: 'Kategori & Subgangguan kosong', wajib: true, saran: 'Isi Kategori dan Subgangguan (kelas saat ini diturunkan otomatis dari judul/uraian).',
+        test: function (r) { return drv(r, 'kelas'); } },
+      menitFlag
+        ? { k: 'menit', label: 'Menit kelambatan kosong/tidak angka', wajib: true, saran: 'Isi Total Andil Kelka (menit) dengan angka bulat.',
+          test: function (r) { return has(r, /Menit (kosong|tidak numerik|bukan bilangan bulat)/); } }
+        : { k: 'menit', label: 'Menit 0 atau kosong', wajib: true, saran: 'Isi Total Andil Kelka (menit). Data ini belum membedakan kosong dan 0 — pisah otomatis setelah sinkron berikutnya.',
+          test: function (r) { return !(r.menit > 0) || has(r, /Menit (tidak numerik|bukan bilangan bulat)/); } },
+      { k: 'lokasi', label: 'Lokasi tidak dikenal', wajib: true, saran: 'Tulis lokasi sebagai kode stasiun (mis. KAC) atau petak A-B sesuai master.',
+        test: function (r) { return has(r, /Lokasi tidak dikenal/) || (!r.lokType && !drv(r, 'lokasi')); } },
+      { k: 'jam', label: 'Jam kejadian kosong', wajib: true, saran: 'Isi jam kejadian (HH:MM).',
+        test: function (r) { return r.hm < 0 || drv(r, 'jam'); } },
+      { k: 'ka', label: 'Nomor KA tidak di kolomnya', wajib: false, saran: 'Isi kolom nomor KA (saat ini diambil dari judul/uraian atau kosong).',
+        test: function (r) { return !r.ka || drv(r, 'ka'); } },
+      { k: 'sarana', label: 'Nomor sarana tidak dikenal', wajib: false, saran: 'Tulis nomor sarana sesuai Referensi Sarana (mis. CC2061506, K1 0 10 01).',
+        test: function (r) { return has(r, /Nomor sarana tidak dikenal/); } },
+      { k: 'penyebab', label: 'Penyebab kosong', wajib: false, saran: 'Isi penyebab/keterangan teknis.',
+        test: function (r) { return !r.penyebab || drv(r, 'penyebab'); } },
+      { k: 'wilayah', label: 'Wilayah kosong', wajib: false, saran: 'Isi Daop/Divre.',
+        test: function (r) { return !r.wilayah || drv(r, 'wilayah'); } }
+    ];
+  }
+  /** Data terbaru punya penanda "Menit kosong"? (diisi 02_Transform sejak v3.22) */
+  function menitFlagged(all) { for (var i = 0; i < all.length; i++) if (all[i].q && all[i].q.indexOf('Menit kosong') >= 0) return true; return false; }
+
+  /**
+   * @param {Array} L rekaman periode aktif · @param {Array} Lp rekaman periode pembanding (boleh kosong)
+   * @return {{C, rows:[{w,n,ok,skor,skorPrev,c:{k:n}}], total, issues:[{r, k:[...]}]}}
+   */
+  function build(L, Lp, menitFlag) {
+    var C = checks(menitFlag), W = C.filter(function (c) { return c.wajib; });
+    function agg(recs) {
+      var by = {}, tot = { w: 'Semua wilayah', n: 0, ok: 0, c: {} }, issues = [];
+      recs.forEach(function (r) {
+        var w = r.wilayah || 'Wilayah tidak tercatat', o = by[w] || (by[w] = { w: w, n: 0, ok: 0, c: {} }), ks = [];
+        C.forEach(function (c) { if (c.test(r)) { ks.push(c.k); o.c[c.k] = (o.c[c.k] || 0) + 1; tot.c[c.k] = (tot.c[c.k] || 0) + 1; } });
+        var bad = W.some(function (c) { return ks.indexOf(c.k) >= 0; });
+        o.n++; tot.n++; if (!bad) { o.ok++; tot.ok++; }
+        if (ks.length) issues.push({ r: r, k: ks, wajib: bad });
+      });
+      return { by: by, tot: tot, issues: issues };
+    }
+    var A = agg(L), B = agg(Lp || []);
+    var rank = function (w) { var m = /^(Daop|Divre) (\d+)/.exec(w); return m ? (m[1] === 'Daop' ? 0 : 100) + +m[2] : 999; };
+    var rows = Object.keys(A.by).map(function (w) { var o = A.by[w], p = B.by[w]; o.skor = o.n ? o.ok / o.n * 100 : null; o.skorPrev = p && p.n ? p.ok / p.n * 100 : null; return o; })
+      .sort(function (a, b) { return rank(a.w) - rank(b.w) || a.w.localeCompare(b.w); });
+    A.tot.skor = A.tot.n ? A.tot.ok / A.tot.n * 100 : null; A.tot.skorPrev = B.tot.n ? B.tot.ok / B.tot.n * 100 : null;
+    return { C: C, rows: rows, total: A.tot, issues: A.issues };
+  }
+
+  root.KAIMutu = { checks: checks, build: build, menitFlagged: menitFlagged };
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>

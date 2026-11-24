@@ -13,6 +13,7 @@ KAI.ROUTES = [
   { id: 'sarana', title: 'Sarana & armada', icon: 'i-train', group: 'Laporan' },
   { id: 'eksposur', title: 'Pendapatan terekspos', icon: 'i-coin', group: 'Laporan' },
   { id: 'telusuri', title: 'Telusuri kejadian', icon: 'i-list', group: 'Analisis' },
+  { id: 'mutu', title: 'Mutu data per wilayah', icon: 'i-list', group: 'Analisis' },
   { id: 'bb-capaian', title: 'Capaian angkutan batubara', icon: 'i-route', group: 'Batubara' },
   { id: 'bb-siklus', title: 'Siklus & terminal', icon: 'i-route', group: 'Batubara' },
   { id: 'batubara', title: 'Papan skenario GAPEKA', icon: 'i-route', group: 'Batubara' },
@@ -30,7 +31,7 @@ KAI.WORKSPACES = [
   { id: 'ws-jaringan', title: 'Jaringan & prasarana', icon: 'i-map', pages: [{ id: 'wilayah', label: 'Wilayah & koridor' }, { id: 'perlintasan', label: 'Perlintasan & JPL' }] },
   { id: 'ws-armada', title: 'Armada', icon: 'i-train', pages: [{ id: 'sarana', label: 'Sarana & armada' }] },
   { id: 'ws-pendapatan', title: 'Pendapatan', icon: 'i-coin', pages: [{ id: 'eksposur', label: 'Pendapatan terekspos' }] },
-  { id: 'ws-telusuri', title: 'Telusuri', icon: 'i-list', pages: [{ id: 'telusuri', label: 'Telusuri kejadian' }] },
+  { id: 'ws-telusuri', title: 'Telusuri', icon: 'i-list', pages: [{ id: 'telusuri', label: 'Telusuri kejadian' }, { id: 'mutu', label: 'Mutu data' }] },
   { id: 'ws-batubara', title: 'Batubara', icon: 'i-route', pages: [{ id: 'bb-capaian', label: 'Capaian' }, { id: 'bb-siklus', label: 'Siklus & terminal' }, { id: 'batubara', label: 'Skenario' }] }
 ];
 KAI.wsOf = function (route) { return KAI.WORKSPACES.filter(function (w) { return w.pages.some(function (p) { return p.id === route; }); })[0] || null; };
@@ -240,6 +241,7 @@ document.addEventListener('alpine:init', function () {
           if (self._wantF) { applyUrlFilters(self, self._wantF); self._wantF = null; }
           self.ver++; self.coreReady = true;
           if (self.entered) self.phase = 'ready';
+          KAI.perf.mark('inti'); KAI.perf.cur.masuk = !!self.entered; requestAnimationFrame(function () { setTimeout(function () { KAI.perf.mark('layar'); }, 0); });
           console.info('[KAI] data siap dalam ' + Math.round(performance.now() - t0) + ' ms · ' + all.length + ' kejadian');
           self.startPolling();
           self.loadNarratives();
@@ -272,7 +274,7 @@ document.addEventListener('alpine:init', function () {
             var wait = function () {
               if (!self.coreReady) return setTimeout(wait, 60);
               KAI.data.search = KAIRef.searchIndex(R, KAI.data.units);
-              self.refReady = true; self.gapekaBusy = false; self.ver++; done();
+              self.refReady = true; self.gapekaBusy = false; self.ver++; KAI.perf.mark('ref'); done();
             };
             wait();
           });

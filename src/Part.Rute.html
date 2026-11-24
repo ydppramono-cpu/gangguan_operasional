@@ -19,9 +19,9 @@
         <div class="kpi"><span x-text="C.name"></span><b x-text="KAI.fmt.n(C.len) + ' km'"></b><em x-text="C.path.length + ' stasiun · ganda ' + KAI.fmt.d1(C.len ? C.kmGanda / C.len * 100 : 0) + '%'"></em></div>
         <div class="kpi"><span>Wilayah dilewati</span><b x-text="C.regions.length + ' wilayah'"></b><em x-text="C.regions.map(function (r) { return r.region + ' ' + KAI.fmt.n(r.km) + ' km'; }).join(' · ')"></em></div>
         <div class="kpi"><span x-text="'Perjalanan harian (' + ($store.app.R && KAI.data.ref ? KAI.data.ref.gapekaLabel : 'GAPEKA') + ')'"></span><b x-text="KAI.fmt.n(C.nDaily) + ' KA'"></b><em x-text="'penumpang ' + C.nPnp + ' · KRL ' + C.nKrl + ' · barang ' + C.nBrg + ' · dinas ' + C.nDinas"></em></div>
-        <div class="kpi"><span>Pendapatan alokasi km · 12 bln</span><b x-text="KAI.fmt.rp(C.revA)"></b><em x-text="'penumpang ' + KAI.fmt.rp(C.revPA) + ' · barang ' + KAI.fmt.rp(C.revBA)"></em></div>
-        <div class="kpi"><span>Volume alokasi km · 12 bln</span><b x-text="KAI.fmt.n(C.paxA) + ' pnp'"></b><em x-text="KAI.fmt.n(C.tonA) + ' ton barang'"></em></div>
-        <div class="kpi"><span>Kejadian di koridor · 12 bln</span><b x-text="KAI.fmt.n(C.g.n) + ' · ' + KAI.fmt.n(C.g.menit) + ' menit'"></b><em x-text="'prasarana ' + C.gPras + ' · keamanan ' + C.gSec + ' · alam ' + C.gNat"></em></div>
+        <div class="kpi"><span>Pendapatan alokasi km · 12 bulan</span><b x-text="KAI.fmt.rp(C.revA)"></b><em x-text="'penumpang ' + KAI.fmt.rp(C.revPA) + ' · barang ' + KAI.fmt.rp(C.revBA)"></em></div>
+        <div class="kpi"><span>Volume alokasi km · 12 bulan</span><b x-text="KAI.fmt.n(C.paxA) + ' penumpang'"></b><em x-text="KAI.fmt.n(C.tonA) + ' ton barang'"></em></div>
+        <div class="kpi"><span>Kejadian di koridor · 12 bulan</span><b x-text="KAI.fmt.n(C.g.n) + ' · ' + KAI.fmt.n(C.g.menit) + ' menit'"></b><em x-text="'prasarana ' + C.gPras + ' · keamanan ' + C.gSec + ' · alam ' + C.gNat"></em></div>
       </div>
 
       <div class="grid g-2-1 mt rt-top">
@@ -38,10 +38,10 @@
         <div class="card">
           <div class="card-h"><div><h3>Peringkat koridor menurut pendapatan</h3><p>Alokasi km = pendapatan KA × porsi km KA di koridor · klik baris untuk memilih</p></div></div>
           <div class="card-b tbl-wrap" style="max-height:none">
-            <table class="tbl"><thead><tr><th>Koridor</th><th class="num">Pendapatan</th><th class="num">KA/hari</th><th class="num hide-sm">Ggn pras.</th></tr></thead><tbody>
+            <table class="tbl"><thead><tr><th>Koridor</th><th class="num">Pendapatan</th><th class="num">KA/hari</th><th class="num hide-sm">Gangguan prasarana</th></tr></thead><tbody>
               <template x-for="(c, i) in rank" :key="c.id">
                 <tr class="click" :class="c.id === id ? 'sel' : ''" @click="pick(c.id)">
-                   <td class="wrap"><b x-text="(i + 1) + '. ' + c.name"></b><div class="muted sm rt-sub" :title="KAI.fmt.n(c.paxA) + ' pnp · ' + KAI.fmt.n(c.tonA) + ' ton'" x-text="KAI.fmt.n(c.len) + ' km · ' + KAI.fmt.n(c.paxA) + ' pnp · ' + KAI.fmt.n(c.tonA) + ' ton'"></div></td>
+                   <td class="wrap"><b x-text="(i + 1) + '. ' + c.name"></b><div class="muted sm rt-sub" :title="KAI.fmt.n(c.paxA) + ' penumpang · ' + KAI.fmt.n(c.tonA) + ' ton'" x-text="KAI.fmt.n(c.len) + ' km · ' + KAI.fmt.n(c.paxA) + ' penumpang · ' + KAI.fmt.n(c.tonA) + ' ton'"></div></td>
                   <td class="num bar-cell"><div class="b" :style="'width:' + (rankMax ? c.revA / rankMax * 100 : 0) + '%'"></div><span x-text="KAI.fmt.rp(c.revA)"></span></td>
                   <td class="num" x-text="c.nDaily"></td><td class="num hide-sm" x-text="c.gPras"></td>
                 </tr>
@@ -65,7 +65,7 @@
                 <button class="btn sm" @click="$store.app.open('petak', seg.key)">Profil petak</button></div>
               <div class="card-b">
                 <div class="rt-flags"><span class="tag" :class="flagCls(seg.flag)" x-text="seg.flag ? 'Prioritas ' + seg.flag : 'Tidak prioritas'"></span>
-                  <span class="tag" x-text="seg.nTrip + ' KA/hari'"></span><span class="tag" x-text="'Ggn pras. ' + seg.gN + ' · ' + KAI.fmt.n(seg.gM) + ' menit'"></span>
+                  <span class="tag" x-text="seg.nTrip + ' KA/hari'"></span><span class="tag" x-text="'Gangguan prasarana ' + seg.gN + ' · ' + KAI.fmt.n(seg.gM) + ' menit'"></span>
                   <span class="tag" x-text="'WKP ' + seg.wkN + 'x (JR ' + seg.wkJR + ')'"></span>
                   <span class="tag" :class="seg.thi && seg.thi.hi < 70 ? 't-bad' : ''" x-text="seg.thi ? 'THI ' + KAI.fmt.d1(seg.thi.hi) + ' · ' + KAI.fmt.mon(seg.thi.ym) : 'THI petak tidak tersedia'"></span></div>
                 <h4 class="h-s mt">Jam kosong (tanpa KA terjadwal, penyangga ± <span x-text="buf"></span> menit)</h4>
@@ -83,7 +83,7 @@
                 </dl>
                 <h4 class="h-s mt" x-show="seg.wk.length" x-text="'WKP terakhir di petak ini (' + seg.wk.length + ')'"></h4>
                 <ul class="rt-list"><template x-for="(w, j) in seg.wk.slice().sort(function (a, b) { return a[0] < b[0] ? 1 : -1; }).slice(0, 6)" :key="j"><li><b x-text="w[0].slice(8) + '/' + w[0].slice(5, 7)"></b> <span x-text="(w[9] || '?') + '–' + (w[10] || '?') + ' · ' + w[8]"></span></li></template></ul>
-                <h4 class="h-s mt" x-show="seg.g.length" x-text="'Gangguan prasarana 12 bln (' + seg.g.length + ')'"></h4>
+                <h4 class="h-s mt" x-show="seg.g.length" x-text="'Gangguan prasarana 12 bulan (' + seg.g.length + ')'"></h4>
                 <ul class="rt-list"><template x-for="r in seg.g.slice().sort(function (a, b) { return b.menit - a.menit; }).slice(0, 6)" :key="r.id"><li class="click" @click="$store.app.open('kejadian', r.id)"><b x-text="KAI.fmt.n(r.menit) + ' menit'"></b> <span x-text="KAI.fmt.date(r) + ' · ' + (r.sub || r.judul)"></span></li></template></ul>
               </div>
             </div>
@@ -94,7 +94,7 @@
       <div class="card mt">
         <div class="card-h"><div><h3>Petak prioritas & rekomendasi WKP</h3><p>P1 = gangguan prasarana ≥ 2 dan (THI &lt; 70 atau WKP jalan rel ≤ 1) · P2 = ada gangguan tanpa WKP jalan rel · P3 = THI &lt; 70 tanpa gangguan · jam kosong dari GAPEKA 2025</p></div></div>
         <div class="card-b tbl-wrap" style="max-height:420px">
-          <table class="tbl"><thead><tr><th>Petak</th><th>Jalur</th><th class="num">KA/hari</th><th class="num">Ggn pras.</th><th class="num">WKP JR</th><th class="num">THI</th><th>Jam kosong terpanjang</th><th>Status</th></tr></thead><tbody>
+          <table class="tbl"><thead><tr><th>Petak</th><th>Jalur</th><th class="num">KA/hari</th><th class="num">Gangguan prasarana</th><th class="num">WKP JR</th><th class="num">THI</th><th>Jam kosong terpanjang</th><th>Status</th></tr></thead><tbody>
             <template x-for="x in priRows" :key="x.key">
               <tr class="click" :class="seg && seg.key === x.key ? 'sel' : ''" @click="pickSeg(x.key)">
                 <td x-text="x.nmA + ' – ' + x.nmB"></td><td x-text="(x.track || '–').toLowerCase()"></td><td class="num" x-text="x.nTrip"></td>
@@ -160,11 +160,11 @@
             <dt>Elevasi</dt><dd x-text="P.zN ? KAI.fmt.n(P.zMin) + '–' + KAI.fmt.n(P.zMax) + ' m dpl' : 'belum ada data'"></dd>
             <dt>Landai rata-rata terbesar</dt><dd x-text="steepTxt"></dd>
           </dl><div class="rt-elev" x-show="P.zN >= 2"><div class="chart sm-h" x-chart="P.zN >= 2 ? elevOpt() : null"></div></div></div></div>
-        <div class="card"><div class="card-h"><div><h3>Kerentanan alam</h3><p>Gangguan_Induk 12 bln (tanpa imbas) · titik terbanyak</p></div></div>
-          <div class="card-b"><template x-for="t in P.nat" :key="t.k"><div class="rt-risk"><b x-text="t.label"></b><span class="num" x-text="t.n + ' kej.'"></span><div class="muted sm" x-text="t.top.map(function (x) { return x.label + ' (' + x.n + ')'; }).join(' · ')"></div></div></template>
+        <div class="card"><div class="card-h"><div><h3>Kerentanan alam</h3><p>Gangguan_Induk 12 bulan (tanpa imbas) · titik terbanyak</p></div></div>
+          <div class="card-b"><template x-for="t in P.nat" :key="t.k"><div class="rt-risk"><b x-text="t.label"></b><span class="num" x-text="t.n + ' kejadian'"></span><div class="muted sm" x-text="t.top.map(function (x) { return x.label + ' (' + x.n + ')'; }).join(' · ')"></div></div></template>
             <p class="muted" x-show="!P.nat.length">Tidak ada kejadian alam tercatat di koridor dalam 12 bulan.</p></div></div>
-        <div class="card"><div class="card-h"><div><h3>Rawan keamanan</h3><p>Tertemper orang, pelemparan batu, vandalisme, pencurian · 12 bln</p></div></div>
-          <div class="card-b"><template x-for="t in P.sec" :key="t.k"><div class="rt-risk"><b x-text="t.label"></b><span class="num" x-text="t.n + ' kej.'"></span><div class="muted sm" x-text="t.top.map(function (x) { return x.label + ' (' + x.n + ')'; }).join(' · ')"></div></div></template>
+        <div class="card"><div class="card-h"><div><h3>Rawan keamanan</h3><p>Tertemper orang, pelemparan batu, vandalisme, pencurian · 12 bulan</p></div></div>
+          <div class="card-b"><template x-for="t in P.sec" :key="t.k"><div class="rt-risk"><b x-text="t.label"></b><span class="num" x-text="t.n + ' kejadian'"></span><div class="muted sm" x-text="t.top.map(function (x) { return x.label + ' (' + x.n + ')'; }).join(' · ')"></div></div></template>
             <p class="muted" x-show="!P.sec.length">Tidak ada kejadian keamanan tercatat di koridor dalam 12 bulan.</p></div></div>
         <div class="card"><div class="card-h"><div><h3>Riset publik</h3><p>Fakta bersumber; diakses 13 Nov 2026</p></div></div>
           <div class="card-b"><template x-for="(f, j) in facts" :key="j"><div class="rt-fact"><p x-text="f.t"></p><a :href="f.url" target="_blank" rel="noopener" x-text="f.src"></a></div></template>

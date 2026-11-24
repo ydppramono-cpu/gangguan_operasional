@@ -55,6 +55,7 @@ function transformRows_(values, idx, nowYm, kor) {
     else if (!dt.ym) { stats.noDate++; q.push('Tanggal tidak valid'); flag('Tanggal tidak valid'); }
     var mn = D.number(g(row, 'menit'));
     if (!mn.ok && D.txt(g(row, 'menit'))) { stats.badMinutes++; q.push('Menit tidak numerik'); flag('Menit tidak numerik'); }
+    else if (!D.txt(g(row, 'menit')) && typeof g(row, 'menit') !== 'number') q.push('Menit kosong');   // dicatat 0 di data, ditandai agar Mutu data dapat membedakannya dari 0 sungguhan
 
     var drv = [], judul = D.txt(g(row, 'judul')), ketTxt = D.txt(g(row, 'ket')), both = judul + '\n' + ketTxt;
     if (mn.ok && mn.value % 1) { q.push('Menit bukan bilangan bulat'); flag('Menit bukan bilangan bulat'); }

@@ -3,8 +3,9 @@
  * Akses terbuka (keputusan 15 Okt 2026: tanpa kode akses/RBAC). Semua mengembalikan { ok:true, ... } atau { ok:false, error }.
  */
 function guard_(fn) {
-  try { return fn(); }
-  catch (e) { return { ok: false, error: String(e && e.message || e) }; }
+  var t0 = Date.now();
+  try { var r = fn(); if (r && typeof r === 'object') r._ms = Date.now() - t0; return r; }   // _ms = lama kerja server (untuk ukur waktu muat)
+  catch (e) { return { ok: false, error: String(e && e.message || e), _ms: Date.now() - t0 }; }
 }
 
 function snapshotOrError_() {

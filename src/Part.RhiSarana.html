@@ -31,11 +31,11 @@
             </div>
             <div class="grid g-2 mt">
               <div class="card"><div class="card-h"><div><h3 x-text="'Daftar pantau: DECLINING per ' + day"></h3><p>HI &lt; 70 pada hari terakhir data RHI</p></div></div>
-                <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Lokomotif</th><th>Depo</th><th class="num">HI</th><th class="num">Hari DECL.</th><th class="num">Reliab.</th><th class="num">Maint. idx</th><th class="num">Umur (th)</th><th class="num" x-text="'Gangg. ' + w6"></th></tr></thead><tbody>
+                <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Lokomotif</th><th>Depo</th><th class="num">HI</th><th class="num">Hari DECLINING</th><th class="num">Reliability</th><th class="num">Maintenance index</th><th class="num">Umur (tahun)</th><th class="num" x-text="'Gangguan ' + w6"></th></tr></thead><tbody>
                   <template x-for="u in decl" :key="u.no"><tr class="click" @click="$store.app.open('sarana', u.no)"><td><b x-text="KAI.fmt.unit(u.no)"></b> <small x-text="u.tipe"></small></td><td x-text="u.depo || '–'"></td><td class="num bad-t" x-text="KAI.fmt.d1(u.hi)"></td><td class="num" x-text="u.nDecl"></td><td class="num" x-text="u.rel == null ? '–' : u.rel"></td><td class="num" x-text="KAI.fmt.d1(u.mi)"></td><td class="num" x-text="KAI.fmt.d1(u.age)"></td><td class="num" x-text="u.g6.n"></td></tr></template>
                 </tbody></table></div></div>
               <div class="card"><div class="card-h"><div><h3 x-text="'Gangguan berulang ≥3 kali · ' + w6"></h3><p x-text="'Status ' + day"></p></div></div>
-                <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Lokomotif</th><th>Depo</th><th class="num">n · menit</th><th class="num" x-text="R.label"></th><th>HI (status)</th><th class="num">Reliab.</th></tr></thead><tbody>
+                <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Lokomotif</th><th>Depo</th><th class="num">n · menit</th><th class="num" x-text="R.label"></th><th>HI (status)</th><th class="num">Reliability</th></tr></thead><tbody>
                   <template x-for="u in rep3" :key="u.no"><tr class="click" @click="$store.app.open('sarana', u.no)"><td><b x-text="KAI.fmt.unit(u.no)"></b> <small x-text="u.tipe"></small></td><td x-text="u.depo || '–'"></td><td class="num" x-text="u.g6.n + ' · ' + KAI.fmt.n(u.g6.menit)"></td><td class="num" x-text="u.gOkt.n"></td><td><b :style="'color:#' + sc(u.st)" x-text="KAI.fmt.d1(u.hi) + ' · ' + KAI.fmt.st(u.st)"></b></td><td class="num" x-text="u.rel == null ? '–' : u.rel"></td></tr></template>
                 </tbody></table></div></div>
             </div>

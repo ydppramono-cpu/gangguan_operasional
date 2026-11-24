@@ -37,11 +37,12 @@ window.KAI = window.KAI || {};
 
   /** Panggil fungsi server; mengembalikan Promise. Di luar GAS (uji) memakai window.__mockServer. */
   K.api = function (fn) {
-    var args = Array.prototype.slice.call(arguments, 1);
+    var args = Array.prototype.slice.call(arguments, 1), t0 = performance.now();
     return new Promise(function (resolve, reject) {
       var run = (window.google && google.script && google.script.run) ? google.script.run : window.__mockServer;
       if (!run) return reject(new Error('Server tidak tersedia.'));
       run.withSuccessHandler(function (res) {
+        K.perf.api(fn, performance.now() - t0, res && res._ms);
         if (res && res.ok === false) { var e = new Error(res.error || 'Gagal'); e.auth = !!res.auth; e.stale = !!res.stale; reject(e); }
         else resolve(res);
       }).withFailureHandler(function (err) { reject(err instanceof Error ? err : new Error(String(err))); })[fn].apply(null, args);
@@ -79,6 +80,27 @@ window.KAI = window.KAI || {};
     get: function (k) { try { return JSON.parse(localStorage.getItem('kai2:' + k)); } catch (e) { return null; } },
     set: function (k, v) { try { localStorage.setItem('kai2:' + k, JSON.stringify(v)); } catch (e) { } },
     del: function (k) { try { localStorage.removeItem('kai2:' + k); } catch (e) { } }
+  };
+
+  /**
+   * Waktu muat (diukur di perangkat ini, disimpan lokal 10 kali terakhir, tidak dikirim ke mana pun).
+   * Tahap: perakitan halaman di server (doGet) · halaman sampai (responseEnd) · skrip siap (DOMContentLoaded) ·
+   * pustaka CDN · data inti (server/total) · layar pertama · referensi siap. Semua dalam milidetik sejak navigasi.
+   */
+  K.perf = {
+    cur: { at: new Date().toISOString(), api: {} },
+    api: function (fn, total, srv) { var a = this.cur.api; if (a[fn]) return; a[fn] = { total: Math.round(total), srv: srv == null ? null : Math.round(srv), t: Math.round(performance.now()) }; },
+    mark: function (k) { var self = this; if (this.cur[k] == null) this.cur[k] = Math.round(performance.now()); if (this.cur.ref != null && this.cur.layar != null) this.save(); if (k === 'inti') setTimeout(function () { self.save(); }, 60000); },
+    save: function () {
+      if (this.saved) return; this.saved = true;
+      var c = this.cur, n = performance.getEntriesByType && performance.getEntriesByType('navigation')[0], T = window.KAI_T0 || {};
+      c.render = T.render; c.libs = T.libs ? Math.round(T.libs) : null;
+      if (n) { c.ttfb = Math.round(n.responseStart); c.html = Math.round(n.responseEnd); c.dcl = Math.round(n.domContentLoadedEventEnd); c.kb = n.transferSize ? Math.round(n.transferSize / 1024) : null; }
+      c.ua = /Mobi/i.test(navigator.userAgent) ? 'ponsel' : 'komputer';
+      var L = K.store.get('perf') || []; L.unshift(c); K.store.set('perf', L.slice(0, 10));
+      try { console.info('[KAI] waktu muat', JSON.stringify(c)); } catch (e) { }
+    },
+    list: function () { return K.store.get('perf') || []; }
   };
 
   /** Ganti tampilan dengan View Transitions bila tersedia. */

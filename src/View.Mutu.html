@@ -1,0 +1,123 @@
+<!-- View.Mutu — mutu data Gangguan_Induk per Daop/Divre: skor kelengkapan, masalah terbanyak, daftar baris yang perlu dilengkapi tim input (unduh Excel). -->
+<template x-if="$store.app.route === 'mutu' && $store.app.R">
+  <section class="view" x-data="vMutu">
+    <p class="note story">Alur baca: <b>seberapa lengkap</b> data tiap wilayah → <b>isian apa</b> yang paling sering kosong → <b>baris mana</b> yang perlu dilengkapi (unduh Excel untuk dikirim ke Daop/Divre). Periode & saringan mengikuti filter global: <b x-text="R.P.label"></b>.</p>
+
+    <div class="grid g-3 mt">
+      <div class="card kpi" :style="'--kpi-c:' + tone(M.total.skor)">
+        <div class="lbl">Skor kelengkapan (isian wajib)</div>
+        <div class="val num" x-text="pct(M.total.skor)"></div>
+        <div class="deltas"><span class="delta" :class="dcls(M.total.skor, M.total.skorPrev)" x-show="M.total.skorPrev != null" x-text="'vs ' + R.prevLabel + ' ' + pct(M.total.skorPrev)"></span></div>
+        <div class="note" x-text="KAI.fmt.n(M.total.ok) + ' dari ' + KAI.fmt.n(M.total.n) + ' kejadian tanpa masalah isian wajib'"></div>
+      </div>
+      <div class="card kpi" style="--kpi-c:var(--bad)">
+        <div class="lbl">Kejadian perlu dilengkapi</div>
+        <div class="val num" x-text="KAI.fmt.n(M.total.n - M.total.ok)"></div>
+        <div class="note">Minimal satu isian wajib bermasalah</div>
+      </div>
+      <div class="card kpi" style="--kpi-c:var(--warn)">
+        <div class="lbl">Isian wajib paling sering bermasalah</div>
+        <div class="val" style="font-size:17px;line-height:1.3" x-text="topCheck ? topCheck.label : 'Tidak ada'"></div>
+        <div class="note" x-text="topCheck ? KAI.fmt.n(topCheck.n) + ' kejadian · ' + topCheck.saran : 'Semua isian wajib lengkap pada periode ini'"></div>
+      </div>
+    </div>
+
+    <div class="card mt">
+      <div class="card-h"><div><h3>Kelengkapan per wilayah</h3><p>Skor = kejadian tanpa masalah isian wajib ÷ semua kejadian wilayah itu · angka sel = jumlah kejadian bermasalah · klik baris untuk melihat daftarnya</p></div>
+        <div class="spacer"></div><label class="chip-chk"><input type="checkbox" x-model="showPel"> tampilkan isian pelengkap</label><button class="btn sm primary" @click="xlsx()"><svg class="i"><use href="#i-download"/></svg>Unduh Excel</button></div>
+      <div class="card-b tbl-wrap">
+        <table class="tbl mutu-t nopg">
+          <thead><tr><th>Wilayah</th><th class="num">Kejadian</th><th>Skor</th><th class="num" x-text="'vs ' + R.prevLabel"></th>
+            <template x-for="c in cols" :key="c.k"><th class="num" :class="!c.wajib && 'pel'" :title="c.saran" x-text="c.label"></th></template></tr></thead>
+          <tbody>
+            <template x-for="r in M.rows" :key="r.w">
+              <tr class="click" :class="fw === r.w && 'sel'" @click="fw = fw === r.w ? '' : r.w">
+                <td><b x-text="r.w"></b></td><td class="num" x-text="KAI.fmt.n(r.n)"></td>
+                <td><span class="meter"><i :style="'width:' + (r.skor || 0) + '%;background:' + tone(r.skor)"></i></span><b class="num" x-text="pct(r.skor)"></b></td>
+                <td class="num"><span class="delta" :class="dcls(r.skor, r.skorPrev)" x-text="r.skorPrev == null ? '–' : signed(r.skor - r.skorPrev)"></span></td>
+                <template x-for="c in cols" :key="c.k"><td class="num" :class="[!c.wajib && 'pel', r.c[c.k] && c.wajib && 'bad-t']" x-text="r.c[c.k] ? KAI.fmt.n(r.c[c.k]) : '–'"></td></template>
+              </tr>
+            </template>
+            <tr class="total"><td>Semua wilayah</td><td class="num" x-text="KAI.fmt.n(M.total.n)"></td><td><b class="num" x-text="pct(M.total.skor)"></b></td>
+              <td class="num"><span class="delta" :class="dcls(M.total.skor, M.total.skorPrev)" x-text="M.total.skorPrev == null ? '–' : signed(M.total.skor - M.total.skorPrev)"></span></td>
+              <template x-for="c in cols" :key="c.k"><td class="num" :class="!c.wajib && 'pel'" x-text="M.total.c[c.k] ? KAI.fmt.n(M.total.c[c.k]) : '–'"></td></template></tr>
+          </tbody>
+        </table>
+        <p class="note mt-s">Isian <b>wajib</b> masuk skor: tanggal, kategori & subgangguan, menit, lokasi, jam. Isian <span class="pel-t">pelengkap</span> (abu-abu) ditampilkan tanpa memengaruhi skor. Dasar: kolom Gangguan_Induk dan catatan kualitas saat sinkron — tidak ada yang ditebak.</p>
+      </div>
+    </div>
+
+    <div class="card mt">
+      <div class="card-h"><div><h3>Daftar kejadian yang perlu dilengkapi</h3><p x-text="(fw || 'Semua wilayah') + ' · ' + KAI.fmt.n(list.length) + ' kejadian' + (list.length > 200 ? ' (200 teratas tampil; Excel memuat semua)' : '') + ' · klik baris untuk detail'"></p></div></div>
+      <div class="card-b">
+        <div class="chips mutu-chips">
+          <button type="button" class="chip" :aria-pressed="String(!fk)" @click="fk = ''">Semua masalah</button>
+          <template x-for="c in M.C" :key="c.k"><button type="button" class="chip" :aria-pressed="String(fk === c.k)" x-show="cnt(c.k)" @click="fk = fk === c.k ? '' : c.k" x-text="c.label + ' · ' + KAI.fmt.n(cnt(c.k))"></button></template>
+          <label class="chip-chk"><input type="checkbox" x-model="onlyW"> hanya isian wajib</label>
+        </div>
+        <div class="tbl-wrap mt-s" style="max-height:520px">
+          <table class="tbl sm" data-pg="20">
+            <thead><tr><th>Tanggal</th><th>Wilayah</th><th>Nomor KA</th><th>Judul</th><th>Perlu dilengkapi</th></tr></thead>
+            <tbody>
+              <template x-for="x in list.slice(0, 200)" :key="x.r.id">
+                <tr class="click" @click="$store.app.open('kejadian', x.r.id)">
+                  <td class="nowrap" x-text="x.r.date ? KAI.fmt.day(x.r.date) : 'tidak tercatat'"></td><td x-text="x.r.wilayah || 'tidak tercatat'"></td><td x-text="x.r.ka || '–'"></td>
+                  <td class="wrap" x-text="x.r.judul"></td><td class="wrap" x-text="labels(x)"></td>
+                </tr>
+              </template>
+              <tr x-show="!list.length"><td colspan="5" class="muted">Tidak ada kejadian bermasalah untuk pilihan ini.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+<script>
+document.addEventListener('alpine:init', function () {
+  Alpine.data('vMutu', function () {
+    var memo = { k: '', v: null };
+    return {
+      fw: '', fk: '', onlyW: true, showPel: false,
+      get cols() { var p = this.showPel; return this.M.C.filter(function (c) { return c.wajib || p; }); },
+      /** Skor naik = membaik (hijau), turun = memburuk (merah) — kebalikan dari jumlah gangguan. */
+      dcls: function (a, b) { if (a == null || b == null) return 'flat'; return a - b > 0.05 ? 'down' : a - b < -0.05 ? 'up' : 'flat'; },
+      get R() { return this.$store.app.R; },
+      get M() {
+        var app = this.$store.app, R = this.R, k = app.ver + '|' + JSON.stringify(app.f);
+        if (memo.k !== k) {
+          var all = app.scoped(), flag = KAIMutu.menitFlagged(KAI.data.all);
+          memo = { k: k, v: KAIMutu.build(R.L, KAIA.sel(all, R.prevP), flag) };
+        }
+        return memo.v;
+      },
+      get topCheck() {
+        var M = this.M, best = null;
+        M.C.forEach(function (c) { var n = M.total.c[c.k] || 0; if (c.wajib && n && (!best || n > best.n)) best = { label: c.label, saran: c.saran, n: n }; });
+        return best;
+      },
+      get base() { var fw = this.fw, onlyW = this.onlyW, W = {}; this.M.C.forEach(function (c) { if (c.wajib) W[c.k] = 1; });
+        return this.M.issues.filter(function (x) { return (!fw || (x.r.wilayah || 'Wilayah tidak tercatat') === fw) && (!onlyW || x.k.some(function (k) { return W[k]; })); }); },
+      cnt: function (k) { return this.base.filter(function (x) { return x.k.indexOf(k) >= 0; }).length; },
+      get list() { var fk = this.fk; return this.base.filter(function (x) { return !fk || x.k.indexOf(fk) >= 0; }).sort(function (a, b) { return String(b.r.date).localeCompare(String(a.r.date)); }); },
+      labels: function (x) { var C = {}; this.M.C.forEach(function (c) { C[c.k] = c; }); return x.k.map(function (k) { return C[k].label + (C[k].wajib ? '' : ' (pelengkap)'); }).join(' · '); },
+      pct: function (v) { return v == null ? '–' : KAI.fmt.d1(v) + '%'; },
+      signed: function (d) { return (d > 0 ? '+' : d < 0 ? '−' : '±') + KAI.fmt.d1(Math.abs(d)) + ' poin'; },
+      tone: function (v) { return v == null ? 'var(--muted)' : v >= 95 ? 'var(--good)' : v >= 85 ? 'var(--warn)' : 'var(--bad)'; },
+      xlsx: function () {
+        var M = this.M, C = M.C, R = this.R, self = this;
+        var sum = [{ title: 'Wilayah', field: 'w', wch: 22 }, { title: 'Kejadian', field: 'n' }, { title: 'Skor kelengkapan (%)', get: function (r) { return r.skor == null ? '' : Math.round(r.skor * 10) / 10; } },
+          { title: 'Skor ' + R.prevLabel + ' (%)', get: function (r) { return r.skorPrev == null ? '' : Math.round(r.skorPrev * 10) / 10; } }]
+          .concat(C.map(function (c) { return { title: c.label + (c.wajib ? '' : ' (pelengkap)'), get: function (r) { return r.c[c.k] || 0; }, wch: 18 }; }));
+        var det = [{ title: 'ID', get: function (x) { return x.r.id; }, wch: 14 }, { title: 'Tanggal', get: function (x) { return x.r.date || 'tidak tercatat'; }, wch: 12 },
+          { title: 'Wilayah', get: function (x) { return x.r.wilayah || 'tidak tercatat'; }, wch: 12 }, { title: 'Nomor KA', get: function (x) { return x.r.ka || ''; } },
+          { title: 'Judul', get: function (x) { return x.r.judul; }, wch: 60 }, { title: 'Perlu dilengkapi', get: function (x) { return self.labels(x); }, wch: 50 },
+          { title: 'Saran perbaikan', get: function (x) { var S = {}; C.forEach(function (c) { S[c.k] = c.saran; }); return x.k.map(function (k) { return S[k]; }).join(' '); }, wch: 80 }];
+        var rows = M.issues.filter(function (x) { return !self.fw || (x.r.wilayah || 'Wilayah tidak tercatat') === self.fw; }).sort(function (a, b) { return String(a.r.wilayah).localeCompare(String(b.r.wilayah)) || String(b.r.date).localeCompare(String(a.r.date)); });
+        KAIExport.xlsx([{ name: 'Ringkasan per wilayah', columns: sum, rows: M.rows.concat([M.total]) }, { name: 'Perlu dilengkapi', columns: det, rows: rows }],
+          'Mutu_data_' + (self.fw ? self.fw + '_' : '') + R.P.short, this.$store.app.meta).catch(function (e) { Alpine.store('app').say(e.message, true); });
+      }
+    };
+  });
+});
+</script>

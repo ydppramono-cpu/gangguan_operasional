@@ -420,11 +420,11 @@
       return o;
     }
     var rows = [
-      row('n', 'Frekuensi gangguan', function (k) { return K[k].n; }, 'kej.'),
+      row('n', 'Frekuensi gangguan', function (k) { return K[k].n; }, 'kejadian'),
       row('menit', 'Total kelambatan', function (k) { return K[k].menit; }, 'menit'),
       row('avg', 'Rerata kelambatan / kejadian', function (k) { return K[k].avg; }, 'menit'),
-      row('heavy', 'Kejadian ≥ ' + cfg.heavy + ' menit', function (k) { return K[k].heavy; }, 'kej.'),
-      row('crossN', 'Kejadian perlintasan', function (k) { return K[k].crossN; }, 'kej.'),
+      row('heavy', 'Kejadian ≥ ' + cfg.heavy + ' menit', function (k) { return K[k].heavy; }, 'kejadian'),
+      row('crossN', 'Kejadian perlintasan', function (k) { return K[k].crossN; }, 'kejadian'),
       row('crossMenit', 'Kelambatan perlintasan', function (k) { return K[k].crossMenit; }, 'menit')
     ];
     var cls = CLASSES.map(function (c) { return row('cls-' + c, c, function (k) { return C[k][c].menit; }, 'menit'); });

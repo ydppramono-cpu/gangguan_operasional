@@ -2,7 +2,10 @@
  * 07_Main.gs — titik masuk web app dan perangkai berkas HTML modular.
  */
 function doGet() {
-  return HtmlService.createTemplateFromFile('Index').evaluate()
+  var t0 = Date.now(), out = HtmlService.createTemplateFromFile('Index').evaluate();
+  // Lama perakitan halaman di server, dibaca browser untuk "Waktu muat" (Metodologi). Tanpa data pengguna.
+  out.setContent(out.getContent().replace('__KAI_RENDER_MS__', String(Date.now() - t0)));
+  return out
     .setTitle('Gangguan Operasional · KAI')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.DEFAULT);
