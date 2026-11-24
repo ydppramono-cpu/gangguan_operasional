@@ -1,0 +1,82 @@
+kode,nama,n_jalur,peran,terminal
+KPT,Kertapati,19,BONGKAR,UPT Terminal Kertapati
+KAS,Kramasan,10,Stasiun antara,
+SIG,Simpang,11,BONGKAR,UPT Terminal Simpang
+POSIDR,Pos Indralaya,,Stasiun antara,
+PYK,Payakabung,5,Stasiun antara,
+SDN,Serdang,5,BONGKAR,UPT Terminal Kertapati
+GLB,Glumbang,5,Stasiun antara,
+KED,Karangenda,5,Stasiun antara,
+LEB,Lembak,5,Stasiun antara,
+PBM,Prabumulih,5,Stasiun antara,
+PBRX6,Prabumulih Baru X6,2,Stasiun antara,
+PBRX5,Prabumulih Baru X5,,Stasiun antara,
+PNM,Penimur,3,Stasiun antara,
+NRU,Niru,3,MUAT,UPT Terminal Niru
+BIB,Blimbing Pendopo,3,Stasiun antara,
+GNM,Gunung Megang,3,MUAT,UPT Terminal Niru
+PNG,Penanggiran,3,Stasiun antara,
+UJM,Ujan Mas,4,Stasiun antara,
+MRL,Muara Gula,10,Stasiun antara,
+ME,Muara Enim,6,Stasiun antara,
+TMB,Tanjungenim Baru,11,MUAT,UPT Terminal Tanjungenim Baru
+MLI,Muaralawai,5,MUAT,UPT Terminal Muaralawai
+BJI,Banjarsari,3,MUAT,UPT Terminal Sukacinta
+MRP,Merapi,3,MUAT,UPT Terminal Sukacinta
+SCT,Sukacinta,10,MUAT,UPT Terminal Sukacinta
+LT,Lahat,10,BBM,UPT Terminal Sukacinta
+BGM,Bunga Mas,2,Stasiun antara,
+SUA,Sukaraja,2,Stasiun antara,
+SNA,Saung Naga,2,Stasiun antara,
+TI,Tebingtinggi,3,Stasiun antara,
+MSL,Muara Saling,2,Stasiun antara,
+KOP,Kota Padang,2,Stasiun antara,
+LLG,Lubuk Linggau,4,BBM,UPT Terminal Sukacinta
+THN,Tarahan,10,BONGKAR,UPT Terminal Tarahan
+SKN,Sukamenanti,4,BONGKAR,UPT Terminal Tarahan
+GR,Garuntang,,Stasiun antara,
+TNK,Tanjungkarang,5,Stasiun antara,
+LAR,Labuan Ratu,3,Stasiun antara,
+GDR,Gedung Ratu,2,Stasiun antara,
+RJS,Rejosari,4,Stasiun antara,
+BTI,Branti,2,Stasiun antara,
+TGI,Tegineneng,3,Stasiun antara,
+RGS,Rengas,2,Stasiun antara,
+BKI,Bekri,3,Stasiun antara,
+HJP,Haji Pemanggilan,2,Stasiun antara,
+SLS,Sulusuban,2,Stasiun antara,
+BBA,Blambangan Pagar,3,Stasiun antara,
+KAG,Kalibalangan,3,Stasiun antara,
+CMS,Candimas,,Stasiun antara,
+KB,Kotabumi,3,Stasiun antara,
+CEP,Cempaka,4,Stasiun antara,
+KTP,Ketapang,2,Stasiun antara,
+NRR,Negara Ratu,4,Stasiun antara,
+TLY,Tulung Buyut,3,Stasiun antara,
+NGN,Negeri Agung,3,Stasiun antara,
+BBU,Blambangan Umpu,3,Stasiun antara,
+GHM,Giham,2,Stasiun antara,
+TJO,Tanjungrajo,,Stasiun antara,
+WAY,Waytuba,2,Stasiun antara,
+WAP,Way Pisang,,Stasiun antara,
+MP,Martapura,4,Stasiun antara,
+SGT,Sungai Tuha,4,Stasiun antara,
+GLS,Gilas,3,Stasiun antara,
+SPC,Sepancar,3,Stasiun antara,
+KMK,Kemelak,,Stasiun antara,
+BTA,Baturaja,4,Stasiun antara,
+TJH,Tigagajah,5,MUAT,UPT Terminal Tigagajah
+LBT,Lubuk Batang,3,BBM,UPT Terminal Tigagajah
+BLT,Belatung,2,Stasiun antara,
+KPY,Kepayang,2,Stasiun antara,
+BIK,Blimbing Air Kaka,2,Stasiun antara,
+DAN,Durian,2,Stasiun antara,
+LRM,Lubuk Rukam,2,Stasiun antara,
+PNW,Peninjawan,3,Stasiun antara,
+TLB,Talang Baru,2,Stasiun antara,
+MET,Metur,2,Stasiun antara,
+KBU,Kotabaru,,Stasiun antara,
+PGG,Pagergunung,3,Stasiun antara,
+ASM,Air Asam,2,Stasiun antara,
+SKU,Sukamerindu,2,Stasiun antara,
+TJR,Tanjungrambang,3,Stasiun antara,

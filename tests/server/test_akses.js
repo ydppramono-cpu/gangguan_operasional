@@ -8,7 +8,7 @@
 const assert = require('assert'), fs = require('fs'), path = require('path');
 const { run } = require('../emulator/emu.js');
 const SRC = path.resolve(__dirname, '../../src');
-const API = ['doGet', 'include', 'apiBootstrap', 'apiNarratives', 'apiRef', 'apiGapeka26', 'apiGapeka', 'apiStatus', 'apiReportAssets', 'apiKaOps'];
+const API = ['doGet', 'include', 'apiBootstrap', 'apiNarratives', 'apiRef', 'apiGapeka26', 'apiGapeka', 'apiStatus', 'apiReportAssets', 'apiKaOps', 'apiBatubara'];
 const ADMIN = ['setupOtomatis', 'syncNow', 'installTrigger', 'showStatus', 'bersihkanSisaV2', 'ujiKondisiBq'];
 const pub = [];
 fs.readdirSync(SRC).filter(f => f.endsWith('.gs')).forEach(f => {

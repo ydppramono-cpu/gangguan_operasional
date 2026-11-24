@@ -1,0 +1,82 @@
+kode,nama,divre,lintas,km,lat,lon,sumber_koordinat,peran,terminal,n_jalur,jalur_terpanjang_m
+KPT,Kertapati,DIVRE III,D3-1,"400,102","-3,016572","104,751605","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",BONGKAR,UPT Terminal Kertapati,19,781
+KAS,Kramasan,DIVRE III,D3-1,"396,225","-3,047371","104,738191","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,10,1236
+SIG,Simpang,DIVRE III,D3-1,"388,546","-3,104507","104,699557","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",BONGKAR,UPT Terminal Simpang,11,1920
+POSIDR,Pos Indralaya,DIVRE III,D3-1,0,"-3,1674","104,6365",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,0,
+PYK,Payakabung,DIVRE III,D3-1,"373,266","-3,199205","104,604558","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,5,1687
+SDN,Serdang,DIVRE III,D3-1,"363,479","-3,219893","104,523301","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",BONGKAR,UPT Terminal Kertapati,5,1468
+GLB,Glumbang,DIVRE III,D3-1,"353,822","-3,2653","104,4546",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,5,1490
+KED,Karangenda,DIVRE III,D3-1,"345,594","-3,303927","104,396018","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,5,1428
+LEB,Lembak,DIVRE III,D3-1,"338,188","-3,3449","104,3467",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,5,1607
+PBM,Prabumulih,DIVRE III,"D3-1,D3-X5","322,705","-3,432888","104,240852","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,5,928
+PBRX6,Prabumulih Baru X6,DIVRE III & DIVRE IV,"D3-1,D3-2,D4-1","321,488","-3,4354","104,2195",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,2,2268
+PBRX5,Prabumulih Baru X5,DIVRE III & DIVRE IV,"D4-1,D3-X5","318,8","-3,4591","104,2288",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,0,
+PNM,Penimur,DIVRE III,D3-2,"333,422","-3,4431","104,153",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,3,1277
+NRU,Niru,DIVRE III,D3-2,"344,254","-3,453534","104,064172","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",MUAT,UPT Terminal Niru,3,1017
+BIB,Blimbing Pendopo,DIVRE III,D3-2,"354,344","-3,4538","103,9768",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,3,1323
+GNM,Gunung Megang,DIVRE III,D3-2,"367,039","-3,454078","103,866818","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",MUAT,UPT Terminal Niru,3,1537
+PNG,Penanggiran,DIVRE III,D3-2,"373,91","-3,4973","103,8366",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,3,1757
+UJM,Ujan Mas,DIVRE III,D3-2,"381,514","-3,5452","103,8031",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,4,1417
+MRL,Muara Gula,DIVRE III,D3-2,"387,716","-3,584191","103,775812","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,10,1173
+ME,Muara Enim,DIVRE III,"D3-2,D3-3",0,"-3,6497","103,7884",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,6,1114
+TMB,Tanjungenim Baru,DIVRE III,D3-2,"7,25","-3,706386","103,799257","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",MUAT,UPT Terminal Tanjungenim Baru,11,1362
+MLI,Muaralawai,DIVRE III,D3-3,"402,594","-3,656194","103,724956","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",MUAT,UPT Terminal Muaralawai,5,1185
+BJI,Banjarsari,DIVRE III,D3-3,"406,881","-3,676474","103,698352","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",MUAT,UPT Terminal Sukacinta,3,1167
+MRP,Merapi,DIVRE III,D3-3,"414,7","-3,739517","103,676081","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",MUAT,UPT Terminal Sukacinta,3,1006
+SCT,Sukacinta,DIVRE III,D3-3,"423,623","-3,778388","103,625345","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",MUAT,UPT Terminal Sukacinta,10,1230
+LT,Lahat,DIVRE III,D3-3,"434,159",,,belum ada,BBM,UPT Terminal Sukacinta,10,330
+BGM,Bunga Mas,DIVRE III,D3-3,"459,986",,,belum ada,Stasiun antara,,2,217
+SUA,Sukaraja,DIVRE III,D3-3,"474,368",,,belum ada,Stasiun antara,,2,170
+SNA,Saung Naga,DIVRE III,D3-3,"484,974",,,belum ada,Stasiun antara,,2,192
+TI,Tebingtinggi,DIVRE III,D3-3,"500,74",,,belum ada,Stasiun antara,,3,316
+MSL,Muara Saling,DIVRE III,D3-3,"519,903",,,belum ada,Stasiun antara,,2,245
+KOP,Kota Padang,DIVRE III,D3-3,"528,948",,,belum ada,Stasiun antara,,2,235
+LLG,Lubuk Linggau,DIVRE III,D3-3,"549,448",,,belum ada,BBM,UPT Terminal Sukacinta,4,297
+THN,Tarahan,DIVRE IV,D4-1,"6,533","-5,506232","105,338816","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",BONGKAR,UPT Terminal Tarahan,10,1214
+SKN,Sukamenanti,DIVRE IV,D4-1,"2,05","-5,46869","105,323725","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",BONGKAR,UPT Terminal Tarahan,4,1202
+GR,Garuntang,DIVRE IV,D4-1,"6,784","-5,4377","105,2907",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,0,
+TNK,Tanjungkarang,DIVRE IV,D4-1,"12,23","-5,408709","105,259851","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,5,919
+LAR,Labuan Ratu,DIVRE IV,D4-1,"17,013","-5,372287","105,252342","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,3,
+GDR,Gedung Ratu,DIVRE IV,D4-1,"21,557","-5,34359","105,224171","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,1174
+RJS,Rejosari,DIVRE IV,D4-1,"28,554","-5,294103","105,188038","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,4,906
+BTI,Branti,DIVRE IV,D4-1,"33,08","-5,254649","105,178784","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,1373
+TGI,Tegineneng,DIVRE IV,D4-1,"39,094","-5,20216","105,172342","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,3,1259
+RGS,Rengas,DIVRE IV,D4-1,"47,029","-5,133702","105,154526","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,1200
+BKI,Bekri,DIVRE IV,D4-1,"54,134","-5,072482","105,136056","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,3,
+HJP,Haji Pemanggilan,DIVRE IV,D4-1,"62,9","-5,001974","105,106808","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,1191
+SLS,Sulusuban,DIVRE IV,D4-1,"69,65","-4,945764","105,083196","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,1328
+BBA,Blambangan Pagar,DIVRE IV,D4-1,"77,944","-4,895042","105,039693","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,3,1450
+KAG,Kalibalangan,DIVRE IV,D4-1,"86,12","-4,865979","104,972915","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,3,1286
+CMS,Candimas,DIVRE IV,D4-1,"91,74","-4,84976","104,925214","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,0,
+KB,Kotabumi,DIVRE IV,D4-1,"97,67","-4,821649","104,881229","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,3,
+CEP,Cempaka,DIVRE IV,D4-1,"105,826","-4,7733","104,8429",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,4,1140
+KTP,Ketapang,DIVRE IV,D4-1,"115,283","-4,717242","104,798558","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,1011
+NRR,Negara Ratu,DIVRE IV,D4-1,"126,469","-4,6595","104,7395",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,4,1162
+TLY,Tulung Buyut,DIVRE IV,D4-1,"135,755","-4,6116","104,6904",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,3,2080
+NGN,Negeri Agung,DIVRE IV,D4-1,"147,752","-4,5497","104,6269",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,3,1976
+BBU,Blambangan Umpu,DIVRE IV,D4-1,"163,035","-4,4709","104,5461",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,3,780
+GHM,Giham,DIVRE IV,D4-1,"172,949","-4,41983","104,493721","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,
+TJO,Tanjungrajo,DIVRE IV,D4-1,"176,9","-4,40746","104,46236","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,0,
+WAY,Waytuba,DIVRE IV,D4-1,"183,975","-4,377705","104,40902","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,
+WAP,Way Pisang,DIVRE IV,D4-1,"188,5","-4,349674","104,386815","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,0,
+MP,Martapura,DIVRE IV,D4-1,"195,641","-4,316141","104,346853","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,4,230
+SGT,Sungai Tuha,DIVRE IV,D4-1,"200,793","-4,2854","104,3201",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,4,983
+GLS,Gilas,DIVRE IV,D4-1,"205,2","-4,2591","104,2972",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,3,1328
+SPC,Sepancar,DIVRE IV,D4-1,"218,638","-4,1789","104,2274",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,3,1266
+KMK,Kemelak,DIVRE IV,D4-1,"222,08","-4,1583","104,2095",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,0,
+BTA,Baturaja,DIVRE IV,D4-1,"228,005","-4,123","104,1787",Perkiraan: interpolasi jarak petak (Master 2) di antara stasiun berkoordinat Rolink; diganti otomatis oleh OpenStreetMap bila tersedia,Stasiun antara,,4,366
+TJH,Tigagajah,DIVRE IV,D4-1,"229,978","-4,111177","104,168392","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",MUAT,UPT Terminal Tigagajah,5,1262
+LBT,Lubuk Batang,DIVRE IV,D4-1,"238,4","-4,056948","104,217677","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",BBM,UPT Terminal Tigagajah,3,1400
+BLT,Belatung,DIVRE IV,D4-1,"242,284","-4,026267","104,228795","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,1528
+KPY,Kepayang,DIVRE IV,D4-1,"246,65","-4,012121","104,262914","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,1013
+BIK,Blimbing Air Kaka,DIVRE IV,D4-1,"250,768","-3,991147","104,291921","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,1204
+DAN,Durian,DIVRE IV,D4-1,"254,225","-3,967608","104,308952","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,1251
+LRM,Lubuk Rukam,DIVRE IV,D4-1,"259,592","-3,932652","104,340601","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,
+PNW,Peninjawan,DIVRE IV,D4-1,"267,088","-3,879507","104,376568","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,3,1293
+TLB,Talang Baru,DIVRE IV,D4-1,"271,625","-3,843637","104,363542","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,1305
+MET,Metur,DIVRE IV,D4-1,"278,43","-3,790324","104,345089","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,1311
+KBU,Kotabaru,DIVRE IV,D4-1,"285,55","-3,730947","104,331973","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,0,
+PGG,Pagergunung,DIVRE IV,D4-1,"290,8","-3,686929","104,317363","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,3,1223
+ASM,Air Asam,DIVRE IV,D4-1,"295,903","-3,647069","104,300754","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,1279
+SKU,Sukamerindu,DIVRE IV,D4-1,"302,6","-3,596283","104,276426","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,2,1473
+TJR,Tanjungrambang,DIVRE IV,D4-1,"309,26","-3,54335","104,261843","Rolink (rata-rata posisi kereta di stasiun, Jan–Sep 2026)",Stasiun antara,,3,1250

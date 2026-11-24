@@ -1,6 +1,6 @@
 {
   "name": "gangguan-operasional",
-  "version": "3.19.0",
+  "version": "3.20.0",
   "private": true,
   "description": "KAI Dashboard Gangguan Operasional (Google Apps Script) + KAI Data Platform",
   "scripts": {
@@ -14,7 +14,8 @@
     "test:bq": "node tests/bq/test_bq.js",
     "test:akses": "node tests/server/test_akses.js",
     "test:alur": "node tests/emulator/flow_test.js",
-    "test:pulau": "node tests/server/test_pulau.js"
+    "test:pulau": "node tests/server/test_pulau.js",
+    "test:sim": "node tests/batubara/test_sim.js"
   },
   "devDependencies": {
     "eslint": "9.17.0",

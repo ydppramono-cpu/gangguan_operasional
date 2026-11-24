@@ -1,0 +1,83 @@
+petak,jalur,wp_menit,headway_menit,jarak_km,blok
+KPT-KAS,2,3.446,12.0,3.877,Blok Otomatik Tertutup
+KAS-SIG,2,6.826,9.0,7.679,Blok Otomatik Tertutup
+SIG-POSIDR,2,9.019,9.0,10.146,Blok Otomatik Tertutup
+POSIDR-PYK,2,4.564,9.0,5.134,Blok Otomatik Tertutup
+PYK-SDN,2,8.7,9.0,9.787,Blok Otomatik Tertutup
+SDN-GLB,2,8.584,9.0,9.657,Blok Otomatik Tertutup
+GLB-KED,2,7.314,9.0,8.228,Blok Otomatik Tertutup
+KED-LEB,2,6.583,9.0,7.406,Blok Otomatik Tertutup
+LEB-PBM,2,14.127,9.0,15.893,Blok Otomatik Tertutup
+PBM-PBRX6,2,2.32,9.0,2.61,Blok Otomatik Tertutup
+POSIDR-IDR,1,3.748,8.0,3.935,elektro Mekanik
+PBM-PBRX5,1,3.329,9.0,3.495,Blok Otomatik Tertutup
+PBRX6-PNM,2,7.206,10.0,8.107,Blok Otomatik Tertutup
+PNM-NRU,2,9.628,9.5,10.832,Blok Otomatik Tertutup
+NRU-BIB,2,8.969,9.0,10.09,Blok Otomatik Tertutup
+BIB-GNM,2,11.284,10.0,12.695,Blok Otomatik Tertutup
+GNM-PNG,2,6.108,9.0,6.871,Blok Otomatik Tertutup
+PNG-UJM,2,6.759,9.5,7.604,Blok Otomatik Tertutup
+UJM-MRL,2,5.513,9.0,6.202,Blok Otomatik Tertutup
+MRL-ME,2,7.449,10.0,8.38,Blok Otomatik Tertutup
+ME-TMB,2,8.788,15.0,7.25,Blok Otomatik Tertutup
+ME-MLI,2,7.6,14.0,6.498,elektro Mekanik
+MLI-BJI,1,5.014,11.0,4.287,elektro Mekanik
+BJI-MRP,1,8.987,16.0,7.819,elektro Mekanik
+MRP-SCT,1,9.914,17.0,8.923,elektro Mekanik
+SCT-LT,1,10.329,16.0,10.536,elektro Mekanik
+LT-BGM,1,26.489,31.0,25.827,elektro Mekanik
+BGM-SUA,1,14.751,20.0,14.382,elektro Mekanik
+SUA-SNA,1,10.878,16.0,10.606,elektro Mekanik
+SNA-TI,1,16.17,21.0,15.766,elektro Mekanik
+TI-MSL,1,19.654,25.0,19.163,elektro Mekanik
+MSL-KOP,1,9.277,15.0,9.045,elektro Mekanik
+KOP-LLG,1,21.026,26.0,20.5,elektro Mekanik
+THN-SKN,1,6.641,13.0,4.483,elektro mekanik
+SKN-GR,1,8.643,16.0,5.834,elektro mekanik
+GR-TNK,1,8.068,16.0,5.446,elektro mekanik
+TNK-LAR,1,4.831,12.0,4.783,elektro mekanik
+LAR-GDR,1,4.59,12.0,4.544,elektro mekanik
+GDR-RJS,1,6.962,15.0,6.997,elektro mekanik
+RJS-BTI,1,3.919,10.0,4.526,elektro mekanik
+BTI-TGI,1,5.207,12.0,6.014,elektro mekanik
+TGI-RGS,1,6.87,13.0,7.935,elektro mekanik
+RGS-BKI,1,6.152,13.0,7.105,elektro mekanik
+BKI-HJP,1,7.59,14.0,8.766,elektro mekanik
+HJP-SLS,1,5.844,12.0,6.75,elektro mekanik
+SLS-BBA,1,7.172,14.0,8.284,elektro mekanik
+BBA-KAG,1,7.087,14.0,8.186,elektro mekanik
+KAG-CMS,1,4.866,11.0,5.62,elektro mekanik
+CMS-KB,1,5.133,12.0,5.929,elektro mekanik
+KB-CEP,2,7.155,14.0,8.157,elektro mekanik
+CEP-KTP,2,8.296,15.0,9.457,elektro mekanik
+KTP-NRR,2,9.943,16.0,11.186,elektro mekanik
+NRR-TLY,2,8.254,15.0,9.286,elektro mekanik
+TLY-NGN,2,13.111,21.0,11.997,elektro mekanik
+NGN-BBU,2,16.703,26.0,15.283,elektro mekanik
+BBU-GHM,2,10.835,18.0,9.914,elektro mekanik
+GHM-TJO,1,4.318,11.0,3.951,elektro mekanik
+TJO-WAY,1,7.732,15.0,7.075,elektro mekanik
+WAY-WAP,1,4.945,12.0,4.525,elektro mekanik
+WAP-MP,1,7.804,15.0,7.141,elektro mekanik
+MP-SGT,1,5.631,13.0,5.152,elektro mekanik
+SGT-GLS,1,4.816,12.0,4.407,Blok Otomatik Tertutup
+GLS-SPC,1,14.686,15.0,13.438,Blok Otomatik Tertutup
+SPC-KMK,1,3.762,10.0,3.442,Blok Otomatik Tertutup
+KMK-BTA,1,6.475,12.0,5.925,Blok Otomatik Tertutup
+BTA-TJH,1,2.268,9.0,1.973,Blok Otomatik Tertutup
+TJH-LBT,1,8.773,17.0,8.422,elektro mekanik
+LBT-BLT,1,4.046,11.0,3.884,elektro mekanik
+BLT-KPY,1,4.548,12.0,4.366,elektro mekanik
+KPY-BIK,1,4.29,11.0,4.118,elektro mekanik
+BIK-DAN,1,3.601,10.0,3.457,elektro mekanik
+DAN-LRM,1,5.591,13.0,5.367,elektro mekanik
+LRM-PNW,1,7.808,16.0,7.496,elektro mekanik
+PNW-TLB,1,4.726,12.0,4.537,elektro mekanik
+TLB-MET,1,7.089,15.0,6.805,elektro mekanik
+MET-KBU,1,7.417,15.0,7.12,elektro mekanik
+KBU-PGG,1,5.469,13.0,5.25,elektro mekanik
+PGG-ASM,1,5.316,13.0,5.103,elektro mekanik
+ASM-SKU,1,6.976,15.0,6.697,elektro mekanik
+SKU-TJR,1,6.938,15.0,6.66,elektro mekanik
+TJR-PBRX5,2,9.938,18.0,9.54,elektro mekanik
+PBRX5-PBRX6,2,2.8,9.0,2.688,Blok Otomatik Tertutup

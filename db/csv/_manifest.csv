@@ -32,3 +32,7 @@ ka_jalan_batal_2026,61434,6,1,Laporan Rekapitulasi KA Berjalan dan Batal 2026-01
 ka_frekuensi_2026,14088,11,1,Laporan Frekuensi Kereta Api 01 Januari 2026 s.d. 30 November 2026; dicetak 2026-11-20,no_ka,4186c110276bdce586d774a123b3aa0a493bdaa728d193b009eb4d8e913e2209
 stasiun_perhentian_2025,7741,7,1,"Laporan Stasiun Perhentian Gapeka 2025 (3 berkas, dicetak 20 Nov 2026)",no_ka,9a6a94809ba292f4d3a8630bb93f4ac5393a31beb596b75584d303e10e0c5dd6
 pola_operasi_ompr2,256,16,1,UPDATE POL OP OMPR2 (pola operasi rangkaian KA penumpang; isi_turun=1 berarti pola/lok/stamformasi mengikuti baris pertama grup),no_ka,ba9bf56c33903156283fce3e1ca049f6a0667b2f51ba7ecdec7ac0102d7bead5
+bb_prasarana_petak,82,6,1,Database_KA_Batubara_Sumsel_v3.2 (salinan baca 24 Nov 2026) tab PRASARANA_PETAK (Data_Prasarana_GAPEKA_2026 Master 2),petak,e9fcaa4c3a36c1d5e30dfa13a3a42b1ad53ea0b55f6ee47c0db0d605496c6fba
+bb_stasiun,81,5,1,Database_KA_Batubara_Sumsel_v3.2 (salinan baca 24 Nov 2026) tab M_STASIUN (n_jalur kosong/0 = tidak tercatat),kode,ae461d666e163b50ac6206e057f2fe5b123318014b7790286e753656412b82c1
+bb_siklus,316,5,1,Database_KA_Batubara_Sumsel_v3.2 (salinan baca 24 Nov 2026) tab PRG_SIKLUS + PRG_TERMINAL,"versi, terminal, ka_dat, ka_ber",698f05e100ecc5a6655f99bdcf85605d6d148fcdbaf001580500f5265189a439
+bb_dinasan_awak_2025,352,6,1,Database_KA_Batubara_Sumsel_v3.2 (salinan baca 24 Nov 2026) tab DINASAN_AWAK (Buku Dinasan Masinis O.20 GAPEKA 2025),"upt_crew, kode, no_ka",8bb29475e5f0687f7213b99baaac9f6d4336626c1b5fdb573f323761b0734f18

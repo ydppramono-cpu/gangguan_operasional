@@ -13,13 +13,14 @@ KAI.ROUTES = [
   { id: 'sarana', title: 'Sarana & armada', icon: 'i-train', group: 'Laporan' },
   { id: 'eksposur', title: 'Pendapatan terekspos', icon: 'i-coin', group: 'Laporan' },
   { id: 'telusuri', title: 'Telusuri kejadian', icon: 'i-list', group: 'Analisis' },
+  { id: 'batubara', title: 'Papan skenario GAPEKA', icon: 'i-route', group: 'Batubara' },
   { id: 'cari', title: 'Cari & profil', icon: 'i-search', group: 'Analisis', hide: true },     // lewat kotak cari di header
   { id: 'unduh', title: 'Unduh', icon: 'i-download', group: 'Analisis', hide: true },          // lewat tombol Unduh di header
   { id: 'metodologi', title: 'Metodologi & sumber', icon: 'i-info', group: 'Analisis' }
 ];
 KAI.HIDDEN_ROUTES = { profil: 'Profil', kejadian: 'Detail kejadian' };
 /**
- * Lima ruang kerja (keputusan 23 Nov 2026). Menu samping = ruang kerja; halaman anggota tampil sebagai sub-navigasi di kepala.
+ * Lima ruang kerja (keputusan 23 Nov 2026) + Batubara (24 Nov 2026: menggantikan app WTT Batubara bertahap). Menu samping = ruang kerja; halaman anggota tampil sebagai sub-navigasi di kepala.
  * Rute lama tetap berlaku (tautan lama tidak putus).
  */
 KAI.WORKSPACES = [
@@ -27,7 +28,8 @@ KAI.WORKSPACES = [
   { id: 'ws-jaringan', title: 'Jaringan & prasarana', icon: 'i-map', pages: [{ id: 'wilayah', label: 'Wilayah & koridor' }, { id: 'perlintasan', label: 'Perlintasan & JPL' }] },
   { id: 'ws-armada', title: 'Armada', icon: 'i-train', pages: [{ id: 'sarana', label: 'Sarana & armada' }] },
   { id: 'ws-pendapatan', title: 'Pendapatan', icon: 'i-coin', pages: [{ id: 'eksposur', label: 'Pendapatan terekspos' }] },
-  { id: 'ws-telusuri', title: 'Telusuri', icon: 'i-list', pages: [{ id: 'telusuri', label: 'Telusuri kejadian' }] }
+  { id: 'ws-telusuri', title: 'Telusuri', icon: 'i-list', pages: [{ id: 'telusuri', label: 'Telusuri kejadian' }] },
+  { id: 'ws-batubara', title: 'Batubara', icon: 'i-route', pages: [{ id: 'batubara', label: 'Papan skenario GAPEKA' }] }
 ];
 KAI.wsOf = function (route) { return KAI.WORKSPACES.filter(function (w) { return w.pages.some(function (p) { return p.id === route; }); })[0] || null; };
 /** Elemen filter yang berlaku per halaman (filter kontekstual). Halaman yang tidak tercantum: filterbar disembunyikan. */
@@ -194,6 +196,7 @@ document.addEventListener('alpine:init', function () {
           if (params.fleet && /^(lok|ker|ger)$/.test(params.fleet)) self.vtab.fleet = params.fleet;
           if (params.page && (KAI.ROUTES.some(function (r) { return r.id === params.page; }) || KAI.HIDDEN_ROUTES[params.page])) {
             self.route = params.page; self.params = params.t ? { type: params.t, id: params.id } : params.id ? { id: params.id } : {};
+            if (params.page === 'batubara') self.params = { kor: params.kor || '', sk: params.sk || '', urut: params.urut || '' };   // divalidasi di vSkenario
             self.entered = true;  // tautan langsung melewati landing
           }
           if (params.ym) self._wantYm = params.ym;
@@ -361,6 +364,7 @@ document.addEventListener('alpine:init', function () {
       urlQuery: function (route, params) {
         var f = this.f, q = { page: route || this.route }; params = params || (route ? {} : this.params) || {};
         if (params.type) { q.t = params.type; q.id = params.id; } else if (params.id) q.id = params.id;
+        if (q.page === 'batubara') { if (params.kor) q.kor = params.kor; if (params.sk) q.sk = params.sk; if (params.urut) q.urut = params.urut; return q; }
         if ((q.page === 'sarana' || q.page === 'wilayah') && this.vtab && this.vtab[q.page]) q.tab = this.vtab[q.page];
         if (f.mode === 'range' && f.from && f.to) { q.d0 = f.from; q.d1 = f.to; } else if (f.ym) q.ym = f.ym;
         if (f.wilayah.length) q.w = f.wilayah.join(',');

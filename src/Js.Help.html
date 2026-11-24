@@ -45,6 +45,12 @@ window.KAIHelp = (function () {
     telusuri: [
       { sel: '.tabulator', t: 'Daftar kejadian', d: 'Semua kejadian sesuai filter. Urutkan kolom, cari, unduh, dan klik baris untuk rincian.' }
     ],
+    batubara: [
+      { sel: '.sk-ctl', t: 'Atur skenario', d: 'Pilih koridor, jendela waktu, dan aturan bila KA berebut petak (urutan tetap seperti GAPEKA, atau prioritas penumpang > batubara isi > lainnya).' },
+      { sel: '.sk-wrap', t: 'Geser garis KA', d: 'Seret garis untuk menggeser slot KA. Tahan Shift lalu seret di titik stasiun untuk menahan KA di stasiun itu. Garis abu-abu = GAPEKA; merah = KA yang ikut terlambat.' },
+      { sel: '.sk-side', t: 'Efek domino', d: 'Jumlah KA terdampak, menit tambahan, KA penumpang terdampak, rambatan ke hari berikutnya, dan rantai sebab-akibat (headway, silang, siklus, awak).' },
+      { sel: '.sk-asumsi', t: 'Baca asumsinya', d: 'Hasil adalah simulasi dari GAPEKA + data prasarana DB Batubara, bukan realisasi.' }
+    ],
     profil: [
       { sel: '.phero', t: 'Kepala profil', d: 'Fakta kunci dan garis kelambatan 24 bulan.' },
       { sel: '.ins-fold', t: 'Temuan & tindakan', d: 'Terlipat agar ringkas; buka bila perlu.' },
@@ -81,6 +87,12 @@ window.KAIHelp = (function () {
       'Rate KA penumpang dari tab Passenger, KA barang dari tab Freight; jam perjalanan dari GAPEKA × hari jalan (Laporan KA Jalan/Batal).',
       'Nomor KA yang tidak ada di GAPEKA dicocokkan ke KA bernama sama dan searah; yang tetap tidak cocok didaftar terpisah beserta alasannya.'
     ] },
+    { id: 'ws-batubara', h: 'Ruang kerja Batubara — Papan skenario GAPEKA', b: [
+      'Grafik perjalanan koridor batubara Sumsel (TMB–Tarahan, TMB–Kertapati, Sukacinta–Kertapati, Lubuk Linggau–Muara Enim) memuat KA batubara dan KA penumpang dari GAPEKA yang dipilih di switch kanan atas.',
+      '<b>Seret</b> garis KA untuk menggeser slotnya; <b>Shift + seret</b> di titik stasiun untuk menahan KA di stasiun itu; atau isi formulir "Tambah perubahan" (tahan / geser / batal).',
+      'Mesin menghitung rambatan lewat waktu tempuh petak, headway jalur ganda, persilangan jalur tunggal, siklus rangkaian (WTT program terpendek di terminal), nomor KA bersambung di batas Divre, dan dinasan awak (GAPEKA 2025).',
+      'Skenario tersimpan di tautan (tombol Tautan) — tidak ada yang ditulis ke basis data. Semua hasil berlabel simulasi.'
+    ] },
     { id: 'ws-telusuri', h: 'Ruang kerja Telusuri', b: [
       'Daftar semua kejadian sesuai filter, kolomnya sama di seluruh aplikasi. Unduh ke Excel/CSV dari kepala tabel.',
       'Kelas bertanda * diturunkan otomatis karena Kategori & Subgangguan kosong di sumber (pola teks atau kelas terdekat); rincian dan keyakinannya ada di kolom Kualitas.'
@@ -105,7 +117,8 @@ window.KAIHelp = (function () {
     ['Ringkasan', 'Sorotan', 'Grafik sumber + pita temuan', 'Lihat N kejadian', 'Rincian kejadian', 'Profil lokasi / KA / sarana'],
     ['Cari (kotak atas)', 'Profil', 'Klik bulan/kelas/jam', 'Riwayat tersaring', 'Rincian kejadian'],
     ['Jaringan & prasarana', 'Peta koridor / tabel lokasi', 'Profil petak / wilayah', 'Tab JPL / jadwal KA'],
-    ['Armada', 'Unit berulang / daftar unit', 'Kartu unit', 'Dinasan & gangguan / skor RHI']
+    ['Armada', 'Unit berulang / daftar unit', 'Kartu unit', 'Dinasan & gangguan / skor RHI'],
+    ['Batubara', 'Pilih koridor', 'Seret / tahan KA', 'Efek domino', 'Rantai sebab-akibat → KA terdampak']
   ];
 
   var GLOS = [
@@ -125,6 +138,9 @@ window.KAIHelp = (function () {
     ['TBBT', 'Tidak Bisa Berangkat Tepat waktu.'],
     ['MoM / YoY / YTD', 'Dibanding bulan lalu / bulan sama tahun lalu / sejak awal tahun.'],
     ['Kelas *', 'Kelas diturunkan otomatis (kolom sumber kosong).'],
+    ['WTT', 'Waktu tunggu terminal: rangkaian tiba → berangkat lagi di terminal muat/bongkar.'],
+    ['Headway', 'Selang waktu minimum antar-KA searah di satu petak.'],
+    ['Persilangan', 'Pertemuan dua KA berlawanan arah di stasiun pada jalur tunggal.'],
     ['Pendapatan terekspos', 'Perkiraan pendapatan KA yang terdampak kelambatan; indikatif.']
   ];
 

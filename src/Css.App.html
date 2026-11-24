@@ -746,4 +746,34 @@ html { scroll-behavior: smooth; }
 .tour-n { font-size: 11.5px; font-weight: 700; color: var(--kai-orange); letter-spacing: .04em; }
 .tour-a { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
 @media (prefers-reduced-motion: reduce) { .tour-spot, .tour-card, .help-in { transition: none; animation: none; } }
+/* v3.20 ruang kerja Batubara: Papan skenario GAPEKA (View.Batubara, Js.Skenario) */
+.tag.sim { background: #FFF4E5; color: #9A3412; border-color: #F8C99B; font-weight: 600; }
+.sk-ctl { padding: 12px 14px; display: grid; gap: 10px; }
+.sk-row { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.sk-row .fld { display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; color: var(--muted); }
+.sk-add { align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line-soft); }
+.sk-chips { gap: 6px; }
+.sk-chips .chip.on { background: #FFF1E7; border-color: #F8C99B; color: #9A3412; cursor: pointer; }
+.sk-grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: var(--gap); align-items: start; }
+.sk-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; padding: 0 14px 8px; font-size: 11.5px; color: var(--muted); }
+.sk-legend span { display: inline-flex; align-items: center; gap: 5px; }
+.sk-legend i { width: 16px; height: 3px; border-radius: 2px; display: inline-block; } .sk-legend i.dash { height: 0; border-top: 2px dashed; }
+.sk-legend i.bar1 { width: 3px; height: 12px; background: #E2E8F0; }
+.sk-legend .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; } .sk-legend .sq { width: 7px; height: 7px; background: #B42318; display: inline-block; }
+.sk-wrap { position: relative; padding: 0 6px 10px; overflow: hidden; }
+.sk-wrap canvas { display: block; touch-action: none; user-select: none; }
+.sk-tip { position: absolute; pointer-events: none; background: #111827; color: #fff; font-size: 11.5px; line-height: 1.45; padding: 6px 9px; border-radius: 7px; white-space: pre-line; max-width: 320px; z-index: 3; box-shadow: 0 6px 18px rgba(0,0,0,.2); }
+.sk-side { display: grid; gap: 0; position: sticky; top: 140px; }
+.sk-kpi { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.sk-kpi > div { display: grid; padding: 8px 10px; border: 1px solid var(--line-soft); border-radius: 10px; background: var(--surface-2); }
+.sk-kpi > div:first-child { grid-column: 1 / -1; background: #FFF5EE; border-color: #F8D3BC; }
+.sk-kpi span { font-size: 11.5px; color: var(--muted); } .sk-kpi b { font-size: 20px; font-variant-numeric: tabular-nums; color: var(--ink); } .sk-kpi em { font-style: normal; font-size: 11px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sk-tree { max-height: 320px; overflow: auto; padding: 4px 6px 10px; }
+.sk-node { display: flex; align-items: center; gap: 6px; width: 100%; border: 0; background: none; padding: 5px 8px; border-radius: 7px; font: inherit; font-size: 12.5px; text-align: left; cursor: pointer; }
+.sk-node:hover, .sk-node.on { background: #FFF1E7; } .sk-node em { font-style: normal; font-variant-numeric: tabular-nums; color: #B42318; font-weight: 600; white-space: nowrap; }
+.sk-node .muted { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.sk-ty { display: inline-block; padding: 1px 6px; border-radius: 5px; color: #fff; font-size: 10.5px; font-weight: 600; white-space: nowrap; }
+.tbl tr.late td { background: #FFF5F3; }
+.sk-asumsi summary { cursor: pointer; padding: 12px 14px; } .sk-asumsi ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 13px; color: var(--ink-2); }
+@media (max-width: 1100px) { .sk-grid { grid-template-columns: minmax(0, 1fr); } .sk-side { position: static; } }
 </style>
