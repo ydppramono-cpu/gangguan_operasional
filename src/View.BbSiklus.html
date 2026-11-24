@@ -1,0 +1,56 @@
+<!-- View.BbSiklus — Batubara › Siklus & terminal: "Waktu hilang di mana dan kenapa?" -->
+<template x-if="$store.app.route === 'bb-siklus'">
+  <section class="view bb" x-data="vBbSiklus">
+    <?!= include('Part.BbFilter'); ?>
+    <div class="tabs mt" role="tablist">
+      <button role="tab" :aria-selected="tab === 'tahap'" @click="tab = 'tahap'">8 tahap siklus</button>
+      <button role="tab" :aria-selected="tab === 'terminal'" @click="tab = 'terminal'">Kinerja terminal</button>
+      <button role="tab" :aria-selected="tab === 'hambatan'" @click="tab = 'hambatan'">Hambatan & PIC</button>
+      <button role="tab" :aria-selected="tab === 'awak'" @click="tab = 'awak'">Awak</button>
+    </div>
+
+    <div x-show="tab === 'tahap'" class="mt">
+      <div class="card"><div class="card-h"><div><h3>Delapan tahap siklus terhadap batas</h3><p x-text="'Gabungan relasi terpilih · ' + $store.bb.f.stat.replace('mean','rata-rata') + ' per tahap · garis hitam = batas SOP kontrak / program · merah = melewati batas'"></p></div></div>
+        <div class="card-b fill"><div class="chart" x-chart="tab === 'tahap' ? stageOpt : null"></div></div></div>
+      <div class="card mt"><div class="card-h"><div><h3>Tahap mana yang melewati batas, di relasi mana</h3><p>Selisih menit terhadap batas (merah = lewat, hijau = di bawah) · relasi diurut menurut hari tertahan · klik relasi untuk profil</p></div></div>
+        <div class="card-b tbl-wrap"><table class="tbl bb-heat"><thead><tr><th>Relasi</th><template x-for="s in heat.st" :key="s.id"><th class="num" x-text="s.n"></th></template><th class="num">Lewat / siklus</th><th class="num">Siklus</th></tr></thead>
+          <tbody><template x-for="(o, i) in heat.rels" :key="o.rel"><tr class="click" @click="$store.bb.open('relasi', o.rel)"><td><b x-text="o.rel"></b></td>
+            <template x-for="(v, j) in heat.cells[i]" :key="j"><td class="num" :style="'background:' + heatBg(v)" x-text="v == null ? '–' : (v > 0 ? '+' : '') + v"></td></template>
+            <td class="num"><b x-text="BBK.fmt.dur(o.lewat)"></b></td><td class="num" x-text="KAI.fmt.n(o.nKa)"></td></tr></template></tbody></table></div></div>
+    </div>
+
+    <div x-show="tab === 'terminal'" class="mt">
+      <div class="card"><div class="card-h"><div><h3>Kinerja terminal muat & bongkar</h3><p>Indeks 0–100 dari 4 komponen berbobot sama: kepatuhan SOP WTT · ketepatan melepas KA · KA terlayani vs program · keandalan alat · klik untuk profil</p></div></div>
+        <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Terminal</th><th>Peran</th><th class="num">KA</th><th class="num">WTT</th><th class="num">SOP</th><th class="num">Pola</th><th>Indeks</th><th>SOP WTT</th><th>Melepas KA</th><th>Terlayani</th><th>Alat</th></tr></thead>
+          <tbody><template x-for="x in KT" :key="x.st + x.uj"><tr class="click" @click="$store.bb.open('terminal', x.st)">
+            <td><b x-text="$store.bb.stName(x.st)"></b> <span class="muted" x-text="x.st"></span></td><td x-text="x.uj"></td><td class="num" x-text="KAI.fmt.n(x.n)"></td>
+            <td class="num"><b :style="x.sop != null && x.wtt > x.sop ? 'color:#C0392B' : ''" x-text="BBK.fmt.dur(x.wtt)"></b></td><td class="num" x-text="BBK.fmt.dur(x.sop)"></td><td class="num" x-text="BBK.fmt.dur(x.pola)"></td>
+            <td><span class="bb-idx" :style="'--v:' + bar(x.indeks) + '%;--c:' + (x.indeks >= 80 ? '#1F8A2E' : x.indeks >= 65 ? '#E0861A' : '#C0392B')"><i></i><b x-text="x.indeks != null ? KAI.fmt.n(x.indeks) : '–'"></b></span></td>
+            <template x-for="k in ['s1','s2','s3','s4']" :key="k"><td><span class="bb-mini" :style="'--v:' + bar(x[k]) + '%'" :title="x[k] != null ? KAI.fmt.n(x[k]) : 'tidak tercatat'"><i></i></span></td></template></tr></template></tbody></table></div>
+        <div x-data="{ get L() { return insFor(['terminal', 'alat']); } }"><?!= include('Part.BbPita'); ?></div></div>
+    </div>
+
+    <div x-show="tab === 'hambatan'" class="mt">
+      <div class="grid g-2-1">
+        <div class="card"><div class="card-h"><div><h3>Hambatan per terminal dan fase</h3><p>Jam hambatan tercatat (REAL_HAMBATAN) · pra / inti / pasca</p></div></div>
+          <div class="card-b fill"><div class="chart tall" x-chart="tab === 'hambatan' ? hamOpt : null" @chart-click="term = String($event.detail.name || '').split(' ')[0]"></div></div></div>
+        <div class="card"><div class="card-h"><div><h3>Top 3 & worst 3 beserta PIC</h3><p x-text="term ? 'Terminal ' + $store.bb.stName(term) : 'Semua terminal · klik batang untuk satu terminal'"></p></div>
+            <span class="spacer"></span><button class="link-btn sm" x-show="term" @click="term = ''">Semua</button></div>
+          <div class="card-b">
+            <div class="bb-tw-h">Paling sering</div>
+            <template x-for="o in tw.top" :key="'t' + o.kode"><div class="bb-tw"><b x-text="o.kode"></b><span x-text="o.nama"></span><em x-text="KAI.fmt.n(o.f) + '× · PIC ' + o.picUtama"></em></div></template>
+            <div class="bb-tw-h mt-s">Menit terbesar</div>
+            <template x-for="o in tw.worst" :key="'w' + o.kode"><div class="bb-tw"><b x-text="o.kode"></b><span x-text="o.nama"></span><em x-text="KAI.fmt.n(o.m) + ' mnt · PIC ' + o.picUtama"></em></div></template>
+          </div></div>
+      </div>
+    </div>
+
+    <div x-show="tab === 'awak'" class="mt">
+      <div class="card"><div class="card-h"><div><h3>Dinasan masinis KA batubara</h3><p x-text="'Buku Dinasan O.20 GAPEKA 2025 · ' + awakFlag + ' dinasan hadir < 60 menit sebelum berangkat (SOP Pengoperasian KA 2025 Bab II C.2.a)'"></p></div></div>
+        <div class="card-b tbl-wrap" style="max-height:520px"><table class="tbl sm"><thead><tr><th>UPT crew</th><th>Kode</th><th>KA</th><th>Nama</th><th>Lintas dinas</th><th class="num">Mulai</th><th class="num">Berangkat</th><th class="num">Siap (mnt)</th><th class="num">Habis</th><th class="num">Jam dinas</th></tr></thead>
+          <tbody><template x-for="(r, i) in awak" :key="i"><tr :class="r.siap != null && r.siap < 60 && 'late'"><td x-text="r.upt"></td><td x-text="r.kode"></td><td><b x-text="r.no"></b></td><td x-text="r.nama"></td><td x-text="r.lin"></td>
+            <td class="num" x-text="r.mulai"></td><td class="num" x-text="r.brk"></td><td class="num"><b x-text="r.siap == null ? '–' : r.siap"></b></td><td class="num" x-text="r.habis"></td><td class="num" x-text="r.jd != null ? BBK.fmt.dur(r.jd) : '–'"></td></tr></template></tbody></table></div>
+        <div x-data="{ get L() { return insFor(['awak']); } }"><?!= include('Part.BbPita'); ?></div></div>
+    </div>
+  </section>
+</template>

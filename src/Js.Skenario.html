@@ -3,27 +3,33 @@
  * Js.Skenario — komponen Papan skenario GAPEKA (rute 'batubara'): grafik perjalanan kanvas yang bisa digeser + hasil efek domino.
  * Mesin: Js.Simulasi (KAISim). Jadwal: GAPEKA aplikasi sesuai switch global. Parameter: apiBatubara (SEED_BB).
  * Interaksi: seret garis KA = geser slot (menit); Shift + seret di titik stasiun = tahan di stasiun itu; klik = pilih KA.
+ * KLB: salinan KA pola + "Cari slot kosong" (KAISim.findSlots). Antrean jalur terminal (bawaan aktif; ?aq=0 mati).
+ * Bandingkan: skenario A disimpan di URL (?skA=…) lalu dibandingkan dengan skenario yang sedang disunting.
  * Skenario disimpan di URL (?page=batubara&sk=…&kor=…&urut=p) — tanpa menulis ke basis data (keputusan 24 Nov 2026).
  */
 document.addEventListener('alpine:init', function () {
   var COL = { pen: '#F06A25', isi: '#1E1B5E', kosong: '#7C89A8', lain: '#4B5563', hit: '#C0392B', ghost: '#CBD2DC', edit: '#D9480F' };
-  var TYC = { sambung: '#475569', headway: '#2563EB', silang: '#9333EA', siklus: '#0E9F6E', awak: '#B45309', tahan: '#D9480F', tempuh: '#64748B', henti: '#64748B', jadwal: '#64748B' };
+  var TYC = { sambung: '#475569', headway: '#2563EB', silang: '#9333EA', siklus: '#0E9F6E', awak: '#B45309', tahan: '#D9480F', antrean: '#0891B2', klb: '#D9480F', tempuh: '#64748B', henti: '#64748B', jadwal: '#64748B' };
   var BBcache = null;
   Alpine.data('vSkenario', function () {
     return {
       busy: true, err: '', BB: null, P: null, base: null, sc: null, cmp: null, ver: '',
       kor: 'TMB-KPT', h0: 0, h1: 24, prio: false, edits: [], sel: -1, hover: null, drag: null, preview: null,
       form: { no: '', jenis: 'tahan', st: '', m: 30 }, tipX: 0, tipY: 0, tip: '',
+      realOn: false, realDate: '', bt: null, P0: null, cap: null, antre: true, slots: null, A: null, Ares: null,
       init: function () {
         var self = this, p = self.$store.app.params || {};
         if (p.kor && /^[A-Z]{2,6}-[A-Z]{2,6}$/.test(p.kor)) self.kor = p.kor;
         if (p.urut === 'p') self.prio = true;
+        if (p.aq === '0') self.antre = false;
+        if (p.skA) self.A = KAISim.decode(p.skA);
         if (p.sk) self.edits = KAISim.decode(p.sk);
         if (window.innerWidth < 700 && !p.sk) { self.h0 = 0; self.h1 = 8; }
         self.load();
         self.$watch('$store.app.gapeka', function () { self.load(); });
         self.$watch('kor', function () { self.sel = -1; self.sync(); self.draw(); });
         self.$watch('prio', function () { self.recalc(); });
+        self.$watch('antre', function () { self.recalc(); });
         var ro = new ResizeObserver(KAI.debounce(function () { self.draw(); }, 80)); self.$nextTick(function () { self.$refs.wrap && ro.observe(self.$refs.wrap); });
       },
       load: function () {
@@ -31,7 +37,7 @@ document.addEventListener('alpine:init', function () {
         self.busy = true; self.err = '';
         var bbP = BBcache ? Promise.resolve(BBcache) : KAI.api('apiBatubara').then(function (r) { return KAI.gunzipJson(r.gz); }).then(function (d) { BBcache = d; return d; });
         Promise.all([bbP, KAIG.load(KAI.api, KAI.gunzipJson, ver)]).then(function (x) {
-          self.BB = x[0]; self.ver = ver; self.P = KAISim.prepare(x[1], x[0], ver); self.base = KAISim.run(self.P, []);
+          self.BB = x[0]; self.ver = ver; self.P0 = KAISim.prepare(x[1], x[0], ver); self.P = self.P0; self.base = KAISim.run(self.P0, []); self.cap = KAISim.capOf(self.base); self.slots = null;
           if (!self.BB.cor.some(function (c) { return c.id === self.kor; })) self.kor = self.BB.cor[0].id;
           self.busy = false; self.recalc();
         }).catch(function (e) { self.busy = false; self.err = e.message || String(e); });
@@ -48,16 +54,22 @@ document.addEventListener('alpine:init', function () {
       },
       recalc: function () {
         if (!this.P) return;
-        var res = KAISim.run(this.P, this.edits, { prioritas: this.prio });
+        this.P = KAISim.withKlb(this.P0, this.edits);
+        var res = KAISim.run(this.P, this.edits, this.opt());
         if (res.error) { this.err = 'Skenario membentuk kebuntuan (urutan saling menunggu). Ubah atau hapus perubahan terakhir.'; return; }
-        this.err = ''; this.sc = res; this.cmp = KAISim.compare(this.P, this.base, res, this.edits); this.sync(); this.draw();
+        this.err = ''; this.sc = res; this.cmp = KAISim.compare(this.P, this.base, res, this.edits);
+        if (this.A && this.A.length) { var PA = KAISim.withKlb(this.P0, this.A), rA = KAISim.run(PA, this.A, this.opt()); this.Ares = rA.error ? { err: 1 } : KAISim.compare(PA, this.base, rA, this.A); rA.error || (this.Ares.nQ = rA.nQ); }
+        else this.Ares = null;
+        this.sync(); this.draw();
       },
+      opt: function () { return { prioritas: this.prio, antrean: this.antre ? this.cap : null }; },
       sync: function () {
-        var p = { kor: this.kor }; if (this.edits.length) p.sk = KAISim.encode(this.edits); if (this.prio) p.urut = 'p';
+        var p = { kor: this.kor }; if (this.edits.length) p.sk = KAISim.encode(this.edits); if (this.prio) p.urut = 'p'; if (!this.antre) p.aq = '0'; if (this.A && this.A.length) p.skA = KAISim.encode(this.A);
         this.$store.app.params = p;
         if (window.google && google.script && google.script.history) google.script.history.replace({ route: 'batubara', params: p }, this.$store.app.urlQuery('batubara', p));
       },
       addEdit: function (e) {
+        if (e.jenis === 'klb') { if (!(e.pola in this.P0.byNo)) return this.$store.app.say('Nomor KA pola ' + e.pola + ' tidak ada di ' + KAI.gapeka.label(this.ver) + ' wilayah Batubara.'); this.edits.push(e); this.slots = null; if (this.edits.length > 20) this.edits.shift(); return this.recalc(); }
         if (!e.no || !(e.no in this.P.byNo)) return this.$store.app.say('Nomor KA ' + e.no + ' tidak ada di ' + KAI.gapeka.label(this.ver) + ' wilayah Batubara.');
         var same = this.edits.filter(function (x) { return x.no === e.no && x.jenis === e.jenis && (x.st || '') === (e.st || ''); })[0];
         if (same) { if (e.jenis === 'batal') return; same.m = e.m; } else this.edits.push(e);
@@ -66,13 +78,46 @@ document.addEventListener('alpine:init', function () {
       },
       addForm: function () {
         var f = this.form, no = String(f.no).trim().toUpperCase(), e = { jenis: f.jenis, no: no };
+        if (f.jenis === 'klb') return this.addEdit({ jenis: 'klb', no: this.klbNo(), pola: no, m: Math.max(-1440, Math.min(1440, Math.round(+f.m || 0))) });
         if (f.jenis !== 'batal') e.m = Math.max(f.jenis === 'tahan' ? 0 : -720, Math.min(720, Math.round(+f.m || 0)));
         if (f.jenis === 'tahan') { e.st = KAISim.norm(f.st); var t = this.P.trains[this.P.byNo[no]]; if (!t || !t.pts.some(function (p) { return p.c === e.st; })) return this.$store.app.say('KA ' + no + ' tidak melewati stasiun ' + (f.st || '–') + '.'); }
         this.addEdit(e);
       },
-      delEdit: function (i) { this.edits.splice(i, 1); this.recalc(); },
+      delEdit: function (i) { var e = this.edits[i]; this.edits.splice(i, 1); if (e.jenis === 'klb') this.edits = this.edits.filter(function (x) { return x.no !== e.no; }); this.recalc(); },
+      klbNo: function () { var n = 1, used = {}; this.edits.forEach(function (e) { if (e.jenis === 'klb') used[e.no] = 1; }); while (used['KLB-' + n]) n++; return 'KLB-' + n; },
+      /** Slot kosong untuk KLB berpola KA di form, keberangkatan dalam jendela waktu yang tampil. */
+      findSlots: function () {
+        var no = String(this.form.no).trim().toUpperCase(), t = this.P0 && this.P0.trains[this.P0.byNo[no]];
+        if (!t) return this.$store.app.say('Isi nomor KA pola yang ada di ' + KAI.gapeka.label(this.ver) + ' wilayah Batubara.');
+        var d0 = t.pts[0].d, self = this, id = this.klbNo(), c0 = this.cmp, L = [], runs = 0;
+        // Kandidat dari benturan petak, lalu DIVERIFIKASI simulasi penuh: KLB tepat waktu dan tidak menambah dampak KA lain
+        // (urutan tetap bisa membuat KLB menunggu KA yang rencananya lebih awal meskipun petaknya kosong).
+        KAISim.findSlots(this.P, this.sc, no, this.h0 * 60 - d0, this.h1 * 60 - d0).some(function (w) {
+          var probes = [Math.round((w.m0 + w.m1) / 2), w.m0 + 2, w.m1 - 2].filter(function (m, i, A) { return m >= w.m0 && m <= w.m1 && A.indexOf(m) === i; });
+          probes.some(function (m) {
+            if (runs++ > 24) return true;
+            var ed = self.edits.concat([{ jenis: 'klb', no: id, pola: no, m: m }]), P2 = KAISim.withKlb(self.P0, ed), r = KAISim.run(P2, ed, self.opt());
+            if (r.error) return false;
+            var c = KAISim.compare(P2, self.base, r, ed), me = r.trains.filter(function (x) { return x.no === id; })[0];
+            if (!me || me.max >= 1 || c.knock.length > c0.knock.length || c.menit > c0.menit) return false;
+            L.push({ m: m, txt: self.hm(d0 + w.m0) + '–' + self.hm(d0 + w.m1), len: w.m1 - w.m0, at: self.hm(d0 + m) }); return true;
+          });
+          return L.length >= 6 || runs > 24;
+        });
+        this.slots = { no: no, L: L };
+      },
+      useSlot: function (w) { this.addEdit({ jenis: 'klb', no: this.klbNo(), pola: this.slots.no, m: w.m }); },
+      /* ---------- bandingkan dua skenario ---------- */
+      saveA: function () { this.A = JSON.parse(JSON.stringify(this.edits)); this.recalc(); this.$store.app.say('Skenario A disimpan. Ubah skenario untuk membandingkan.'); },
+      clearA: function () { this.A = null; this.Ares = null; this.sync(); },
+      get cmpRows() {
+        var a = this.Ares, b = this.cmp; if (!a || !b || a.err) return [];
+        var f = function (c) { return [c.knock.length, c.menit, c.pen, c.nextDay, c.over.length]; }, A = f(a), B = f(b);
+        return ['KA terdampak efek domino', 'Menit tambahan di tujuan', 'KA penumpang terdampak', 'Merambat ke hari berikutnya', 'Stasiun melebihi jalur'].map(function (l, i) {
+          return { l: l, a: A[i], b: B[i], d: B[i] - A[i] }; });
+      },
       reset: function () { this.edits = []; this.sel = -1; this.recalc(); },
-      editTxt: function (e) { return (this.P && !(e.no in this.P.byNo) ? '[tidak ada di ' + KAI.gapeka.label(this.ver) + '] ' : '') + (e.jenis === 'geser' ? 'KA ' + e.no + ' digeser ' + (e.m > 0 ? '+' : '') + e.m + ' mnt' : e.jenis === 'tahan' ? 'KA ' + e.no + ' ditahan ' + e.m + ' mnt di ' + e.st : 'KA ' + e.no + ' dibatalkan'); },
+      editTxt: function (e) { if (e.jenis === 'klb') return e.no + ' pola KA ' + e.pola + ' (' + (e.m > 0 ? '+' : '') + e.m + ' mnt)' + (this.P0 && !(e.pola in this.P0.byNo) ? ' [pola tidak ada]' : ''); return (this.P && !(e.no in this.P.byNo) ? '[tidak ada di ' + KAI.gapeka.label(this.ver) + '] ' : '') + (e.jenis === 'geser' ? 'KA ' + e.no + ' digeser ' + (e.m > 0 ? '+' : '') + e.m + ' mnt' : e.jenis === 'tahan' ? 'KA ' + e.no + ' ditahan ' + e.m + ' mnt di ' + e.st : 'KA ' + e.no + ' dibatalkan'); },
       kaList: function () { return this.P ? this.P.trains.map(function (t) { return t.no; }) : []; },
       stList: function () { var no = String(this.form.no).trim().toUpperCase(), t = this.P && this.P.trains[this.P.byNo[no]]; return t ? t.pts.map(function (p) { return p.c; }) : []; },
       trainOf: function (ii) { return this.P.trains[this.sc.T[ii].ti]; },
@@ -86,7 +131,8 @@ document.addEventListener('alpine:init', function () {
           ['Menit tambahan di tujuan', KAI.fmt.n(c.menit), 'jumlah kelambatan tiba seluruh KA terdampak'],
           ['KA penumpang terdampak', KAI.fmt.n(c.pen), 'prioritas tertinggi'],
           ['Merambat ke hari berikutnya', KAI.fmt.n(c.nextDay), 'lewat siklus rangkaian'],
-          ['Stasiun melebihi jalur', KAI.fmt.n(c.over.length), c.over.length ? c.over.map(function (o) { return o.st + ' ' + o.max + '/' + o.jalur; }).join(', ') : 'jumlah jalur M_STASIUN']];
+          ['Stasiun melebihi jalur', KAI.fmt.n(c.over.length), c.over.length ? c.over.map(function (o) { return o.st + ' ' + o.max + '/' + o.jalur; }).join(', ') : 'jumlah jalur M_STASIUN'],
+          ['Antrean masuk terminal', this.antre ? KAI.fmt.n(this.sc ? this.sc.nQ || 0 : 0) : 'mati', this.antre ? 'KA menunggu jalur terminal kosong' : 'aktifkan di Aturan']];
       },
       get tree() {
         var sc = this.sc, base = this.base, self = this; if (!sc || !this.cmp) return [];
@@ -105,7 +151,7 @@ document.addEventListener('alpine:init', function () {
       get hitList() {
         var self = this; if (!this.cmp) return [];
         return this.cmp.hit.slice().sort(function (a, b) { return b.max - a.max; }).slice(0, 60).map(function (x) {
-          var t = self.P.trains[x.ti]; return { ii: x.ii, no: x.no, nama: t.nama, relasi: t.relasi, grp: t.grp, muat: t.muat, day: x.day, max: x.max, end: x.end, st: x.stAt, cause: x.moved ? 'geser' : x.cause, src: x.src >= 0 ? self.sc.trains[x.src].no : '' };
+          var t = self.P.trains[x.ti]; return { ii: x.ii, no: x.no, nama: t.nama, relasi: t.relasi, grp: t.grp, muat: t.muat, day: x.day, max: x.max, end: x.end, st: x.stAt, cause: t.klb ? 'klb' : x.moved ? 'geser' : x.cause, src: x.src >= 0 ? self.sc.trains[x.src].no : '' };
         });
       },
       get selInfo() {
@@ -192,6 +238,18 @@ document.addEventListener('alpine:init', function () {
         Tlist.forEach(function (I, ii) { if (!hitSet[ii] && ii !== self.sel) drawTrain(I, ii, false); });
         Tlist.forEach(function (I, ii) { if (hitSet[ii] && ii !== self.sel) drawTrain(I, ii, false); });
         if (self.sel >= 0 && Tlist[self.sel]) drawTrain(Tlist[self.sel], self.sel, false);
+        // jejak realisasi Rolink (tanggal terpilih)
+        if (self.realOn && self.realRows.length) {
+          var RB = {}; self.realRows.forEach(function (r) { (RB[r.no] = RB[r.no] || []).push(r); });
+          c.strokeStyle = '#0E9F6E'; c.lineWidth = 1.6; c.setLineDash([2, 3]);
+          Object.keys(RB).forEach(function (no) {
+            var L = RB[no], last = null; c.beginPath();
+            L.forEach(function (r) { var i = Y.idx[r.c]; if (i == null) { last = null; return; }
+              [r.ra, r.rd].forEach(function (m) { if (m == null) return; var x = g.x(m), y = g.y(i); if (last && Math.abs(last.i - i) <= 1) c.lineTo(x, y); else c.moveTo(x, y); last = { i: i }; }); });
+            c.stroke();
+          });
+          c.setLineDash([]);
+        }
         // panah sebab-akibat (skenario saja)
         if (self.sc && self.edits.length && !self.preview) self.tree.forEach(function (n) {
           if (!n.via) return; var l = n.via, A = sc.T[l.a], Bt = sc.T[l.b], i = Y.idx[l.st]; if (i == null) return;
@@ -246,6 +304,20 @@ document.addEventListener('alpine:init', function () {
         if (D && D.m) this.addEdit(D.st ? { jenis: 'tahan', no: D.no, st: D.st, m: D.m } : { jenis: 'geser', no: D.no, m: D.m });
         else this.draw();
       },
+      /* ---------- realisasi Rolink (REAL_JEJAK) & uji ulang ---------- */
+      toggleReal: function () {
+        var self = this; this.realOn = !this.realOn;
+        if (this.realOn) this.$store.bb.need(['core', 'jejak']).then(function () { if (!self.realDate) self.realDate = self.realDates[self.realDates.length - 1] || ''; self.backtest(); self.draw(); });
+        else { this.bt = null; this.draw(); }
+      },
+      get realDates() { var bb = this.$store.bb; if (!bb.parts.jejak) return []; return bb.memo('jdates', function () { var D = {}; BBK.rows('REAL_JEJAK').forEach(function (r) { if (r.tanggal) D[r.tanggal] = 1; }); return Object.keys(D).sort(); }); },
+      get realRows() {
+        var d = this.realDate, bb = this.$store.bb; if (!d || !bb.parts.jejak) return [];
+        return bb.memo('jrows' + d, function () { return BBK.rows('REAL_JEJAK').filter(function (r) { return r.tanggal === d; }).map(function (r) {
+          return { no: String(r.no_ka), c: KAISim.norm(r.stasiun), ra: r.dtg_real == null ? null : +r.dtg_real, rd: r.brk_real == null ? null : +r.brk_real }; }); });
+      },
+      backtest: function () { if (!this.P || !this.realRows.length) { this.bt = null; return; } var r = KAISim.backtest(this.P0, this.realRows, { prioritas: this.prio }); this.bt = { n: r.n, ka: r.ka, m: r.maeModel, j: r.maeJadwal, e: r.edits.length, err: r.error || '' }; },
+      setReal: function (d) { this.realDate = d; this.backtest(); this.draw(); },
       setWin: function (a, b) { this.h0 = a; this.h1 = b; this.draw(); },
       png: function () { var a = document.createElement('a'); a.href = this.$refs.cv.toDataURL('image/png'); a.download = 'skenario-gapeka-' + this.kor + '.png'; a.click(); }
     };

@@ -12,6 +12,17 @@
     </div>
 
     <div class="card mt">
+      <div class="card-h"><div><h3>Batubara — WTT & Papan skenario (v3.21)</h3><p>Pengganti aplikasi WTT lama · sumber: Database_KA_Batubara_Sumsel (hanya baca)</p></div></div>
+      <div class="card-b">
+        <dl class="kv">
+          <dt>Sinkron</dt><dd>Script Property <code>BB_DB_ID</code> menunjuk DB Batubara. ETL tiap 15 menit membaca tab master/SOP/program dan REAL_PERJALANAN, REAL_TERMINAL, REAL_THN, REAL_HAMBATAN, REAL_JEJAK bila DB berubah; disimpan sebagai snapshot gzip. Tab REAL_GANGGUAN tidak dibaca (gangguan tetap dari Gangguan_Induk). Penurunan baris REAL_PERJALANAN &gt; 20% dibandingkan sinkron sebelumnya ditolak (snapshot lama dipakai).</dd>
+          <dt>Capaian</dt><dd>Rumus WTT, WPKA, WPG (program · realisasi · evaluasi), OTP, indeks kinerja terminal (4 komponen), dan 8 tahap siklus dipindahkan apa adanya dari aplikasi WTT lama. OTP = porsi KA dengan kelambatan ≤ toleransi SIPOKA KELKA (Divre III berangkat 20 / datang 30 mnt; Divre IV 10 / 25 mnt) kecuali bila tab KPI_TARGET mengisi lain.</dd>
+          <dt>Papan skenario</dt><dd>Jaringan kejadian–kegiatan (propagasi kelambatan max-plus): waktu tempuh & headway PRASARANA_PETAK, persilangan jalur tunggal, siklus rangkaian PRG_SIKLUS/PRG_TERMINAL, nomor bersambung, dinasan awak O.20 (GAPEKA 2025). Skenario tanpa perubahan = GAPEKA persis. Antrean terminal: kapasitas = jumlah jalur M_STASIUN atau puncak GAPEKA bila lebih besar.</dd>
+          <dt>Uji ulang</dt><dd>Model diuji ke REAL_JEJAK: simpangan pertama tiap KA dimasukkan sebagai geser, batas siklus/sambung/awak tidak dipakai (rangkaian dan awak di lapangan sering dipertukarkan). Hasil per tanggal tampil di Papan skenario (tombol Realisasi). Selisih masih besar karena KA batubara sering menyimpang jam-jam dari GAPEKA dan urutan nyata di petak tidak dimodelkan — pakai untuk membandingkan skenario, bukan meramal jam.</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="card mt">
       <div class="card-h"><div><h3>Rute jalur (v3.10)</h3><p>Wilayah & koridor → tab Rute jalur · 13 koridor KA penumpang & barang</p></div></div>
       <div class="card-b">
         <dl class="kv">

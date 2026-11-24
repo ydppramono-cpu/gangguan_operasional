@@ -189,7 +189,7 @@
       <button class="btn sm ghost icon-btn" @click="$store.app.resetFilters()" title="Kembalikan semua filter" aria-label="Kembalikan semua filter"><svg class="i"><use href="#i-refresh"/></svg></button>
       <button class="btn sm ghost icon-btn" @click="$store.app.copyLink()" title="Salin tautan halaman ini beserta filternya" aria-label="Salin tautan halaman ini beserta filternya"><svg class="i"><use href="#i-link"/></svg></button>
     </div>
-<div class="periodnote" x-show="$store.app.R && ['kejadian'].indexOf($store.app.route) < 0">
+<div class="periodnote" x-show="$store.app.R && ['kejadian', 'batubara', 'bb-capaian', 'bb-siklus', 'bb-profil'].indexOf($store.app.route) < 0">
       <b x-text="$store.app.R && $store.app.R.label"></b>
       <span x-text="$store.app.R ? ' · MoM: ' + $store.app.R.prevP.base + ' · YoY: ' + $store.app.R.yoyP.base + ' · YTD: ' + $store.app.R.ytdP.base : ''"></span>
       <span class="warn-txt" x-show="$store.app.R && ($store.app.R.excluded.noDay || $store.app.R.excluded.noHour)"
@@ -234,6 +234,12 @@
         <?!= include('View.Metodologi'); ?>
 
         <?!= include('View.Batubara'); ?>
+
+        <?!= include('View.BbCapaian'); ?>
+
+        <?!= include('View.BbSiklus'); ?>
+
+        <?!= include('View.BbProfil'); ?>
 
     </div>
   </main>

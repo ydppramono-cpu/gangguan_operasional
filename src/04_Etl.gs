@@ -152,7 +152,11 @@ function getStatus_() {
 }
 
 /** Target pemicu waktu. */
-function syncScheduled_() { runSync_(false, 'jadwal'); }
+function syncScheduled_() {
+  runSync_(false, 'jadwal');
+  // DB Batubara (28_BatubaraSync.gs): terpisah agar kegagalannya tidak menahan snapshot gangguan.
+  try { var b = Bb.sync(false); if (b.changed) console.log('Batubara: snapshot ' + b.version); } catch (e) { console.warn('Sinkron Batubara gagal: ' + e); }
+}
 
 
 /** Ringkasan per bulan { ym: [kejadian, menit] } — dipakai untuk mendeteksi perubahan data antar-snapshot. */

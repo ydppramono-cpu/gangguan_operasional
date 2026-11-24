@@ -13,12 +13,14 @@ KAI.ROUTES = [
   { id: 'sarana', title: 'Sarana & armada', icon: 'i-train', group: 'Laporan' },
   { id: 'eksposur', title: 'Pendapatan terekspos', icon: 'i-coin', group: 'Laporan' },
   { id: 'telusuri', title: 'Telusuri kejadian', icon: 'i-list', group: 'Analisis' },
+  { id: 'bb-capaian', title: 'Capaian angkutan batubara', icon: 'i-route', group: 'Batubara' },
+  { id: 'bb-siklus', title: 'Siklus & terminal', icon: 'i-route', group: 'Batubara' },
   { id: 'batubara', title: 'Papan skenario GAPEKA', icon: 'i-route', group: 'Batubara' },
   { id: 'cari', title: 'Cari & profil', icon: 'i-search', group: 'Analisis', hide: true },     // lewat kotak cari di header
   { id: 'unduh', title: 'Unduh', icon: 'i-download', group: 'Analisis', hide: true },          // lewat tombol Unduh di header
   { id: 'metodologi', title: 'Metodologi & sumber', icon: 'i-info', group: 'Analisis' }
 ];
-KAI.HIDDEN_ROUTES = { profil: 'Profil', kejadian: 'Detail kejadian' };
+KAI.HIDDEN_ROUTES = { profil: 'Profil', kejadian: 'Detail kejadian', 'bb-profil': 'Profil Batubara' };
 /**
  * Lima ruang kerja (keputusan 23 Nov 2026) + Batubara (24 Nov 2026: menggantikan app WTT Batubara bertahap). Menu samping = ruang kerja; halaman anggota tampil sebagai sub-navigasi di kepala.
  * Rute lama tetap berlaku (tautan lama tidak putus).
@@ -29,7 +31,7 @@ KAI.WORKSPACES = [
   { id: 'ws-armada', title: 'Armada', icon: 'i-train', pages: [{ id: 'sarana', label: 'Sarana & armada' }] },
   { id: 'ws-pendapatan', title: 'Pendapatan', icon: 'i-coin', pages: [{ id: 'eksposur', label: 'Pendapatan terekspos' }] },
   { id: 'ws-telusuri', title: 'Telusuri', icon: 'i-list', pages: [{ id: 'telusuri', label: 'Telusuri kejadian' }] },
-  { id: 'ws-batubara', title: 'Batubara', icon: 'i-route', pages: [{ id: 'batubara', label: 'Papan skenario GAPEKA' }] }
+  { id: 'ws-batubara', title: 'Batubara', icon: 'i-route', pages: [{ id: 'bb-capaian', label: 'Capaian' }, { id: 'bb-siklus', label: 'Siklus & terminal' }, { id: 'batubara', label: 'Skenario' }] }
 ];
 KAI.wsOf = function (route) { return KAI.WORKSPACES.filter(function (w) { return w.pages.some(function (p) { return p.id === route; }); })[0] || null; };
 /** Elemen filter yang berlaku per halaman (filter kontekstual). Halaman yang tidak tercantum: filterbar disembunyikan. */

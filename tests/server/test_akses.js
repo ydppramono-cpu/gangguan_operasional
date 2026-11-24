@@ -8,8 +8,8 @@
 const assert = require('assert'), fs = require('fs'), path = require('path');
 const { run } = require('../emulator/emu.js');
 const SRC = path.resolve(__dirname, '../../src');
-const API = ['doGet', 'include', 'apiBootstrap', 'apiNarratives', 'apiRef', 'apiGapeka26', 'apiGapeka', 'apiStatus', 'apiReportAssets', 'apiKaOps', 'apiBatubara'];
-const ADMIN = ['setupOtomatis', 'syncNow', 'installTrigger', 'showStatus', 'bersihkanSisaV2', 'ujiKondisiBq'];
+const API = ['doGet', 'include', 'apiBootstrap', 'apiNarratives', 'apiRef', 'apiGapeka26', 'apiGapeka', 'apiStatus', 'apiReportAssets', 'apiKaOps', 'apiBatubara', 'apiBatubaraPart'];
+const ADMIN = ['setupOtomatis', 'syncNow', 'installTrigger', 'showStatus', 'bersihkanSisaV2', 'ujiKondisiBq', 'syncBatubaraNow'];
 const pub = [];
 fs.readdirSync(SRC).filter(f => f.endsWith('.gs')).forEach(f => {
   for (const m of fs.readFileSync(path.join(SRC, f), 'utf8').matchAll(/^function ([A-Za-z0-9]+)\s*\(/gm)) if (!m[1].endsWith('_')) pub.push(m[1]);
@@ -25,6 +25,7 @@ process.env.EMU_USER = 'pemilik@contoh.id'; run('showStatus()'); assert.strictEq
 ['apiBootstrap', 'apiStatus', 'apiReportAssets'].forEach(n => assert.strictEqual(run(n + '().ok'), true, n));
 assert.strictEqual(run('apiGapeka("1999").ok'), false); assert.strictEqual(run('apiGapeka("2025").ok'), true);
 assert.strictEqual(run('apiNarratives("versi-lama").stale'), true);
+assert.strictEqual(run('apiBatubaraPart("../x").ok'), false, 'apiBatubaraPart menerima nama tak dikenal'); assert.strictEqual(run('apiBatubaraPart("core").ok'), true);
 // include: pola tertutup
 assert.throws(() => run('include("../../etc")'), /tidak dikenal/);
 assert.throws(() => run('include("Code")'), /tidak dikenal/);

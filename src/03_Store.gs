@@ -83,5 +83,5 @@ var Store = (function () {
     return data;
   }
 
-  return { publish: publish, pointer: pointer, payload: payload, gzB64: gzB64, cachePut: cachePut, cacheGet: cacheGet };
+  return { publish: publish, pointer: pointer, payload: payload, gzB64: gzB64, cachePut: cachePut, cacheGet: cacheGet, writeBlob: writeFile };
 })();

@@ -1,0 +1,237 @@
+<script>
+/**
+ * Js.BbUi — store & komponen ruang kerja Batubara (keputusan 24 Nov 2026: 3 halaman cerita + 3 profil).
+ *   bb-capaian  "Target tercapai?"            KPI wajib + program vs realisasi per relasi
+ *   bb-siklus   "Waktu hilang di mana & kenapa?" 8 tahap siklus · terminal · hambatan + PIC · awak
+ *   batubara    Papan skenario GAPEKA (Js.Skenario)
+ *   bb-profil   profil terminal / relasi / rangkaian (kepala profil + grafik saling menyaring)
+ * Angka dari BBK (Js.BbData, definisi app WTT). Data: apiBatubaraPart (sinkron DB Batubara, 28_BatubaraSync.gs).
+ */
+document.addEventListener('alpine:init', function () {
+  var STC = { ok: '#1F8A2E', warn: '#E0861A', bad: '#C0392B', na: '#94A3B8' };
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+  Alpine.store('bb', {
+    parts: {}, meta: null, busy: false, err: '', empty: false, tick: 0, ready: false,
+    f: { m0: 1, m1: 9, wil: 'Sumsel', pem: 'Semua', mut: 'Semua', sm: '', sb: '', stat: 'mean' },
+    months: [], _memo: {},
+    /** Muat bagian data yang belum ada; semua halaman Batubara memanggil ini. */
+    need: function (names) {
+      var self = this, miss = names.filter(function (n) { return !self.parts[n]; });
+      if (!miss.length) return Promise.resolve();
+      self.busy = true; self.err = '';
+      return Promise.all(miss.map(function (n) {
+        return KAI.api('apiBatubaraPart', n).then(function (r) {
+          if (r.empty) { self.empty = true; return null; }
+          self.meta = r; return KAI.gunzipJson(r.gz).then(function (d) { BBK.addTables(d.t); self.parts[n] = 1; });
+        });
+      })).then(function () {
+        if (self.parts.core && !self.ready) { BBK.buildIndex(); self.ready = true; }
+        if (self.parts.perjalanan && !self.months.length) {
+          var M = {}; BBK.rows('REAL_PERJALANAN').forEach(function (r) { var m = String(r.tanggal || '').slice(0, 7); if (m) M[m] = 1; });
+          self.months = Object.keys(M).sort();
+          if (self.months.length) { self.f.m0 = +self.months[0].slice(5); self.f.m1 = +self.months[self.months.length - 1].slice(5); }
+        }
+        self._memo = {}; self.busy = false; self.tick++;
+      }).catch(function (e) { self.busy = false; self.err = e.message || String(e); });
+    },
+    get versi() { return 'GAPEKA ' + (Alpine.store('app').gapeka || KAI.gapeka.initial()); },
+    /** Filter BBK (format app WTT); versi mengikuti switch GAPEKA global. */
+    get F() { var f = this.f; return { versi: this.versi, m0: +f.m0, m1: +f.m1, wil: f.wil, pem: f.pem, mitra: '', nama: '', ka: '', sm: f.sm, sb: f.sb, mut: f.mut, stat: f.stat }; },
+    key: function () { return JSON.stringify(this.F) + '|' + this.tick; },
+    memo: function (name, fn) {
+      var k = name + '|' + this.key(); if (this._memo[k] === undefined) { BBK.stat = this.f.stat; this._memo[k] = fn(); }
+      return this._memo[k];
+    },
+    get KW() { var self = this; return this.ready && this.parts.core && this.parts.perjalanan && this.parts.terminal && this.parts.hambatan ? this.memo('kw', function () { return BBK.kpiWajib(self.F); }) : null; },
+    get INS() { var self = this, KW = this.KW; return KW ? this.memo('ins', function () { return BBK.insight(self.F, KW); }) : []; },
+    periodTxt: function () { var f = this.f; return MON[f.m0 - 1] + (f.m1 !== f.m0 ? '–' + MON[f.m1 - 1] : '') + ' ' + (this.months[0] || '2026').slice(0, 4); },
+    stName: function (k) { return BBK.stName ? BBK.stName(k) : k; },
+    relName: function (r) { return BBK.relName ? BBK.relName(r) : r; },
+    open: function (type, id) { Alpine.store('app').go('bb-profil', { type: type, id: id }); },
+    STC: STC, MON: MON
+  });
+
+  /* ---------- Capaian ---------- */
+  Alpine.data('vBbCapaian', function () {
+    return {
+      init: function () { this.$store.bb.need(['core', 'perjalanan', 'terminal', 'hambatan']); },
+      get KW() { return this.$store.bb.KW; },
+      get groups() {
+        var C = this.KW ? this.KW.cards : [], by = {}; C.forEach(function (c) { by[c.id] = c; });
+        return [['Terminal', ['wtt_muat', 'wtt_bongkar', 'kin_muat', 'kin_bongkar']], ['Perjalanan', ['wpka_isi', 'wpka_kosong', 'otp_brk', 'otp_tiba']], ['Peredaran & stasiun', ['wpg', 'kin_st']]]
+          .map(function (g) { return { n: g[0], cards: g[1].map(function (id) { return by[id]; }).filter(Boolean) }; });
+      },
+      get answer() {
+        var C = this.KW ? this.KW.cards : []; if (!C.length) return '';
+        var bad = C.filter(function (c) { return c.st === 'bad'; }), warn = C.filter(function (c) { return c.st === 'warn'; }), w = bad[0] || warn[0];
+        return this.$store.bb.periodTxt() + ' · ' + this.$store.bb.versi + ': ' + bad.length + ' dari ' + C.length + ' KPI di bawah target, ' + warn.length + ' mendekati.' +
+          (w ? ' Paling perlu perhatian: ' + w.l + ' ' + w.v + (w.t ? ' (' + w.t + ')' : '') + '.' : ' Semua KPI dalam target.');
+      },
+      stc: function (s) { return STC[s] || STC.na; },
+      get otpOpt() {
+        var O = this.KW && this.KW.O; if (!O) return null;
+        var B = O.bulan, mo = B.map(function (b) { return MON[+b.m.slice(5) - 1]; });
+        var s = function (n, k, c, dash) { return { name: n, type: 'line', smooth: 0.3, symbolSize: 6, data: B.map(function (b) { return b[k].pct == null ? null : +b[k].pct.toFixed(1); }), lineStyle: { width: 2.4, color: c }, itemStyle: { color: c } }; };
+        var t = function (n, k, c) { return { name: n, type: 'line', symbol: 'none', data: B.map(function (b) { return b[k].tgt == null ? null : +b[k].tgt.toFixed(1); }), lineStyle: { type: 'dashed', width: 1.4, color: c }, itemStyle: { color: c } }; };
+        return { tooltip: { trigger: 'axis', valueFormatter: function (v) { return v == null ? '–' : KAI.fmt.d1(v) + '%'; } }, legend: { top: 0 }, grid: { left: 44, right: 16, top: 34, bottom: 28 },
+          xAxis: { type: 'category', data: mo }, yAxis: { type: 'value', min: function (v) { return Math.max(0, Math.floor(v.min / 10) * 10); }, max: 100, axisLabel: { formatter: '{value}%' } },
+          series: [s('Berangkat', 'brk', '#1E1B5E'), s('Datang', 'tiba', '#F06A25'), t('Target berangkat', 'brk', '#7C89A8'), t('Target datang', 'tiba', '#F6A878')] };
+      },
+      get sikRows() { return this.KW ? this.KW.SIK.filter(function (o) { return o.realT; }).slice(0, 12) : []; },
+      get sikOpt() {
+        var R = this.sikRows; if (!R.length) return null;
+        var parts = [['muat', 'Di terminal muat', '#2F3439'], ['isi', 'Perjalanan isi', '#F06A25'], ['bongkar', 'Di terminal bongkar', '#4A5866'], ['kosong', 'Perjalanan kosong', '#F6A878']];
+        var cats = R.map(function (o) { return o.rel; }).reverse();
+        var ser = parts.map(function (p) { return { name: p[1], type: 'bar', stack: 'r', barWidth: 14, itemStyle: { color: p[2] }, data: R.slice().reverse().map(function (o) { var v = o.realT[p[0]]; return v == null ? null : +(v / 60).toFixed(1); }) }; });
+        ser.push({ name: 'Program GAPEKA', type: 'scatter', symbol: 'rect', symbolSize: [3, 22], itemStyle: { color: '#C0392B' }, data: R.slice().reverse().map(function (o) { return o.prgTotal == null ? null : +(o.prgTotal / 60).toFixed(1); }), z: 5 });
+        return { tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return v == null ? '–' : KAI.fmt.d1(v) + ' jam'; } }, legend: { top: 0 },
+          grid: { left: 84, right: 24, top: 46, bottom: 22 }, xAxis: { type: 'value', axisLabel: { formatter: '{value} j' } },
+          yAxis: { type: 'category', data: cats, axisLabel: { formatter: function (r) { return r; } } }, series: ser };
+      },
+      get wpgRows() { return this.KW && this.KW.G ? this.KW.G.rows.slice().sort(function (a, b) { return (b.nKa || 0) - (a.nKa || 0); }) : []; },
+      insFor: function (tags) { return this.$store.bb.INS.filter(function (i) { return i.tag.some(function (t) { return tags.indexOf(t) >= 0; }); }); },
+      clickSik: function (d) { if (d && d.name) this.$store.bb.open('relasi', d.name); }
+    };
+  });
+
+  /* ---------- Siklus & terminal ---------- */
+  Alpine.data('vBbSiklus', function () {
+    return {
+      tab: 'tahap', term: '',
+      init: function () { var p = this.$store.app.params || {}; if (/^(tahap|terminal|hambatan|awak)$/.test(p.tab || '')) this.tab = p.tab; this.$store.bb.need(['core', 'perjalanan', 'terminal', 'hambatan']); },
+      get KW() { return this.$store.bb.KW; },
+      get stages() { var KW = this.KW; return KW ? this.$store.bb.memo('stage', function () { return BBK.stageAll(KW.SIK); }) : []; },
+      get stageOpt() {
+        var S = this.stages; if (!S.length) return null;
+        return { tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: function (ps) { var s = S[ps[0].dataIndex]; return '<b>' + s.n + '</b><br>Realisasi ' + KAI.fmt.n(s.med) + ' mnt · P85 ' + KAI.fmt.n(s.p85) + (s.sop != null ? '<br>Batas SOP/program ' + KAI.fmt.n(s.sop) + ' mnt · ' + KAI.fmt.d1((s.over || 0) * 100) + '% KA lewat' : '<br>Tanpa batas SOP'); } },
+          grid: { left: 44, right: 16, top: 16, bottom: 44 }, xAxis: { type: 'category', data: S.map(function (s) { return s.n; }), axisLabel: { interval: 0, rotate: 18, fontSize: 11 } }, yAxis: { type: 'value', name: 'menit' },
+          series: [{ type: 'bar', barWidth: 26, data: S.map(function (s) { var over = s.sop != null && s.med > s.sop; return { value: s.med == null ? null : Math.round(s.med), itemStyle: { color: over ? '#C0392B' : s.c, borderRadius: [5, 5, 0, 0] } }; }) },
+            { type: 'scatter', symbol: 'rect', symbolSize: [30, 3], itemStyle: { color: '#111827' }, data: S.map(function (s) { return s.sop == null ? null : Math.round(s.sop); }), z: 5 }] };
+      },
+      get heat() {
+        var KW = this.KW; if (!KW) return { rels: [], st: [], cells: [] };
+        var S = BBK.STAGES, rels = KW.SIK.slice(0, 12);
+        return { rels: rels, st: S, cells: rels.map(function (o) { return S.map(function (s) { var r = o.rows.filter(function (x) { return x.id === s.id; })[0]; return r && r.med != null && r.sop != null ? Math.round(r.med - r.sop) : null; }); }) };
+      },
+      heatBg: function (v) { if (v == null) return '#F8FAFC'; if (v <= 0) return 'rgba(31,138,46,' + Math.min(0.35, 0.08 + (-v) / 300) + ')'; return 'rgba(192,57,43,' + Math.min(0.75, 0.1 + v / 160) + ')'; },
+      get KT() { return this.KW ? this.KW.KT : []; },
+      get H() { var bb = this.$store.bb; return bb.ready && bb.parts.hambatan ? bb.memo('ham', function () { return BBK.hambatan(bb.F) || []; }) : []; },
+      get hamOpt() {
+        var H = this.H; if (!H.length) return null;
+        var g = {}, fase = ['PRA', 'INTI', 'PASCA'], col = { PRA: '#C5CBD2', INTI: '#2F3439', PASCA: '#F06A25' };
+        H.forEach(function (h) { var st = String(h.lokasi || '').split('-')[0] + ' · ' + (h.jenis === 'MUAT' ? 'muat' : 'bongkar'); var o = g[st] = g[st] || { PRA: 0, INTI: 0, PASCA: 0, t: 0 }; var f = fase.indexOf(h.fase) >= 0 ? h.fase : 'INTI'; o[f] += +h.menit || 0; o.t += +h.menit || 0; });
+        var L = Object.keys(g).sort(function (a, b) { return g[a].t - g[b].t; }).slice(-12);
+        return { tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return KAI.fmt.n(v) + ' jam'; } }, legend: { top: 0 }, grid: { left: 110, right: 20, top: 34, bottom: 24 },
+          xAxis: { type: 'value', name: 'jam hambatan' }, yAxis: { type: 'category', data: L },
+          series: fase.map(function (f) { return { name: f === 'PRA' ? 'Pra' : f === 'INTI' ? 'Inti' : 'Pasca', type: 'bar', stack: 'h', itemStyle: { color: col[f] }, data: L.map(function (k) { return Math.round(g[k][f] / 60); }) }; }) };
+      },
+      get tw() { var H = this.H, t = this.term; return BBK.topWorst(t ? H.filter(function (h) { return String(h.lokasi || '').split('-')[0] === t; }) : H); },
+      get hamTerms() { var s = {}; this.H.forEach(function (h) { s[String(h.lokasi || '').split('-')[0]] = 1; }); return Object.keys(s).sort(); },
+      get awak() {
+        if (!this.$store.bb.ready) return [];
+        return BBK.rows('DINASAN_AWAK').map(function (x) { var m0 = BBK.mins(x.mulai_dinas), b = BBK.mins(x.jam_berangkat), jd = BBK.mins(x.jam_dinas);
+          return { upt: x.upt_crew, kode: x.kode, no: x.no_ka, nama: x.nama_ka, rel: x.relasi, lin: x.lintas_dinas, mulai: x.mulai_dinas, brk: x.jam_berangkat, habis: x.habis_dinas, jd: jd, siap: m0 != null && b != null ? (b - m0 + 1440) % 1440 : null, coal: /^L?[34]\d{3}/.test(x.no_ka) }; })
+          .filter(function (r) { return r.coal; }).sort(function (a, b) { return (a.siap == null) - (b.siap == null) || a.siap - b.siap; });
+      },
+      get awakFlag() { return this.awak.filter(function (r) { return r.siap != null && r.siap < 60; }).length; },
+      insFor: function (tags) { return this.$store.bb.INS.filter(function (i) { return i.tag.some(function (t) { return tags.indexOf(t) >= 0; }); }); },
+      bar: function (v) { return v == null ? 0 : Math.max(2, Math.min(100, v)); }
+    };
+  });
+
+  /* ---------- Profil terminal / relasi / rangkaian ---------- */
+  Alpine.data('vBbProfil', function () {
+    return {
+      xm: '', xk: '',
+      init: function () { var self = this; this.$store.bb.need(['core', 'perjalanan', 'terminal', 'hambatan']); this.$watch('$store.app.params', function () { self.xm = ''; self.xk = ''; }); },
+      get P() { return this.$store.app.params || {}; },
+      get type() { return /^(terminal|relasi|rangkaian)$/.test(this.P.type) ? this.P.type : ''; },
+      get id() { return String(this.P.id || '').replace(/[^A-Za-z0-9 ·-]/g, '').slice(0, 40); },
+      get ok() { return !!(this.type && this.id && this.$store.bb.KW); },
+      get T() { var bb = this.$store.bb; return bb.ready && bb.parts.terminal ? bb.memo('ter', function () { return BBK.terminal(bb.F) || []; }) : []; },
+      get Pj() { var bb = this.$store.bb; return bb.ready && bb.parts.perjalanan ? bb.memo('pj', function () { return BBK.perjalanan(bb.F) || []; }) : []; },
+      get H() { var bb = this.$store.bb; return bb.ready && bb.parts.hambatan ? bb.memo('ham', function () { return BBK.hambatan(bb.F) || []; }) : []; },
+      /* -- kepala profil -- */
+      get hero() {
+        if (!this.ok) return null; var id = this.id, KW = this.$store.bb.KW, bb = this.$store.bb;
+        if (this.type === 'terminal') {
+          var tm = BBK.rows('M_TERMINAL').filter(function (t) { return t.kode === id; })[0] || {}, kt = KW.KT.filter(function (x) { return x.st === id; });
+          return { t: bb.stName(id) + ' (' + id + ')', s: [tm.upt_terminal, tm.peran, tm.pengelola].filter(Boolean).join(' · '), facts: [['Kapasitas', tm.kapasitas_rinci], ['Fasilitas', tm.fasilitas], ['Catatan SOP', tm.catatan_sop], ['Relasi', tm.relasi]].filter(function (x) { return x[1]; }),
+            kpi: kt.map(function (x) { return [x.uj === 'muat' ? 'WTT muat' : 'WTT bongkar', BBK.fmt.dur(x.wtt), x.sop != null ? 'SOP ' + BBK.fmt.dur(x.sop) : 'tanpa SOP kontrak']; })
+              .concat(kt.map(function (x) { return ['Indeks ' + x.uj, x.indeks != null ? KAI.fmt.n(x.indeks) + '/100' : '–', 'KA/hari ' + KAI.fmt.d1(x.kaHariReal) + ' vs program ' + KAI.fmt.n(x.kaHariProg)]; })) };
+        }
+        if (this.type === 'relasi') {
+          var o = KW.SIK.filter(function (x) { return x.rel === id; })[0], g = KW.G.rows.filter(function (x) { return x.rel === id; })[0], ot = KW.O && KW.O.rel[id];
+          return { t: bb.relName(id), s: 'Relasi muat → bongkar · ' + (o ? KAI.fmt.n(o.nKa) + ' siklus tercatat' : 'siklus tidak tercatat'),
+            facts: [['Program (GAPEKA)', o && o.prgTotal != null ? BBK.fmt.dur(o.prgTotal) + ' per siklus' : '–'], ['Realisasi', o ? BBK.fmt.dur(o.real) : '–'], ['Lewat batas SOP', o ? BBK.fmt.dur(o.lewat) + ' per siklus' : '–'], ['Status SOP kontrak', g ? (g.sopStatus || 'tunggal') : '–']],
+            kpi: [['WPG realisasi', g && g.real != null ? KAI.fmt.d1(g.real) + ' hari' : '–', g && g.prog != null ? 'program ' + KAI.fmt.d1(g.prog) + ' hari' : ''], ['OTP berangkat', ot ? KAI.fmt.d1(ot.brk.pct) + '%' : '–', ot ? KAI.fmt.n(ot.brk.n) + ' KA' : ''],
+              ['OTP datang', ot ? KAI.fmt.d1(ot.tiba.pct) + '%' : '–', ot ? 'lambat rata-rata ' + KAI.fmt.n(ot.tiba.lambat) + ' mnt' : ''], ['Kebutuhan rangkaian', g && g.tsReal != null ? KAI.fmt.n(g.tsReal) + ' TS' : '–', g && g.so != null ? 'Duksar SO ' + KAI.fmt.n(g.so) : '']] };
+        }
+        var R = BBK.rows('PRG_SIKLUS').filter(function (r) { return r.rangkaian === id && r.versi === bb.versi; }).sort(function (a, b) { return +a.urut - +b.urut; });
+        return { t: 'Rangkaian ' + id, s: bb.versi + ' · ' + R.length + ' kaki perjalanan dalam satu putaran', facts: [['Terminal', BBK.uniq(R.map(function (r) { return r.terminal; })).join(', ')], ['Nomor KA', R.map(function (r) { return r.ka_jalan; }).join(' → ')], ['WTT program', R.map(function (r) { return r.terminal + ' ' + r.wtt + ' mnt'; }).join(' · ')]],
+          kpi: [['Lama satu putaran', BBK.fmt.dur(BBK.sum(R, function (r) { return +r.wtt; }) + BBK.sum(R, function (r) { return +r.wp; })), 'WTT + waktu perjalanan program']], legs: R };
+      },
+      /* -- himpunan kejadian profil (saring silang bulan & kode hambatan) -- */
+      inP: function (r) {
+        var id = this.id;
+        if (this.type === 'terminal') return r.stasiun_muat === id || r.stasiun_bongkar === id;
+        if (this.type === 'relasi') return r.stasiun_muat + '-' + r.stasiun_bongkar === id;
+        var nos = {}; (this.hero && this.hero.legs || []).forEach(function (l) { nos[String(l.ka_jalan)] = 1; }); return !!nos[String(r.no_ka)];
+      },
+      monthOf: function (r) { return String(r.mulai_muat || r.mulai_bongkar || r.tanggal || '').slice(0, 7); },
+      get Tp() { var self = this; return this.T.filter(function (r) { return self.inP(r); }); },
+      get Hp() {
+        var id = this.id, type = this.type, rel = type === 'relasi' ? id.split('-') : null, nos = {};
+        (this.hero && this.hero.legs || []).forEach(function (l) { nos[String(l.ka_jalan)] = 1; });
+        return this.H.filter(function (h) { var loc = String(h.lokasi || '').split('-')[0];
+          return type === 'terminal' ? loc === id : type === 'relasi' ? (loc === rel[0] && h.jenis === 'MUAT') || (loc === rel[rel.length - 1] && h.jenis === 'BONGKAR') : !!nos[String(h.no_ka)]; });
+      },
+      get Pp() {
+        var id = this.id, type = this.type, nos = {}; (this.hero && this.hero.legs || []).forEach(function (l) { nos[String(l.ka_jalan)] = 1; });
+        return this.Pj.filter(function (r) { var rel = r.muatan === 'Isi' ? r.asal + '-' + r.tujuan : r.tujuan + '-' + r.asal;
+          return type === 'terminal' ? r.asal === id || r.tujuan === id : type === 'relasi' ? rel === id : String(r.no_ka).split('-').some(function (n) { return nos[n]; }); });
+      },
+      get months() { var M = {}; this.Pp.forEach(function (r) { M[String(r.tanggal).slice(0, 7)] = 1; }); this.Tp.forEach(function (r) { var m = String(r.mulai_muat || r.mulai_bongkar || '').slice(0, 7); if (m) M[m] = 1; }); return Object.keys(M).sort(); },
+      get monthOpt() {
+        var self = this, Ms = this.months; if (!Ms.length) return null;
+        var otp = Ms.map(function (m) { var L = self.Pp.filter(function (r) { return !r.batal && String(r.tanggal).slice(0, 7) === m && typeof r.lambat_tiba === 'number'; });
+          var ok = L.filter(function (r) { return r.lambat_tiba <= BBK.otpTol(BBK.divOf(r.tujuan), 'tiba'); }).length; return L.length ? +(100 * ok / L.length).toFixed(1) : null; });
+        var wtt = Ms.map(function (m) { var v = self.Tp.filter(function (r) { return self.monthOf(r) === m; }).map(function (r) {
+          var a = self.type === 'terminal' && r.stasiun_bongkar === self.id ? [r.pra_bongkar, r.bongkar, r.pasca_bongkar] : [r.pra_muat, r.muat, r.pasca_muat];
+          return a.every(function (x) { return x != null; }) ? a[0] + a[1] + a[2] : null; }).filter(function (x) { return x != null; }); return v.length ? Math.round(BBK.ctr(v)) : null; });
+        var sel = this.xm;
+        return { tooltip: { trigger: 'axis' }, legend: { top: 0 }, grid: { left: 46, right: 46, top: 34, bottom: 26 }, xAxis: { type: 'category', data: Ms.map(function (m) { return MON[+m.slice(5) - 1]; }) },
+          yAxis: [{ type: 'value' }, { type: 'value', max: 100, axisLabel: { formatter: '{value}%' }, splitLine: { show: false } }],
+          series: [{ name: 'WTT realisasi', type: 'bar', barWidth: 18, data: wtt.map(function (v, i) { return { value: v, ym: Ms[i], itemStyle: { color: sel && Ms[i] !== sel ? 'rgba(30,27,94,.25)' : '#1E1B5E', borderRadius: [4, 4, 0, 0] } }; }) },
+            { name: 'OTP datang', type: 'line', yAxisIndex: 1, smooth: 0.3, data: otp, lineStyle: { color: '#F06A25', width: 2.2 }, itemStyle: { color: '#F06A25' } }] };
+      },
+      get Hx() { var m = this.xm; return m ? this.Hp.filter(function (h) { return String(h.tanggal).slice(0, 7) === m; }) : this.Hp; },
+      get hamTop() {
+        var g = {}; this.Hx.forEach(function (h) { var o = g[h.kode_std] = g[h.kode_std] || { kode: h.kode_std, nama: h.nama_std, f: 0, m: 0, pic: {} }; o.f += +h.frek || 1; o.m += +h.menit || 0; o.pic[h.pic || '–'] = (o.pic[h.pic || '–'] || 0) + (+h.menit || 0); });
+        return Object.keys(g).map(function (k) { var o = g[k]; o.picU = Object.keys(o.pic).sort(function (a, b) { return o.pic[b] - o.pic[a]; })[0]; return o; }).sort(function (a, b) { return b.m - a.m; }).slice(0, 8);
+      },
+      get stageOpt() {
+        var self = this, Tp = this.xm ? this.Tp.filter(function (r) { return self.monthOf(r) === self.xm; }) : this.Tp; if (!Tp.length) return null;
+        var muatSide = this.type !== 'terminal' || Tp.some(function (r) { return r.stasiun_muat === self.id; }), bkSide = this.type !== 'terminal' || Tp.some(function (r) { return r.stasiun_bongkar === self.id; });
+        var ids = (muatSide ? ['pra_muat', 'muat', 'pasca_muat'] : []).concat(bkSide ? ['pra_bongkar', 'bongkar', 'pasca_bongkar'] : []).filter(function (id) { return Tp.some(function (r) { return r[id] != null; }); });
+        var rel = this.type === 'relasi' ? this.id : null;
+        return { tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return KAI.fmt.n(v) + ' mnt'; } }, grid: { left: 40, right: 12, top: 16, bottom: 44 },
+          xAxis: { type: 'category', data: ids.map(function (id) { return BBK.ST_BY[id].n.replace('Pasca ', 'Pasca\n').replace('Pra ', 'Pra\n'); }), axisLabel: { interval: 0, fontSize: 10.5, lineHeight: 13 } }, yAxis: { type: 'value' },
+          series: [{ type: 'bar', barWidth: 22, data: ids.map(function (id) { var v = BBK.ctr(Tp.map(function (r) { return r[id]; })), p = rel ? rel.split('-') : null, sop = rel ? BBK.sop(rel, BBK.ST_BY[id].ujung === 'muat' ? p[0] : p[1], id) : null;
+            return { value: v == null ? null : Math.round(v), itemStyle: { color: sop != null && v > sop ? '#C0392B' : BBK.ST_BY[id].c, borderRadius: [4, 4, 0, 0] } }; }) }] };
+      },
+      clickMonth: function (d) { if (d && d.ym) this.xm = this.xm === d.ym ? '' : d.ym; },
+      get legsOpt() {
+        var L = this.hero && this.hero.legs; if (!L || !L.length) return null;
+        var data = [], t = 0;
+        L.forEach(function (l, i) { var w = +l.wtt || 0, wp = +l.wp || 0; data.push({ name: l.terminal + ' (WTT)', value: [i, t, t + w], c: '#4A5866' }); t += w; data.push({ name: 'KA ' + l.ka_jalan + ' ' + (l.muatan || '') + ' → ' + l.tujuan, value: [i, t, t + wp], c: /isi/i.test(l.muatan) ? '#1E1B5E' : '#7C89A8' }); t += wp; });
+        return { tooltip: { formatter: function (p) { return '<b>' + p.data.name + '</b><br>' + BBK.fmt.dur(p.data.value[2] - p.data.value[1]); } }, grid: { left: 70, right: 16, top: 10, bottom: 28 },
+          xAxis: { type: 'value', name: 'menit sejak awal putaran', nameLocation: 'middle', nameGap: 20 }, yAxis: { type: 'category', data: L.map(function (l) { return 'Kaki ' + l.urut; }), inverse: true },
+          series: [{ type: 'custom', renderItem: function (p, api) { var y = api.coord([0, api.value(0)])[1], a = api.coord([api.value(1), 0])[0], b = api.coord([api.value(2), 0])[0], h = 16;
+            return { type: 'rect', shape: { x: a, y: y - h / 2, width: Math.max(1, b - a), height: h, r: 3 }, style: { fill: data[p.dataIndex].c } }; }, encode: { x: [1, 2], y: 0 }, data: data }] };
+      }
+    };
+  });
+});
+</script>

@@ -49,7 +49,18 @@ window.KAIHelp = (function () {
       { sel: '.sk-ctl', t: 'Atur skenario', d: 'Pilih koridor, jendela waktu, dan aturan bila KA berebut petak (urutan tetap seperti GAPEKA, atau prioritas penumpang > batubara isi > lainnya).' },
       { sel: '.sk-wrap', t: 'Geser garis KA', d: 'Seret garis untuk menggeser slot KA. Tahan Shift lalu seret di titik stasiun untuk menahan KA di stasiun itu. Garis abu-abu = GAPEKA; merah = KA yang ikut terlambat.' },
       { sel: '.sk-side', t: 'Efek domino', d: 'Jumlah KA terdampak, menit tambahan, KA penumpang terdampak, rambatan ke hari berikutnya, dan rantai sebab-akibat (headway, silang, siklus, awak).' },
-      { sel: '.sk-asumsi', t: 'Baca asumsinya', d: 'Hasil adalah simulasi dari GAPEKA + data prasarana DB Batubara, bukan realisasi.' }
+      { sel: '.sk-add', t: 'KLB & slot kosong', d: 'Pilih KLB, isi nomor KA pola, lalu "Cari slot kosong": jam berangkat tanpa benturan petak yang sudah diverifikasi simulasi. "Simpan sebagai A" untuk membandingkan dua skenario.' },
+      { sel: '.sk-asumsi', t: 'Baca asumsinya', d: 'Hasil adalah simulasi dari GAPEKA + data prasarana DB Batubara, bukan realisasi. Tombol Realisasi menguji model terhadap jejak Rolink.' }
+    ],
+    'bb-capaian': [
+      { sel: '.bb-filter', t: 'Saring sekali', d: 'Periode, wilayah, pemilik muatan, dan isi/kosong berlaku untuk semua angka di halaman Batubara.' },
+      { sel: '.view.bb .card', t: 'Capaian vs SOP', d: 'WTT muat/bongkar, WPKA, WPG, dan OTP dibanding SOP & target. Klik baris untuk membuka profil terminal atau relasi.' }
+    ],
+    'bb-siklus': [
+      { sel: '.tabs', t: 'Empat sudut pandang', d: '8 tahap siklus (di mana waktu hilang), kinerja terminal, hambatan & PIC, dan dinasan awak.' }
+    ],
+    'bb-profil': [
+      { sel: '.view.bb .card', t: 'Profil', d: 'Fakta kunci terminal, relasi, atau rangkaian. Klik bulan di grafik untuk menyaring grafik lain.' }
     ],
     profil: [
       { sel: '.phero', t: 'Kepala profil', d: 'Fakta kunci dan garis kelambatan 24 bulan.' },
@@ -91,7 +102,14 @@ window.KAIHelp = (function () {
       'Grafik perjalanan koridor batubara Sumsel (TMB–Tarahan, TMB–Kertapati, Sukacinta–Kertapati, Lubuk Linggau–Muara Enim) memuat KA batubara dan KA penumpang dari GAPEKA yang dipilih di switch kanan atas.',
       '<b>Seret</b> garis KA untuk menggeser slotnya; <b>Shift + seret</b> di titik stasiun untuk menahan KA di stasiun itu; atau isi formulir "Tambah perubahan" (tahan / geser / batal).',
       'Mesin menghitung rambatan lewat waktu tempuh petak, headway jalur ganda, persilangan jalur tunggal, siklus rangkaian (WTT program terpendek di terminal), nomor KA bersambung di batas Divre, dan dinasan awak (GAPEKA 2025).',
-      'Skenario tersimpan di tautan (tombol Tautan) — tidak ada yang ditulis ke basis data. Semua hasil berlabel simulasi.'
+      'Skenario tersimpan di tautan (tombol Tautan) — tidak ada yang ditulis ke basis data. Semua hasil berlabel simulasi.',
+      '<b>Antrean terminal</b> (bawaan aktif): KA yang tiba saat semua jalur terminal terisi menunggu di sinyal masuk. <b>KLB</b>: salinan KA pola yang digeser; <b>Cari slot kosong</b> memberi jam berangkat tanpa benturan petak. <b>Simpan sebagai A</b> membandingkan dua skenario berdampingan.',
+      '<b>Realisasi</b>: jejak Rolink (REAL_JEJAK) satu tanggal digambar putus-putus hijau, dan model diuji: simpangan pertama tiap KA dimasukkan, lalu waktu simulasi dibandingkan dengan jam realisasi di stasiun berikutnya.'
+    ] },
+    { id: 'ws-bb-capaian', h: 'Batubara — Capaian & Siklus', b: [
+      'Pengganti aplikasi WTT lama. Data disinkronkan otomatis dari DB Batubara (hanya baca) tiap 15 menit bila berubah.',
+      '<b>Capaian</b>: WTT muat/bongkar, WPKA, WPG (program · realisasi · evaluasi) dan OTP (toleransi KELKA per Divre) dibanding SOP dan target. <b>Siklus & terminal</b>: 8 tahap siklus, indeks kinerja terminal (4 komponen), hambatan per PIC, dan awak.',
+      'Profil terminal, relasi, dan rangkaian terbuka dari klik baris; grafik di dalamnya saling menyaring.'
     ] },
     { id: 'ws-telusuri', h: 'Ruang kerja Telusuri', b: [
       'Daftar semua kejadian sesuai filter, kolomnya sama di seluruh aplikasi. Unduh ke Excel/CSV dari kepala tabel.',

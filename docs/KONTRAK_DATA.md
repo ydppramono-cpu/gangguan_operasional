@@ -112,3 +112,14 @@ Kode spreadsheet: `DB` = KAI | Basis Data Gangguan dan Hambatan 2025–2026, `GA
 ## 8. Yang tidak dipakai
 - Tanggal uji berkala sarana (EXPUJI) — keputusan 19 Nov 2026; data juga kedaluwarsa.
 - Ubin OpenRailwayMap/OSM — kebijakan pemakaian; peta memakai vektor OSM sendiri (© kontributor OpenStreetMap, ODbL).
+
+## 9. DB Batubara (ruang kerja Batubara, v3.21)
+| Hal | Ketentuan |
+|---|---|
+| Sumber | Spreadsheet `Database_KA_Batubara_Sumsel` (milik tim Batubara). ID di Script Property `BB_DB_ID`, **hanya baca**. |
+| Dibaca | master/SOP/program (M_*, SOP, PRG_TERMINAL, PRG_SIKLUS, KATALOG_HAMBATAN, AMBANG_SOP, KPI_TARGET, OTP_RESMI, KINERJA_*, DINASAN_AWAK, SARANA_*, PROGRAM_KA, PRASARANA_PETAK, KAPASITAS_LINTAS, EMPLASEMEN_*, TEMUAN_REGULASI, PUSTAKA, ALUR_KEGIATAN) + REAL_PERJALANAN, REAL_TERMINAL, REAL_THN, REAL_HAMBATAN, REAL_JEJAK. **REAL_GANGGUAN tidak dibaca** (gangguan = Gangguan_Induk). |
+| Kesegaran | `syncScheduled_` → `Bb.sync(false)` tiap 15 menit bila DB berubah; `syncBatubaraNow()` (editor) memaksa. Snapshot per bagian (core, perjalanan, terminal, hambatan, jejak) gzip di Drive + CacheService. |
+| Penjaga | REAL_PERJALANAN turun > 20% dari sinkron sebelumnya → ditolak, snapshot lama dipakai. |
+| API | `apiBatubaraPart(name)` — nama dari daftar tertutup; `BB_DB_ID` kosong → `{ok:true, empty:true}`. `apiBatubara()` = parameter Papan skenario dari seed `27_SeedBatubara.gs`. |
+| Repo publik | Data realisasi & SOP asli **tidak** masuk repo. Emulator/uji memakai `tests/emulator/bb_fixture.json` dari `tools/batubara/fixture_sintetis.py` (sintetis, benih tetap). |
+| Perhitungan | `Js.BbData` (`window.BBK`) = rumus aplikasi WTT lama apa adanya (WTT, WPKA, WPG, OTP, indeks terminal, 8 tahap siklus). |

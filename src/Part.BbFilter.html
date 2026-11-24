@@ -1,0 +1,16 @@
+<!-- Part.BbFilter — saringan kontekstual ruang kerja Batubara (satu baris; versi GAPEKA dari switch global). -->
+<div class="bb-filter" x-data>
+  <label class="fld"><span>Bulan</span><span class="bb-mrange">
+    <select class="ctl sm" x-model.number="$store.bb.f.m0" aria-label="Bulan awal"><template x-for="m in $store.bb.months" :key="m"><option :value="+m.slice(5)" x-text="$store.bb.MON[+m.slice(5) - 1]" :selected="+m.slice(5) === $store.bb.f.m0"></option></template></select>
+    <span>–</span>
+    <select class="ctl sm" x-model.number="$store.bb.f.m1" aria-label="Bulan akhir"><template x-for="m in $store.bb.months" :key="m"><option :value="+m.slice(5)" x-text="$store.bb.MON[+m.slice(5) - 1]" :selected="+m.slice(5) === $store.bb.f.m1"></option></template></select></span></label>
+  <div class="fld"><span>Wilayah</span><div class="seg"><template x-for="w in ['Sumsel','Divre III','Divre IV']" :key="w"><button :aria-pressed="$store.bb.f.wil === w" @click="$store.bb.f.wil = w" x-text="w"></button></template></div></div>
+  <div class="fld"><span>Pemilik</span><div class="seg"><template x-for="w in ['Semua','PTBA','Swasta']" :key="w"><button :aria-pressed="$store.bb.f.pem === w" @click="$store.bb.f.pem = w" x-text="w"></button></template></div></div>
+  <div class="fld"><span>Muatan</span><div class="seg"><template x-for="w in ['Semua','Isi','Kosong']" :key="w"><button :aria-pressed="$store.bb.f.mut === w" @click="$store.bb.f.mut = w" x-text="w"></button></template></div></div>
+  <div class="fld"><span>Statistik</span><div class="seg"><button :aria-pressed="$store.bb.f.stat === 'mean'" @click="$store.bb.f.stat = 'mean'" title="Sama dengan deck Siklus">Rata-rata</button><button :aria-pressed="$store.bb.f.stat === 'median'" @click="$store.bb.f.stat = 'median'" title="Tahan pencilan">Median</button></div></div>
+  <span class="spacer"></span>
+  <span class="note" x-show="$store.bb.meta" x-text="$store.bb.meta ? 'Data ' + $store.bb.meta.db + ' · diperbarui ' + $store.bb.meta.sourceUpdated : ''"></span>
+</div>
+<div class="loading mt-s" x-show="$store.bb.busy"><span class="spin"></span>Memuat data Batubara…</div>
+<div class="alert mt-s" x-show="$store.bb.err" x-text="'Data Batubara gagal dimuat: ' + $store.bb.err"></div>
+<div class="alert mt-s" x-show="$store.bb.empty">Data Batubara belum disinkron. Pemilik skrip: isi Script Property <b>BB_DB_ID</b> dengan ID Database_KA_Batubara_Sumsel, lalu jalankan <b>syncBatubaraNow</b> di editor.</div>

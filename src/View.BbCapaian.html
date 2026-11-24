@@ -1,0 +1,48 @@
+<!-- View.BbCapaian — Batubara › Capaian: "Target tercapai?" KPI wajib (definisi app WTT) + program vs realisasi per relasi. -->
+<template x-if="$store.app.route === 'bb-capaian'">
+  <section class="view bb" x-data="vBbCapaian">
+    <?!= include('Part.BbFilter'); ?>
+    <div class="headline mt" x-show="KW">
+      <div style="flex:1"><h2>Capaian angkutan batubara</h2><p x-text="answer"></p></div>
+    </div>
+
+    <template x-for="g in groups" :key="g.n">
+      <div class="bb-band mt">
+        <div class="bb-band-h" x-text="g.n"></div>
+        <div class="bb-kpis">
+          <template x-for="c in g.cards" :key="c.id">
+            <div class="bb-kpi" :title="c.def || ''">
+              <span class="bb-dot" :style="'background:' + stc(c.st)"></span>
+              <div class="lbl" x-text="c.l"></div>
+              <div class="val"><span x-text="c.v"></span><small x-text="c.u || ''"></small></div>
+              <div class="tgt" x-text="c.t"></div>
+              <div class="sub" x-text="c.s"></div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </template>
+
+    <div class="grid g-2 mt" x-show="KW">
+      <div class="card"><div class="card-h"><div><h3>On Time Performance per bulan</h3><p>KA batubara berangkat & datang · toleransi KELKA per Divre · garis putus = target</p></div></div>
+        <div class="card-b fill"><div class="chart" x-chart="otpOpt"></div></div>
+        <div x-data="{ get L() { return insFor(['otp']); } }"><?!= include('Part.BbPita'); ?></div></div>
+      <div class="card"><div class="card-h"><div><h3>Siklus per relasi: realisasi vs program</h3><p>Jam per siklus (muat · isi · bongkar · kosong) · garis merah = program GAPEKA · klik relasi untuk profil</p></div></div>
+        <div class="card-b fill"><div class="chart tall" x-chart="sikOpt" @chart-click="clickSik({ name: $event.detail.name })"></div></div>
+        <div x-data="{ get L() { return insFor(['wpg', 'armada']); } }"><?!= include('Part.BbPita'); ?></div></div>
+    </div>
+
+    <div class="card mt" x-show="wpgRows.length">
+      <div class="card-h"><div><h3>Program vs realisasi per relasi</h3><p>WPG = (DPI + DPK + SOP muat + SOP bongkar) ÷ 24 jam · evaluasi = SO Duksar ÷ KA isi diberangkatkan × hari · klik baris untuk profil relasi</p></div></div>
+      <div class="card-b tbl-wrap"><table class="tbl">
+        <thead><tr><th>Relasi</th><th class="num">Siklus tercatat</th><th class="num">WPG program</th><th class="num">WPG realisasi</th><th class="num">WPG evaluasi</th><th class="num">KA isi/hari</th><th class="num">TS dibutuhkan</th><th class="num">SO Duksar</th><th>SOP kontrak</th></tr></thead>
+        <tbody><template x-for="r in wpgRows" :key="r.rel"><tr class="click" @click="$store.bb.open('relasi', r.rel)">
+          <td><b x-text="r.rel"></b> <span class="muted" x-text="$store.bb.relName(r.rel)"></span></td><td class="num" x-text="KAI.fmt.n(r.nKa)"></td>
+          <td class="num" x-text="r.prog != null ? BBK.fmt.d2(r.prog) : '–'"></td>
+          <td class="num"><b :style="r.real != null && r.prog != null && r.real > r.prog ? 'color:#C0392B' : ''" x-text="r.real != null ? BBK.fmt.d2(r.real) : '–'"></b></td>
+          <td class="num" x-text="r.eval != null ? BBK.fmt.d2(r.eval) : '–'"></td><td class="num" x-text="r.kaHari != null ? KAI.fmt.n(r.kaHari) : '–'"></td>
+          <td class="num" x-text="r.tsReal != null ? KAI.fmt.d1(r.tsReal) : '–'"></td><td class="num" x-text="r.so != null ? KAI.fmt.n(r.so) : '–'"></td>
+          <td><span class="tag" x-show="r.sopStatus" x-text="r.sopStatus === 'tanpa' ? 'Belum ada SOP' : r.sopStatus === 'ganda' ? 'SOP ganda' : 'Tunggal'"></span></td></tr></template></tbody></table></div>
+    </div>
+  </section>
+</template>

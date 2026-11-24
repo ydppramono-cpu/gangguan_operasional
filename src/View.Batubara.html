@@ -18,7 +18,9 @@
         <div class="fld"><span>Aturan bila berebut petak</span><div class="seg">
           <button :aria-pressed="!prio" @click="prio = false" title="Urutan KA di setiap petak mengikuti GAPEKA; KA belakang selalu menunggu">Urutan tetap</button>
           <button :aria-pressed="prio" @click="prio = true" title="KA penumpang > batubara isi > lainnya: mesin boleh menukar urutan bila KA prioritas tertahan > 3 mnt">Prioritas</button></div></div>
+        <label class="fld sk-chk" title="KA yang tiba saat semua jalur terminal terisi menunggu di sinyal masuk (kapasitas = jumlah jalur M_STASIUN, atau puncak GAPEKA bila lebih besar)"><span>Terminal</span><span><input type="checkbox" x-model="antre"> antrean jalur</span></label>
         <span class="spacer"></span>
+        <button class="btn sm" :class="realOn && 'primary'" @click="toggleReal()" title="Tampilkan jejak realisasi Rolink satu tanggal dan uji ketepatan model">Realisasi</button>
         <button class="btn sm" @click="reset()" :disabled="!edits.length">Atur ulang</button>
         <button class="btn sm" @click="$store.app.copyLink()" title="Salin tautan skenario"><svg class="i"><use href="#i-link"/></svg>Tautan</button>
         <button class="btn sm" @click="png()"><svg class="i"><use href="#i-image"/></svg>PNG</button>
@@ -27,10 +29,27 @@
         <span class="note">Tambah perubahan:</span>
         <input class="ctl sm" list="sk-ka" placeholder="No KA" x-model="form.no" style="width:110px" aria-label="Nomor KA">
         <datalist id="sk-ka"><template x-for="n in kaList()" :key="n"><option :value="n"></option></template></datalist>
-        <div class="seg"><template x-for="j in [['tahan','Tahan'],['geser','Geser'],['batal','Batal']]" :key="j[0]"><button :aria-pressed="form.jenis === j[0]" @click="form.jenis = j[0]" x-text="j[1]"></button></template></div>
+        <div class="seg"><template x-for="j in [['tahan','Tahan'],['geser','Geser'],['batal','Batal'],['klb','KLB']]" :key="j[0]"><button :aria-pressed="form.jenis === j[0]" @click="form.jenis = j[0]" x-text="j[1]"></button></template></div>
         <select class="ctl sm" x-model="form.st" x-show="form.jenis === 'tahan'" aria-label="Stasiun"><option value="">Stasiun…</option><template x-for="s in stList()" :key="s"><option :value="s" x-text="s"></option></template></select>
         <input class="ctl sm" type="number" step="5" x-model.number="form.m" x-show="form.jenis !== 'batal'" style="width:80px" aria-label="Menit"><span class="note" x-show="form.jenis !== 'batal'">mnt</span>
         <button class="btn sm primary" @click="addForm()">Terapkan</button>
+        <button class="btn sm" x-show="form.jenis === 'klb'" @click="findSlots()" title="Cari jam berangkat KLB tanpa benturan petak dengan KA yang ada, dalam jendela waktu yang tampil">Cari slot kosong</button>
+        <span class="note" x-show="form.jenis === 'klb'">KLB = salinan rute & waktu tempuh KA pola, digeser menit.</span>
+        <span class="spacer"></span>
+        <button class="btn sm" @click="saveA()" :disabled="!edits.length" title="Simpan skenario ini sebagai A, lalu ubah untuk membandingkan">Simpan sebagai A</button>
+      </div>
+      <div class="sk-row sk-slots" x-show="slots">
+        <span class="note" x-text="slots ? (slots.L.length ? 'Slot kosong KLB pola KA ' + slots.no + ' (berangkat dalam jendela ' + h0 + '–' + h1 + ' jam):' : 'Tidak ada slot tanpa benturan petak untuk pola KA ' + slots.no + ' di jendela ini — coba jendela lain.') : ''"></span>
+        <template x-for="w in (slots ? slots.L : [])" :key="w.txt"><button type="button" class="chip" @click="useSlot(w)" :title="'Rentang bebas petak ' + w.txt + ' (' + w.len + ' mnt) · terverifikasi simulasi: berangkat ' + w.at" x-text="'Berangkat ' + w.at"></button></template>
+        <span class="note mut">Slot = tanpa benturan petak (headway/persilangan) dan terverifikasi simulasi penuh: KLB tepat waktu, dampak ke KA lain tidak bertambah.</span>
+      </div>
+      <div class="sk-row sk-real" x-show="realOn">
+        <label class="fld"><span>Tanggal realisasi (REAL_JEJAK)</span><select class="ctl sm" :value="realDate" @change="setReal($event.target.value)"><template x-for="d in realDates" :key="d"><option :value="d" x-text="d" :selected="d === realDate"></option></template></select></label>
+        <div class="sk-bt" x-show="bt"><b>Uji ulang model</b>
+          <span x-text="bt ? 'Simpangan pertama ' + bt.e + ' KA dari GAPEKA dimasukkan, ' + bt.n + ' titik stasiun dibandingkan.' : ''"></span>
+          <span x-text="bt && bt.err ? bt.err : (bt && bt.m != null ? 'Selisih rata-rata: jadwal saja ' + KAI.fmt.d1(bt.j) + ' mnt → model ' + KAI.fmt.d1(bt.m) + ' mnt' + (bt.m < bt.j ? ' (lebih dekat ke realisasi).' : ' (model belum lebih baik dari jadwal untuk tanggal ini).') : 'Belum ada titik pembanding.')"></span>
+          <small class="mut">Mode putar ulang: batas siklus rangkaian, sambung, dan awak tidak dipakai karena di lapangan sering dipertukarkan; hanya urutan di petak yang diperhitungkan.</small></div>
+        <span class="note">Garis hijau putus-putus = jejak Rolink tanggal terpilih.</span>
       </div>
       <div class="sk-row sk-chips" x-show="edits.length">
         <template x-for="(e, i) in edits" :key="i"><button type="button" class="chip on" @click="delEdit(i)" :title="'Hapus: ' + editTxt(e)"><span x-text="editTxt(e)"></span> ✕</button></template>
@@ -47,8 +66,8 @@
         <div class="sk-legend">
           <span><i style="background:#F06A25"></i>Penumpang</span><span><i style="background:#1E1B5E"></i>Batubara isi</span><span><i class="dash" style="border-color:#7C89A8"></i>Kosong</span>
           <span><i style="background:#C0392B"></i>Terdampak</span><span><i style="background:#CBD2DC"></i>Rencana GAPEKA</span>
-          <span><b class="dot" style="background:#2563EB"></b>Headway</span><span><b class="dot" style="background:#9333EA"></b>Silang</span><span><b class="dot" style="background:#0E9F6E"></b>Siklus</span><span><b class="dot" style="background:#B45309"></b>Awak</span>
-          <span><i class="bar1"></i>Petak jalur tunggal</span><span><b class="sq"></b>Stasiun melebihi jalur</span>
+          <span><b class="dot" style="background:#2563EB"></b>Headway</span><span><b class="dot" style="background:#9333EA"></b>Silang</span><span><b class="dot" style="background:#0E9F6E"></b>Siklus</span><span><b class="dot" style="background:#B45309"></b>Awak</span><span><b class="dot" style="background:#0891B2"></b>Antrean terminal</span>
+          <span x-show="realOn"><i class="dash" style="border-color:#0E9F6E"></i>Realisasi Rolink</span><span><i class="bar1"></i>Petak jalur tunggal</span><span><b class="sq"></b>Stasiun melebihi jalur</span>
         </div>
         <div class="sk-wrap" x-ref="wrap" @pointerleave="tip = ''">
           <canvas x-ref="cv" @pointerdown="down($event)" @pointermove="move($event)" @pointerup="up()" @pointercancel="up()" role="img" :aria-label="'Grafik perjalanan koridor ' + (C ? C.n : '')"></canvas>
@@ -60,6 +79,13 @@
       <div class="sk-side">
         <div class="card"><div class="card-h"><div><h3>Efek domino</h3><p x-text="edits.length ? 'Dibanding GAPEKA tanpa perubahan · ' + (prio ? 'aturan prioritas' + (sc && sc.nSwap ? ' (' + sc.nSwap + ' urutan ditukar)' : '') : 'urutan tetap') : 'Belum ada perubahan — seret garis atau tambah perubahan di atas.'"></p></div></div>
           <div class="card-b"><div class="sk-kpi"><template x-for="k in kpi" :key="k[0]"><div><span x-text="k[0]"></span><b x-text="k[1]"></b><em x-text="k[2]"></em></div></template></div></div></div>
+
+        <div class="card mt-s" x-show="A"><div class="card-h"><div><h3>Bandingkan skenario</h3><p x-text="'A: ' + (A ? A.map(e => editTxt(e)).join(' · ') : '')"></p></div><span class="spacer"></span><button class="btn sm" @click="clearA()">Hapus A</button></div>
+          <div class="card-b"><p class="note" x-show="Ares && Ares.err">Skenario A membentuk kebuntuan pada aturan saat ini.</p>
+            <div class="tbl-wrap sk-cmp" x-show="cmpRows.length"><table class="tbl sm" data-no-csv><thead><tr><th>Ukuran</th><th class="num">A</th><th class="num">Sekarang</th><th class="num">Selisih</th></tr></thead>
+              <tbody><template x-for="r in cmpRows" :key="r.l"><tr><td x-text="r.l"></td><td class="num" x-text="KAI.fmt.n(r.a)"></td><td class="num" x-text="KAI.fmt.n(r.b)"></td>
+                <td class="num" :class="r.d > 0 ? 'bad-t' : r.d < 0 ? 'good-t' : ''" x-text="r.d ? (r.d > 0 ? '+' : '') + KAI.fmt.n(r.d) : '='"></td></tr></template></tbody></table></div>
+            <p class="note">Lebih kecil = lebih baik. Kedua skenario dihitung dengan aturan yang sama (urutan/prioritas, antrean terminal).</p></div></div>
 
         <div class="card mt-s" x-show="tree.length"><div class="card-h"><div><h3>Rantai sebab-akibat</h3><p>KA yang diubah → KA yang ikut menunggu · klik untuk menyorot</p></div></div>
           <div class="card-b sk-tree"><template x-for="n in tree" :key="n.ii + '-' + n.d">
@@ -82,7 +108,7 @@
         <tbody><template x-for="r in hitList" :key="r.ii"><tr class="click" @click="sel = r.ii; draw(); $refs.wrap.scrollIntoView({ block: 'center', behavior: 'smooth' })">
           <td><b x-text="r.no"></b><span class="muted" x-show="r.day" x-text="' +1'"></span></td><td x-text="r.nama"></td><td x-text="r.relasi"></td><td x-text="r.grp + (r.muat ? ' · ' + r.muat : '')"></td>
           <td class="num"><b x-text="r.max"></b></td><td class="num" x-text="r.end >= 1 ? '+' + r.end : '–'"></td><td x-text="r.st || '–'"></td>
-          <td><span class="sk-ty" :style="'background:' + typeColor(r.cause)" x-text="r.cause === 'geser' ? 'Digeser' : typeLabel(r.cause)"></span></td><td x-text="r.src || '–'"></td></tr></template></tbody></table></div></div>
+          <td><span class="sk-ty" :style="'background:' + typeColor(r.cause)" x-text="r.cause === 'geser' ? 'Digeser' : r.cause === 'klb' ? 'KLB (skenario)' : typeLabel(r.cause)"></span></td><td x-text="r.src || '–'"></td></tr></template></tbody></table></div></div>
 
     <details class="card mt sk-asumsi"><summary><b>Model, asumsi & batasan</b> — baca sebelum memakai hasil</summary>
       <div class="card-b"><ul>
@@ -90,7 +116,8 @@
         <li><b>Waktu tempuh minimum</b> = waktu tempuh petak (wp_menit) atau rencana bila lebih kecil; cadangan waktu di jadwal dipakai untuk mengejar keterlambatan. KA tidak berangkat lebih awal dari jadwal.</li>
         <li><b>Headway & persilangan</b> dari PRASARANA_PETAK (Data_Prasarana_GAPEKA_2026): jalur ganda = headway_dipakai; jalur tunggal = waktu bebas blok (headway − wp, min 1 mnt) dari kedatangan KA sebelumnya.</li>
         <li><b>Siklus rangkaian</b> dari PRG_SIKLUS & PRG_TERMINAL; WTT minimum = WTT program terpendek di terminal yang sama. <b>Awak</b>: Buku Dinasan O.20 GAPEKA 2025 (GAPEKA 2026 belum ada dinasan → tidak dihitung).</li>
-        <li><b>Jalur stasiun</b> (M_STASIUN) hanya diperiksa, tidak menahan KA; stasiun dengan jumlah jalur kosong/0 tidak diperiksa.</li>
+        <li><b>Jalur stasiun</b> (M_STASIUN): stasiun lintas hanya diperiksa. <b>Terminal</b> (peran terminal di M_STASIUN) dengan antrean aktif: KA yang tiba saat semua jalur terisi menunggu rangkaian yang paling cepat keluar; okupansi = KA berhenti + rangkaian dalam siklus. Kapasitas = jumlah jalur, atau puncak GAPEKA bila lebih besar (data jalur belum mencerminkan pola GAPEKA). Stasiun dengan jumlah jalur kosong/0 tidak diperiksa.</li>
+        <li><b>KLB</b>: salinan rute & waktu tempuh rencana KA pola, sekali jalan (hari-0). <b>Cari slot kosong</b> mencari geser tanpa benturan petak (headway/persilangan) terhadap hasil skenario saat ini.</li>
         <li>Simulasi 2 hari (hari ini + salinan esok) agar rambatan lewat siklus terlihat. Alat perencanaan "bagaimana jika", bukan pengatur perjalanan waktu-nyata.</li>
         <li x-text="'Sumber parameter: ' + (BB ? BB.db : '') + '. Jadwal: ' + KAI.gapeka.label(ver || '2025') + ' aplikasi ini (KA penumpang & batubara pada lintas yang sama).'"></li>
       </ul></div></details>

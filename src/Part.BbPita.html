@@ -1,0 +1,12 @@
+<!-- Part.BbPita — pita temuan Batubara di bawah grafik sumbernya. Pemakai menyediakan L (daftar dari BBK.insight). -->
+<div class="pita" x-data="{ o: false }" x-show="L.length">
+  <button type="button" class="pita-h" :class="'t-' + (L[0] ? (L[0].lvl === 'bad' ? 'bad' : 'warn') : 'info')" @click="o = !o" :aria-expanded="o">
+    <svg class="i"><use href="#i-bulb"/></svg><b x-text="'Temuan ' + L.length"></b><em x-text="L[0] ? L[0].judul : ''"></em><svg class="i chev"><use href="#i-chevron"/></svg></button>
+  <ul class="pita-l" x-show="o" x-transition.opacity>
+    <template x-for="(i, n) in L" :key="n"><li :class="'t-' + (i.lvl === 'bad' ? 'bad' : 'warn')">
+      <b class="pita-f" x-text="i.judul"></b><p x-html="i.teks"></p>
+      <div class="pita-r"><b>Dasar:</b> <span x-text="i.dasar"></span><br><b>PIC:</b> <span x-text="i.pic"></span>
+        <div class="pita-lit" x-show="i.refs && i.refs.length"><template x-for="p in (i.refs || [])" :key="p.id"><a :href="p.tautan" target="_blank" rel="noopener" :title="p.temuan_kunci" x-text="String(p.penulis).split(',')[0] + ' (' + p.tahun + ') · '"></a></template></div></div>
+    </li></template>
+  </ul>
+</div>

@@ -15,18 +15,21 @@
  *     siklus   rangkaian datang di terminal → berangkat lagi: w = min(rencana, WTT program terpendek di terminal itu)
  *     sambung  satu perjalanan berganti nomor di batas Divre (M_KA "4000-4001"): tiba nomor A → berangkat nomor B
  *     awak     dinasan masinis O.20 (hanya GAPEKA 2025): KA berikutnya awak yang sama, w = min(rencana, 30 mnt)
+ *     antrean  (opsi antrean) terminal penuh: KA yang datang saat semua jalur terisi menunggu di sinyal masuk sampai
+ *              rangkaian yang paling cepat keluar berangkat. Okupansi terminal = KA berhenti + rangkaian dalam siklus
+ *              (datang → berangkat lagi). Kapasitas = n_jalur M_STASIUN, atau puncak GAPEKA bila lebih besar (agar dasar = GAPEKA).
  *   Bobot pasangan yang TIDAK diubah dibatasi selisih rencananya, sehingga skenario tanpa perubahan = GAPEKA persis.
  *   KA yang digeser memakai bobot aturan penuh → konflik slot barunya terlihat.
  *   Urutan tetap: urutan KA di setiap petak mengikuti rencana (setelah geser). Mode prioritas: bila KA prioritas lebih tinggi
  *   tertahan > 3 mnt oleh KA prioritas lebih rendah di petak yang sama, urutannya ditukar (maks 6 putaran; tukar yang membuat
  *   siklus/kebuntuan dibatalkan). Prioritas: penumpang 3 > batubara isi 2 > lainnya 1.
- * BATASAN (ditampilkan di layar): bukan alat pengatur perjalanan waktu-nyata; jalur stasiun hanya diperiksa (tidak menahan KA);
+ * BATASAN (ditampilkan di layar): bukan alat pengatur perjalanan waktu-nyata; jalur stasiun non-terminal hanya diperiksa;
  *   petak tanpa data prasarana memakai waktu tempuh rencana tanpa headway; dinasan hanya GAPEKA 2025.
  */
 (function (root) {
   'use strict';
   var DAY = 1440, norm = function (s) { return String(s || '').replace(/\s+/g, '').toUpperCase(); };
-  var TYPES = { sambung: 'Nomor bersambung', jadwal: 'Jadwal', tempuh: 'Waktu tempuh', henti: 'Berhenti', headway: 'Headway', silang: 'Persilangan', siklus: 'Siklus rangkaian', awak: 'Awak', tahan: 'Ditahan (skenario)' };
+  var TYPES = { sambung: 'Nomor bersambung', jadwal: 'Jadwal', tempuh: 'Waktu tempuh', henti: 'Berhenti', headway: 'Headway', silang: 'Persilangan', siklus: 'Siklus rangkaian', awak: 'Awak', tahan: 'Ditahan (skenario)', antrean: 'Antrean jalur terminal' };
 
   /** Prioritas KA: penumpang 3, batubara isi 2, lainnya 1. */
   function prio(k, meta) {
@@ -91,7 +94,8 @@
     P.trains.forEach(function (t, ti) {
       if (cancel[t.no]) return;
       [0, 1].forEach(function (day) {
-        var sh = (E[t.no] && day === 0 ? E[t.no] : 0) + day * DAY, inst = { ti: ti, day: day, moved: !!(E[t.no] && day === 0), a: [], d: [] };
+        if (t.klb && day) return;   // KLB = sekali jalan (hari-0 saja)
+        var sh = (E[t.no] && day === 0 ? E[t.no] : 0) + day * DAY, inst = { ti: ti, day: day, moved: !!((E[t.no] || t.klb) && day === 0), a: [], d: [] };
         t.pts.forEach(function (p, s) {
           inst.a.push(N.length); N.push({ i: T.length, s: s, k: 0, plan: p.a + sh, plan0: p.a + day * DAY, h: 0 });
           inst.d.push(N.length); N.push({ i: T.length, s: s, k: 1, plan: p.d + sh, plan0: p.d + day * DAY, h: day === 0 ? (hold[t.no + '@' + p.c] || 0) : 0 });
@@ -143,8 +147,8 @@
     var instOf = function (no, day) { var ti = P.byNo[no]; if (ti == null) return null; for (var j = 0; j < T.length; j++) if (T[j].ti === ti && T[j].day === day) return T[j]; return null; };
     var lastAt = function (I, c) { var p = P.trains[I.ti].pts; for (var s = p.length - 1; s >= 0; s--) if (p[s].c === c) return s; return -1; };
     var firstAt = function (I, c) { var p = P.trains[I.ti].pts; for (var s = 0; s < p.length; s++) if (p[s].c === c) return s; return -1; };
-    var nSik = 0;
-    ((BB.sik && BB.sik[P.versi]) || []).forEach(function (r) {
+    var nSik = 0, sikP = [];
+    ((!opt.replay && BB.sik && BB.sik[P.versi]) || []).forEach(function (r) {
       var c = norm(r[0]), wmin = (BB.wtt && BB.wtt[P.versi] && BB.wtt[P.versi][c]) || r[3];
       [0, 1].forEach(function (day) {
         var A = instOf(r[1], day); if (!A) return;
@@ -156,11 +160,11 @@
           var g = N[B.d[sb]].plan0 - N[A.a[sa]].plan0;
           if (g < 0 || g > 2 * DAY) return false;
           if (Math.abs(g - r[3]) > 90 && d2 === day) return false;   // pasangan hari yang cocok dengan WTT program
-          add(A.a[sa], B.d[sb], Math.min(wmin, r[3]), 'siklus', A.moved || B.moved ? null : 1); nSik++; return true;
+          add(A.a[sa], B.d[sb], Math.min(wmin, r[3]), 'siklus', A.moved || B.moved ? null : 1); nSik++; sikP.push([A.a[sa], B.d[sb], c]); return true;
         });
       });
     });
-    ((BB.sam && BB.sam[P.versi]) || []).forEach(function (r) {
+    ((!opt.replay && BB.sam && BB.sam[P.versi]) || []).forEach(function (r) {
       [0, 1].forEach(function (day) {
         var A = instOf(r[0], day) || instOf(r[1], day), B = instOf(r[2], day); if (!A || !B || A === B) return;
         var ta = P.trains[A.ti].pts, tb = P.trains[B.ti].pts, sa = ta.length - 1, g = N[B.d[0]].plan0 - N[A.a[sa]].plan0;
@@ -170,7 +174,7 @@
       });
     });
     var crew = {};
-    if (P.versi === '2025') (BB.din || []).forEach(function (r) { var g = r[1] + '|' + String(r[2]).replace(/[A-Z]+$/i, ''); (crew[g] = crew[g] || []).push(r); });
+    if (P.versi === '2025' && !opt.replay) (BB.din || []).forEach(function (r) { var g = r[1] + '|' + String(r[2]).replace(/[A-Z]+$/i, ''); (crew[g] = crew[g] || []).push(r); });
     Object.keys(crew).forEach(function (g) {
       var L = crew[g].sort(function (x, y) { return x[3] - y[3]; });
       for (var i = 0; i + 1 < L.length; i++) {
@@ -180,6 +184,7 @@
         add(A.a[sa], B.d[sb], Math.min(30, g2), 'awak', A.moved || B.moved ? null : 1);
       }
     });
+    (opt._q || []).forEach(function (q) { add(q[0], q[1], 0, 'antrean', null); });
     /* ---- propagasi (Kahn) ---- */
     var t = new Float64Array(N.length), by = new Int32Array(N.length).fill(-1), byT = new Array(N.length), deg = inc.slice(), Q = [], seen = 0;
     for (n = 0; n < N.length; n++) { t[n] = N[n].k === 1 ? N[n].plan + N[n].h : -1e9; byT[n] = N[n].k === 1 ? (N[n].h ? 'tahan' : 'jadwal') : ''; if (!deg[n]) Q.push(n); }
@@ -205,11 +210,63 @@
       });
       if (cand) {
         var sw2 = Object.assign({}, swaps); sw2[cand.r.sk] = 1;
-        var res = run(P, edits, { prioritas: true, _swaps: sw2, _round: (opt._round || 0) + 1 });
+        var res = run(P, edits, Object.assign({}, opt, { _swaps: sw2, _round: (opt._round || 0) + 1 }));
         if (!res.error) return res;
       }
     }
-    return summarize(P, N, T, t, by, byT, nSik, Object.keys(swaps).length);
+    var TO = termOcc(P, N, T, t, sikP);
+    /* ---- opsi antrean terminal: KA yang masuk saat jalur penuh menunggu rangkaian yang paling cepat keluar ---- */
+    if (opt.antrean && (opt._qr || 0) < 25) {
+      var q2 = (opt._q || []).slice(), bad = opt._bad || {}, had = {}, cand2 = [];
+      q2.forEach(function (q) { had[q[0] + '>' + q[1]] = 1; });
+      Object.keys(TO.iv).forEach(function (c) {
+        var cap = opt.antrean[c]; if (!cap) return;
+        var L = TO.iv[c].slice().sort(function (x, y) { return t[x[0]] - t[y[0]]; }), act = [];
+        for (var i = 0; i < L.length; i++) {
+          var X = L[i], ta = t[X[0]];
+          act = act.filter(function (z) { return t[z[1]] > ta + 1e-6; });
+          if (act.length >= cap) {
+            var fst = act.slice().sort(function (x, y) { return t[x[1]] - t[y[1]]; }).filter(function (z) { var k = z[1] + '>' + X[0]; return z[1] !== X[1] && !had[k] && !bad[k]; })[0];
+            if (fst) { cand2.push({ k: fst[1] + '>' + X[0], q: [fst[1], X[0]], ta: ta }); if (cand2.length >= 6) break; }
+          }
+          act.push(X);
+        }
+      });
+      // satu antrean per putaran (paling awal); bila membentuk kebuntuan, tandai dan coba berikutnya
+      cand2.sort(function (x, y) { return x.ta - y.ta; });
+      for (var ci = 0; ci < cand2.length; ci++) {
+        var rq = run(P, edits, Object.assign({}, opt, { _q: q2.concat([cand2[ci].q]), _qr: (opt._qr || 0) + 1, _bad: bad }));
+        if (!rq.error) return rq;
+        bad[cand2[ci].k] = 1;
+      }
+    }
+    var out2 = summarize(P, N, T, t, by, byT, nSik, Object.keys(swaps).length);
+    out2.term = TO.pk; out2.nQ = (opt._q || []).length;
+    return out2;
+  }
+
+  /** Okupansi terminal (stasiun berperan terminal di M_STASIUN): interval [simpul masuk, simpul keluar] + puncak. */
+  function termOcc(P, N, T, t, sikP) {
+    var BB = P.BB, iv = {}, pk = {};
+    var isT = function (c) { return BB.st[c] && BB.st[c][3]; };
+    T.forEach(function (I) {
+      var tr = P.trains[I.ti];
+      tr.pts.forEach(function (p, s) { if (s === 0 || s === tr.pts.length - 1 || !isT(p.c) || !(t[I.d[s]] - t[I.a[s]] >= 1)) return; (iv[p.c] = iv[p.c] || []).push([I.a[s], I.d[s]]); });
+    });
+    sikP.forEach(function (x) { if (isT(x[2])) (iv[x[2]] = iv[x[2]] || []).push([x[0], x[1]]); });
+    Object.keys(iv).forEach(function (c) {
+      var E = []; iv[c].forEach(function (x) { E.push([t[x[0]], 1], [t[x[1]], -1]); });
+      E.sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; });
+      var cur = 0, mx = 0, at = 0; E.forEach(function (e) { cur += e[1]; if (cur > mx) { mx = cur; at = e[0]; } });
+      pk[c] = { max: mx, t: at, jalur: BB.st[c][1] || null, n: iv[c].length };
+    });
+    return { iv: iv, pk: pk };
+  }
+
+  /** Kapasitas antrean per terminal dari skenario dasar: n_jalur tercatat, atau puncak GAPEKA bila lebih besar. */
+  function capOf(base) {
+    var cap = {}; Object.keys(base.term || {}).forEach(function (c) { var o = base.term[c]; if (o.jalur) cap[c] = Math.max(o.jalur, o.max); });
+    return cap;
   }
 
   function summarize(P, N, T, t, by, byT, nSik, nSwap) {
@@ -255,19 +312,102 @@
     return { hit: hit, knock: knock, pen: pen.length, menit: add, nextDay: day1.length, over: sc.over.filter(function (o) { return !base.over.some(function (b) { return b.st === o.st && b.max >= o.max; }); }) };
   }
 
-  /** Kode skenario ⇄ teks URL: "g:3100:30;t:3104@PBM:15;b:3220". Nilai divalidasi. */
+  /** Kode skenario ⇄ teks URL: "g:3100:30;t:3104@PBM:15;b:3220;k:KLB-1:3100:90". Nilai divalidasi. */
   function encode(edits) {
-    return edits.map(function (e) { return e.jenis === 'geser' ? 'g:' + e.no + ':' + Math.round(e.m) : e.jenis === 'tahan' ? 't:' + e.no + '@' + e.st + ':' + Math.round(e.m) : 'b:' + e.no; }).join(';');
+    return edits.map(function (e) { return e.jenis === 'geser' ? 'g:' + e.no + ':' + Math.round(e.m) : e.jenis === 'tahan' ? 't:' + e.no + '@' + e.st + ':' + Math.round(e.m) : e.jenis === 'klb' ? 'k:' + e.no + ':' + e.pola + ':' + Math.round(e.m) : 'b:' + e.no; }).join(';');
   }
   function decode(s) {
     return String(s || '').split(';').map(function (x) {
       var m = /^g:([A-Z0-9-]{1,12}):(-?\d{1,4})$/i.exec(x); if (m) return { jenis: 'geser', no: m[1].toUpperCase(), m: Math.max(-720, Math.min(720, +m[2])) };
       m = /^t:([A-Z0-9-]{1,12})@([A-Z0-9-]{1,12}):(\d{1,4})$/i.exec(x); if (m) return { jenis: 'tahan', no: m[1].toUpperCase(), st: m[2].toUpperCase(), m: Math.min(720, +m[3]) };
       m = /^b:([A-Z0-9-]{1,12})$/i.exec(x); if (m) return { jenis: 'batal', no: m[1].toUpperCase() };
+      m = /^k:(KLB-\d{1,2}):([A-Z0-9-]{1,12}):(-?\d{1,4})$/i.exec(x); if (m) return { jenis: 'klb', no: m[1].toUpperCase(), pola: m[2].toUpperCase(), m: Math.max(-1440, Math.min(1440, +m[3])) };
       return null;
     }).filter(Boolean).slice(0, 20);
   }
 
-  root.KAISim = { TYPES: TYPES, norm: norm, prepare: prepare, run: run, compare: compare, encode: encode, decode: decode, petakOf: petakOf };
+  /**
+   * Uji ulang ke realisasi (REAL_JEJAK satu tanggal): simpangan PERTAMA tiap KA terhadap GAPEKA dimasukkan sebagai "geser" slot,
+   * mesin merambatkannya, lalu waktu simulasi dibandingkan dengan jam realisasi di stasiun-stasiun berikutnya.
+   * @param {Array} rows [{no, c, ra (datang real, mnt), rd (berangkat real, mnt)}] — menit sejak 00:00 tanggal itu
+   * @return {{edits, n, maeModel, maeJadwal, ka}} selisih rata-rata absolut (menit) model vs jadwal saja
+   */
+  function backtest(P, rows, opt) {
+    var by = {}; rows.forEach(function (r) { (by[r.no] = by[r.no] || []).push(r); });
+    var wrap = function (x) { while (x > 720) x -= DAY; while (x <= -720) x += DAY; return x; };
+    var edits = [], obs = [];
+    Object.keys(by).forEach(function (no) {
+      var ti = P.byNo[no]; if (ti == null) return;
+      var t = P.trains[ti], first = true;
+      by[no].forEach(function (r) {
+        var s = -1; t.pts.forEach(function (p, i) { if (s < 0 && p.c === norm(r.c)) s = i; }); if (s < 0) return;
+        var real = r.rd != null ? r.rd : r.ra; if (real == null) return;
+        var dl = wrap(real - t.pts[s].d);
+        // KA batubara sering berangkat jauh lebih awal/lambat dari GAPEKA → simpangan pertama dipakai sebagai geser slot (bisa negatif).
+        if (first) { first = false; if (Math.abs(dl) >= 1) edits.push({ jenis: 'geser', no: no, m: Math.round(dl) }); return; }
+        obs.push({ no: no, s: s, dl: dl });
+      });
+    });
+    // Mode putar ulang: rangkaian & awak di lapangan sering dipertukarkan → batas siklus, sambung, awak tidak dipakai.
+    var sc = run(P, edits, Object.assign({}, opt || {}, { replay: true })), idx = {};
+    if (sc.error) return { edits: edits, n: 0, ka: 0, maeModel: null, maeJadwal: null, error: 'Simpangan realisasi membentuk urutan saling menunggu (kebuntuan) pada model urutan tetap.' };
+    sc.T.forEach(function (I) { if (I.day === 0) idx[P.trains[I.ti].no] = I; });
+    var em = 0, ej = 0, n = 0;
+    obs.forEach(function (o) { var I = idx[o.no]; if (!I) return; var pd = sc.t[I.d[o.s]] - sc.N[I.d[o.s]].plan0; em += Math.abs(o.dl - pd); ej += Math.abs(o.dl); n++; });
+    return { edits: edits, n: n, ka: Object.keys(by).filter(function (no) { return no in P.byNo; }).length, maeModel: n ? em / n : null, maeJadwal: n ? ej / n : null, sc: sc };
+  }
+
+  /**
+   * Tambahkan KA Luar Biasa (KLB) dari perubahan {jenis:'klb', no:'KLB-n', pola, m}: salinan rute & waktu tempuh rencana KA pola,
+   * digeser m menit, hanya hari-0. KLB diperlakukan seperti KA yang diubah (bobot aturan penuh → konflik terlihat).
+   */
+  function withKlb(P, edits) {
+    var K = (edits || []).filter(function (e) { return e.jenis === 'klb' && e.pola in P.byNo; });
+    if (!K.length) return P;
+    var trains = P.trains.slice(), byNo = Object.assign({}, P.byNo);
+    K.forEach(function (e) {
+      if (e.no in byNo) return;
+      var t = P.trains[P.byNo[e.pola]], m = +e.m || 0;
+      byNo[e.no] = trains.length;
+      trains.push({ no: e.no, nama: 'KLB pola KA ' + t.no, relasi: t.relasi, kelas: t.kelas, kat: t.kat, grp: t.grp, muat: t.muat, pr: t.pr, klb: true, pola: t.no,
+        pts: t.pts.map(function (p) { return { c: p.c, a: p.a + m, d: p.d + m, stop: p.stop }; }) });
+    });
+    return Object.assign({}, P, { trains: trains, byNo: byNo });
+  }
+
+  /**
+   * Cari slot kosong untuk KLB berpola KA `pola`: geser m (menit, relatif jadwal pola) dalam [m0, m1] yang TIDAK berbenturan di petak
+   * dengan KA yang ada pada hasil skenario `sc` (jalur tunggal: satu KA per petak + waktu bebas blok; jalur ganda: headway searah).
+   * Jalur terminal, siklus, dan awak tidak diperiksa di sini → diperiksa oleh simulasi penuh setelah slot dipakai.
+   * @return {Array<{m0:number,m1:number}>} rentang geser yang bebas, berurutan
+   */
+  function findSlots(P, sc, pola, m0, m1) {
+    var t = P.trains[P.byNo[pola]]; if (!t) return [];
+    var occ = {};
+    sc.T.forEach(function (I) {
+      var tr = P.trains[I.ti];
+      for (var s = 0; s + 1 < tr.pts.length; s++) {
+        var p = tr.pts[s], q = tr.pts[s + 1], key = p.c < q.c ? p.c + '|' + q.c : q.c + '|' + p.c;
+        (occ[key] = occ[key] || []).push([sc.t[I.d[s]], sc.t[I.a[s + 1]], p.c < q.c]);
+      }
+    });
+    var F = [];
+    for (var s = 0; s + 1 < t.pts.length; s++) {
+      var p = t.pts[s], q = t.pts[s + 1], pk = petakOf(P.BB, p.c, q.c); if (!pk) continue;
+      var key = p.c < q.c ? p.c + '|' + q.c : q.c + '|' + p.c, dir = p.c < q.c, h = pk[2] != null ? pk[2] : 0, wp = pk[1] != null ? pk[1] : 0, clr = Math.max(1, h - wp);
+      var d = p.d, a = Math.max(q.a, p.d + Math.min(wp || 0, q.a - p.d));
+      (occ[key] || []).forEach(function (o) {
+        if (pk[0] === 2) { if (o[2] !== dir) return; F.push([o[0] - h - d, o[0] + h - d]); F.push([o[1] - h - a, o[1] + h - a]); }
+        else F.push([o[0] - clr - a, o[1] + clr - d]);
+      });
+    }
+    F = F.filter(function (f) { return f[1] > m0 && f[0] < m1; }).sort(function (x, y) { return x[0] - y[0]; });
+    var out = [], cur = m0;
+    F.forEach(function (f) { if (f[0] > cur + 1e-6) out.push({ m0: Math.ceil(cur), m1: Math.floor(f[0]) }); cur = Math.max(cur, f[1]); });
+    if (cur < m1) out.push({ m0: Math.ceil(cur), m1: Math.floor(m1) });
+    return out.filter(function (w) { return w.m1 - w.m0 >= 2; });
+  }
+
+  root.KAISim = { TYPES: TYPES, norm: norm, prepare: prepare, run: run, compare: compare, encode: encode, decode: decode, petakOf: petakOf, backtest: backtest, capOf: capOf, withKlb: withKlb, findSlots: findSlots };
 })(typeof window !== 'undefined' ? window : globalThis);
 </script>

@@ -138,6 +138,12 @@ if (require.main === module) {
   console.log('runSync_', JSON.stringify(r), (Date.now() - t) + ' ms'); console.log('status', props.SYNC_STATUS);
   const out = {}; ['apiBootstrap()', 'apiNarratives()', 'apiRef()', 'apiStatus()', 'apiGapeka26()', 'apiBatubara()'].forEach(c => { out[c.replace('()', '')] = vm.runInContext(c, ctx); });
   out.apiGapeka = { __byArg: true, '2025': vm.runInContext('apiGapeka("2025")', ctx), '2026': vm.runInContext('apiGapeka("2026")', ctx), x: vm.runInContext('apiGapeka("1999")', ctx) };
+  // apiBatubaraPart: data SINTETIS (tools/batubara/fixture_sintetis.py) — server asli membaca DB Batubara lewat BB_DB_ID.
+  try {
+    const fx = JSON.parse(fs.readFileSync(path.join(__dirname, 'bb_fixture.json'), 'utf8'));
+    out.apiBatubaraPart = { __byArg: true };
+    Object.keys(fx).forEach(k => { out.apiBatubaraPart[k] = { ok: true, version: 'sintetis', built: '2026-11-24 00:00', sourceUpdated: '2026-11-24 00:00', db: 'DATA SINTETIS (emulator)', counts: {}, gz: zlib.gzipSync(Buffer.from(JSON.stringify(fx[k]))).toString('base64') }; });
+  } catch (eb) { console.log('fixture Batubara tidak ada: ' + eb.message); }
   console.log('apiGapeka 2025', out.apiGapeka['2025'].ok, '2026', out.apiGapeka['2026'].ok, 'tahun tak dikenal ditolak:', out.apiGapeka.x.ok === false);
   // apiKaOps: jawaban per nomor KA yang muncul di snapshot (+ satu nomor tak dikenal untuk uji penolakan).
   try {

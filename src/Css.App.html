@@ -776,4 +776,28 @@ html { scroll-behavior: smooth; }
 .tbl tr.late td { background: #FFF5F3; }
 .sk-asumsi summary { cursor: pointer; padding: 12px 14px; } .sk-asumsi ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 13px; color: var(--ink-2); }
 @media (max-width: 1100px) { .sk-grid { grid-template-columns: minmax(0, 1fr); } .sk-side { position: static; } }
+/* v3.21 ruang kerja Batubara: Capaian, Siklus & terminal, profil (Js.BbUi) */
+.bb-filter { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; padding: 10px 14px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); }
+.bb-filter .fld { display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; color: var(--muted); }
+.bb-mrange { display: inline-flex; align-items: center; gap: 6px; }
+.bb-band { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 12px; align-items: stretch; }
+.bb-band-h { display: flex; align-items: center; font-weight: 700; font-size: 13px; color: var(--ink-2); border-left: 3px solid var(--kai-orange); padding-left: 10px; }
+.bb-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.bb-kpi { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 10px; min-height: 104px; }
+.bb-kpi .lbl { font-size: 12px; color: var(--muted); padding-right: 14px; } .bb-kpi .val { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; }
+.bb-kpi .val small { font-size: 12px; color: var(--muted); font-weight: 500; margin-left: 2px; }
+.bb-kpi .tgt { font-size: 12px; color: var(--ink-2); } .bb-kpi .sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+.bb-dot { position: absolute; top: 14px; right: 14px; width: 9px; height: 9px; border-radius: 50%; }
+.bb-heat td.num { font-variant-numeric: tabular-nums; }
+.bb-idx { display: inline-flex; align-items: center; gap: 6px; min-width: 96px; } .bb-idx i { width: 60px; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--c) var(--v), #EEF1F5 var(--v)); }
+.bb-mini i { display: block; width: 54px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, #1E1B5E var(--v), #EEF1F5 var(--v)); }
+.bb-tw-h { font-size: 11.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+.bb-tw { display: grid; grid-template-columns: 52px minmax(0, 1fr); column-gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line-soft); font-size: 12.5px; }
+.bb-tw b { color: var(--kai-navy); } .bb-tw em { grid-column: 2; font-style: normal; color: var(--muted); font-size: 11.5px; }
+@media (max-width: 1100px) { .bb-band { grid-template-columns: 1fr; } .bb-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.sk-real { align-items: center; padding-top: 10px; border-top: 1px solid var(--line-soft); }
+.sk-chk input { vertical-align: -2px; margin-right: 4px; } .sk-chk > span:last-child { display: inline-flex; align-items: center; height: 30px; font-size: 13px; }
+.sk-cmp .tbl th, .sk-cmp .tbl td { padding: 6px 8px; white-space: normal; } .sk-cmp .tbl td:first-child { min-width: 0; }
+.sk-slots { gap: 6px; flex-wrap: wrap; }
+.sk-bt { display: grid; gap: 2px; padding: 8px 12px; border-radius: 10px; background: #ECFDF3; border: 1px solid #ABEFC6; font-size: 12.5px; }
 </style>

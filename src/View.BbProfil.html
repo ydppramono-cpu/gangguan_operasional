@@ -1,0 +1,31 @@
+<!-- View.BbProfil — profil terminal / relasi / rangkaian: kepala profil + grafik saling menyaring (klik bulan). -->
+<template x-if="$store.app.route === 'bb-profil'">
+  <section class="view bb" x-data="vBbProfil">
+    <?!= include('Part.BbFilter'); ?>
+    <div class="alert mt" x-show="!type">Profil tidak dikenal.</div>
+    <template x-if="hero">
+      <div>
+        <div class="phead phero mt">
+          <div style="flex:1;min-width:0"><div class="eyebrow" x-text="type === 'terminal' ? 'Terminal' : type === 'relasi' ? 'Relasi' : 'Rangkaian'"></div><h2 x-text="hero.t"></h2><p x-text="hero.s"></p></div>
+          <dl class="facts"><template x-for="f in hero.facts" :key="f[0]"><div><dt x-text="f[0]"></dt><dd x-text="f[1]"></dd></div></template></dl>
+        </div>
+        <div class="kpi-strip mt" x-show="hero.kpi.length"><template x-for="k in hero.kpi" :key="k[0]"><div class="card kpi"><div class="lbl" x-text="k[0]"></div><div class="val" x-text="k[1]"></div><div class="sub" x-text="k[2]"></div></div></template></div>
+
+        <div class="card mt" x-show="legsOpt"><div class="card-h"><div><h3>Satu putaran rangkaian (program)</h3><p>Abu tua = WTT di terminal · biru = perjalanan isi · kelabu-biru = perjalanan kosong (PRG_SIKLUS)</p></div></div>
+          <div class="card-b fill"><div class="chart short" x-chart="legsOpt"></div></div></div>
+
+        <div class="xf-bar mt" x-show="xm"><span class="note">Disaring:</span><button type="button" class="chip on" @click="xm = ''"><span x-text="$store.bb.MON[+xm.slice(5) - 1] + ' ' + xm.slice(0, 4)"></span> ✕</button></div>
+        <p class="note xf-hint mt" x-show="!xm && monthOpt">Klik bulan pada grafik untuk menyaring tahap dan hambatan di sampingnya.</p>
+        <div class="grid g-3x mt">
+          <div class="card"><div class="card-h"><div><h3>WTT & OTP datang per bulan</h3><p>Batang = WTT realisasi (mnt, kiri) · garis = OTP datang (%, kanan) · klik bulan</p></div></div>
+            <div class="card-b"><div class="chart short" x-chart="monthOpt" @chart-click="clickMonth($event.detail.data)"></div></div></div>
+          <div class="card"><div class="card-h"><div><h3>Tahap di terminal</h3><p x-text="(type === 'relasi' ? 'Merah = lewat batas SOP · ' : '') + (xm ? 'bulan terpilih' : 'seluruh periode')"></p></div></div>
+            <div class="card-b"><div class="chart short" x-chart="stageOpt"></div></div></div>
+          <div class="card"><div class="card-h"><div><h3>Hambatan terbesar</h3><p x-text="KAI.fmt.n(Hx.length) + ' catatan · menurut menit'"></p></div></div>
+            <div class="card-b"><template x-for="o in hamTop" :key="o.kode"><div class="bb-tw"><b x-text="o.kode"></b><span x-text="o.nama"></span><em x-text="KAI.fmt.n(o.m) + ' mnt · ' + o.picU"></em></div></template>
+              <div class="empty" x-show="!hamTop.length">Tidak ada hambatan tercatat.</div></div></div>
+        </div>
+      </div>
+    </template>
+  </section>
+</template>

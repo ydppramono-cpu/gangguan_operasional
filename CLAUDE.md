@@ -17,6 +17,10 @@ Google Sheets (input tim) → GAS server (`src/*.gs`: ETL `runSync_` tiap 15 men
 BigQuery sandbox (`platform/`): tabel eksternal atas Sheets + salinan berkala + agregat berat (RHI/THI/WKP); dipakai web app (bila diaktifkan) dan DBeaver. Batas sandbox: 10 GB, 1 TB kueri/bulan, tabel kedaluwarsa 60 hari (pemicu memuat ulang), tanpa DML/kueri terjadwal.
 Rincian: `docs/ARSITEKTUR.md`, kontrak data: `docs/KONTRAK_DATA.md`.
 
+## Batubara (v3.20–3.21)
+Ruang kerja Batubara menggantikan aplikasi WTT lama: Capaian · Siklus & terminal · Papan skenario + profil terminal/relasi/rangkaian (`bb-profil`).
+Data: Script Property `BB_DB_ID` (DB Batubara, hanya baca; REAL_GANGGUAN tidak dibaca) → `28_BatubaraSync.gs` (`Bb.sync`, `apiBatubaraPart`, `syncBatubaraNow`). Rumus WTT di `Js.BbData` (`BBK`), UI di `Js.BbUi`. Papan skenario: `Js.Simulasi` (`KAISim`: antrean terminal, KLB + `findSlots`, `backtest`) + `Js.Skenario`. Data realisasi asli tidak masuk repo; uji pakai `tools/batubara/fixture_sintetis.py`. Uji: `npm run test:sim`.
+
 ## Kelas & temuan (v3.19)
 Kategori & Subgangguan kosong → kelas diturunkan (pola teks, lalu kelas terdekat), bertanda * + keyakinan; tidak ada kelas "belum". Temuan tampil sebagai pita di bawah grafik sumbernya (`Js.Pita` MAP: src.label → `rute:kartu`); Ringkasan = 3 sorotan. Bantuan: `Js.Help` (tur, panduan, glosarium, FAQ).
 
