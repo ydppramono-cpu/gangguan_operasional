@@ -191,8 +191,8 @@ document.addEventListener('alpine:init', function () {
         var R = this.R, E = this.E, C = R.expoCmp, f = KAI.fmt, D = this.D, X = this.X, qP = X && X.rate('PENUMPANG', R.ym), qB = X && X.rate('BARANG', R.ym);
         return [
           { id: 't', label: 'Pendapatan terekspos (Gross RaR)', val: f.rp(E.tot.rp), raw: E.tot.rp, prev: C.prev.rp, yoy: C.yoy.rp, color: 'var(--c-alam)', note: 'YTD ' + f.rp(C.ytd.rp) + ' (' + KAI.delta(C.ytd.rp, C.ytdPrev.rp).text + ' vs YTD thn lalu)' },
-          { id: 'p', label: 'KA penumpang', val: f.rp(E.tot.p), raw: E.tot.p, prev: C.prev.p, yoy: C.yoy.p, color: 'var(--kai-navy)', note: f.n(E.tot.nP) + ' kej. · ' + f.n(E.tot.mP) + ' mnt' + (D ? ' · KA termatch ' + f.d1(D.tot.covP * 100) + '% menit' : '') },
-          { id: 'b', label: 'KA barang', val: f.rp(E.tot.b), raw: E.tot.b, prev: C.prev.b, yoy: C.yoy.b, color: 'var(--kai-orange)', note: f.n(E.tot.nB) + ' kej. · ' + f.n(E.tot.mB) + ' mnt' + (D ? ' · KA termatch ' + f.d1(D.tot.covB * 100) + '% menit' : '') },
+          { id: 'p', label: 'KA penumpang', val: f.rp(E.tot.p), raw: E.tot.p, prev: C.prev.p, yoy: C.yoy.p, color: 'var(--kai-navy)', note: f.n(E.tot.nP) + ' kej. · ' + f.n(E.tot.mP) + ' menit' + (D ? ' · KA termatch ' + f.d1(D.tot.covP * 100) + '% menit' : '') },
+          { id: 'b', label: 'KA barang', val: f.rp(E.tot.b), raw: E.tot.b, prev: C.prev.b, yoy: C.yoy.b, color: 'var(--kai-orange)', note: f.n(E.tot.nB) + ' kej. · ' + f.n(E.tot.mB) + ' menit' + (D ? ' · KA termatch ' + f.d1(D.tot.covB * 100) + '% menit' : '') },
           { id: 'r', label: 'Rate dipakai ' + KAI.fmt.mon(R.ym), val: qP ? (qP.v / 1e6).toFixed(1).replace('.', ',') + ' · ' + (qB.v / 1e6).toFixed(1).replace('.', ',') + ' jt/jam' : f.n(R.cfg.rate.PENUMPANG / 1e6) + ' · ' + f.n(R.cfg.rate.BARANG / 1e6) + ' jt/jam', raw: null, prev: null, color: 'var(--c-prasarana)',
             note: qP ? 'Penumpang · barang (' + (qP.src === 'acuan' ? 'rate acuan — data bulan ini belum lengkap' : 'rate bulan berjalan') + ')' : 'Rate tetap cadangan' }
         ];
@@ -212,7 +212,7 @@ document.addEventListener('alpine:init', function () {
           f.rp(D.tot.batalRp) + (D.tot.batalNoRate ? ' (' + D.tot.batalNoRate + ' tanpa data pendapatan KA)' : '') + '. Ditampilkan terpisah, tidak dijumlahkan ke pendapatan terekspos; perlu verifikasi apakah KA dibatalkan karena gangguan.' });
         if (D && D.tot.mAcuan) out.push({ tone: 'warn', text: f.n(D.tot.mAcuan) + ' menit dinilai dengan rate acuan karena data Passenger/Freight bulan tersebut belum lengkap atau belum tersedia (mis. bulan berjalan, tahun 2025).' });
         if (E.paretoTop || (D && D.paretoAll[0])) { var a = D.paretoAll, byM = a.slice().sort(function (x, y) { return y.menit - x.menit; })[0];
-          if (a[0] && byM && a[0].key !== byM.key) out.push({ tone: 'info', text: 'Menit terbanyak: ' + byM.key + ' (' + f.n(byM.menit) + ' mnt), tetapi Rp terbesar: ' + a[0].key + ' (' + f.rp(a[0].rp) + ') — prioritaskan dengan Pareto Rp, bukan menit saja.' }); }
+          if (a[0] && byM && a[0].key !== byM.key) out.push({ tone: 'info', text: 'Menit terbanyak: ' + byM.key + ' (' + f.n(byM.menit) + ' menit), tetapi Rp terbesar: ' + a[0].key + ' (' + f.rp(a[0].rp) + ') — prioritaskan dengan Pareto Rp, bukan menit saja.' }); }
         out.push({ tone: E.top5share > 0.5 ? 'warn' : 'info', text: '5 kejadian terbesar = ' + f.d1(E.top5share * 100) + '% pendapatan terekspos' + (E.top5share > 0.5 ? ' — tren sangat dipengaruhi kejadian tunggal; cek kewajaran menit KELKA kejadian tersebut.' : '.') });
         out.push({ tone: 'info', text: 'Satu kejadian dinilai dengan jenis KA dari nomor KA yang tercatat; bila menghambat beberapa KA berbeda jenis, nilainya tetap satu jenis. Gross RaR belum memperhitungkan pendapatan yang tidak hilang (penumpang tetap berangkat).' });
         return out;

@@ -59,7 +59,7 @@
           <div class="card-h"><div><h3 x-text="'Top 3 · ' + $store.app.classLabel(k)"></h3><p x-text="R.label + ' · diurutkan menurut menit'"></p></div></div>
           <div class="card-b">
             <div class="tbl-x"><table class="tbl">
-              <thead><tr><th>Jenis gangguan</th><th class="num">Kej.</th><th class="num">Menit</th><th class="num" x-text="'≥' + R.cfg.top + ' mnt'"></th></tr></thead>
+              <thead><tr><th>Jenis gangguan</th><th class="num">Kej.</th><th class="num">Menit</th><th class="num" x-text="'≥' + R.cfg.top + ' menit'"></th></tr></thead>
               <tbody>
                 <template x-for="t in R.top[k]" :key="t.label">
                   <tr class="click" @click="$store.app.go('telusuri', { ids: t.ids, label: t.label, period: 'all' })">

@@ -79,7 +79,7 @@
     if (tops.length >= 2) {
       var fp = add({ tone: shTop >= 0.6 ? 'warn' : 'info', area: 'Umum', src: src('Matriks frekuensi × kelambatan', 'tren', 'Jenis gangguan teratas'), metric: pctTxt(shTop),
         head: tops.length + ' jenis gangguan teratas = ' + pctTxt(shTop) + ' kelambatan',
-        text: tops.map(function (t) { return KAI.tc(t.label.replace(/^[^-]+-\s*/, '')) + ' (' + F.n(t.menit) + ' mnt, ' + t.n + '×)'; }).join(' · '),
+        text: tops.map(function (t) { return KAI.tc(t.label.replace(/^[^-]+-\s*/, '')) + ' (' + F.n(t.menit) + ' menit, ' + t.n + '×)'; }).join(' · '),
         ids: [].concat.apply([], tops.map(function (t) { return t.ids; })) });
       if (shTop >= 0.6) fp.rec = { area: 'Umum', title: 'Fokuskan program pada ' + tops.length + ' jenis gangguan teratas',
         actions: ['Tetapkan pemilik (unit kerja) dan target penurunan menit per jenis.', 'Tinjau ulang tiap bulan dengan pembanding MoM/YoY di halaman Ringkasan.'], lit: [] };
@@ -88,7 +88,7 @@
     var big = L.slice().sort(function (a, b) { return b.menit - a.menit; })[0];
     if (big && share(big.menit, S.menit) >= 0.2 && S.n >= 5) add({ tone: 'warn', area: 'Umum', src: src('Daftar kejadian terlama', 'telusuri', 'Riwayat gangguan'),
       metric: pctTxt(share(big.menit, S.menit)), head: 'Satu kejadian mendominasi kelambatan',
-      text: KAI.tc(big.judul || big.sub) + (big.lokasi ? ' di ' + big.lokasi : '') + ' (' + F.date(big) + ', ' + F.n(big.menit) + ' mnt). Arah tren bisa berbeda tanpa kejadian ini.', ids: [big.id],
+      text: KAI.tc(big.judul || big.sub) + (big.lokasi ? ' di ' + big.lokasi : '') + ' (' + F.date(big) + ', ' + F.n(big.menit) + ' menit). Arah tren bisa berbeda tanpa kejadian ini.', ids: [big.id],
       rec: { area: 'Umum', title: 'Lakukan RCA atas kejadian dominan', actions: ['Susun kronologi, penyebab langsung, dan penyebab dasar (5-Why/fishbone).', 'Tetapkan tindakan korektif dengan pemilik & tenggat; pantau kejadian sejenis 3 bulan ke depan.'], lit: [] } });
     // 4. Kelas dominan
     var bc = KAIA.byClassOf(L), dom = KAIA.CLASSES.slice().sort(function (a, b) { return bc[b].menit - bc[a].menit; })[0];
@@ -104,7 +104,7 @@
     if (ctx.kind !== 'stasiun' && ctx.kind !== 'petak' && ctx.kind !== 'jpl') {
       var locs = KAIA.locations(L, 3);
       if (locs.length) add({ tone: 'warn', area: 'Lokasi', src: src('Lokasi per wilayah', 'wilayah', 'Lokasi berulang'), metric: locs.length + ' lokasi',
-        head: 'Lokasi berulang (≥3 kejadian)', text: 'Tertinggi ' + locs[0].lokasi + ' (' + locs[0].n + '×, ' + F.n(locs[0].menit) + ' mnt)' + (locs[1] ? ', lalu ' + locs[1].lokasi + ' (' + locs[1].n + '×)' : '') + '.',
+        head: 'Lokasi berulang (≥3 kejadian)', text: 'Tertinggi ' + locs[0].lokasi + ' (' + locs[0].n + '×, ' + F.n(locs[0].menit) + ' menit)' + (locs[1] ? ', lalu ' + locs[1].lokasi + ' (' + locs[1].n + '×)' : '') + '.',
         ids: locs[0].ids, idsOf: 'di ' + locs[0].lokasi, rec: { area: 'Lokasi', title: 'Inspeksi gabungan di lokasi berulang', actions: ['Jadwalkan inspeksi bersama (sarana, prasarana, operasi) di lokasi teratas.', 'Catat temuan per kunjungan dan cocokkan dengan kejadian berikutnya.'], lit: [] } });
     }
     // 7. Pola jam & hari
@@ -129,7 +129,7 @@
     var oneUnit = ctx.kind === 'sarana';
     var units = oneUnit ? [] : KAIA.unitsOf(L).filter(function (u) { return u.n >= 2; }).sort(function (a, b) { return b.n - a.n || b.menit - a.menit; });
     if (units.length) add({ tone: 'warn', area: 'Sarana', src: src('Tabel sarana berulang', 'sarana', 'Sarana terkait'), metric: units.length + ' unit',
-      head: 'Unit sarana dengan ≥2 gangguan', text: 'Tertinggi ' + F.unit(units[0].unit) + ' (' + units[0].n + '×, ' + F.n(units[0].menit) + ' mnt).',
+      head: 'Unit sarana dengan ≥2 gangguan', text: 'Tertinggi ' + F.unit(units[0].unit) + ' (' + units[0].n + '×, ' + F.n(units[0].menit) + ' menit).',
       ids: [].concat.apply([], units.slice(0, 5).map(function (u) { return ids(u.events); })), idsOf: 'dari 5 unit teratas',
       rec: { area: 'Sarana', title: 'RCA per unit berulang dan percepat perbaikan',
         actions: ['Buka profil unit, cek apakah gangguannya sejenis (komponen sama) → RCA dan perbaikan permanen.', 'Ukur MTTR per depo; siapkan suku cadang komponen kritis (bogie, kompresor, kontrol).', 'Sesuaikan interval perawatan preventif dengan data kegagalan, bukan hanya jadwal tetap.'],

@@ -37,7 +37,7 @@ window.KAIChart = (function () {
         lineStyle: { width: 2.5 }, emphasis: { focus: 'series' }, clip: true, kelas: c };
       if (cap) {
         var pts = [];
-        data.forEach(function (v, i) { if (v > cap) { pts.push({ coord: [i, cap], value: v }); outliers.push(CLASS_LABEL[c] + ' ' + KAI.fmt.mon(model.yms[i]) + ': ' + KAI.fmt.n(v) + ' mnt'); } });
+        data.forEach(function (v, i) { if (v > cap) { pts.push({ coord: [i, cap], value: v }); outliers.push(CLASS_LABEL[c] + ' ' + KAI.fmt.mon(model.yms[i]) + ': ' + KAI.fmt.n(v) + ' menit'); } });
 
       }
       series.push(s);
@@ -45,7 +45,7 @@ window.KAIChart = (function () {
     return {
       grid: { left: 52, right: 28, top: outliers.length ? 58 : 40, bottom: 32 },
       legend: { top: 0, left: 0 },
-      tooltip: { trigger: 'axis', valueFormatter: function (v) { return KAI.fmt.n(v) + (metric === 'menit' ? ' mnt' : ' kej.'); } },
+      tooltip: { trigger: 'axis', valueFormatter: function (v) { return KAI.fmt.n(v) + (metric === 'menit' ? ' menit' : ' kej.'); } },
       xAxis: { type: 'category', data: model.yms.map(KAI.fmt.mon), boundaryGap: false },
       yAxis: { type: 'value', max: cap || null, axisLabel: { formatter: k } },
       series: series, animation: !REDUCE,
@@ -73,7 +73,7 @@ window.KAIChart = (function () {
         }),
         markLine: { silent: true, symbol: 'none', lineStyle: { type: 'dashed', color: '#8C95A8' }, label: { color: C.axis, fontSize: 11 },
           data: [{ xAxis: m.medN, label: { formatter: 'median ' + KAI.fmt.d1(m.medN) + ' kej.', position: 'end' } },
-                 { yAxis: m.medMenit, label: { formatter: 'median ' + KAI.fmt.n(m.medMenit) + ' mnt', position: 'insideEndTop' } }] },
+                 { yAxis: m.medMenit, label: { formatter: 'median ' + KAI.fmt.n(m.medMenit) + ' menit', position: 'insideEndTop' } }] },
         markArea: { silent: true, itemStyle: { color: 'rgba(240,106,37,.07)' }, label: { show: false },   // keterangan area ditulis di subjudul kartu agar tidak tertutup gelembung
           data: [[{ name: 'Sering · dampak tinggi', xAxis: m.medN, yAxis: m.medMenit }, { xAxis: xMax, yAxis: yMax }]] }
       }]
@@ -112,7 +112,7 @@ window.KAIChart = (function () {
     var days = model.days.map(function (d) { return +d.slice(8, 10) + '/' + (+d.slice(5, 7)); });
     return {
       grid: { left: 48, right: 16, top: 34, bottom: 28 }, legend: { top: 0, left: 0 },
-      tooltip: { trigger: 'axis', valueFormatter: function (v) { return KAI.fmt.n(v) + (metric === 'menit' ? ' mnt' : ' kej.'); } },
+      tooltip: { trigger: 'axis', valueFormatter: function (v) { return KAI.fmt.n(v) + (metric === 'menit' ? ' menit' : ' kej.'); } },
       xAxis: { type: 'category', data: days, axisLabel: { hideOverlap: true } }, yAxis: { type: 'value', axisLabel: { formatter: k } },
       series: KAIA.CLASSES.map(function (c) { return { name: CLASS_LABEL[c], type: 'bar', stack: 'k', data: model.series[c][metric], color: KAI.classColor(c), barMaxWidth: 22, kelas: c }; }),
       animation: !REDUCE
@@ -177,7 +177,7 @@ window.KAIChart = (function () {
     var rev = rows.slice().reverse();
     return {
       grid: { left: 8, right: 30, top: 30, bottom: 6, containLabel: true }, legend: { top: 0, left: 0 },
-      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return KAI.fmt.n(v) + (metric === 'menit' ? ' mnt' : ' kej.'); } },
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return KAI.fmt.n(v) + (metric === 'menit' ? ' menit' : ' kej.'); } },
       xAxis: { type: 'value', axisLabel: { formatter: k } }, yAxis: { type: 'category', data: rev.map(function (r) { return r.label; }) },
       series: KAIA.CLASSES.map(function (c) { return { name: CLASS_LABEL[c], type: 'bar', stack: 's', color: KAI.classColor(c), barMaxWidth: 16, data: rev.map(function (r) { return r.cls[c][metric]; }) }; }),
       animation: !REDUCE

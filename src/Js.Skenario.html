@@ -16,12 +16,13 @@ document.addEventListener('alpine:init', function () {
       busy: true, err: '', BB: null, P: null, base: null, sc: null, cmp: null, ver: '',
       kor: 'TMB-KPT', h0: 0, h1: 24, prio: false, edits: [], sel: -1, hover: null, drag: null, preview: null,
       form: { no: '', jenis: 'tahan', st: '', m: 30 }, tipX: 0, tipY: 0, tip: '',
-      realOn: false, realDate: '', bt: null, P0: null, cap: null, antre: true, slots: null, A: null, Ares: null,
+      realOn: false, realDate: '', bt: null, P0: null, cap: null, antre: true, q: '', slots: null, A: null, Ares: null,
       init: function () {
         var self = this, p = self.$store.app.params || {};
         if (p.kor && /^[A-Z]{2,6}-[A-Z]{2,6}$/.test(p.kor)) self.kor = p.kor;
         if (p.urut === 'p') self.prio = true;
         if (p.aq === '0') self.antre = false;
+        if (p.q) self.q = String(p.q).slice(0, 40);
         if (p.skA) self.A = KAISim.decode(p.skA);
         if (p.sk) self.edits = KAISim.decode(p.sk);
         if (window.innerWidth < 700 && !p.sk) { self.h0 = 0; self.h1 = 8; }
@@ -30,6 +31,7 @@ document.addEventListener('alpine:init', function () {
         self.$watch('kor', function () { self.sel = -1; self.sync(); self.draw(); });
         self.$watch('prio', function () { self.recalc(); });
         self.$watch('antre', function () { self.recalc(); });
+        self.$watch('q', function () { self.sync(); self.draw(); });
         var ro = new ResizeObserver(KAI.debounce(function () { self.draw(); }, 80)); self.$nextTick(function () { self.$refs.wrap && ro.observe(self.$refs.wrap); });
       },
       load: function () {
@@ -64,7 +66,7 @@ document.addEventListener('alpine:init', function () {
       },
       opt: function () { return { prioritas: this.prio, antrean: this.antre ? this.cap : null }; },
       sync: function () {
-        var p = { kor: this.kor }; if (this.edits.length) p.sk = KAISim.encode(this.edits); if (this.prio) p.urut = 'p'; if (!this.antre) p.aq = '0'; if (this.A && this.A.length) p.skA = KAISim.encode(this.A);
+        var p = { kor: this.kor }; if (this.edits.length) p.sk = KAISim.encode(this.edits); if (this.prio) p.urut = 'p'; if (!this.antre) p.aq = '0'; if (this.qn) p.q = this.q.trim(); if (this.A && this.A.length) p.skA = KAISim.encode(this.A);
         this.$store.app.params = p;
         if (window.google && google.script && google.script.history) google.script.history.replace({ route: 'batubara', params: p }, this.$store.app.urlQuery('batubara', p));
       },
@@ -77,7 +79,11 @@ document.addEventListener('alpine:init', function () {
         this.recalc();
       },
       addForm: function () {
-        var f = this.form, no = String(f.no).trim().toUpperCase(), e = { jenis: f.jenis, no: no };
+        var f = this.form, no = this.noOf(f.no), e = { jenis: f.jenis, no: no };
+        if (this.P && !(no in this.P.byNo) && !/^[A-Z0-9-]{1,12}$/.test(no)) {
+          var lo = String(f.no).trim().toLowerCase(), M = this.P.trains.filter(function (t) { return String(t.nama || '').toLowerCase().indexOf(lo) >= 0; }).map(function (t) { return t.no; });
+          return this.$store.app.say(M.length ? 'Nama "' + String(f.no).trim() + '" cocok dengan ' + M.length + ' KA (' + M.slice(0, 8).join(', ') + (M.length > 8 ? ', …' : '') + '). Pilih nomornya.' : 'Tidak ada KA bernama "' + String(f.no).trim() + '" di ' + KAI.gapeka.label(this.ver) + ' wilayah Batubara.');
+        }
         if (f.jenis === 'klb') return this.addEdit({ jenis: 'klb', no: this.klbNo(), pola: no, m: Math.max(-1440, Math.min(1440, Math.round(+f.m || 0))) });
         if (f.jenis !== 'batal') e.m = Math.max(f.jenis === 'tahan' ? 0 : -720, Math.min(720, Math.round(+f.m || 0)));
         if (f.jenis === 'tahan') { e.st = KAISim.norm(f.st); var t = this.P.trains[this.P.byNo[no]]; if (!t || !t.pts.some(function (p) { return p.c === e.st; })) return this.$store.app.say('KA ' + no + ' tidak melewati stasiun ' + (f.st || '–') + '.'); }
@@ -87,7 +93,7 @@ document.addEventListener('alpine:init', function () {
       klbNo: function () { var n = 1, used = {}; this.edits.forEach(function (e) { if (e.jenis === 'klb') used[e.no] = 1; }); while (used['KLB-' + n]) n++; return 'KLB-' + n; },
       /** Slot kosong untuk KLB berpola KA di form, keberangkatan dalam jendela waktu yang tampil. */
       findSlots: function () {
-        var no = String(this.form.no).trim().toUpperCase(), t = this.P0 && this.P0.trains[this.P0.byNo[no]];
+        var no = this.noOf(this.form.no), t = this.P0 && this.P0.trains[this.P0.byNo[no]];
         if (!t) return this.$store.app.say('Isi nomor KA pola yang ada di ' + KAI.gapeka.label(this.ver) + ' wilayah Batubara.');
         var d0 = t.pts[0].d, self = this, id = this.klbNo(), c0 = this.cmp, L = [], runs = 0;
         // Kandidat dari benturan petak, lalu DIVERIFIKASI simulasi penuh: KLB tepat waktu dan tidak menambah dampak KA lain
@@ -117,8 +123,36 @@ document.addEventListener('alpine:init', function () {
           return { l: l, a: A[i], b: B[i], d: B[i] - A[i] }; });
       },
       reset: function () { this.edits = []; this.sel = -1; this.recalc(); },
-      editTxt: function (e) { if (e.jenis === 'klb') return e.no + ' pola KA ' + e.pola + ' (' + (e.m > 0 ? '+' : '') + e.m + ' mnt)' + (this.P0 && !(e.pola in this.P0.byNo) ? ' [pola tidak ada]' : ''); return (this.P && !(e.no in this.P.byNo) ? '[tidak ada di ' + KAI.gapeka.label(this.ver) + '] ' : '') + (e.jenis === 'geser' ? 'KA ' + e.no + ' digeser ' + (e.m > 0 ? '+' : '') + e.m + ' mnt' : e.jenis === 'tahan' ? 'KA ' + e.no + ' ditahan ' + e.m + ' mnt di ' + e.st : 'KA ' + e.no + ' dibatalkan'); },
-      kaList: function () { return this.P ? this.P.trains.map(function (t) { return t.no; }) : []; },
+      editTxt: function (e) { if (e.jenis === 'klb') return e.no + ' pola KA ' + e.pola + ' (' + (e.m > 0 ? '+' : '') + e.m + ' menit)' + (this.P0 && !(e.pola in this.P0.byNo) ? ' [pola tidak ada]' : ''); return (this.P && !(e.no in this.P.byNo) ? '[tidak ada di ' + KAI.gapeka.label(this.ver) + '] ' : '') + (e.jenis === 'geser' ? 'KA ' + e.no + ' digeser ' + (e.m > 0 ? '+' : '') + e.m + ' menit' : e.jenis === 'tahan' ? 'KA ' + e.no + ' ditahan ' + e.m + ' menit di ' + e.st : 'KA ' + e.no + ' dibatalkan'); },
+      kaList: function () { return this.P ? this.P.trains.map(function (t) { return { no: t.no, nama: t.nama || '' }; }) : []; },
+      /* ---------- saring nomor / nama KA ---------- */
+      get qn() { return String(this.q || '').trim().toLowerCase().replace(/\s+/g, ' '); },
+      /** Nomor KA (hari-0 di P) yang cocok dengan kata pencarian: nomor diawali kata itu, atau nama/relasi memuat kata itu. */
+      get qHit() {
+        var q = this.qn, out = {}; if (!q || !this.P) return null;
+        var qs = q.replace(/\s/g, '');
+        this.P.trains.forEach(function (t) {
+          var no = String(t.no).toLowerCase(), nm = String(t.nama || '').toLowerCase();
+          if (no.indexOf(qs) === 0 || nm.indexOf(q) >= 0 || nm.replace(/\s/g, '').indexOf(qs) >= 0 || String(t.relasi || '').toLowerCase().indexOf(q) >= 0) out[t.no] = 1;
+        });
+        return out;
+      },
+      /** Daftar KA cocok yang lewat koridor ini (untuk chip). */
+      get qList() {
+        var H = this.qHit, Y = this.C, self = this; if (!H || !this.P || !Y) return [];
+        var st = {}; Y.st.forEach(function (x) { st[x] = 1; });
+        return this.P.trains.filter(function (t) { return H[t.no] && t.pts.some(function (p) { return st[p.c]; }); }).map(function (t) { return { no: t.no, nama: t.nama || '', relasi: t.relasi || '' }; })
+          .sort(function (a, b) { return String(a.no).localeCompare(String(b.no), 'id', { numeric: true }); });
+      },
+      /** Ubah isian nama KA di formulir menjadi nomor bila cocok tepat satu. */
+      noOf: function (v) {
+        v = String(v || '').trim(); var up = v.toUpperCase(); if (!this.P || up in this.P.byNo) return up;
+        var m = /^([A-Z0-9-]{1,12})\s*[·—-]\s/.exec(up); if (m && m[1] in this.P.byNo) return m[1];
+        var lo = v.toLowerCase(), L = this.P.trains.filter(function (t) { return String(t.nama || '').toLowerCase() === lo; });
+        if (L.length === 1) return L[0].no;
+        L = this.P.trains.filter(function (t) { return String(t.nama || '').toLowerCase().indexOf(lo) >= 0; });
+        return L.length === 1 ? L[0].no : up;
+      },
       stList: function () { var no = String(this.form.no).trim().toUpperCase(), t = this.P && this.P.trains[this.P.byNo[no]]; return t ? t.pts.map(function (p) { return p.c; }) : []; },
       trainOf: function (ii) { return this.P.trains[this.sc.T[ii].ti]; },
       colorOf: function (t) { return t.pr === 3 ? COL.pen : /isi/i.test(t.muat) ? COL.isi : /kosong/i.test(t.muat) ? COL.kosong : COL.lain; },
@@ -196,7 +230,7 @@ document.addEventListener('alpine:init', function () {
         }
         // garis KA
         var segs = [], labels = []; self._segs = segs;
-        var hitSet = {}; (self.cmp ? self.cmp.hit : []).forEach(function (x) { hitSet[x.ii] = 1; });
+        var hitSet = {}, qH = self.qHit; (self.cmp ? self.cmp.hit : []).forEach(function (x) { hitSet[x.ii] = 1; });
         var drawTrain = function (I, ii, ghost) {
           var t = self.P.trains[I.ti], pts = [];
           t.pts.forEach(function (p, s) {
@@ -212,24 +246,24 @@ document.addEventListener('alpine:init', function () {
             path.push([g.x(p.ta), g.y(p.i), p]); if (p.td > p.ta + 0.01) path.push([g.x(p.td), g.y(p.i), p]);
           }
           var vis = path.some(function (q) { return q && q[0] >= g.L - 50 && q[0] <= g.W + 50; }); if (!vis) return;
-          var isSel = ii === self.sel, isEd = I.day === 0 && self.edits.some(function (e) { return e.no === t.no; }), isHit = hitSet[ii];
-          c.lineWidth = ghost ? 1 : isSel ? 3.2 : isEd ? 2.6 : isHit ? 2 : 1.25;
+          var isSel = ii === self.sel, isEd = I.day === 0 && self.edits.some(function (e) { return e.no === t.no; }), isHit = hitSet[ii], isQ = qH && qH[t.no];
+          c.lineWidth = ghost ? 1 : isSel ? 3.2 : isEd ? 2.6 : isHit ? 2 : isQ ? 2.4 : 1.25;
           c.strokeStyle = ghost ? COL.ghost : isEd ? COL.edit : isHit ? COL.hit : self.colorOf(t);
-          c.globalAlpha = ghost ? 0.9 : (self.sel >= 0 && !isSel && !isHit && !isEd ? 0.35 : 1);
+          c.globalAlpha = ghost ? 0.9 : qH ? (isQ || isSel || isEd ? 1 : 0.12) : (self.sel >= 0 && !isSel && !isHit && !isEd ? 0.35 : 1);
           if (!ghost && /kosong/i.test(t.muat)) c.setLineDash([5, 3]); else c.setLineDash([]);
           c.beginPath(); var pen = false, lastPt = null;
           path.forEach(function (q) { if (!q) { pen = false; return; } if (!pen) { c.moveTo(q[0], q[1]); pen = true; } else { c.lineTo(q[0], q[1]); if (!ghost && lastPt) segs.push([lastPt[0], lastPt[1], q[0], q[1], ii, q[2].s]); } lastPt = q; });
           c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
-          if (!ghost && (isHit || isEd || isSel)) {
+          if (!ghost && (isHit || isEd || isSel || isQ)) {
             var lp = null; path.forEach(function (q) { if (q && q[0] <= g.W - g.R) lp = q; });
             var dl = self.sc && self.sc.trains[ii] ? self.sc.trains[ii].max : 0;
             if (lp) {
-              var txt = t.no + (dl >= 1 ? ' +' + dl + "'" : ''); c.font = '600 10.5px Inter, system-ui, sans-serif';
+              var txt = t.no + (isQ && t.nama ? ' ' + t.nama : '') + (dl >= 1 ? ' +' + dl + ' menit' : ''); c.font = '600 10.5px Inter, system-ui, sans-serif';
               var tw = c.measureText(txt).width + 6, lx = Math.min(lp[0] + 4, g.W - tw - 4), ly = lp[1] - 7;
               for (var k2 = 0; k2 < 6 && labels.some(function (r) { return lx < r[0] + r[2] && lx + tw > r[0] && Math.abs(ly - r[1]) < 12; }); k2++) ly -= 13;
               labels.push([lx, ly, tw]);
               c.fillStyle = 'rgba(255,255,255,.85)'; c.fillRect(lx - 2, ly - 7, tw, 13);
-              c.fillStyle = isEd ? COL.edit : COL.hit; c.fillText(txt, lx, ly);
+              c.fillStyle = isEd ? COL.edit : isHit ? COL.hit : '#0F172A'; c.fillText(txt, lx, ly);
             }
           }
         };
@@ -285,13 +319,13 @@ document.addEventListener('alpine:init', function () {
         var p = this.pos(e), self = this;
         if (!this.drag) {
           var s = this.nearest(p.x, p.y); this.$refs.cv.style.cursor = s ? (e.shiftKey ? 'col-resize' : 'grab') : 'default';
-          if (s) { var I = this.sc.T[s[4]], t = this.P.trains[I.ti], x = this.sc.trains[s[4]]; this.tip = 'KA ' + t.no + ' ' + t.nama + ' · ' + t.relasi + (I.day ? ' · hari +1' : '') + (x.max >= 1 ? ' · terlambat ' + x.max + ' mnt (' + this.typeLabel(x.moved ? 'geser' : x.cause) + ')' : '') + '\nSeret: geser slot · Shift+seret: tahan di stasiun'; this.tipX = p.x + 14; this.tipY = p.y + 12; }
+          if (s) { var I = this.sc.T[s[4]], t = this.P.trains[I.ti], x = this.sc.trains[s[4]]; this.tip = 'KA ' + t.no + ' ' + t.nama + ' · ' + t.relasi + (I.day ? ' · hari +1' : '') + (x.max >= 1 ? ' · terlambat ' + x.max + ' menit (' + this.typeLabel(x.moved ? 'geser' : x.cause) + ')' : '') + '\nSeret: geser slot · Shift+seret: tahan di stasiun'; this.tipX = p.x + 14; this.tipY = p.y + 12; }
           else this.tip = '';
           return;
         }
         var D = this.drag; D.x = p.x; D.y = p.y; D.m = Math.round((p.x - D.x0) / D.ppm);
         if (D.st) D.m = Math.max(0, D.m);
-        D.label = D.st ? 'Tahan ' + D.no + ' di ' + D.st + ' ' + D.m + ' mnt' : 'Geser ' + D.no + ' ' + (D.m > 0 ? '+' : '') + D.m + ' mnt';
+        D.label = D.st ? 'Tahan ' + D.no + ' di ' + D.st + ' ' + D.m + ' menit' : 'Geser ' + D.no + ' ' + (D.m > 0 ? '+' : '') + D.m + ' menit';
         this.tip = '';
         if (!D.raf) D.raf = requestAnimationFrame(function () {
           D.raf = 0; if (!self.drag) return;

@@ -192,7 +192,7 @@ document.addEventListener('alpine:init', function () {
         var C = this.comp.filter(function (c) { return c.v > 0; }), T = KAIA.sum(C, function (c) { return c.v; }) || 1, pal = ['#252271', '#275BC0', '#0F766E', '#E0861A', '#B45309', '#7C3AED', '#64748B', '#C0392B'];
         return { textStyle: { fontFamily: 'Inter, Arial' }, tooltip: { formatter: function (p) { return '<b>' + p.name + '</b><br>' + KAI.fmt.n(p.value) + ' menit · ' + KAI.fmt.d1(p.value / T * 100) + '%'; } },
           series: [{ type: 'treemap', roam: false, nodeClick: false, breadcrumb: { show: false }, left: 0, right: 0, top: 0, bottom: 0, itemStyle: { borderColor: '#fff', borderWidth: 2, gapWidth: 2 },
-            label: { show: true, formatter: function (p) { return p.name + '\n' + KAI.fmt.n(p.value) + ' mnt · ' + KAI.fmt.d1(p.value / T * 100) + '%'; }, fontSize: 12, lineHeight: 16, color: '#fff' },
+            label: { show: true, formatter: function (p) { return p.name + '\n' + KAI.fmt.n(p.value) + ' menit · ' + KAI.fmt.d1(p.value / T * 100) + '%'; }, fontSize: 12, lineHeight: 16, color: '#fff' },
             data: C.map(function (c, i) { return { name: c.label, value: c.v, itemStyle: { color: pal[i % pal.length] } }; }) }] };
       },
       get compTot() { return KAIA.sum(this.comp, function (c) { return c.v; }); },
@@ -341,7 +341,7 @@ document.addEventListener('alpine:init', function () {
       get decl() { return this.S.units.filter(function (u) { return u.st === 'DECLINING'; }).sort(function (a, b) { return a.hi - b.hi; }); },
       get rep3() { return this.S.units.filter(function (u) { return u.g6.n >= 3; }).sort(function (a, b) { return b.g6.n - a.g6.n || b.g6.menit - a.g6.menit; }); },
       gc: function (g) { return GC[g] || '17223B'; }, sc: function (s) { return SC[s] || '17223B'; },
-      uptCols: [['id', 'UPT JR'], ['w', 'Wilayah'], ['hi', 'THI', 1], ['dhi', 'Δ sejak awal', 1], ['low', 'Komponen terendah'], ['g6', 'Gangguan pras. (n · mnt)', 1], ['wkp6', 'WKP JR (keg · >prog · lebih · andil)', 1], ['lok', 'Lokasi gangguan terbanyak'], ['pri', 'Prioritas']],
+      uptCols: [['id', 'UPT JR'], ['w', 'Wilayah'], ['hi', 'THI', 1], ['dhi', 'Δ sejak awal', 1], ['low', 'Komponen terendah'], ['g6', 'Gangguan pras. (n · menit)', 1], ['wkp6', 'WKP JR (keg · >prog · lebih · andil)', 1], ['lok', 'Lokasi gangguan terbanyak'], ['pri', 'Prioritas']],
       sortBy: function (k) { this.sortD = this.sortK === k ? -this.sortD : -1; this.sortK = k; },
       get uptRows() {
         var q = this.pri, k = this.sortK, d = this.sortD, P = this.P;
@@ -364,7 +364,7 @@ document.addEventListener('alpine:init', function () {
       quadPra: function () {
         var P = this.P, U = this.uptHi;
         return { textStyle: { fontFamily: 'Inter, Arial' }, grid: { left: 12, right: 24, top: 34, bottom: 34, containLabel: true }, legend: { top: 0 },
-          tooltip: { formatter: function (p) { var u = p.data.u; return '<b>' + u.id + ' ' + u.code + '</b> · ' + u.w + '<br>THI ' + KAI.fmt.d1(u.hi) + ' (' + u.grade + ')<br>Gangguan: ' + u.g6.n + ' kej. · ' + KAI.fmt.n(u.g6.menit) + ' mnt<br>WKP >prog: ' + u.wkp6.over + '<br>Terendah: ' + (u.low ? u.low.label + ' ' + KAI.fmt.d1(u.low.v) : '–') + '<br>Prioritas: ' + (u.pri || '—'); } },
+          tooltip: { formatter: function (p) { var u = p.data.u; return '<b>' + u.id + ' ' + u.code + '</b> · ' + u.w + '<br>THI ' + KAI.fmt.d1(u.hi) + ' (' + u.grade + ')<br>Gangguan: ' + u.g6.n + ' kej. · ' + KAI.fmt.n(u.g6.menit) + ' menit<br>WKP >prog: ' + u.wkp6.over + '<br>Terendah: ' + (u.low ? u.low.label + ' ' + KAI.fmt.d1(u.low.v) : '–') + '<br>Prioritas: ' + (u.pri || '—'); } },
           xAxis: { type: 'value', min: 40, max: 100, name: 'THI →', nameLocation: 'middle', nameGap: 26 }, yAxis: { type: 'value', name: 'Gangguan prasarana (kejadian)', nameLocation: 'middle', nameGap: 34, minInterval: 1 },
           series: ['P1', 'P2', 'P3', 'P4', ''].map(function (k, i) { return { name: k || 'Lainnya', type: 'scatter', data: U.filter(function (u) { return u.pri === k; }).map(function (u) { return { value: [u.hi, u.g6.n], u: u }; }), symbolSize: 9, itemStyle: { color: PC[k], opacity: 0.85 },
             markLine: i ? undefined : { silent: true, symbol: 'none', lineStyle: { type: 'dashed', color: '#3F4D63' }, label: { formatter: '{b}' }, data: [{ xAxis: P.medHi, name: 'median ' + KAI.fmt.d1(P.medHi) }, { yAxis: 1.5, name: '≥2 = berulang' }] } }; }) };

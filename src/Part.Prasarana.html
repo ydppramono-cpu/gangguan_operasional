@@ -11,8 +11,8 @@
             <div class="kpis">
               <div class="kpi"><span x-text="'UPT JR prioritas (P1) · median THI ' + KAI.fmt.d1(P.medHi)"></span><b class="bad-t" x-text="P.cnt.P1 + ' UPT'"></b><em x-text="'P2 ' + P.cnt.P2 + ' · P3 ' + P.cnt.P3 + ' · P4 ' + P.cnt.P4"></em></div>
               <div class="kpi"><span x-text="'UPT JR dengan THI ' + KAI.fmt.mon(P.thiYm) + ' < 70'"></span><b x-text="lowN + ' / ' + uptHi.length"></b><em>Cukup/Waspada/Kritis</em></div>
-              <div class="kpi"><span x-text="'Gangguan prasarana · ' + R.label"></span><b x-text="tot.g.n + ' · ' + KAI.fmt.n(tot.g.menit) + '′'"></b><em x-text="win + ': ' + tot.g6.n + ' kej. (JR&wesel ' + tot.g6.jr + ' · persinyalan ' + tot.g6.sin + ')'"></em></div>
-              <div class="kpi"><span x-text="'WKP jalan rel · ' + R.label"></span><b x-text="KAI.fmt.n(tot.wkp.n) + ' keg · ' + tot.wkp.over + ' >prog'"></b><em x-text="'lebih ' + KAI.fmt.n(tot.wkp.lebih) + '′ · andil KA ' + KAI.fmt.n(tot.wkp.andil) + '′'"></em></div>
+              <div class="kpi"><span x-text="'Gangguan prasarana · ' + R.label"></span><b x-text="tot.g.n + ' · ' + KAI.fmt.n(tot.g.menit) + ' menit'"></b><em x-text="win + ': ' + tot.g6.n + ' kej. (JR&wesel ' + tot.g6.jr + ' · persinyalan ' + tot.g6.sin + ')'"></em></div>
+              <div class="kpi"><span x-text="'WKP jalan rel · ' + R.label"></span><b x-text="KAI.fmt.n(tot.wkp.n) + ' keg · ' + tot.wkp.over + ' >prog'"></b><em x-text="'lebih ' + KAI.fmt.n(tot.wkp.lebih) + ' menit · andil KA ' + KAI.fmt.n(tot.wkp.andil) + ' menit'"></em></div>
             </div>
             <div class="grid g-2 mt">
               <div class="card">
@@ -26,7 +26,7 @@
             </div>
             <div class="card mt" x-show="!byUpt">
               <div class="card-h"><div><h3>Per Daop/Divre</h3><p x-text="'THI (Ringkasan Bulanan) · gangguan prasarana ' + R.label + ' · WKP jalan rel ' + R.label"></p></div></div>
-              <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Wilayah</th><th class="num">UPT</th><th class="num" x-text="'THI ' + KAI.fmt.mon(P.first) + '→' + KAI.fmt.mon(P.thiYm)"></th><th>Grade</th><th class="num">UPT &lt;70</th><th class="num">Gangguan pras. (n·mnt)</th><th class="num" x-text="win + ' (JR/sin)'"></th><th class="num">WKP JR</th><th class="num">&gt;program</th><th class="num">Lebih (mnt)</th><th class="num">Andil KA (mnt)</th><th class="num" x-text="'>prog ' + win"></th></tr></thead><tbody>
+              <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Wilayah</th><th class="num">UPT</th><th class="num" x-text="'THI ' + KAI.fmt.mon(P.first) + '→' + KAI.fmt.mon(P.thiYm)"></th><th>Grade</th><th class="num">UPT &lt;70</th><th class="num">Gangguan pras. (n·menit)</th><th class="num" x-text="win + ' (JR/sin)'"></th><th class="num">WKP JR</th><th class="num">&gt;program</th><th class="num">Lebih (menit)</th><th class="num">Andil KA (menit)</th><th class="num" x-text="'>prog ' + win"></th></tr></thead><tbody>
                 <template x-for="x in P.regions" :key="x.w"><tr>
                   <td><b x-text="x.w"></b></td><td class="num" x-text="x.nUpt"></td><td class="num" x-text="KAI.fmt.d1(x.hiFirst) + '→' + KAI.fmt.d1(x.hi)"></td><td :style="'color:#' + gc(x.grade)" x-text="x.grade"></td>
                   <td class="num" :class="x.low70.length && 'bad-t'" x-text="x.low70.length"></td><td class="num" x-text="x.g.n + ' · ' + KAI.fmt.n(x.g.menit)"></td><td class="num" x-text="x.g6.n + ' (' + x.g6.jr + '/' + x.g6.sin + ')'"></td>
@@ -47,7 +47,7 @@
                     <td x-text="u.low ? u.low.label + ' ' + KAI.fmt.d1(u.low.v) : '–'"></td>
                     <td class="num" x-text="u.g6.n ? u.g6.n + ' · ' + KAI.fmt.n(u.g6.menit) + ' (JR ' + u.g6.jr + '/sin ' + u.g6.sin + ')' : '–'"></td>
                     <td class="num" x-text="u.wkp6.n + ' · ' + u.wkp6.over + ' · ' + KAI.fmt.n(u.wkp6.lebih) + ' · ' + KAI.fmt.n(u.wkp6.andil)"></td>
-                    <td x-text="u.topLok ? u.topLok.lokasi + ' (' + u.topLok.n + 'x, ' + KAI.fmt.n(u.topLok.menit) + '′)' : '–'"></td>
+                    <td x-text="u.topLok ? u.topLok.lokasi + ' (' + u.topLok.n + 'x, ' + KAI.fmt.n(u.topLok.menit) + ' menit)' : '–'"></td>
                     <td><span class="chip" :class="u.pri === 'P1' ? 'bad' : u.pri === 'P2' ? 'warn' : ''" x-text="u.pri || '—'"></span></td>
                   </tr></template>
                 </tbody></table>

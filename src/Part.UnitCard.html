@@ -43,8 +43,8 @@
             <template x-for="m in u.form" :key="m.ym"><span class="form-chip" :class="m.n === 0 ? 'f0' : m.n === 1 ? 'f1' : 'f2'" :title="KAI.fmt.mon(m.ym) + ': ' + m.n + ' gangguan · ' + KAI.fmt.n(m.menit) + ' menit'"><b x-text="m.n"></b><small x-text="KAI.fmt.monOnly(m.ym)"></small></span></template>
           </div>
           <dl class="uc-facts mt-s">
-            <div><dt>Gangguan 12 bln</dt><dd x-text="u.n12 + ' · ' + KAI.fmt.n(u.m12) + ' mnt'"></dd></div>
-            <div><dt>Seluruh data (unit utama)</dt><dd x-text="u.nAll + ' · ' + KAI.fmt.n(u.mAll) + ' mnt'"></dd></div>
+            <div><dt>Gangguan 12 bln</dt><dd x-text="u.n12 + ' · ' + KAI.fmt.n(u.m12) + ' menit'"></dd></div>
+            <div><dt>Seluruh data (unit utama)</dt><dd x-text="u.nAll + ' · ' + KAI.fmt.n(u.mAll) + ' menit'"></dd></div>
             <div><dt>Peringkat di depo</dt><dd x-text="rankTxt"></dd></div>
           </dl>
         </div>
@@ -130,7 +130,7 @@
             <div><dt>Unit SAP</dt><dd x-text="KAI.fmt.n(d.d.n)"></dd></div><div><dt>Siap guna GAPEKA</dt><dd x-text="KAI.fmt.n(d.d.sg)"></dd></div>
             <div><dt>Median usia</dt><dd x-text="KAI.fmt.age(d.d.ageMed)"></dd></div><div><dt x-text="'> ' + ageWarn + ' tahun'"></dt><dd x-text="KAI.fmt.n(d.d.old)"></dd></div>
             <div><dt x-text="d.kind === 'Lokomotif' ? 'RHI rata-rata' : 'Skor turunan'"></dt><dd x-text="KAI.fmt.d1(d.d.health)"></dd></div><div><dt x-text="d.kind === 'Lokomotif' ? 'H / M / D' : 'Baik / Pantau / Prioritas'"></dt><dd x-text="d.d.H + ' / ' + d.d.M + ' / ' + d.d.Dc"></dd></div>
-            <div><dt>Gangguan 12 bln</dt><dd x-text="d.d.n12 + ' · ' + KAI.fmt.n(d.d.m12) + ' mnt'"></dd></div><div><dt>Per 100 unit</dt><dd x-text="KAI.fmt.d1(d.d.rate)"></dd></div>
+            <div><dt>Gangguan 12 bln</dt><dd x-text="d.d.n12 + ' · ' + KAI.fmt.n(d.d.m12) + ' menit'"></dd></div><div><dt>Per 100 unit</dt><dd x-text="KAI.fmt.d1(d.d.rate)"></dd></div>
           </dl>
           <dl class="uc-facts" x-show="d.d.dinas">
             <div><dt>Dinasan lok (SO)</dt><dd x-text="d.d.dinas ? KAI.fmt.n(d.d.dinas.so) : ''"></dd></div><div><dt>Untuk perbaikan</dt><dd x-text="d.d.dinas ? KAI.fmt.n(d.d.dinas.perbaikan) : ''"></dd></div>
@@ -142,7 +142,7 @@
           <div class="uc-h">Komposisi armada</div>
           <div class="squad"><template x-for="c in d.cls" :key="c[0]"><span class="sq" :title="c[0] + ': ' + c[1] + ' unit'"><b x-text="c[1]"></b><small x-text="c[0]"></small></span></template></div>
           <div class="uc-h mt-s" x-show="d.d.top.length">Unit terberat 12 bulan</div>
-          <div class="ka-chips"><template x-for="x in d.d.top" :key="x.no"><button class="chip warn" @click="$store.app.openUnit(x.no)" x-text="KAI.fmt.unit(x.no) + ' · ' + x.n12 + '× · ' + KAI.fmt.n(x.m12) + ' mnt'"></button></template></div>
+          <div class="ka-chips"><template x-for="x in d.d.top" :key="x.no"><button class="chip warn" @click="$store.app.openUnit(x.no)" x-text="KAI.fmt.unit(x.no) + ' · ' + x.n12 + '× · ' + KAI.fmt.n(x.m12) + ' menit'"></button></template></div>
         </div>
       </div>
     </template>

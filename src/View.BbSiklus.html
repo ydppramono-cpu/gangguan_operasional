@@ -40,14 +40,14 @@
             <div class="bb-tw-h">Paling sering</div>
             <template x-for="o in tw.top" :key="'t' + o.kode"><div class="bb-tw"><b x-text="o.kode"></b><span x-text="o.nama"></span><em x-text="KAI.fmt.n(o.f) + '× · PIC ' + o.picUtama"></em></div></template>
             <div class="bb-tw-h mt-s">Menit terbesar</div>
-            <template x-for="o in tw.worst" :key="'w' + o.kode"><div class="bb-tw"><b x-text="o.kode"></b><span x-text="o.nama"></span><em x-text="KAI.fmt.n(o.m) + ' mnt · PIC ' + o.picUtama"></em></div></template>
+            <template x-for="o in tw.worst" :key="'w' + o.kode"><div class="bb-tw"><b x-text="o.kode"></b><span x-text="o.nama"></span><em x-text="KAI.fmt.n(o.m) + ' menit · PIC ' + o.picUtama"></em></div></template>
           </div></div>
       </div>
     </div>
 
     <div x-show="tab === 'awak'" class="mt">
       <div class="card"><div class="card-h"><div><h3>Dinasan masinis KA batubara</h3><p x-text="'Buku Dinasan O.20 GAPEKA 2025 · ' + awakFlag + ' dinasan hadir < 60 menit sebelum berangkat (SOP Pengoperasian KA 2025 Bab II C.2.a)'"></p></div></div>
-        <div class="card-b tbl-wrap" style="max-height:520px"><table class="tbl sm"><thead><tr><th>UPT crew</th><th>Kode</th><th>KA</th><th>Nama</th><th>Lintas dinas</th><th class="num">Mulai</th><th class="num">Berangkat</th><th class="num">Siap (mnt)</th><th class="num">Habis</th><th class="num">Jam dinas</th></tr></thead>
+        <div class="card-b tbl-wrap" style="max-height:520px"><table class="tbl sm"><thead><tr><th>UPT crew</th><th>Kode</th><th>KA</th><th>Nama</th><th>Lintas dinas</th><th class="num">Mulai</th><th class="num">Berangkat</th><th class="num">Siap (menit)</th><th class="num">Habis</th><th class="num">Jam dinas</th></tr></thead>
           <tbody><template x-for="(r, i) in awak" :key="i"><tr :class="r.siap != null && r.siap < 60 && 'late'"><td x-text="r.upt"></td><td x-text="r.kode"></td><td><b x-text="r.no"></b></td><td x-text="r.nama"></td><td x-text="r.lin"></td>
             <td class="num" x-text="r.mulai"></td><td class="num" x-text="r.brk"></td><td class="num"><b x-text="r.siap == null ? '–' : r.siap"></b></td><td class="num" x-text="r.habis"></td><td class="num" x-text="r.jd != null ? BBK.fmt.dur(r.jd) : '–'"></td></tr></template></tbody></table></div>
         <div x-data="{ get L() { return insFor(['awak']); } }"><?!= include('Part.BbPita'); ?></div></div>

@@ -24,8 +24,8 @@
                 <tr>
                   <td><button class="link-btn" @click="$store.app.open('wilayah', r.wilayah)" x-text="r.wilayah"></button></td>
                   <td class="wrap"><button class="link-btn plain" x-show="r.freq" @click="openLoc(r.freq)" x-text="r.freq && r.freq.lokasi"></button><span class="sub-n" x-show="r.freq" x-text="r.freq && r.freq.n + '×'"></span><span class="nil" x-show="!r.freq" x-text="r.n ? 'Lokasi tidak tercatat' : 'Tidak ada kejadian'"></span></td>
-                  <td class="wrap"><button class="link-btn plain" x-show="r.worst" @click="openLoc(r.worst)" x-text="r.worst && r.worst.lokasi"></button><span class="sub-n" x-show="r.worst" x-text="r.worst && KAI.fmt.n(r.worst.menit) + ' mnt'"></span><span class="nil" x-show="!r.worst" x-text="r.n ? 'Lokasi tidak tercatat' : 'Tidak ada kejadian'"></span></td>
-                  <td class="num bar-cell"><div class="b" :style="'width:' + (maxMenit ? r.menit / maxMenit * 100 : 0) + '%'"></div><span x-text="KAI.fmt.n(r.menit) + ' mnt · ' + r.n + ' kej.'"></span></td>
+                  <td class="wrap"><button class="link-btn plain" x-show="r.worst" @click="openLoc(r.worst)" x-text="r.worst && r.worst.lokasi"></button><span class="sub-n" x-show="r.worst" x-text="r.worst && KAI.fmt.n(r.worst.menit) + ' menit'"></span><span class="nil" x-show="!r.worst" x-text="r.n ? 'Lokasi tidak tercatat' : 'Tidak ada kejadian'"></span></td>
+                  <td class="num bar-cell"><div class="b" :style="'width:' + (maxMenit ? r.menit / maxMenit * 100 : 0) + '%'"></div><span x-text="KAI.fmt.n(r.menit) + ' menit · ' + r.n + ' kej.'"></span></td>
                 </tr>
               </template>
             </tbody>

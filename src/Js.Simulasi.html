@@ -8,20 +8,20 @@
  *   kejadian  = datang / berangkat satu KA di satu stasiun (jadwal GAPEKA aplikasi; 2 hari: hari-0 dan salinan +24 jam).
  *   kegiatan  = batas t_v ≥ t_u + w. Waktu simulasi t_v = max(rencana keberangkatan, max(t_u + w)) dalam urutan topologis.
  *     tempuh   berangkat A → datang B: w = min(rencana, waktu tempuh petak wp_menit)          (PRASARANA_PETAK)
- *     henti    datang → berangkat di stasiun: w = min(rencana, 2 mnt) KA penumpang berhenti, selain itu 0
+ *     henti    datang → berangkat di stasiun: w = min(rencana, 2 menit) KA penumpang berhenti, selain itu 0
  *     headway  KA searah berurutan di petak: jalur ganda w = headway_dipakai antar keberangkatan dan antar kedatangan;
  *              jalur tunggal w = waktu bebas blok (headway − wp, min 1) dari kedatangan KA depan
  *     silang   jalur tunggal, KA berlawanan: KA kedua berangkat setelah KA pertama tiba + waktu bebas blok
  *     siklus   rangkaian datang di terminal → berangkat lagi: w = min(rencana, WTT program terpendek di terminal itu)
  *     sambung  satu perjalanan berganti nomor di batas Divre (M_KA "4000-4001"): tiba nomor A → berangkat nomor B
- *     awak     dinasan masinis O.20 (hanya GAPEKA 2025): KA berikutnya awak yang sama, w = min(rencana, 30 mnt)
+ *     awak     dinasan masinis O.20 (hanya GAPEKA 2025): KA berikutnya awak yang sama, w = min(rencana, 30 menit)
  *     antrean  (opsi antrean) terminal penuh: KA yang datang saat semua jalur terisi menunggu di sinyal masuk sampai
  *              rangkaian yang paling cepat keluar berangkat. Okupansi terminal = KA berhenti + rangkaian dalam siklus
  *              (datang → berangkat lagi). Kapasitas = n_jalur M_STASIUN, atau puncak GAPEKA bila lebih besar (agar dasar = GAPEKA).
  *   Bobot pasangan yang TIDAK diubah dibatasi selisih rencananya, sehingga skenario tanpa perubahan = GAPEKA persis.
  *   KA yang digeser memakai bobot aturan penuh → konflik slot barunya terlihat.
  *   Urutan tetap: urutan KA di setiap petak mengikuti rencana (setelah geser). Mode prioritas: bila KA prioritas lebih tinggi
- *   tertahan > 3 mnt oleh KA prioritas lebih rendah di petak yang sama, urutannya ditukar (maks 6 putaran; tukar yang membuat
+ *   tertahan > 3 menit oleh KA prioritas lebih rendah di petak yang sama, urutannya ditukar (maks 6 putaran; tukar yang membuat
  *   siklus/kebuntuan dibatalkan). Prioritas: penumpang 3 > batubara isi 2 > lainnya 1.
  * BATASAN (ditampilkan di layar): bukan alat pengatur perjalanan waktu-nyata; jalur stasiun non-terminal hanya diperiksa;
  *   petak tanpa data prasarana memakai waktu tempuh rencana tanpa headway; dinasan hanya GAPEKA 2025.
@@ -329,7 +329,7 @@
   /**
    * Uji ulang ke realisasi (REAL_JEJAK satu tanggal): simpangan PERTAMA tiap KA terhadap GAPEKA dimasukkan sebagai "geser" slot,
    * mesin merambatkannya, lalu waktu simulasi dibandingkan dengan jam realisasi di stasiun-stasiun berikutnya.
-   * @param {Array} rows [{no, c, ra (datang real, mnt), rd (berangkat real, mnt)}] — menit sejak 00:00 tanggal itu
+   * @param {Array} rows [{no, c, ra (datang real, menit), rd (berangkat real, menit)}] — menit sejak 00:00 tanggal itu
    * @return {{edits, n, maeModel, maeJadwal, ka}} selisih rata-rata absolut (menit) model vs jadwal saja
    */
   function backtest(P, rows, opt) {

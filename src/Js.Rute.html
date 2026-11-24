@@ -310,17 +310,17 @@
   /** Rekomendasi berbasis data (tanpa angka karangan): WKP pada jendela kosong terpanjang untuk petak prioritas; pendapatan; keamanan; alam. */
   function recommend(C, S, prof) {
     var out = [];
-    function win(g) { return fmt(g.a) + '–' + fmt(g.b) + ' (' + Math.round(g.dur) + ' mnt)'; }
+    function win(g) { return fmt(g.a) + '–' + fmt(g.b) + ' (' + Math.round(g.dur) + ' menit)'; }
     S.filter(function (x) { return x.flag === 'P1' || x.flag === 'P2'; }).sort(function (a, b) { return b.gM - a.gM || b.gN - a.gN; }).slice(0, 8).forEach(function (x) {
       var ganda = /GANDA/i.test(x.track), full = (x.gapAll || []).filter(function (g) { return g.dur >= 60; }), n = full.filter(nightScore)[0] || full[0];
       var up = (x.gapUp || []).filter(function (g) { return g.dur >= 60; }), dn = (x.gapDn || []).filter(function (g) { return g.dur >= 60; });
       var u1 = up.filter(nightScore)[0] || up[0], d1 = dn.filter(nightScore)[0] || dn[0];
-      var where = n ? 'tutup petak ' + win(n) : ganda && (u1 || d1) ? 'satu sepur (KA lain lewat sepur sebelah): sepur arah ' + x.a + '→' + x.b + ' ' + (u1 ? win(u1) : 'tidak ada jendela ≥ 60 mnt') + ', sepur arah ' + x.b + '→' + x.a + ' ' + (d1 ? win(d1) : 'tidak ada jendela ≥ 60 mnt')
-        : 'tidak ada jendela kosong ≥ 60 mnt di GAPEKA' + (x.best ? ' (terpanjang ' + win(x.best) + ')' : '') + ' — perlu rekayasa pola operasi';
+      var where = n ? 'tutup petak ' + win(n) : ganda && (u1 || d1) ? 'satu sepur (KA lain lewat sepur sebelah): sepur arah ' + x.a + '→' + x.b + ' ' + (u1 ? win(u1) : 'tidak ada jendela ≥ 60 menit') + ', sepur arah ' + x.b + '→' + x.a + ' ' + (d1 ? win(d1) : 'tidak ada jendela ≥ 60 menit')
+        : 'tidak ada jendela kosong ≥ 60 menit di GAPEKA' + (x.best ? ' (terpanjang ' + win(x.best) + ')' : '') + ' — perlu rekayasa pola operasi';
       var jr = Object.keys(x.gJr).sort(function (p, q) { return x.gJr[q] - x.gJr[p]; })[0];
       var job = jr === 'wesel' ? 'perawatan wesel' : jr === 'track' ? 'pemeriksaan sirkuit track & isolasi rel' : jr === 'jembatan' ? 'pemeriksaan jembatan' : 'jalan rel (geometri, bantalan/penambat, las)';
       var used = x.wk.map(function (w) { return hm(w[9]); }).filter(function (v) { return v != null; }), uMed = used.length ? med(used) : null;
-      var why = x.gN + ' gangguan prasarana (' + Math.round(x.gM) + ' mnt, 12 bln)' + (x.thi ? ' · THI ' + x.thi.hi + ' ' + (x.thi.grade || '') + ' (' + x.thi.ym + ')' : ' · THI petak tidak tersedia') + ' · WKP jalan rel ' + x.wkJR + 'x (13 bln)' + (uMed != null ? ', median mulai program ' + fmt(uMed) : '');
+      var why = x.gN + ' gangguan prasarana (' + Math.round(x.gM) + ' menit, 12 bln)' + (x.thi ? ' · THI ' + x.thi.hi + ' ' + (x.thi.grade || '') + ' (' + x.thi.ym + ')' : ' · THI petak tidak tersedia') + ' · WKP jalan rel ' + x.wkJR + 'x (13 bln)' + (uMed != null ? ', median mulai program ' + fmt(uMed) : '');
       var on = /^tidak/.test(where) ? '; ' + where : ' pada ' + where;
       var act = x.wkJR >= 12 ? 'WKP sudah rutin (' + x.wkJR + 'x) namun gangguan & kondisi belum membaik → evaluasi mutu pekerjaan dan beralih ke perbaikan permanen (' + job + ', penggantian komponen)' + on + '.'
         : 'Tambah WKP ' + job + on + '.';

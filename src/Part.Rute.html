@@ -21,7 +21,7 @@
         <div class="kpi"><span x-text="'Perjalanan harian (' + ($store.app.R && KAI.data.ref ? KAI.data.ref.gapekaLabel : 'GAPEKA') + ')'"></span><b x-text="KAI.fmt.n(C.nDaily) + ' KA'"></b><em x-text="'penumpang ' + C.nPnp + ' · KRL ' + C.nKrl + ' · barang ' + C.nBrg + ' · dinas ' + C.nDinas"></em></div>
         <div class="kpi"><span>Pendapatan alokasi km · 12 bln</span><b x-text="KAI.fmt.rp(C.revA)"></b><em x-text="'penumpang ' + KAI.fmt.rp(C.revPA) + ' · barang ' + KAI.fmt.rp(C.revBA)"></em></div>
         <div class="kpi"><span>Volume alokasi km · 12 bln</span><b x-text="KAI.fmt.n(C.paxA) + ' pnp'"></b><em x-text="KAI.fmt.n(C.tonA) + ' ton barang'"></em></div>
-        <div class="kpi"><span>Kejadian di koridor · 12 bln</span><b x-text="KAI.fmt.n(C.g.n) + ' · ' + KAI.fmt.n(C.g.menit) + '′'"></b><em x-text="'prasarana ' + C.gPras + ' · keamanan ' + C.gSec + ' · alam ' + C.gNat"></em></div>
+        <div class="kpi"><span>Kejadian di koridor · 12 bln</span><b x-text="KAI.fmt.n(C.g.n) + ' · ' + KAI.fmt.n(C.g.menit) + ' menit'"></b><em x-text="'prasarana ' + C.gPras + ' · keamanan ' + C.gSec + ' · alam ' + C.gNat"></em></div>
       </div>
 
       <div class="grid g-2-1 mt rt-top">
@@ -41,7 +41,7 @@
             <table class="tbl"><thead><tr><th>Koridor</th><th class="num">Pendapatan</th><th class="num">KA/hari</th><th class="num hide-sm">Ggn pras.</th></tr></thead><tbody>
               <template x-for="(c, i) in rank" :key="c.id">
                 <tr class="click" :class="c.id === id ? 'sel' : ''" @click="pick(c.id)">
-                   <td class="wrap"><b x-text="(i + 1) + '. ' + c.name"></b><div class="muted sm rt-sub" :title="KAI.fmt.n(c.paxA) + ' pnp · ' + KAI.fmt.n(c.tonA) + ' ton'" x-text="KAI.fmt.n(c.len) + ' km · ' + KAI.fmt.n(c.paxA) + ' pnp · ' + KAI.fmt.n(c.tonA) + ' t'"></div></td>
+                   <td class="wrap"><b x-text="(i + 1) + '. ' + c.name"></b><div class="muted sm rt-sub" :title="KAI.fmt.n(c.paxA) + ' pnp · ' + KAI.fmt.n(c.tonA) + ' ton'" x-text="KAI.fmt.n(c.len) + ' km · ' + KAI.fmt.n(c.paxA) + ' pnp · ' + KAI.fmt.n(c.tonA) + ' ton'"></div></td>
                   <td class="num bar-cell"><div class="b" :style="'width:' + (rankMax ? c.revA / rankMax * 100 : 0) + '%'"></div><span x-text="KAI.fmt.rp(c.revA)"></span></td>
                   <td class="num" x-text="c.nDaily"></td><td class="num hide-sm" x-text="c.gPras"></td>
                 </tr>
@@ -65,10 +65,10 @@
                 <button class="btn sm" @click="$store.app.open('petak', seg.key)">Profil petak</button></div>
               <div class="card-b">
                 <div class="rt-flags"><span class="tag" :class="flagCls(seg.flag)" x-text="seg.flag ? 'Prioritas ' + seg.flag : 'Tidak prioritas'"></span>
-                  <span class="tag" x-text="seg.nTrip + ' KA/hari'"></span><span class="tag" x-text="'Ggn pras. ' + seg.gN + ' · ' + KAI.fmt.n(seg.gM) + '′'"></span>
+                  <span class="tag" x-text="seg.nTrip + ' KA/hari'"></span><span class="tag" x-text="'Ggn pras. ' + seg.gN + ' · ' + KAI.fmt.n(seg.gM) + ' menit'"></span>
                   <span class="tag" x-text="'WKP ' + seg.wkN + 'x (JR ' + seg.wkJR + ')'"></span>
                   <span class="tag" :class="seg.thi && seg.thi.hi < 70 ? 't-bad' : ''" x-text="seg.thi ? 'THI ' + KAI.fmt.d1(seg.thi.hi) + ' · ' + KAI.fmt.mon(seg.thi.ym) : 'THI petak tidak tersedia'"></span></div>
-                <h4 class="h-s mt">Jam kosong (tanpa KA terjadwal, penyangga ± <span x-text="buf"></span> mnt)</h4>
+                <h4 class="h-s mt">Jam kosong (tanpa KA terjadwal, penyangga ± <span x-text="buf"></span> menit)</h4>
                 <template x-for="r in winRows" :key="r.k">
                   <div class="rt-win"><span class="lbl" x-text="r.label"></span>
                     <div class="rt-day"><template x-for="(g, j) in r.bars" :key="j"><i :style="'left:' + g.l + '%;width:' + g.w + '%'" :title="g.t"></i></template>
@@ -84,7 +84,7 @@
                 <h4 class="h-s mt" x-show="seg.wk.length" x-text="'WKP terakhir di petak ini (' + seg.wk.length + ')'"></h4>
                 <ul class="rt-list"><template x-for="(w, j) in seg.wk.slice().sort(function (a, b) { return a[0] < b[0] ? 1 : -1; }).slice(0, 6)" :key="j"><li><b x-text="w[0].slice(8) + '/' + w[0].slice(5, 7)"></b> <span x-text="(w[9] || '?') + '–' + (w[10] || '?') + ' · ' + w[8]"></span></li></template></ul>
                 <h4 class="h-s mt" x-show="seg.g.length" x-text="'Gangguan prasarana 12 bln (' + seg.g.length + ')'"></h4>
-                <ul class="rt-list"><template x-for="r in seg.g.slice().sort(function (a, b) { return b.menit - a.menit; }).slice(0, 6)" :key="r.id"><li class="click" @click="$store.app.open('kejadian', r.id)"><b x-text="KAI.fmt.n(r.menit) + '′'"></b> <span x-text="KAI.fmt.date(r) + ' · ' + (r.sub || r.judul)"></span></li></template></ul>
+                <ul class="rt-list"><template x-for="r in seg.g.slice().sort(function (a, b) { return b.menit - a.menit; }).slice(0, 6)" :key="r.id"><li class="click" @click="$store.app.open('kejadian', r.id)"><b x-text="KAI.fmt.n(r.menit) + ' menit'"></b> <span x-text="KAI.fmt.date(r) + ' · ' + (r.sub || r.judul)"></span></li></template></ul>
               </div>
             </div>
           </template>
@@ -98,7 +98,7 @@
             <template x-for="x in priRows" :key="x.key">
               <tr class="click" :class="seg && seg.key === x.key ? 'sel' : ''" @click="pickSeg(x.key)">
                 <td x-text="x.nmA + ' – ' + x.nmB"></td><td x-text="(x.track || '–').toLowerCase()"></td><td class="num" x-text="x.nTrip"></td>
-                <td class="num" x-text="x.gN + ' · ' + KAI.fmt.n(x.gM) + '′'"></td><td class="num" x-text="x.wkJR"></td><td class="num" x-text="x.thi ? KAI.fmt.d1(x.thi.hi) : '–'"></td>
+                <td class="num" x-text="x.gN + ' · ' + KAI.fmt.n(x.gM) + ' menit'"></td><td class="num" x-text="x.wkJR"></td><td class="num" x-text="x.thi ? KAI.fmt.d1(x.thi.hi) : '–'"></td>
                 <td x-text="gapTxt(x)"></td><td><span class="tag" :class="flagCls(x.flag)" x-text="x.flag || '–'"></span></td>
               </tr>
             </template>
@@ -120,17 +120,18 @@
 
       <div class="card mt">
         <div class="card-h"><div><h3>KA yang melewati koridor</h3><p>Penuh = seluruh pendapatan KA · alokasi = × (km di koridor ÷ km rute) · indeks isian = penumpang ÷ (kapasitas GAPEKA × hari); bisa &gt; 100% karena kursi terjual ulang antar-relasi · klik untuk profil KA</p></div>
-          <div class="seg" role="group" aria-label="Jenis"><template x-for="m in [['all','Semua'],['PENUMPANG','Penumpang'],['BARANG','Barang']]" :key="m[0]"><button :aria-pressed="String(kaF === m[0])" @click="kaF = m[0]" x-text="m[1]"></button></template></div></div>
+          <input class="ctl sm" type="search" x-model.debounce.200ms="kaQ" placeholder="Nomor atau nama KA" aria-label="Saring KA menurut nomor atau nama" style="width:190px;margin-right:8px"><div class="seg" role="group" aria-label="Jenis"><template x-for="m in [['all','Semua'],['PENUMPANG','Penumpang'],['BARANG','Barang']]" :key="m[0]"><button :aria-pressed="String(kaF === m[0])" @click="kaF = m[0]" x-text="m[1]"></button></template></div></div>
         <div class="card-b tbl-wrap" style="max-height:480px">
           <table class="tbl"><thead><tr><th>KA</th><th>Kelas</th><th class="num">km di koridor</th><th class="num">Porsi</th><th class="num">Pendapatan penuh</th><th class="num">Alokasi</th><th class="num">Penumpang / ton</th><th class="num">Indeks isian</th><th>Catatan</th></tr></thead><tbody>
             <template x-for="r in kaRows" :key="r.id">
               <tr class="click" @click="openKaRow(r)">
                 <td><b x-text="r.no"></b> <span x-text="r.nama"></span></td><td x-text="r.kelas || '–'"></td><td class="num" x-text="KAI.fmt.d1(r.kmOn)"></td>
                 <td class="num" x-text="KAI.fmt.d1(r.share * 100) + '%'"></td><td class="num" x-text="KAI.fmt.rp(r.rev)"></td><td class="num"><b x-text="KAI.fmt.rp(r.revA)"></b></td>
-                <td class="num" x-text="r.jenis === 'BARANG' ? KAI.fmt.n(r.ton) + ' t' : KAI.fmt.n(r.pax)"></td>
+                <td class="num" x-text="r.jenis === 'BARANG' ? KAI.fmt.n(r.ton) + ' ton' : KAI.fmt.n(r.pax)"></td>
                 <td class="num" x-text="r.lf == null ? '–' : KAI.fmt.d1(r.lf) + '%'"></td><td class="muted sm" x-text="r.note"></td>
               </tr>
             </template>
+            <tr x-show="kaQ && !kaRows.length"><td colspan="9" class="muted" x-text="'Tidak ada KA bernomor/bernama &quot;' + kaQ.trim() + '&quot; yang melewati koridor ini.'"></td></tr>
           </tbody></table>
         </div>
       </div>

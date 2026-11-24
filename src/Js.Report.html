@@ -215,12 +215,12 @@ window.KAIReport = (function () {
     function topCards(LL, c, label) {
       var t = topKinds(LL, c, 3);
       return { head: 'Top 3 Gangguan ' + CLS_NAME[c] + ' ' + label, color: CLS[c],
-        items: t.length ? t.map(function (x, i) { return { t: (i + 1) + '. ' + clip(x.label, 52), s: f.n(x.n) + ' kejadian  |  ' + f.n(x.menit) + ' mnt  |  ' + f.n(x.heavy) + ' kejadian ≥' + cfg.top + ' menit' }; }) : [{ t: 'Tidak ada kejadian', s: '' }] };
+        items: t.length ? t.map(function (x, i) { return { t: (i + 1) + '. ' + clip(x.label, 52), s: f.n(x.n) + ' kejadian  |  ' + f.n(x.menit) + ' menit  |  ' + f.n(x.heavy) + ' kejadian ≥' + cfg.top + ' menit' }; }) : [{ t: 'Tidak ada kejadian', s: '' }] };
     }
     function quadText(m, lab) {
       var pts = m.points.slice().sort(function (a, b) { return b.menit - a.menit; });
       var q = function (p) { return p.n >= m.medN ? (p.menit >= m.medMenit ? 'sering, dampak tinggi' : 'sering, dampak rendah') : (p.menit >= m.medMenit ? 'jarang, dampak tinggi' : 'jarang, dampak rendah'); };
-      return lab + ': ' + pts.map(function (p) { return CLS_SHORT[p.kelas].toLowerCase() + ' ' + f.n(p.menit) + ' mnt/' + f.n(p.n) + ' kej. (' + q(p) + ')'; }).join('; ') + '.';
+      return lab + ': ' + pts.map(function (p) { return CLS_SHORT[p.kelas].toLowerCase() + ' ' + f.n(p.menit) + ' menit/' + f.n(p.n) + ' kej. (' + q(p) + ')'; }).join('; ') + '.';
     }
     /** Perlintasan sebidang: tabel 3 periode + kotak insight kanan + chip lokasi berulang & wilayah. */
     function crossSlide(title, toc, periods, X, detail, insT, recT) {
@@ -229,17 +229,17 @@ window.KAIReport = (function () {
       periods.forEach(function (p, i) { band(s, cols[i][1], 1.23, 2.22, 0.25, p, { fill: cols[i][0] }); });
       var xc = X.total.cells;
       tbl(s, 0.54, 1.55, 10.32, 2.28, [['Jenis kejadian', 'Frek', 'Total Lambat', 'Frek', 'Total Lambat', 'Frek', 'Total Lambat']].concat(X.rows.concat([X.total]).map(function (r, i) {
-        return [{ t: r.label, bold: i === 0 || r === X.total }].concat(r.cells.reduce(function (a, c, j) { return a.concat([{ t: f.n(c.n) + 'x', bold: j === 2 }, { t: f.n(c.menit) + ' mnt', bold: j === 2 }]); }, []));
+        return [{ t: r.label, bold: i === 0 || r === X.total }].concat(r.cells.reduce(function (a, c, j) { return a.concat([{ t: f.n(c.n) + 'x', bold: j === 2 }, { t: f.n(c.menit) + ' menit', bold: j === 2 }]); }, []));
       })), { fs: 10, colW: [3.46, 0.8, 1.42, 1.0, 1.32, 1.0, 1.32], headFill: 'A6A6A6', headColor: INK, totalRow: true, headSize: 11 });
       band(s, 10.97, 1.23, 1.78, 0.37, 'Insight', { fill: 'E26B0A', size: 13 });
       add(s, 'bigbox', 10.97, 1.68, 1.78, 1.05, { big: pct0(xc[2].menit, xc[1].menit), sub: 'Total menit perlintasan sebidang ' + periods[2] + ' vs ' + periods[1], fill: 'DCEEF4' });
-      add(s, 'textbox', 10.97, 2.8, 1.78, 1.06, { text: (X.rows[0] ? X.rows[0].label + ': ' + f.n(X.rows[0].cells[1].n) + 'x → ' + f.n(X.rows[0].cells[2].n) + 'x, menit ' + f.n(X.rows[0].cells[1].menit) + ' → ' + f.n(X.rows[0].cells[2].menit) + ' (' + pct0(X.rows[0].cells[2].menit, X.rows[0].cells[1].menit) + '). ' : '') + 'Temperan orang/hewan/lainnya (' + f.n(X.other.cells[2].n) + 'x, ' + f.n(X.other.cells[2].menit) + ' mnt) dipisah karena bukan perlintasan.', fill: 'FDEBDC', color: ORANGE, size: 7.5, bold: true, align: 'center' });
+      add(s, 'textbox', 10.97, 2.8, 1.78, 1.06, { text: (X.rows[0] ? X.rows[0].label + ': ' + f.n(X.rows[0].cells[1].n) + 'x → ' + f.n(X.rows[0].cells[2].n) + 'x, menit ' + f.n(X.rows[0].cells[1].menit) + ' → ' + f.n(X.rows[0].cells[2].menit) + ' (' + pct0(X.rows[0].cells[2].menit, X.rows[0].cells[1].menit) + '). ' : '') + 'Temperan orang/hewan/lainnya (' + f.n(X.other.cells[2].n) + 'x, ' + f.n(X.other.cells[2].menit) + ' menit) dipisah karena bukan perlintasan.', fill: 'FDEBDC', color: ORANGE, size: 7.5, bold: true, align: 'center' });
       band(s, 0.54, 4.1, 6.6, 0.3, 'Lokasi tertemper berulang di perlintasan ' + periods[2], { fill: NAVY2, size: 12 });
       var rep = detail.repeat.slice(0, 3);
-      add(s, 'chips', 0.54, 4.47, 6.6, 0.82, { gap: 0.12, items: (rep.length ? rep : [{ lokasi: 'Tidak ada lokasi berulang', wilayah: '–', n: 0, menit: 0 }]).map(function (x) { return { t: x.lokasi, s1: x.wilayah, s2: f.n(x.n) + ' kejadian | ' + f.n(x.menit) + ' mnt' }; }), size: 10.5 });
+      add(s, 'chips', 0.54, 4.47, 6.6, 0.82, { gap: 0.12, items: (rep.length ? rep : [{ lokasi: 'Tidak ada lokasi berulang', wilayah: '–', n: 0, menit: 0 }]).map(function (x) { return { t: x.lokasi, s1: x.wilayah, s2: f.n(x.n) + ' kejadian | ' + f.n(x.menit) + ' menit' }; }), size: 10.5 });
       band(s, 0.54, 5.38, 6.6, 0.3, 'Wilayah dengan kejadian perlintasan & temperan terbanyak ' + periods[2], { fill: NAVY2, size: 11 });
       var rg = detail.regions.slice(0, 4);
-      add(s, 'chips', 0.52, 5.75, 6.62, 0.78, { gap: 0.1, items: (rg.length ? rg : [{ wilayah: '–', n: 0, menit: 0 }]).map(function (x) { return { t: x.wilayah, s2: f.n(x.n) + ' kejadian | ' + f.n(x.menit) + ' mnt' }; }), size: 11.5 });
+      add(s, 'chips', 0.52, 5.75, 6.62, 0.78, { gap: 0.1, items: (rg.length ? rg : [{ wilayah: '–', n: 0, menit: 0 }]).map(function (x) { return { t: x.wilayah, s2: f.n(x.n) + ' kejadian | ' + f.n(x.menit) + ' menit' }; }), size: 11.5 });
       band(s, 7.27, 4.1, 5.48, 0.3, 'Insight', { fill: 'E26B0A', size: 12 });
       add(s, 'textbox', 7.27, 4.47, 5.48, 0.82, { text: V(insT, s), fill: 'FDEBDC', size: 9.5, align: 'justify' });
       band(s, 7.27, 5.38, 5.48, 0.3, 'Rekomendasi', { fill: '1B6E1B', size: 12 });
@@ -254,7 +254,7 @@ window.KAIReport = (function () {
         var hiF = r.freq && r.freq.n >= 5, hiW = r.worst && r.worst.menit >= 1000;
         return [{ t: regionLong(r.wilayah).replace(/^Daop/, 'DAOP').replace(/^Divre ([IV]+)/, function (m0, x) { return 'DIVRE ' + ({ I: 1, II: 2, III: 3, IV: 4 }[x] || x); }), bold: true, color: NAVY2 },
           { t: r.freq ? r.freq.lokasi : '-', color: hiF ? 'E0001B' : INK }, { t: f.n(r.freq ? r.freq.n : 0) + 'x', color: hiF ? 'E0001B' : INK, align: 'center' },
-          { t: r.worst ? r.worst.lokasi : '-', color: hiW ? 'E0001B' : INK }, { t: f.n(r.worst ? r.worst.menit : 0) + ' mnt', color: hiW ? 'E0001B' : INK }];
+          { t: r.worst ? r.worst.lokasi : '-', color: hiW ? 'E0001B' : INK }, { t: f.n(r.worst ? r.worst.menit : 0) + ' menit', color: hiW ? 'E0001B' : INK }];
       })), { fs: 9.5, colW: [1.98, 2.1, 1.26, 2.38, 1.56], headFill: 'BFBFBF', headColor: INK, headSize: 11.5, zebra: true });
       add(s, 'textbox', 10.15, 1.63, 2.9, 2.75, { head: 'Insight:', paras: V(insList, s), fill: INS_BG, size: 8.5, bold: true, headColor: INK });
       add(s, 'textbox', 10.15, 4.47, 2.9, 1.98, { head: 'Rekomendasi:', paras: V(recList, s), fill: REC_BG, size: 8.5, color: '1B6E1B', headColor: '1B6E1B' });
@@ -278,7 +278,7 @@ window.KAIReport = (function () {
         O.expo !== false ? ['Pendapatan terekspos (revenue at risk)', f.rp(K.exposure), pctTxt(K.exposure, Kp.exposure) + ' vs ' + R.prevP.short + '; bukan kerugian aktual', 'C2410C']
           : ['Kejadian ≥' + cfg.heavy + ' menit', f.n(K.heavy) + ' kali', pctTxt(K.heavy, Kp.heavy) + ' vs ' + R.prevP.short + '; ' + f.n(K.heavyMenit) + ' menit', 'C2410C']];
       var s1 = execSlide(curN + (better ? ' membaik' : ' memburuk') + ' dari ' + prevN + ': kejadian ' + pct0(K.n, Kp.n) + ', kelambatan ' + pct0(K.menit, Kp.menit), 'Ringkasan Eksekutif',
-        'RINGKASAN EKSEKUTIF · ' + R.P.base.toUpperCase(), 'Vs ' + R.yoyP.base + ': kejadian ' + pct0(K.n, Ky.n) + ', kelambatan ' + pct0(K.menit, Ky.menit) + (bigReg && bigReg.d ? '; perubahan terbesar dari ' + regionLong(bigReg.w) + ' (' + f.n(bigReg.na) + '→' + f.n(bigReg.nb) + ' kejadian; ' + f.n(bigReg.a) + '→' + f.n(bigReg.b) + ' mnt).' : '.'),
+        'RINGKASAN EKSEKUTIF · ' + R.P.base.toUpperCase(), 'Vs ' + R.yoyP.base + ': kejadian ' + pct0(K.n, Ky.n) + ', kelambatan ' + pct0(K.menit, Ky.menit) + (bigReg && bigReg.d ? '; perubahan terbesar dari ' + regionLong(bigReg.w) + ' (' + f.n(bigReg.na) + '→' + f.n(bigReg.nb) + ' kejadian; ' + f.n(bigReg.a) + '→' + f.n(bigReg.b) + ' menit).' : '.'),
         cards, 'Apa yang paling menonjol di Bulan ' + R.P.base + '?', kaiFindings(), 'Scorecard ' + R.P.base,
         [['Indikator gangguan', R.P.short, R.prevP.short, R.yoyP.short, 'vs ' + R.prevP.short],
          ['Frekuensi gangguan', f.n(K.n) + 'x', f.n(Kp.n) + 'x', f.n(Ky.n) + 'x', arrow(K.n, Kp.n)],
@@ -307,7 +307,7 @@ window.KAIReport = (function () {
       var mv = KAIA.CLASSES.map(function (c) { return { c: c, d: Cc[c].menit - Cp[c].menit }; }).sort(function (a, b) { return a.d - b.d; });
       var bigYtd = KAIA.CLASSES.slice().sort(function (a, b) { return Ct[b].menit - Ct[a].menit; })[0];
       note(s2, 0.45, 5.48, 12.4, 0.22, 'Nilai Kejadian & Menit = periode berjalan; Δ = perubahan terhadap pembanding. Merah = naik (memburuk), hijau = turun (membaik).' + (Cc.belum && Cc.belum.n ? ' Data belum lengkap = Kategori & Subgangguan belum diisi (' + f.n(Cc.belum.n) + ' kejadian, ' + f.n(Cc.belum.menit) + ' menit); dihitung di total, tidak di 4 jenis.' : '') + (Ltp.length && Ltp.length < Lt.length * 0.5 ? ' Data awal tahun pembanding di database tipis sehingga Δ frekuensi YtD perlu dibaca hati-hati.' : ''));
-      insrec(s2, 'MoM: kelambatan ' + pct0(K.menit, Kp.menit) + (mv.filter(function (x) { return x.d < 0; }).length ? ', terutama dari ' + mv.filter(function (x) { return x.d < 0; }).slice(0, 2).map(function (x) { return CLS_SHORT[x.c].toLowerCase() + ' (' + f.signed(x.d) + ' mnt)'; }).join(' dan ') : '') +
+      insrec(s2, 'MoM: kelambatan ' + pct0(K.menit, Kp.menit) + (mv.filter(function (x) { return x.d < 0; }).length ? ', terutama dari ' + mv.filter(function (x) { return x.d < 0; }).slice(0, 2).map(function (x) { return CLS_SHORT[x.c].toLowerCase() + ' (' + f.signed(x.d) + ' menit)'; }).join(' dan ') : '') +
         (mv.some(function (x) { return x.d > 0; }) ? ', sementara ' + mv.filter(function (x) { return x.d > 0; }).reverse().map(function (x) { return CLS_SHORT[x.c].toLowerCase() + ' (' + f.signed(x.d) + ')'; }).join(' dan ') + ' naik' : '') + '. YoY: ' +
         (KAIA.CLASSES.filter(function (c) { return Cc[c].menit > Cy[c].menit; }).map(function (c) { return CLS_SHORT[c].toLowerCase() + ' naik ' + pct0(Cc[c].menit, Cy[c].menit); }).join(', ') || 'semua jenis turun') + '. YtD: total ' + pct0(C.K.ytd.menit, C.K.ytdPrev.menit) + '; ' + CLS_SHORT[bigYtd].toLowerCase() + ' penyumbang terbesar (' + pctS(share(Ct[bigYtd].menit, C.K.ytd.menit)) + ' menit YtD).',
         recFrom(s2, up3.map(function (c) { return CLS_NAME[c]; }).concat(['Alam']), up3.length ? ['Prioritaskan pengendalian ' + up3.map(function (c) { return CLS_SHORT[c].toLowerCase(); }).join(' & ') + ' karena naik di ketiga perbandingan'] : []), 5.72, 0.66, 0.46);
@@ -318,7 +318,7 @@ window.KAIReport = (function () {
       var maxM = Math.max.apply(null, KAIA.CLASSES.map(function (c) { return (R.top[c][0] || { menit: 0 }).menit; }).concat([1]));
       KAIA.CLASSES.forEach(function (c, i) {
         var x = i % 2 ? 6.67 : 0.45, y = i < 2 ? 1.25 : 3.3;
-        add(s3, 'toplist', x, y, 6.06, 1.92, { head: CLS_NAME[c], color: CLS[c], headRight: R.P.short + ': ' + f.n(Cc[c].n) + ' kejadian · ' + f.n(Cc[c].menit) + ' mnt (' + pct0(Cc[c].menit, Cp[c].menit) + ' MoM)', maxM: maxM,
+        add(s3, 'toplist', x, y, 6.06, 1.92, { head: CLS_NAME[c], color: CLS[c], headRight: R.P.short + ': ' + f.n(Cc[c].n) + ' kejadian · ' + f.n(Cc[c].menit) + ' menit (' + pct0(Cc[c].menit, Cp[c].menit) + ' MoM)', maxM: maxM,
           cols: ['Subgangguan', 'Menit ' + R.P.base, 'Kej.', 'Δ MoM', 'Δ YoY', 'YtD ' + R.ym.slice(2, 4) + ' (Δ)'],
           rows: (R.top[c].length ? R.top[c] : []).map(function (t, j) {
             var yt = statKind(Lt, c, t.label).menit, ytp = statKind(Ltp, c, t.label).menit;
@@ -342,7 +342,7 @@ window.KAIReport = (function () {
       chart(s4, 6.7, 1.95, 6.05, 2.95, { kind: 'line', cats: cats, yName: '', noLegend: true, yMax: capY, series: KAIA.CLASSES.map(function (c) { return { name: CLS_SHORT[c], values: T.series[c].menit, color: CLS[c] }; }) });
       if (capY) {
         var big = recs.filter(function (r) { return r.ym === T.yms[flat[0].i] && r.kelas === flat[0].c; }).sort(byMenit)[0];
-        add(s4, 'textbox', 8.2, 2.03, 3.0, 0.42, { text: '↑ ' + KAIA.MON[+T.yms[flat[0].i].slice(5, 7) - 1] + ' ' + CLS_SHORT[flat[0].c] + ' ' + f.n(flat[0].v) + ' mnt di luar skala' + (big ? ' (' + clip(subOf(big).toLowerCase(), 30) + (big.lokasi ? ' ' + big.lokasi : '') + ' ' + f.n(big.menit) + ' mnt)' : ''), fill: 'FDEBDC', line: 'E0861A', color: 'C2410C', size: 8, bold: true });
+        add(s4, 'textbox', 8.2, 2.03, 3.0, 0.42, { text: '↑ ' + KAIA.MON[+T.yms[flat[0].i].slice(5, 7) - 1] + ' ' + CLS_SHORT[flat[0].c] + ' ' + f.n(flat[0].v) + ' menit di luar skala' + (big ? ' (' + clip(subOf(big).toLowerCase(), 30) + (big.lokasi ? ' ' + big.lokasi : '') + ' ' + f.n(big.menit) + ' menit)' : ''), fill: 'FDEBDC', line: 'E0861A', color: 'C2410C', size: 8, bold: true });
       }
       note(s4, 0.55, 4.92, 9, 0.18, 'Frekuensi dan kelambatan mencakup ' + (regions.length ? regions.join(', ') : 'seluruh wilayah Jawa–Sumatera') + ', dihitung berdasarkan TOTAL durasi (Total Andil Kelka).');
       text(s4, 0.4, 5.16, 9, 0.28, 'Counter Gangguan ' + R.P.base + ' (vs ' + R.prevP.base + ')', { size: 13, bold: true, color: NAVY });
@@ -425,7 +425,7 @@ window.KAIReport = (function () {
       return cands.filter(function (t) { return typeof document === 'undefined' || mw(t, 17, true) <= 11.4; })[0] || cands[3];
     }
     function top3Insight() {
-      var parts = KAIA.CLASSES.map(function (c) { var t = (R.top[c] || [])[0]; return t ? CLS_SHORT[c] + ': ' + t.label.toLowerCase() + ' ' + fm().n(t.menit) + ' mnt (' + fm().n(t.n) + ' kej.)' : null; }).filter(Boolean);
+      var parts = KAIA.CLASSES.map(function (c) { var t = (R.top[c] || [])[0]; return t ? CLS_SHORT[c] + ': ' + t.label.toLowerCase() + ' ' + fm().n(t.menit) + ' menit (' + fm().n(t.n) + ' kej.)' : null; }).filter(Boolean);
       var heavy = L.filter(function (r) { return r.menit >= cfg.top; });
       return parts.join('; ') + '. ' + fm().n(heavy.length) + ' kejadian ≥' + cfg.top + ' menit menyumbang ' + pctS(share(sumM(heavy), K.menit)) + ' kelambatan ' + R.P.base + '.';
     }
@@ -460,15 +460,15 @@ window.KAIReport = (function () {
       band(s, 7.3, 1.32, 5.4, 0.28, 'Jenis gangguan berulang ' + R.P.base + ' (≥4 kejadian)');
       tbl(s, 0.6, 1.65, 6.5, 3.3, [['Lokomotif', 'Kej.', 'Total menit', 'Rincian gangguan (bulan, menit)', 'RHI ' + (SR ? KAIA.MON[+SR.rhiYm.slice(5, 7) - 1] + '’' + SR.rhiYm.slice(2, 4) : '')]].concat(ru.length ? ru.map(function (x, i) {
         var hl = i < 2 ? 'FFF2DF' : null;
-        return [{ t: fm().unit(x.unit), bold: true, fill: hl }, { t: x.n + 'x', fill: hl }, { t: fm().n(x.menit) + ' mnt', fill: hl }, { t: x.events.map(function (e) { return fm().monOnly(e.ym) + ': ' + clip(subOf(e).replace(/^Lokomotif\s*-\s*/i, '').replace(/^Gangguan\s+/i, ''), 26) + ' (' + fm().n(e.menit) + ' mnt)'; }).join('; '), fill: hl }, { t: rhiOf(SR, x.unit), bold: true, color: rhiStColor(SR, x.unit), fill: hl }];
-      }) : [['Tidak ada lokomotif berulang', '0x', '0 mnt', '–', '–']]), { fs: 7.5, colW: [0.95, 0.4, 0.7, 3.4, 1.05], headFill: NAVY2 });
+        return [{ t: fm().unit(x.unit), bold: true, fill: hl }, { t: x.n + 'x', fill: hl }, { t: fm().n(x.menit) + ' menit', fill: hl }, { t: x.events.map(function (e) { return fm().monOnly(e.ym) + ': ' + clip(subOf(e).replace(/^Lokomotif\s*-\s*/i, '').replace(/^Gangguan\s+/i, ''), 26) + ' (' + fm().n(e.menit) + ' menit)'; }).join('; '), fill: hl }, { t: rhiOf(SR, x.unit), bold: true, color: rhiStColor(SR, x.unit), fill: hl }];
+      }) : [['Tidak ada lokomotif berulang', '0x', '0 menit', '–', '–']]), { fs: 7.5, colW: [0.95, 0.4, 0.7, 3.4, 1.05], headFill: NAVY2 });
       tbl(s, 7.3, 1.65, 5.4, 3.3, [['Jenis gangguan', 'Kej.', 'Jml sarana', 'Total menit', 'Wilayah dominan']].concat(rk.length ? rk.map(function (x, i) {
         return [{ t: x.jenis, bold: true, fill: i < 2 ? 'FFF2DF' : null }, { t: x.n + 'x', fill: i < 2 ? 'FFF2DF' : null }, { t: x.units + ' unit', fill: i < 2 ? 'FFF2DF' : null }, { t: fm().n(x.menit), fill: i < 2 ? 'FFF2DF' : null }, { t: x.wilayah, fill: i < 2 ? 'FFF2DF' : null }];
       }) : [['Tidak ada', '0x', '0 unit', '0', '–']]), { fs: 8, colW: [1.75, 0.45, 0.75, 0.7, 1.75], headFill: NAVY2 });
       var noUnit = L.filter(function (r) { return r.kelas === 'sarana' && !r.sarana.length; }).length;
       note(s, 0.6, 5.07, 6.5, 0.32, 'Unit = nomor lokomotif per kejadian (kereta/KRL/KRD tidak dinilai); bila kolom Nomor sarana kosong, nomor diambil dari judul/uraian laporan. ' + noUnit + ' kejadian sarana ' + R.P.short + ' tanpa nomor sarana. Baris oranye = 2 unit dengan menit terbesar. RHI = healthy index hari terakhir data RHI.', 6.5);
       note(s, 7.3, 5.07, 5.4, 0.32, "Kolom 'Jml sarana' menghitung nomor sarana unik; arsip JASUM tidak selalu mencatat nomor lokomotif.", 6.5);
-      insrec(s, (ru[0] ? 'Unit berulang: ' + ru.slice(0, 2).map(function (x) { return fm().unit(x.unit) + ' (' + x.n + ' kejadian, ' + fm().n(x.menit) + ' mnt)'; }).join(' dan ') + '. ' : 'Tidak ada unit berulang. ') + (rk[0] ? 'Pola sistemik: ' + rk.slice(0, 2).map(function (x) { return x.jenis.toLowerCase() + ' ' + x.n + ' kejadian di ' + x.units + ' unit'; }).join(', ') + '.' : ''),
+      insrec(s, (ru[0] ? 'Unit berulang: ' + ru.slice(0, 2).map(function (x) { return fm().unit(x.unit) + ' (' + x.n + ' kejadian, ' + fm().n(x.menit) + ' menit)'; }).join(' dan ') + '. ' : 'Tidak ada unit berulang. ') + (rk[0] ? 'Pola sistemik: ' + rk.slice(0, 2).map(function (x) { return x.jenis.toLowerCase() + ' ' + x.n + ' kejadian di ' + x.units + ' unit'; }).join(', ') + '.' : ''),
         recFrom(s, ['Sarana'], ru[0] ? ['RCA unit ' + ru.slice(0, 2).map(function (x) { return fm().unit(x.unit); }).join(' dan ')] : [], 3), 5.46, 0.62, 0.62);
     }
     function expoSlide() {
@@ -520,7 +520,7 @@ window.KAIReport = (function () {
         [['Total kejadian', f.n(Hs.n) + ' kali', (first ? f.day(first) : '–') + ' – ' + (last ? f.day(last) : '–'), '0F7A6C', RED],
          ['Total kelambatan', f.n(Hs.menit) + ' menit', 'rerata ' + f.n(avgAll) + ' menit/kejadian', '2563EB', RED],
          [j0 ? cap(j0.k) : 'Sarana', f.n(j0 ? j0.menit : 0) + ' menit', f.n(j0 ? j0.n : 0) + ' kejadian = ' + pctS(share(j0 ? j0.menit : 0, Hs.menit)) + ' kelambatan ' + w, 'D97706', RED],
-         [heavyLoc ? clip(heavyLoc.lokasi, 30) : 'Lokasi', f.n(heavyLoc ? heavyLoc.menit : 0) + ' menit', heavyLoc ? f.n(heavyLoc.n) + ' kejadian; rerata ' + f.n(heavyLoc.menit / heavyLoc.n) + ' mnt/kejadian (' + w + ': ' + f.n(avgAll) + ')' : '–', 'C2410C', RED]],
+         [heavyLoc ? clip(heavyLoc.lokasi, 30) : 'Lokasi', f.n(heavyLoc ? heavyLoc.menit : 0) + ' menit', heavyLoc ? f.n(heavyLoc.n) + ' kejadian; rerata ' + f.n(heavyLoc.menit / heavyLoc.n) + ' menit/kejadian (' + w + ': ' + f.n(avgAll) + ')' : '–', 'C2410C', RED]],
         'Apa yang paling menonjol di ' + WL + '?', regionFindings(H, Hs, jen, locM, null), 'Scorecard ' + w + ' (periode setara ' + setara + ')',
         [['Indikator', setara + ' ' + String(y - 1).slice(2), setara + ' ' + String(y).slice(2), 'Δ', ' '],
          ['Frekuensi gangguan', f.n(kp.n) + 'x', f.n(kc.n) + 'x', pct0(kc.n, kp.n), arrow(kc.n, kp.n)],
@@ -549,7 +549,7 @@ window.KAIReport = (function () {
       var bigPk = H.filter(function (r) { return r.ym === T.yms[pk]; }).sort(byMenit)[0];
       var alamRef = pickLib(lib, TOPIC.alam, regions, { max: 1, regionOnly: true, jenis: ['Media'] })[0];
       insrec(s3, 'Rerata kejadian per bulan ' + (rateA.months ? 'turun dari ' : '') + f.d1(rateA.n) + ' (' + (y - 1) + ', ' + rateA.months + ' bulan) ' + (rateA.months ? 'menjadi ' : '') + f.d1(rateB.n) + ' (' + y + ', ' + rateB.months + ' bulan). Kelambatan bulanan tertinggi terjadi pada ' + (T.yms[pk] ? f.month(T.yms[pk]) : '–') + ' (' + f.n(totM[pk] || 0) + ' menit)' +
-        (bigPk ? ', didorong ' + clip(subOf(bigPk), 50).toLowerCase() + ' di ' + (bigPk.lokasi || 'lokasi tidak tercatat') + ' (' + f.n(bigPk.menit) + ' mnt).' : '.') + (zeroM.length ? ' ' + zeroM.map(f.mon).join(', ') + ' tidak mencatat gangguan.' : ''),
+        (bigPk ? ', didorong ' + clip(subOf(bigPk), 50).toLowerCase() + ' di ' + (bigPk.lokasi || 'lokasi tidak tercatat') + ' (' + f.n(bigPk.menit) + ' menit).' : '.') + (zeroM.length ? ' ' + zeroM.map(f.mon).join(', ') + ' tidak mencatat gangguan.' : ''),
         recText(['Pertahankan tren dengan fokus pada penyebab puncak kelambatan' + (bigPk ? ' (' + clip(subOf(bigPk), 40).toLowerCase() + ')' : ''), 'Siapkan antisipasi musim hujan di petak rawan' + (alamRef ? ', mengingat ' + clip(String(alamRef.fakta).split(/:\s/)[0], 70) + ' ' + libCite(s3, alamRef) : ''), zeroM.length ? 'Konfirmasi kelengkapan input bulan ' + zeroM.map(f.mon).join(', ') : null]), 5.1, 0.95, 0.72);
 
       /* 4. Periode setara */
@@ -605,7 +605,7 @@ window.KAIReport = (function () {
         var refsLoc = pickLib(lib, TOPIC.alam.concat(['profil']), regions, { max: 1, regionOnly: true });
         insrec(s6, f.n(heavyLoc.n) + ' kejadian (' + pctS(share(heavyLoc.n, Hs.n)) + ' kejadian ' + w + ') menyumbang ' + pctS(share(heavyLoc.menit, Hs.menit)) + ' kelambatan ' + w + '; rerata ' + f.n(heavyLoc.menit / heavyLoc.n) + ' menit = ' + f.d1(heavyLoc.menit / heavyLoc.n / (avgAll || 1)) + '× rerata wilayah. Dua kejadian terbesar: ' + evS.slice(0, 2).map(function (r) { return clip(subOf(r).toLowerCase(), 36) + ' (' + f.n(r.menit) + "', " + dayTxt(r) + ')'; }).join(' dan ') + '.' +
           (refsLoc.length ? ' ' + refsLoc.map(function (r) { return r.fakta + ' ' + libCite(s6, r); }).join(' ') : ''),
-          recFrom(s6, [CLS_NAME[evS[0].kelas], 'Sarana', 'Alam'], ['Kaji akar masalah kejadian terbesar di lokasi ini (' + clip(subOf(evS[0]), 40).toLowerCase() + ', ' + f.n(evS[0].menit) + ' mnt)'], 3), 4.95, 0.85, 0.82);
+          recFrom(s6, [CLS_NAME[evS[0].kelas], 'Sarana', 'Alam'], ['Kaji akar masalah kejadian terbesar di lokasi ini (' + clip(subOf(evS[0]), 40).toLowerCase() + ', ' + f.n(evS[0].menit) + ' menit)'], 3), 4.95, 0.85, 0.82);
       }
 
       /* 7. Sarana */
@@ -640,7 +640,7 @@ window.KAIReport = (function () {
       band(s8, 6.7, 0.95, 6.05, 0.3, '5 kejadian perlintasan dengan kelambatan terbesar');
       tbl(s8, 6.7, 1.27, 6.05, 3.5, [['Tgl', 'Petak', 'Kejadian', 'Menit']].concat(xb.length ? xb.map(function (r) { return [r.d ? (r.d < 10 ? '0' : '') + r.d + '/' + r.ym.slice(5, 7) + '/' + r.ym.slice(2, 4) : f.mon(r.ym), clip(r.lokasi || 'Tidak tercatat', 26), clip(r.judul || r.sub, 90), { t: f.n(r.menit), bold: true, align: 'center' }]; }) : [['–', 'Tidak ada', '–', '0']]), { fs: 8, colW: [0.75, 1.35, 3.35, 0.6], headFill: NAVY });
       var xr = pickLib(lib, TOPIC.perlintasan, regions, { max: 1 });
-      insrec(s8, (xk[0] ? 'Durasi kelambatan perlintasan didorong ' + xk[0].k.toLowerCase() + ' (' + f.n(xk[0].n) + ' kejadian, ' + f.n(xk[0].menit) + ' mnt). ' : '') + (xb[0] ? 'Kejadian terbesar: ' + clip(xb[0].judul || xb[0].sub, 80) + ' (' + f.n(xb[0].menit) + ' mnt). ' : '') + xr.map(function (r) { return r.fakta + ' ' + libCite(s8, r); }).join(' '),
+      insrec(s8, (xk[0] ? 'Durasi kelambatan perlintasan didorong ' + xk[0].k.toLowerCase() + ' (' + f.n(xk[0].n) + ' kejadian, ' + f.n(xk[0].menit) + ' menit). ' : '') + (xb[0] ? 'Kejadian terbesar: ' + clip(xb[0].judul || xb[0].sub, 80) + ' (' + f.n(xb[0].menit) + ' menit). ' : '') + xr.map(function (r) { return r.fakta + ' ' + libCite(s8, r); }).join(' '),
         recFrom(s8, ['Perlintasan'], xl[0] ? ['Koordinasi Dishub/Polres/Pemda untuk pengamanan perlintasan di ' + xl.slice(0, 2).map(function (x) { return x.lokasi; }).join(' dan ')] : [], 3), 4.95, 0.85, 0.82);
 
       /* 9. Alam & kerawanan */
@@ -667,7 +667,7 @@ window.KAIReport = (function () {
       if (jen[0]) {
         var Lj = H.filter(function (r) { return r.kelas === 'sarana' && (r.jenis || 'Tidak tercatat') === jen[0].k; }), g = KAIA.group(Lj, kindKey);
         var tops = Object.keys(g).map(function (k) { return { k: k, m: sumM(g[k]) }; }).sort(function (a, b) { return b.m - a.m; }).slice(0, 2);
-        out.push({ head: cap(jen[0].k) + ' menjadi sumber kelambatan terbesar', body: fm().n(jen[0].n) + ' gangguan ' + jen[0].k.toLowerCase() + ' menyumbang ' + fm().n(jen[0].menit) + ' menit (' + pctS(share(jen[0].menit, Hs.menit)) + ')' + (tops.length ? '; ' + tops.map(function (t) { return t.k.toLowerCase() + ' (' + fm().n(t.m) + ' mnt)'; }).join(' dan ') + ' terbesar.' : '.') });
+        out.push({ head: cap(jen[0].k) + ' menjadi sumber kelambatan terbesar', body: fm().n(jen[0].n) + ' gangguan ' + jen[0].k.toLowerCase() + ' menyumbang ' + fm().n(jen[0].menit) + ' menit (' + pctS(share(jen[0].menit, Hs.menit)) + ')' + (tops.length ? '; ' + tops.map(function (t) { return t.k.toLowerCase() + ' (' + fm().n(t.m) + ' menit)'; }).join(' dan ') + ' terbesar.' : '.') });
       }
       var lin = KAIA.lintasRankOf(H)[0];
       if (lin) out.push({ head: 'Lintas ' + lin.lintas + ' menanggung ' + pctS(share(lin.menit, Hs.menit)) + ' kelambatan', body: fm().n(lin.n) + ' kejadian, ' + fm().n(lin.menit) + ' menit (' + pctS(share(lin.menit, Hs.menit)) + ') terjadi di lintas ' + lin.lintas + '.' });
@@ -745,7 +745,7 @@ window.KAIReport = (function () {
       var topicsAll = [].concat(TOPIC.alam, TOPIC.perlintasan, TOPIC.sarana, TOPIC.prasarana, TOPIC.operasional);
       var media = pickLib(lib, topicsAll, regions, { max: 5, jenis: ['Media', 'Resmi'] }), sci = pickLib(lib, topicsAll, regions, { max: 5, jenis: ['Ilmiah', 'Pedoman'] });
       var clsMenit = mode === 'wilayah' ? KAIA.byClassOf(recsToEnd) : R.cls;
-      var link = function (r) { var ks = KAIA.CLASSES.filter(function (c) { return r.topik.some(function (t) { return TOPIC[c].indexOf(t) >= 0; }); }); return ks.length ? ks.map(function (c) { return CLS_SHORT[c] + ': ' + fm().n(clsMenit[c].menit) + ' mnt'; }).join('; ') : '–'; };
+      var link = function (r) { var ks = KAIA.CLASSES.filter(function (c) { return r.topik.some(function (t) { return TOPIC[c].indexOf(t) >= 0; }); }); return ks.length ? ks.map(function (c) { return CLS_SHORT[c] + ': ' + fm().n(clsMenit[c].menit) + ' menit'; }).join('; ') : '–'; };
       var s = slide('Konteks eksternal' + (mode === 'wilayah' ? ' ' + regions[0] : '') + ': ' + media.length + ' pemberitaan & ' + sci.length + ' kajian ilmiah yang menguatkan temuan', { toc: 'Konteks eksternal: pemberitaan media & kajian ilmiah' });
       text(s, 0.45, 0.88, 12.4, 0.3, 'Fakta eksternal dari pustaka rujukan terverifikasi (tab M_RUJUKAN), dikaitkan dengan angka laporan. Nomor [n] merujuk ke Daftar Sumber (APA 7) di lampiran.', { size: 11 });
       band(s, 0.6, 1.25, 12.1, 0.3, 'Pemberitaan media massa', { fill: 'E26B0A' });
@@ -776,7 +776,7 @@ window.KAIReport = (function () {
       var a = KAIA.CLASSES.slice().sort(function (x, y) { return C.C.ytdPrev[y].menit - C.C.ytdPrev[x].menit; })[0], b = KAIA.CLASSES.slice().sort(function (x, y) { return C.C.ytd[y].menit - C.C.ytd[x].menit; })[0];
       matrixSlide('Gangguan ' + C.ytdPrevP.short + ' didominasi ' + CLS_SHORT[a].toLowerCase() + ', ' + C.ytdP.short + ' didominasi ' + CLS_SHORT[b].toLowerCase(), null, mtp, mt, C.ytdPrevP.label, C.ytdP.label, 'Gangguan ' + C.ytdPrevP.short + ' vs ' + C.ytdP.short,
         [topCards(Ltp, a, C.ytdPrevP.short), topCards(Lt, b, C.ytdP.short)],
-        'YtD ' + C.ytdP.label + ' mencatat ' + fm().n(C.K.ytd.n) + ' kejadian (' + pct0(C.K.ytd.n, C.K.ytdPrev.n) + ') dan ' + fm().n(C.K.ytd.menit) + ' menit (' + pct0(C.K.ytd.menit, C.K.ytdPrev.menit) + ') dibanding ' + C.ytdPrevP.label + '. ' + KAIA.CLASSES.map(function (c) { return CLS_SHORT[c].toLowerCase() + ' ' + fm().n(C.C.ytdPrev[c].menit) + ' → ' + fm().n(C.C.ytd[c].menit) + ' mnt'; }).join('; ') + '.',
+        'YtD ' + C.ytdP.label + ' mencatat ' + fm().n(C.K.ytd.n) + ' kejadian (' + pct0(C.K.ytd.n, C.K.ytdPrev.n) + ') dan ' + fm().n(C.K.ytd.menit) + ' menit (' + pct0(C.K.ytd.menit, C.K.ytdPrev.menit) + ') dibanding ' + C.ytdPrevP.label + '. ' + KAIA.CLASSES.map(function (c) { return CLS_SHORT[c].toLowerCase() + ' ' + fm().n(C.C.ytdPrev[c].menit) + ' → ' + fm().n(C.C.ytd[c].menit) + ' menit'; }).join('; ') + '.',
         function (s) { return recFrom(s, [CLS_NAME[b], 'Alam', 'Operasional'], [], 4); });
       lastAppx('Perbandingan jenis gangguan ' + (+R.ym.slice(0, 4) - 1) + ' vs ' + R.ym.slice(0, 4));
       // perlintasan & temperan YtD
@@ -824,7 +824,7 @@ window.KAIReport = (function () {
           return [{ t: r.label, bold: true }].concat(CP.kinds.map(function (k) { var v = r.byKind[k] || 0; return { t: v ? fm().n(v) : '–', align: 'center', fill: v && v === mx && v >= 100 ? 'F5B971' : null, bold: v === mx && v > 0 }; }));
         })), { fs: 8, colW: [1.8, 0.64, 0.64, 0.64, 0.64, 0.64], headFill: NAVY2 });
         note(s4, 0.65, 5.12, 12, 0.3, 'Pengelompokan komponen dari teks subgangguan dengan kata kunci (aturan ' + (meta.componentRule || 'KOMP') + '). Kejadian tanpa kata kunci komponen masuk "Lainnya". Oranye = jenis sarana dengan menit terbesar per komponen.', 6.5);
-        insrec(s4, tops.map(function (r) { return r.label.toLowerCase() + ' ' + fm().n(r.menit) + ' mnt (' + pctS(r.share) + ', ' + pct0(r.menit, r.prev) + ' vs ' + R.prevP.short + ')'; }).join(' dan ') + ' menjadi komponen dominan ' + R.P.base + '.',
+        insrec(s4, tops.map(function (r) { return r.label.toLowerCase() + ' ' + fm().n(r.menit) + ' menit (' + pctS(r.share) + ', ' + pct0(r.menit, r.prev) + ' vs ' + R.prevP.short + ')'; }).join(' dan ') + ' menjadi komponen dominan ' + R.P.base + '.',
           recFrom(s4, ['Sarana'], ['Wajibkan kode komponen penyebab untuk laporan "tenaga lemah" dan gangguan tanpa komponen'], 3), 5.46, 0.62, 0.62);
       }
       // ----- Track Health Index -----
@@ -857,7 +857,7 @@ window.KAIReport = (function () {
       var rail = Lp.filter(function (r) { return /rel|goyang|wesel|spaten|track/i.test(r.sub || r.judul || ''); }), sig = Lp.filter(function (r) { return /sinyal|persinyalan|track merah|counting|interlocking/i.test(r.sub || r.judul || ''); });
       var yt = recs.filter(function (r) { return r.kelas === 'prasarana' && r.ym >= R.ym.slice(0, 4) + '-01' && r.ym <= R.ym; }), ytS = yt.filter(function (r) { return KAIK.prasKind(r) === 'sin'; }), ytJ = yt.filter(function (r) { return KAIK.prasKind(r) === 'jr'; });
       note(s, 0.65, 5.0, 12, 0.3, 'Jalan rel & wesel ' + fm().n(rail.length) + ' kejadian / ' + fm().n(sumM(rail)) + ' menit; persinyalan ' + fm().n(sig.length) + ' kejadian / ' + fm().n(sumM(sig)) + ' menit (' + R.P.base + '). Konteks YTD ' + KAIA.MON[0] + '–' + KAIA.MON[+R.ym.slice(5, 7) - 1] + ' ' + R.ym.slice(0, 4) + ': persinyalan ' + fm().n(ytS.length) + ' kejadian / ' + fm().n(sumM(ytS)) + ' menit (' + pctS(share(sumM(ytS), sumM(yt))) + ' menit prasarana), jalan rel & wesel ' + fm().n(ytJ.length) + ' kejadian / ' + fm().n(sumM(ytJ)) + ' menit. THI = Track Health Index UPT JR ' + (KREP.PR ? f.month(KREP.PR.thiYm) : '') + ' di lokasi (persinyalan di luar cakupan THI).');
-      insrec(s, 'Menit prasarana ' + (cur.menit >= prev.menit ? 'naik ' : 'turun ') + pctS(Math.abs(KAIA.pct(cur.menit, prev.menit) || 0)) + ' dari ' + R.prevP.base + (kinds[0] ? '; terbesar ' + kinds.slice(0, 2).map(function (x) { return x.k.toLowerCase() + ' ' + x.n + ' kejadian (' + fm().n(x.menit) + ' mnt)'; }).join(' dan ') : '') + (topW ? ', terpusat di ' + topW : '') + '.',
+      insrec(s, 'Menit prasarana ' + (cur.menit >= prev.menit ? 'naik ' : 'turun ') + pctS(Math.abs(KAIA.pct(cur.menit, prev.menit) || 0)) + ' dari ' + R.prevP.base + (kinds[0] ? '; terbesar ' + kinds.slice(0, 2).map(function (x) { return x.k.toLowerCase() + ' ' + x.n + ' kejadian (' + fm().n(x.menit) + ' menit)'; }).join(' dan ') : '') + (topW ? ', terpusat di ' + topW : '') + '.',
         recFrom(s, ['Prasarana'], rail.length >= 3 ? ['Inspeksi geometri & uji ultrasonik rel di petak dengan kejadian berulang (' + rail.slice(0, 3).map(function (r) { return r.lokasi || r.wilayah; }).filter(Boolean).join(', ') + ')'] : [], 3), 5.46, 0.62, 0.62);
     }
     function regionAppendix() {
@@ -961,7 +961,7 @@ window.KAIReport = (function () {
       var hPra = function (t) { return /batu bara/i.test(t) ? 'Angkutan batu bara' : /penurunan muka tanah/i.test(t) ? 'Penurunan muka tanah' : /elektrifikasi|KRL/i.test(t) && /persinyalan/i.test(t) && !/stasiun paling timur/i.test(t) ? 'Persinyalan & listrik' : /persinyalan/i.test(t) ? 'Persinyalan & prasarana' : /penumpang|layanan|ekspres/i.test(t) ? 'Layanan & prasarana' : 'Prasarana & layanan'; };
       var prs = H.filter(function (r) { return r.kelas === 'prasarana'; }).sort(byMenit).slice(0, 2);
       var boxes = [{ h: 'Geografi & lintas', c: NAVY2, t: ftxt(gGeo) || 'Belum ada fakta profil bernomor untuk wilayah ini di M_RUJUKAN.' },
-        { h: gPra.length ? hPra(gPra[0].fakta) : gGeo.length ? hPra(gGeo[0].fakta) : 'Prasarana', c: '3B5BDB', t: (ftxt(gPra) || (prs.length ? '' : 'Tidak ada gangguan prasarana pada bulan ini.')) + (prs.length ? ' ' + mName + ': ' + prs.map(function (r) { return clip(subOf(r).replace(/^Gangguan\s+/i, ''), 40).toLowerCase() + (r.lokasi ? ' ' + r.lokasi : '') + ' (' + f.n(r.menit) + ' mnt)'; }).join('; ') + ' ' + cite(s, [DB]) + '.' : '') }];
+        { h: gPra.length ? hPra(gPra[0].fakta) : gGeo.length ? hPra(gGeo[0].fakta) : 'Prasarana', c: '3B5BDB', t: (ftxt(gPra) || (prs.length ? '' : 'Tidak ada gangguan prasarana pada bulan ini.')) + (prs.length ? ' ' + mName + ': ' + prs.map(function (r) { return clip(subOf(r).replace(/^Gangguan\s+/i, ''), 40).toLowerCase() + (r.lokasi ? ' ' + r.lokasi : '') + ' (' + f.n(r.menit) + ' menit)'; }).join('; ') + ' ' + cite(s, [DB]) + '.' : '') }];
       var gKam = take(function (x) { return /keamanan/.test(tp(x)); }, 2), gPer = take(function (x) { return /perlintasan/.test(tp(x)); }, 2), gRaw = take(function (x) { return /banjir|longsor|gempa/.test(tp(x)); }, 2);
       var evH = function (r) { var w1 = subOf(r).replace(/^(Gangguan|KA|Ka)\s+/, '').split(/\s+/)[0]; return capF(w1) + ' ' + String(r.lokasi || '').replace(/^Sta\.\s*/, ''); };
       if (gKam.length && big) boxes.push({ h: evH(big), c: 'B5401B', t: ftxt(gKam) });
@@ -969,7 +969,7 @@ window.KAIReport = (function () {
       if (gRaw.length && boxes.length < 4) boxes.push({ h: /gempa/.test(tp(gRaw[0])) ? 'Bahaya gempa' : 'Titik rawan', c: '2E6E62', t: ftxt(gRaw) });
       if (boxes.length < 4) {
         var oth = top.slice(gKam.length ? 1 : 0, (gKam.length ? 1 : 0) + 4);
-        boxes.push({ h: gKam.length ? 'Gangguan lain ' + mName : 'Kerawanan', c: '2E6E62', t: oth.length ? oth.map(function (r) { return clip(subOf(r).replace(/^Gangguan\s+/i, ''), 44) + (r.lokasi ? ' ' + r.lokasi : '') + ' ' + f.n(r.menit) + ' mnt'; }).join('; ') + ' ' + cite(s, [DB]) + '.' : 'Tidak ada kejadian lain.' });
+        boxes.push({ h: gKam.length ? 'Gangguan lain ' + mName : 'Kerawanan', c: '2E6E62', t: oth.length ? oth.map(function (r) { return clip(subOf(r).replace(/^Gangguan\s+/i, ''), 44) + (r.lokasi ? ' ' + r.lokasi : '') + ' ' + f.n(r.menit) + ' menit'; }).join('; ') + ' ' + cite(s, [DB]) + '.' : 'Tidak ada kejadian lain.' });
       }
       boxes.slice(0, 4).forEach(function (b, i) { var x = 0.45 + (i % 2) * 3.02, y = 1.25 + Math.floor(i / 2) * 2.06; add(s, 'textbox', x, y, 2.9, 1.96, { head: b.h, text: b.t, fill: 'F7F8FA', size: 8.5, headColor: b.c, accent: b.c, valign: 'top' }); });
       [['Kejadian ' + R.P.short, f.n(st.n), (st.n <= stp.n ? '▼ ' : '▲ ') + R.prevP.short + ': ' + f.n(stp.n), st.n <= stp.n ? GREEN : RED],
@@ -979,10 +979,10 @@ window.KAIReport = (function () {
       chart(s, 6.6, 2.55, 6.15, 1.1, { kind: 'barHStack', cats: [w], noLegend: false, legendBottom: true, small: true, series: KAIA.ALLK.filter(function (c) { return cls[c] && (cls[c].n || KAIA.CLASSES.indexOf(c) >= 0); }).map(function (c) { return { name: (CLS_SHORT[c] || 'Belum lengkap') + ' ' + f.n(cls[c].n) + 'x · ' + f.n(cls[c].menit) + "'", values: [cls[c].menit], color: CLS[c] || '9AA3B2' }; }) });
       band(s, 6.6, 3.72, 6.15, 0.24, 'Tiga kejadian dengan kelambatan terbesar, ' + R.P.base, { size: 9, fill: 'FFFFFF' });
       tbl(s, 6.6, 3.98, 6.15, 1.38, [['Tgl', 'Lokasi', 'Uraian (dari laporan)', 'Menit']].concat(top.slice(0, 3).map(function (r) { return [(r.d < 10 ? '0' : '') + r.d + '/' + R.ym.slice(5, 7), clip(r.lokasi || '(lokasi tidak tercatat)', 26), clip((r.ka ? 'KA ' + r.ka + ' ' : '') + (r.judul || r.sub || ''), 80), { t: f.n(r.menit), bold: true }]; })), { fs: 7.5, colW: [0.5, 1.3, 3.7, 0.55], headFill: NAVY });
-      var ins = (berulang ? romW(w) + ': Permasalahan ini telah dibahas beserta insight dan rekomendasinya pada Laporan Gangguan Operasional ' + R.prevP.base + ' (' + f.n(stp.n) + ' kejadian, ' + f.n(stp.menit) + ' mnt); ' + mName + ' ' + (st.menit > stp.menit ? 'naik' : 'turun') + ' menjadi ' + f.n(st.menit) + ' mnt dari ' + f.n(st.n) + ' kejadian' + (st.menit > stp.menit ? ' — belum membaik' : '') + '. '
-        : romW(w) + ' ' + (st.menit > stp.menit ? 'naik' : 'turun') + ' dari ' + f.n(stp.n) + ' kejadian/' + f.n(stp.menit) + ' mnt (' + R.prevP.short + ') menjadi ' + f.n(st.n) + ' kejadian/' + f.n(st.menit) + ' mnt (' + R.P.short + '). ') +
-        (big ? pctS(share(big.menit, st.menit)) + ' menit berasal dari satu kejadian terbesar (' + clip(subOf(big), 46) + (big.lokasi ? ', ' + big.lokasi : '') + ', ' + f.n(big.menit) + ' mnt)' + (top.length > 1 ? '; tanpa kejadian itu ' + f.n(st.n - 1) + ' kejadian/' + f.n(st.menit - big.menit) + ' mnt' : '') + '. ' : '') +
-        CLS_SHORT[lead] + ' menyumbang ' + pctS(share(cls[lead].menit, st.menit)) + ' menit.' + (cls.belum && cls.belum.n ? ' ' + f.n(cls.belum.n) + ' laporan (' + f.n(cls.belum.menit) + ' mnt) berstatus Data belum lengkap karena kategori & subgangguan kosong.' : '');
+      var ins = (berulang ? romW(w) + ': Permasalahan ini telah dibahas beserta insight dan rekomendasinya pada Laporan Gangguan Operasional ' + R.prevP.base + ' (' + f.n(stp.n) + ' kejadian, ' + f.n(stp.menit) + ' menit); ' + mName + ' ' + (st.menit > stp.menit ? 'naik' : 'turun') + ' menjadi ' + f.n(st.menit) + ' menit dari ' + f.n(st.n) + ' kejadian' + (st.menit > stp.menit ? ' — belum membaik' : '') + '. '
+        : romW(w) + ' ' + (st.menit > stp.menit ? 'naik' : 'turun') + ' dari ' + f.n(stp.n) + ' kejadian/' + f.n(stp.menit) + ' menit (' + R.prevP.short + ') menjadi ' + f.n(st.n) + ' kejadian/' + f.n(st.menit) + ' menit (' + R.P.short + '). ') +
+        (big ? pctS(share(big.menit, st.menit)) + ' menit berasal dari satu kejadian terbesar (' + clip(subOf(big), 46) + (big.lokasi ? ', ' + big.lokasi : '') + ', ' + f.n(big.menit) + ' menit)' + (top.length > 1 ? '; tanpa kejadian itu ' + f.n(st.n - 1) + ' kejadian/' + f.n(st.menit - big.menit) + ' menit' : '') + '. ' : '') +
+        CLS_SHORT[lead] + ' menyumbang ' + pctS(share(cls[lead].menit, st.menit)) + ' menit.' + (cls.belum && cls.belum.n ? ' ' + f.n(cls.belum.n) + ' laporan (' + f.n(cls.belum.menit) + ' menit) berstatus Data belum lengkap karena kategori & subgangguan kosong.' : '');
       insrec(s, ins, recFrom(s, [CLS_NAME[lead]], [big ? 'Tuntaskan RCA kejadian terbesar (' + clip(subOf(big), 40) + ') dan tetapkan tindakan pencegahan di ' + (big.lokasi || w) : null, top[1] ? 'Tindak lanjuti ' + clip(subOf(top[1]), 36).toLowerCase() + (top[1].lokasi ? ' di ' + top[1].lokasi : '') : null].filter(Boolean), 3), 5.45, 0.62, 0.62);
     }
 
@@ -1093,11 +1093,11 @@ window.KAIReport = (function () {
         series: [{ name: 'Gangguan prasarana ' + w6 + ' (kejadian)', type: 'bar', values: rg.map(function (x) { return x.g6.n; }), color: '6B7A90' },
                  { name: 'WKP jalan rel melebihi program ' + w6 + ' (kegiatan)', type: 'bar', values: rg.map(function (x) { return x.wkp6.over; }), color: 'E0861A' },
                  { name: 'THI ' + monL(PR.thiYm) + ' ' + PR.thiYm.slice(0, 4) + ' (indeks 0–100)', type: 'line', axis: 'y2', values: rg.map(function (x) { return x.hi; }), color: NAVY, labels: true, fmt: '0.0' }] });
-      var rows = [['Wilayah', 'UPT', 'THI ' + monS(PR.first) + '→' + mon, 'Grade ' + mon, 'UPT <70', 'Gangg. pras ' + monS(R.ym) + ' (n·mnt)', 'WKP JR ' + monS(R.ym), '>program', 'Lebih (mnt)', 'Andil KA (mnt)']].concat(rg.map(function (x) {
+      var rows = [['Wilayah', 'UPT', 'THI ' + monS(PR.first) + '→' + mon, 'Grade ' + mon, 'UPT <70', 'Gangg. pras ' + monS(R.ym) + ' (n·menit)', 'WKP JR ' + monS(R.ym), '>program', 'Lebih (menit)', 'Andil KA (menit)']].concat(rg.map(function (x) {
         return [{ t: romW(x.w), bold: true }, f.n(x.nUpt), d1(x.hiFirst) + '→' + d1(x.hi), { t: x.grade || '–', color: GRADE_CM()[x.grade] || INK }, { t: f.n(x.low70.length), color: x.low70.length ? RED : INK, bold: !!x.low70.length }, f.n(x.g.n) + ' · ' + f.n(x.g.menit), f.n(x.wkp.n), { t: f.n(x.wkp.over), bold: true }, f.n(x.wkp.lebih), { t: f.n(x.wkp.andil), color: x.wkp.andil > 5000 ? RED : INK }]; }));
       tbl(s, 6.9, 1.25, 5.95, 4.5, rows, { fs: 7.5, colW: [0.7, 0.4, 0.95, 0.75, 0.45, 0.85, 0.55, 0.6, 0.55, 0.65], headFill: NAVY, zebra: true });
       var andT = rg.slice().sort(function (a, b) { return b.wkp.andil - a.wkp.andil; }).slice(0, 2), rho = PR.rho == null ? null : Math.round(PR.rho * 100) / 100;
-      duo(s, 'THI terendah ' + mon + ': ' + minW.slice(0, 2).map(function (x) { return romW(x.w) + ' ' + d1(x.hi); }).join(', ') + '. WKP jalan rel melebihi program terbanyak ' + mon + ': ' + topOver.map(function (x) { return romW(x.w) + ' ' + f.n(x.wkp.over) + ' kegiatan/' + f.n(x.wkp.lebih) + ' mnt'; }).join(', ') + '. Andil kelka WKP terbesar: ' + andT.map(function (x) { return romW(x.w) + ' ' + f.n(x.wkp.andil) + ' mnt'; }).join(', ') + '. Korelasi peringkat THI vs jumlah gangguan prasarana per UPT ρ = ' + (rho == null ? '–' : (rho < 0 ? '−' : '') + String(Math.abs(rho).toFixed(2)).replace('.', ',')) + (rho != null && Math.abs(rho) < 0.2 ? ' → THI belum memprediksi gangguan (gangguan prasarana didominasi persinyalan).' : '.'),
+      duo(s, 'THI terendah ' + mon + ': ' + minW.slice(0, 2).map(function (x) { return romW(x.w) + ' ' + d1(x.hi); }).join(', ') + '. WKP jalan rel melebihi program terbanyak ' + mon + ': ' + topOver.map(function (x) { return romW(x.w) + ' ' + f.n(x.wkp.over) + ' kegiatan/' + f.n(x.wkp.lebih) + ' menit'; }).join(', ') + '. Andil kelka WKP terbesar: ' + andT.map(function (x) { return romW(x.w) + ' ' + f.n(x.wkp.andil) + ' menit'; }).join(', ') + '. Korelasi peringkat THI vs jumlah gangguan prasarana per UPT ρ = ' + (rho == null ? '–' : (rho < 0 ? '−' : '') + String(Math.abs(rho).toFixed(2)).replace('.', ',')) + (rho != null && Math.abs(rho) < 0.2 ? ' → THI belum memprediksi gangguan (gangguan prasarana didominasi persinyalan).' : '.'),
         'Pisahkan sasaran: (1) THI → program perawatan jalan rel per komponen terlemah; (2) disiplin WKP → batasi kelebihan durasi dan andil KA, terutama ' + andT.map(function (x) { return romW(x.w); }).join('–') + '; (3) gangguan persinyalan dianalisis bersama data sintelis karena tidak tercakup THI.', 5.84, 0.74, 0.56);
       srcNote(s, 'tab THI (Ringkasan Bulanan per wilayah, ' + monS(PR.first) + '–' + mon + ' ' + PR.thiYm.slice(0, 4) + '); tab WKP (tanggal terverifikasi); Gangguan_Induk (' + meta.rule + '). WKP JR = kegiatan jalan rel/wesel/geometri/bantalan/las/KPJR.');
     }
@@ -1151,7 +1151,7 @@ window.KAIReport = (function () {
         'Gangguan prasarana didominasi ' + (dom ? 'jalan rel & wesel' : 'persinyalan') + ' (' + f.n(x.g6.jr) + ' JR/wesel vs ' + f.n(x.g6.sin) + ' persinyalan). WKP ' + mon + ': ' + pct + '% kegiatan melebihi program.' + (x.unmapped6 ? ' ' + f.n(x.unmapped6) + ' gangguan tanpa lokasi resor.' : '');
       var rr = []; if (P1.length) rr.push('Prioritaskan perawatan komponen terendah di ' + P1.slice(0, 3).map(function (u) { return u.id + ' ' + u.code + ' (' + (u.low ? u.low.label : '–') + ')'; }).join(', '));
       if (pct >= 10) rr.push('evaluasi durasi program WKP (≥10% melebihi) dan kesiapan alat/tenaga sebelum tutup jalur');
-      if (x.wkp.andil >= 1000) rr.push('jadwalkan ulang WKP pada sela KA agar andil kelka (' + f.n(x.wkp.andil) + ' mnt ' + mon + ') berkurang');
+      if (x.wkp.andil >= 1000) rr.push('jadwalkan ulang WKP pada sela KA agar andil kelka (' + f.n(x.wkp.andil) + ' menit ' + mon + ') berkurang');
       if (!dom) rr.push('koordinasikan dengan unit sintelis karena sumber utama gangguan prasarana di luar cakupan THI');
       if (!rr.length) rr.push('Pertahankan program perawatan; pantau UPT dengan THI turun dan komponen terendah');
       duo(s, ins, capF(rr.join('; ')) + '.', 5.9, 0.66);
@@ -1370,7 +1370,7 @@ window.KAIReport = (function () {
       var c = cellOf(c0), t = c.runs ? null : String(c.t == null || c.t === '' ? (i === 0 ? ' ' : KAI.NIL) : c.t);
       var o = { t: t, runs: c.runs, bold: !!c.bold, color: c.color, fill: c.fill, align: c.align };
       if (i === 0) { o.bold = true; o.color = it.headColor || 'FFFFFF'; o.fill = it.headFill || NAVY; o.align = c.align || (j ? 'center' : 'left'); return o; }
-      if (!o.align) o.align = j && /^[−+\-\d.,%Rp x’'▲▼=()]+(\s*(mnt|menit|km|unit))?$|^Rp|^baru$|^–$/.test(t || '') ? 'right' : 'left';
+      if (!o.align) o.align = j && /^[−+\-\d.,%Rp x’'▲▼=()]+(\s*(menit|menit|km|unit))?$|^Rp|^baru$|^–$/.test(t || '') ? 'right' : 'left';
       if (it.delta && it.delta.indexOf(j) >= 0 && !c.color) o.color = signColor(t);
       if (it.arrows && it.arrows.indexOf(j) >= 0) { o.color = arrowColor(t); o.align = 'center'; o.bold = true; }
       if (it.hiCol === j) { o.bold = true; if (!o.fill) o.fill = 'E8EEF9'; }

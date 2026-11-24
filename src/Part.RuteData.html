@@ -7,7 +7,7 @@ document.addEventListener('alpine:init', function () {
   function hh(v) { return KAIRoute.fmt(v); }
   Alpine.data('vRute', function () {
     return {
-      id: 'utara', segKey: '', mapMode: 'ggn', kaF: 'all', kaLimit: 9999, buf: 5,
+      id: 'utara', segKey: '', mapMode: 'ggn', kaF: 'all', kaQ: '', kaLimit: 9999, buf: 5,
       mapModes: [['ggn', 'Gangguan'], ['ka', 'KA/hari'], ['thi', 'THI'], ['jalur', 'Ganda/tunggal']],
       init: function () { try { var s = KAI.store.get('rute1'); if (s && s.id) this.id = s.id; } catch (e) { } },
       get B() {
@@ -30,23 +30,24 @@ document.addEventListener('alpine:init', function () {
       tallyTxt: function (o, list) { var t = list.filter(function (g) { return o[g[0]]; }).map(function (g) { return g[1] + ' ' + o[g[0]]; }); return t.length ? t.join(' · ') : 'tidak ada kejadian 12 bln'; },
       gapTxt: function (x) {
         var g = x.gapAll[0]; if (!g) return 'tidak ada';
-        var t = hh(g.a) + '–' + hh(g.b) + ' (' + Math.round(g.dur) + '′)';
-        if (x.gapUp && x.gapUp[0]) t += ' · satu sepur ' + Math.round(Math.max(x.gapUp[0].dur, (x.gapDn && x.gapDn[0] || { dur: 0 }).dur)) + '′';
+        var t = hh(g.a) + '–' + hh(g.b) + ' (' + Math.round(g.dur) + ' menit)';
+        if (x.gapUp && x.gapUp[0]) t += ' · satu sepur ' + Math.round(Math.max(x.gapUp[0].dur, (x.gapDn && x.gapDn[0] || { dur: 0 }).dur)) + ' menit';
         return t;
       },
       get steepTxt() { var s = this.P.steep[0]; if (!s) return this.P.zN ? 'tidak terhitung (stasiun berelevasi terlalu jarang)' : 'belum ada data'; var R = KAI.data.ref; return KAI.fmt.d1(Math.abs(s.permil)) + '‰ antara ' + ((R.st[s.a] || {}).name || s.a) + ' – ' + ((R.st[s.b] || {}).name || s.b) + ' (' + KAI.fmt.d1(s.km1 - s.km0) + ' km, beda ' + KAI.fmt.n(Math.abs(s.dz)) + ' m)'; },
       get priRows() { return this.D.S.filter(function (x) { return x.flag; }).sort(function (a, b) { return a.flag.localeCompare(b.flag) || b.gM - a.gM; }).slice(0, 40); },
       get winRows() {
         var x = this.seg; if (!x) return [];
-        function bars(G) { var out = []; (G || []).forEach(function (g) { var t = hh(g.a) + '–' + hh(g.b) + ' · ' + Math.round(g.dur) + ' mnt'; if (g.b <= 1440) out.push({ l: g.a / 14.4, w: g.dur / 14.4, t: t }); else { out.push({ l: g.a / 14.4, w: (1440 - g.a) / 14.4, t: t }); out.push({ l: 0, w: (g.b - 1440) / 14.4, t: t }); } }); return out; }
-        function txt(G) { var L = (G || []).filter(function (g) { return g.dur >= 30; }); return L.length ? L.slice(0, 3).map(function (g) { return hh(g.a) + '–' + hh(g.b) + ' (' + Math.round(g.dur) + '′)'; }).join(' · ') : 'tidak ada jendela ≥ 30 mnt'; }
+        function bars(G) { var out = []; (G || []).forEach(function (g) { var t = hh(g.a) + '–' + hh(g.b) + ' · ' + Math.round(g.dur) + ' menit'; if (g.b <= 1440) out.push({ l: g.a / 14.4, w: g.dur / 14.4, t: t }); else { out.push({ l: g.a / 14.4, w: (1440 - g.a) / 14.4, t: t }); out.push({ l: 0, w: (g.b - 1440) / 14.4, t: t }); } }); return out; }
+        function txt(G) { var L = (G || []).filter(function (g) { return g.dur >= 30; }); return L.length ? L.slice(0, 3).map(function (g) { return hh(g.a) + '–' + hh(g.b) + ' (' + Math.round(g.dur) + ' menit)'; }).join(' · ') : 'tidak ada jendela ≥ 30 menit'; }
         var rows = [{ k: 'all', label: 'Tutup petak', bars: bars(x.gapAll), txt: txt(x.gapAll) }];
         if (x.gapUp) rows.push({ k: 'up', label: 'Sepur ' + x.a + '→' + x.b, bars: bars(x.gapUp), txt: txt(x.gapUp) }, { k: 'dn', label: 'Sepur ' + x.b + '→' + x.a, bars: bars(x.gapDn), txt: txt(x.gapDn) });
         return rows;
       },
       get kaAll() {
         var f = this.kaF, days = this.B.revYms.length ? KAIA.sum(this.B.revYms, function (y) { return new Date(+y.slice(0, 4), +y.slice(5, 7), 0).getDate(); }) : 0;
-        return this.C.rows.filter(function (r) { return f === 'all' || r.jenis === f; }).map(function (r) {
+        var q = String(this.kaQ || '').trim().toLowerCase(), qs = q.replace(/\s/g, '');
+        return this.C.rows.filter(function (r) { return (f === 'all' || r.jenis === f) && (!q || String(r.no).toLowerCase().indexOf(qs) === 0 || String(r.nama || '').toLowerCase().indexOf(q) >= 0 || String(r.nama || '').toLowerCase().replace(/\s/g, '').indexOf(qs) >= 0); }).map(function (r) {
           var lf = r.jenis === 'PENUMPANG' && r.kap && days && r.pax ? r.pax / (r.kap * days) * 100 : null; var lfBad = lf != null && lf < 5;
           var note = lfBad ? 'indeks isian < 5%: periksa kapasitas/penumpang di sumber' : r.noRev ? 'tidak ada di tab Freight' : !r.rev ? 'tidak ada pendapatan pada periode' : r.share < 0.15 ? 'hanya melintas sebagian kecil koridor' : '';
           return Object.assign({}, r, { lf: lf, note: note });

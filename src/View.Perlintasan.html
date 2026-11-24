@@ -64,7 +64,7 @@
         <div class="card-b">
           <table class="tbl"><tbody>
             <template x-for="x in R.crossDetail.repeat" :key="x.lokasi + x.wilayah">
-              <tr class="click" @click="x.segKey ? $store.app.open('petak', x.segKey) : $store.app.go('telusuri', { ids: x.ids, label: x.lokasi, period: 'all' })"><td><b x-text="x.lokasi"></b><div class="note" x-text="x.wilayah"></div></td><td class="num" x-text="x.n + ' kej. · ' + KAI.fmt.n(x.menit) + ' mnt'"></td></tr>
+              <tr class="click" @click="x.segKey ? $store.app.open('petak', x.segKey) : $store.app.go('telusuri', { ids: x.ids, label: x.lokasi, period: 'all' })"><td><b x-text="x.lokasi"></b><div class="note" x-text="x.wilayah"></div></td><td class="num" x-text="x.n + ' kej. · ' + KAI.fmt.n(x.menit) + ' menit'"></td></tr>
             </template>
           </tbody></table>
           <div class="empty" x-show="!R.crossDetail.repeat.length">Tidak ada lokasi berulang pada periode ini.</div>
@@ -79,7 +79,7 @@
         <div class="card-b">
           <table class="tbl"><tbody>
             <template x-for="x in R.crossYtd.repeat" :key="x.lokasi + x.wilayah">
-              <tr class="click" @click="x.segKey ? $store.app.open('petak', x.segKey) : $store.app.go('telusuri', { ids: x.ids, label: x.lokasi + ' (YTD)', period: 'all' })"><td><b x-text="x.lokasi"></b><div class="note" x-text="x.wilayah"></div></td><td class="num" x-text="x.n + ' kej. · ' + KAI.fmt.n(x.menit) + ' mnt'"></td></tr>
+              <tr class="click" @click="x.segKey ? $store.app.open('petak', x.segKey) : $store.app.go('telusuri', { ids: x.ids, label: x.lokasi + ' (YTD)', period: 'all' })"><td><b x-text="x.lokasi"></b><div class="note" x-text="x.wilayah"></div></td><td class="num" x-text="x.n + ' kej. · ' + KAI.fmt.n(x.menit) + ' menit'"></td></tr>
             </template>
           </tbody></table>
         </div>
