@@ -1,0 +1,44 @@
+<!-- View.Help — pusat bantuan (laci kanan) + pemicu tur. Data & mesin: Js.Help (KAIHelp, store 'help'). -->
+<div class="help-scrim" x-show="$store.help.open" x-transition.opacity @click="$store.help.open = false" x-cloak></div>
+<aside class="help" x-show="$store.help.open" x-transition:enter="help-in" x-cloak role="dialog" aria-label="Pusat bantuan"
+  x-init="$watch('$store.app.phase', function (v) { v === 'ready' && KAIHelp.autoTour(); })">
+  <div class="help-h">
+    <div><b>Bantuan</b><span class="note">Tekan <kbd>?</kbd> kapan saja · <kbd>Esc</kbd> menutup</span></div>
+    <button class="btn sm primary" @click="$store.help.tour()"><svg class="i"><use href="#i-route"/></svg>Tur halaman ini</button>
+    <button class="btn ghost sm icon-btn" @click="$store.help.open = false" aria-label="Tutup bantuan"><svg class="i"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="help-tabs" role="tablist">
+    <template x-for="t in [['mulai','Mulai'],['panduan','Panduan'],['alur','Alur klik'],['glosarium','Glosarium'],['faq','FAQ']]" :key="t[0]">
+      <button role="tab" :aria-selected="$store.help.tab === t[0]" @click="$store.help.tab = t[0]" x-text="t[1]"></button>
+    </template>
+  </div>
+  <div class="help-b">
+    <p class="help-note" x-show="$store.help.note" x-text="$store.help.note"></p>
+    <input class="ctl help-q" type="search" placeholder="Cari di panduan & glosarium…" x-model="$store.help.q" x-show="$store.help.tab === 'panduan' || $store.help.tab === 'glosarium'">
+    <template x-if="$store.help.tab === 'mulai'">
+      <div>
+        <ol class="help-steps"><template x-for="(b, i) in KAIHelp.GUIDE[0].b" :key="i"><li x-html="b"></li></template></ol>
+        <div class="help-cta">
+          <button class="btn sm" @click="$store.help.tour()">Mulai tur halaman ini</button>
+          <button class="btn sm" @click="$store.help.tab = 'panduan'">Baca panduan lengkap</button>
+        </div>
+      </div>
+    </template>
+    <template x-if="$store.help.tab === 'panduan'">
+      <div><template x-for="g in $store.help.guide" :key="g.id">
+        <section class="help-sec" :id="'hlp-' + g.id" :class="$store.help.sec === g.id && 'on'"><h4 x-text="g.h"></h4>
+          <ul><template x-for="(b, i) in g.b" :key="i"><li x-html="b"></li></template></ul></section>
+      </template><p class="note" x-show="!$store.help.guide.length">Tidak ada bagian yang cocok.</p></div>
+    </template>
+    <template x-if="$store.help.tab === 'alur'">
+      <div><p class="note">Jalur klik umum → rinci. Setiap langkah membawa filter yang sama.</p>
+        <template x-for="(f, i) in $store.help.FLOW" :key="i"><div class="help-flow"><template x-for="(s, j) in f" :key="j"><span><b x-text="s"></b><i x-show="j < f.length - 1">→</i></span></template></div></template></div>
+    </template>
+    <template x-if="$store.help.tab === 'glosarium'">
+      <dl class="help-glos"><template x-for="g in $store.help.glos" :key="g[0]"><div><dt x-text="g[0]"></dt><dd x-text="g[1]"></dd></div></template></dl>
+    </template>
+    <template x-if="$store.help.tab === 'faq'">
+      <div><template x-for="(f, i) in $store.help.FAQ" :key="i"><details class="help-faq"><summary x-text="f[0]"></summary><p x-text="f[1]"></p></details></template></div>
+    </template>
+  </div>
+</aside>

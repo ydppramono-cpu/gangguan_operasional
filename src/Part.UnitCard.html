@@ -150,7 +150,7 @@
 </template>
 
 
-        <div class="grid g-4 mt">
+        <div class="kpi-strip mt">
           <div class="card kpi"><div class="lbl" x-text="'Kejadian · ' + R.P.short"></div><div class="val num" x-text="KAI.fmt.n(M.k.n)"></div>
             <div class="deltas"><span class="delta" :class="KAI.delta(M.k.n, M.kPrev.n).cls" x-text="'MoM ' + KAI.delta(M.k.n, M.kPrev.n).text"></span><span class="delta" :class="KAI.delta(M.k.n, M.kYoy.n).cls" x-text="'YoY ' + KAI.delta(M.k.n, M.kYoy.n).text"></span></div></div>
           <div class="card kpi" style="--kpi-c:var(--kai-orange)"><div class="lbl" x-text="'Kelambatan · ' + R.P.short"></div><div class="val num"><span x-text="KAI.fmt.n(M.k.menit)"></span><small>menit</small></div>
@@ -159,11 +159,16 @@
           <div class="card kpi" style="--kpi-c:var(--c-prasarana)"><div class="lbl" x-text="'Seluruh data' + M.scopeNote"></div><div class="val num" x-text="KAI.fmt.n(M.all.length)"></div><div class="note" x-text="KAI.fmt.n(KAIA.sum(M.all, function (r) { return r.menit; })) + ' menit · ' + (M.all.length ? 'terakhir ' + KAI.fmt.date(M.prof.latest[0]) : 'belum ada kejadian')"></div></div>
         </div>
 
-        <div class="card mt">
+        <div class="card mt ins-fold" x-show="M.IB && M.IB.findings.length">
+          <button type="button" class="pita-h" :class="'t-' + (M.IB && M.IB.pairs.length ? M.IB.pairs[0].tone : 'info')" @click="insOpen = !insOpen" :aria-expanded="insOpen">
+            <svg class="i"><use href="#i-bulb"/></svg><b x-text="'Temuan ' + (M.IB ? M.IB.findings.length : 0)"></b><span x-show="M.IB && M.IB.pairs.length" x-text="'· Tindakan ' + (M.IB ? M.IB.pairs.length : 0)"></span>
+            <em x-text="M.IB && M.IB.findings[0] ? M.IB.findings[0].head : ''"></em><svg class="i chev"><use href="#i-chevron"/></svg></button>
+          <div x-show="insOpen" x-transition.opacity>
           <div class="card-h"><div><h3>Temuan &amp; tindakan</h3><p x-text="basis === '12' ? 'Basis: 12 bulan s.d. ' + KAI.fmt.day(KAIA.endOf(R.P)) + ' vs 12 bulan sebelumnya' : 'Basis: ' + R.label + ' vs ' + R.prevLabel"></p></div>
             <div class="spacer"></div><div class="seg"><button :aria-pressed="basis === '12'" @click="basis = '12'">12 bulan</button><button :aria-pressed="basis === 'p'" @click="basis = 'p'">Periode aktif</button></div></div>
           <div class="card-b" x-data="{ IBhead: false, get IB() { return M.IB; } }"><?!= include('Part.Insight'); ?>
 </div>
+          </div>
         </div>
 
         <div class="tabs mt" role="tablist">
@@ -172,20 +177,32 @@
 
         <!-- Riwayat gangguan (semua jenis) -->
         <div x-show="tab === 'riwayat'">
-          <div class="grid g-2">
-            <div class="card"><div class="card-h"><div><h3>Gangguan per bulan</h3><p>24 bulan terakhir · batang = kejadian, garis = menit</p></div></div>
-              <div class="card-b fill"><div class="chart short" x-chart="tab === 'riwayat' ? KAIChart.monthly(M.months) : null"></div></div></div>
-            <div class="card"><div class="card-h"><div><h3>Pola jam kejadian</h3><p x-text="KAI.fmt.n(M.prof.hour.known) + ' kejadian berjam tercatat (seluruh data)'"></p></div></div>
-              <div class="card-b fill"><div class="chart short" x-chart="tab === 'riwayat' ? KAIChart.hourBar(M.prof.hour) : null"></div></div></div>
+          <!-- Saring silang (v3.19): klik bulan, jam, kelas, atau jenis → semua grafik & tabel di tab ini ikut tersaring -->
+          <div class="xf-bar" x-show="xOn">
+            <span class="note">Disaring:</span>
+            <template x-for="c in xChips" :key="c.k"><button type="button" class="chip on" @click="xClear(c.k)" :title="'Hapus saringan ' + c.t"><span x-text="c.t"></span> ✕</button></template>
+            <button type="button" class="link-btn sm" @click="xClear()">Atur ulang</button>
+            <span class="note" x-text="KAI.fmt.n(xL.length) + ' dari ' + KAI.fmt.n(M.all.length) + ' kejadian'"></span>
+          </div>
+          <p class="note xf-hint" x-show="!xOn">Klik bulan, jam, kelas, atau jenis gangguan untuk menyaring semua grafik dan riwayat di bawah.</p>
+          <div class="grid g-3x">
+            <div class="card"><div class="card-h"><div><h3>Gangguan per bulan</h3><p>24 bulan · batang = kejadian, garis = menit · klik bulan</p></div></div>
+              <div class="card-b fill"><div class="chart short" x-chart="tab === 'riwayat' ? xMonthsOpt : null" @chart-click="$event.detail.data && $event.detail.data.ym && xSet('ym', $event.detail.data.ym)"></div></div></div>
+            <div class="card"><div class="card-h"><div><h3>Komposisi kelas</h3><p>Menit per kelas · klik irisan</p></div></div>
+              <div class="card-b fill"><div class="chart short" x-chart="tab === 'riwayat' ? xClsOpt : null" @chart-click="$event.detail.data && xSet('kelas', $event.detail.data.kelas)"></div></div></div>
+            <div class="card"><div class="card-h"><div><h3>Pola jam</h3><p x-text="'Jam mulai tercatat · klik jam'"></p></div></div>
+              <div class="card-b fill"><div class="chart short" x-chart="tab === 'riwayat' ? xHourOpt : null" @chart-click="$event.detail.seriesIndex === 0 && xSet('h', $event.detail.dataIndex)"></div></div></div>
           </div>
           <div class="grid mt" :class="M.type === 'sarana' ? '' : 'g-2-1'">
-            <div class="card" x-show="M.type !== 'sarana'"><div class="card-h"><div><h3>Riwayat gangguan</h3><p>Terbaru di atas · klik untuk detail kejadian</p></div>
+            <div class="card" x-show="M.type !== 'sarana'"><div class="card-h"><div><h3>Riwayat gangguan</h3><p x-text="xOn ? 'Tersaring · terbaru di atas · klik untuk detail' : 'Terbaru di atas · klik untuk detail kejadian'"></p></div>
               <div class="spacer"></div><div class="seg"><button :aria-pressed="hist === 'all'" @click="hist = 'all'">Semua</button><button :aria-pressed="hist === 'p'" @click="hist = 'p'" x-text="R.P.short"></button></div>
               <button class="btn sm" @click="exp()">Excel</button></div>
               <div class="card-b"><div x-table="histTable" @row-click="$store.app.openEvent($event.detail.id)"></div></div></div>
-            <div class="card"><div class="card-h"><div><h3>Jenis gangguan teratas</h3><p>Seluruh data · menurut menit</p></div></div>
-              <div class="card-b"><table class="tbl"><tbody><template x-for="t in M.prof.top" :key="t.label"><tr class="click" @click="$store.app.go('telusuri', { ids: t.ids, label: M.title + ' · ' + t.label, period: 'all' })"><td x-text="t.label"></td><td class="num" x-text="t.n + '×'"></td><td class="num"><b x-text="KAI.fmt.n(t.menit)"></b></td></tr></template></tbody></table>
-                <div class="empty" x-show="!M.prof.top.length">Belum ada kejadian.</div></div></div>
+            <div class="card"><div class="card-h"><div><h3>Jenis gangguan teratas</h3><p>Menurut menit · klik untuk menyaring</p></div></div>
+              <div class="card-b"><table class="tbl"><tbody><template x-for="t in xTop.slice(0, 8)" :key="t.label"><tr class="click" :class="xf.jenis === t.label && 'sel'" @click="xSet('jenis', t.label)">
+                <td x-text="t.label"></td><td class="num" x-text="t.n + '×'"></td><td class="num"><b x-text="KAI.fmt.n(t.menit)"></b></td></tr></template></tbody></table>
+                <div class="empty" x-show="!xTop.length">Belum ada kejadian.</div>
+                <button class="link-btn sm mt-s" x-show="xf.jenis" @click="$store.app.go('telusuri', { ids: (xTop.filter(function (t) { return t.label === xf.jenis; })[0] || { ids: [] }).ids, label: M.title + ' · ' + xf.jenis, period: 'all' })">Buka di Telusuri →</button></div></div>
           </div>
         </div>
 

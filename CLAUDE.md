@@ -17,6 +17,9 @@ Google Sheets (input tim) → GAS server (`src/*.gs`: ETL `runSync_` tiap 15 men
 BigQuery sandbox (`platform/`): tabel eksternal atas Sheets + salinan berkala + agregat berat (RHI/THI/WKP); dipakai web app (bila diaktifkan) dan DBeaver. Batas sandbox: 10 GB, 1 TB kueri/bulan, tabel kedaluwarsa 60 hari (pemicu memuat ulang), tanpa DML/kueri terjadwal.
 Rincian: `docs/ARSITEKTUR.md`, kontrak data: `docs/KONTRAK_DATA.md`.
 
+## Kelas & temuan (v3.19)
+Kategori & Subgangguan kosong → kelas diturunkan (pola teks, lalu kelas terdekat), bertanda * + keyakinan; tidak ada kelas "belum". Temuan tampil sebagai pita di bawah grafik sumbernya (`Js.Pita` MAP: src.label → `rute:kartu`); Ringkasan = 3 sorotan. Bantuan: `Js.Help` (tur, panduan, glosarium, FAQ).
+
 ## Lima kunci penghubung data
 kode stasiun · petak `A-B` · nomor KA · nomor sarana (dinormalkan tanpa spasi) · kode UPT Resor JR (`4.22`). Master stasiun gabungan: `db/csv/master_stasiun.csv`.
 
@@ -28,12 +31,13 @@ Wilayah & koridor memakai peta vektor OSM sendiri (dasar P1: `SEED_PETA`, © kon
 
 ## Perintah
 - `npm run check` — ESLint + `tools/check_build.py` (include, sintaks, urutan push) + uji koordinat stasiun (`tools/peta/koreksi_koordinat.py --cek`: pulau, koordinat kembar seperti KTG/KTP Ketapang, jarak tetangga rute). Wajib lulus sebelum commit.
-- `npm run test:emu` — pipeline .gs asli di Node + semua menu di Chromium desktop/400 px (data sintetis dari seed repo; pustaka ECharts/Tabulator/Alpine di `tests/emulator/node_modules`, lihat README di sana).
+- `npm run test:emu` — pipeline .gs asli di Node + semua menu (dan semua tab) di Chromium desktop/400 px, termasuk pemeriksa kerapian (teks sisa, tab bergulir, label kelas, bento, baris kosong); `STRICT=1` = gagal bila ada temuan (data sintetis dari seed repo; pustaka di `tests/emulator/node_modules`).
 - `npm run test:gapeka` — data GAPEKA 2025 & 2026 untuk switch global (seed terbaca, jam tidak mundur, km lintas urut, baris jadwal lengkap). Grafik Marey dihapus v3.18.0.
 - `npm run test:switch` — switch GAPEKA global: bawaan, ganti ke 2026, kembali ke 2025 (setelah `test:emu` membangun app.html).
 - `npm run test:pulau` — aturan pulau Paket A (mutasi, nomor diragukan, awalan KA Sumatera, KA lintas pulau, kelas diturunkan, daftar depo).
 - `npm run test:akses` / `npm run test:alur` — fungsi publik terkunci; alur klik umum → rinci.
 - `npm run test:bq` — adaptor BigQuery web app (`src/22_Bq.gs`) dengan tiruan BigQuery: hasil Kondisi setara Sheets, cadangan ke Sheets, masukan tertutup.
+- `python3 -I tools/peta/koreksi_koordinat.py` — koreksi koordinat (CSV beralasan; `interpolasi` = km lembar GAPEKA di graf rel OSM; kode kembar `KODE@wilayah`) + geometri petak dari graf rel OSM. `python3 tools/peta/bangun_daratan.py` — daratan peta (Natural Earth 10m + koridor rel).
 - `python3 tools/bigquery/gen_agregat.py` — bangkitkan `platform/Agregat.gs` dari `db/bigquery/30_agregat.sql`.
 - `npm run pack` — paket tempel editor GAS di `dist/` (Code.gs, Index.html utuh, seed terpisah).
 - `npm run csv` — ekspor ulang CSV non-Sheets ke `db/csv` (lihat docstring `tools/csv/export_csv.py`).

@@ -5,7 +5,7 @@
     <template x-if="$store.app.refReady && !M.ok"><div class="card"><div class="card-b"><h2 style="margin-top:0">Tidak ditemukan</h2><p x-text="M.msg"></p><button class="btn" @click="$store.app.go('cari', {})">Cari lagi</button></div></div></template>
     <template x-if="$store.app.refReady && M.ok">
       <div>
-        <div class="phead" x-show="$store.app.params.type !== 'sarana'">
+        <div class="phead phero" x-show="$store.app.params.type !== 'sarana'">
           <div class="phead-ic"><svg class="i"><use :href="'#' + M.icon"/></svg></div>
           <div style="flex:1;min-width:0">
             <div class="eyebrow" x-text="M.kindLabel"></div>
@@ -14,6 +14,7 @@
             <div class="tags"><template x-for="t in M.tags" :key="t.t"><span class="tag" :class="t.c" x-text="t.t"></span></template></div>
           </div>
           <dl class="facts"><template x-for="f in M.facts" :key="f[0]"><div><dt x-text="f[0]"></dt><dd x-text="f[1]"></dd></div></template></dl>
+          <div class="phero-spark"><span x-text="'Menit kelambatan · 24 bulan · ' + KAI.fmt.n(M.all.length) + ' kejadian tercatat'"></span><div class="chart" x-chart="spark"></div></div>
         </div>
         <?!= include('Part.UnitCard'); ?>
       </div>
@@ -415,8 +416,59 @@ document.addEventListener('alpine:init', function () {
   });
   Alpine.data('vProfil', function () {
     return {
-      tab: 'riwayat', basis: '12', hist: 'all', role: '', regOnly: true,
-      init: function () { var self = this; this.$watch('$store.app.params', function () { self.tab = 'riwayat'; self.role = ''; self.hist = 'all'; }); },
+      tab: 'riwayat', basis: '12', hist: 'all', role: '', regOnly: true, insOpen: false,
+      // v3.19 saring silang: klik bulan / jam / kelas / jenis di satu grafik → grafik lain & tabel riwayat ikut tersaring.
+      xf: { ym: '', h: -1, kelas: '', jenis: '' },
+      init: function () { var self = this; this.$watch('$store.app.params', function () { self.tab = 'riwayat'; self.role = ''; self.hist = 'all'; self.insOpen = false; self.xf = { ym: '', h: -1, kelas: '', jenis: '' }; }); },
+      xOf: function (skip) {
+        var M = this.M, f = this.xf; if (!M.ok) return [];
+        var ids = null;
+        if (f.jenis && skip !== 'jenis') { var t = (M.prof.top || []).filter(function (x) { return x.label === f.jenis; })[0]; ids = {}; (t ? t.ids : []).forEach(function (i) { ids[i] = 1; }); }
+        return M.all.filter(function (r) {
+          return (skip === 'ym' || !f.ym || r.ym === f.ym) && (skip === 'h' || f.h < 0 || r.hr === f.h) && (skip === 'kelas' || !f.kelas || r.kelas === f.kelas) && (!ids || ids[r.id]);
+        });
+      },
+      get xOn() { var f = this.xf; return !!(f.ym || f.h >= 0 || f.kelas || f.jenis); },
+      get xChips() {
+        var f = this.xf, o = [];
+        if (f.ym) o.push({ k: 'ym', t: KAI.fmt.mon(f.ym) }); if (f.h >= 0) o.push({ k: 'h', t: 'Jam ' + ('0' + f.h).slice(-2) + ':00–' + ('0' + f.h).slice(-2) + ':59' });
+        if (f.kelas) o.push({ k: 'kelas', t: this.$store.app.classLabel(f.kelas).split(',')[0] }); if (f.jenis) o.push({ k: 'jenis', t: f.jenis });
+        return o;
+      },
+      xClear: function (k) { if (!k) { this.xf = { ym: '', h: -1, kelas: '', jenis: '' }; return; } var f = Object.assign({}, this.xf); f[k] = k === 'h' ? -1 : ''; this.xf = f; },
+      xSet: function (k, v) { var f = Object.assign({}, this.xf); f[k] = f[k] === v ? (k === 'h' ? -1 : '') : v; this.xf = f; },
+      get xL() { return this.xOf(''); },
+      get xMonthsOpt() {
+        var M = this.M, L = this.xOf('ym'), by = {}, sel = this.xf.ym;
+        L.forEach(function (r) { var o = by[r.ym] = by[r.ym] || { n: 0, menit: 0 }; o.n++; o.menit += r.menit; });
+        var rows = M.months.map(function (m) { return { ym: m.ym, n: (by[m.ym] || {}).n || 0, menit: (by[m.ym] || {}).menit || 0 }; }), o = KAIChart.monthly(rows);
+        o.series[0].data = rows.map(function (r) { return { value: r.n, ym: r.ym, itemStyle: sel && r.ym !== sel ? { opacity: 0.28 } : sel ? { color: '#F06A25' } : undefined }; });
+        return o;
+      },
+      get xHourOpt() {
+        var H = KAIA.hourly(this.xOf('h')), h = this.xf.h, o = KAIChart.hourBar(H);
+        if (h >= 0) o.series[0].data = H.n.map(function (v, i) { return { value: v, itemStyle: i === h ? { color: '#F06A25' } : { opacity: 0.28 } }; });
+        return o;
+      },
+      get xClsOpt() {
+        var L = this.xOf('kelas'), sel = this.xf.kelas, app = this.$store.app;
+        var d = KAIA.CLASSES.map(function (c) { var m = 0, n = 0; L.forEach(function (r) { if (r.kelas === c) { m += r.menit; n++; } }); return { name: app.classLabel(c).split(',')[0], value: m, n: n, kelas: c, itemStyle: { color: KAI.classColor(c), opacity: sel && sel !== c ? 0.3 : 1 } }; }).filter(function (x) { return x.n; });
+        return { tooltip: { formatter: function (p) { return '<b>' + p.name + '</b><br>' + KAI.fmt.n(p.data.n) + ' kejadian · ' + KAI.fmt.n(p.value) + ' menit (' + KAI.fmt.d1(p.percent) + '%)'; } },
+          legend: { bottom: 0, left: 'center' }, grid: { top: 10, bottom: 30 },
+          graphic: [{ type: 'text', left: 'center', top: '38%', style: { text: KAI.fmt.n(KAIA.sum(d, function (x) { return x.value; })) + '\nmenit', textAlign: 'center', fill: '#1B2236', font: '600 14px Inter, sans-serif', lineHeight: 18 } }],
+          series: [{ type: 'pie', radius: ['50%', '74%'], center: ['50%', '45%'], label: { show: false }, labelLine: { show: false }, data: d }] };
+      },
+      get xTop() {
+        var M = this.M, L = this.xOf('jenis'), ids = {}; L.forEach(function (r) { ids[r.id] = 1; });
+        return (M.prof.top || []).map(function (t) { var m = 0, n = 0; t.ids.forEach(function (i) { if (ids[i]) { n++; } }); L.forEach(function (r) { if (r.id in ids && t.ids.indexOf(r.id) >= 0) m += r.menit; }); return { label: t.label, n: n, menit: m, ids: t.ids }; })
+          .filter(function (t) { return t.n; }).sort(function (a, b) { return b.menit - a.menit; });
+      },
+      get spark() {
+        var M = this.M; if (!M.ok) return null;
+        return { grid: { left: 0, right: 0, top: 4, bottom: 0 }, xAxis: { type: 'category', show: false, data: M.months.map(function (m) { return KAI.fmt.mon(m.ym); }) }, yAxis: { type: 'value', show: false },
+          tooltip: { trigger: 'axis', valueFormatter: function (v) { return KAI.fmt.n(v) + ' menit'; } },
+          series: [{ type: 'line', data: M.months.map(function (m) { return m.menit; }), smooth: 0.3, symbol: 'none', lineStyle: { width: 2, color: '#F6A06A' }, areaStyle: { color: 'rgba(246,160,106,.22)' } }] };
+      },
       get R() { return this.$store.app.R; },
       get M() {
         var app = this.$store.app; if (!app.refReady) return { ok: false, msg: '' };
@@ -438,7 +490,8 @@ document.addEventListener('alpine:init', function () {
       },
       get histTable() {
         var M = this.M; if (!M.ok) return null;
-        return KAITable.eventSpec('phist', this.hist === 'p' ? M.Lp : M.all);
+        var L = this.xL; if (this.hist === 'p') { var Lp = {}; M.Lp.forEach(function (r) { Lp[r.id] = 1; }); L = L.filter(function (r) { return Lp[r.id]; }); }
+        return KAITable.eventSpec('phist', L);
       },
       listSpec: function (x) {
         return { id: 'pl-' + x.id, index: 'key', data: x.rows, columns: x.cols, pageSize: x.pageSize || 25,

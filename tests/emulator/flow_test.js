@@ -18,7 +18,9 @@ const OUT = process.env.FLOW_DIR || __dirname + '/shots/alur'; fs.mkdirSync(OUT,
   // v3.19: sorotan Ringkasan → grafik sumber (pita temuan terbuka) → "Lihat N kejadian"
   await step('sorotan-ke-grafik', () => p.locator('.sorot-c').first().click(), s => s.route !== 'ringkasan' || true);
   await p.waitForTimeout(1500);
-  await step('temuan-ke-telusuri', () => p.locator('.pita-k').first().click(), s => s.route === 'telusuri');
+  await p.evaluate(() => document.querySelectorAll('.pita-h[aria-expanded="false"]').forEach(b => b.click()));
+  await p.waitForTimeout(400);
+  await step('temuan-ke-telusuri', () => p.locator('.pita-k:visible').first().click(), s => s.route === 'telusuri');
   await step('baris-ke-kejadian', () => p.locator('.tabulator-row').first().click(), s => s.route === 'kejadian');
   await step('kejadian-ke-profil-lokasi', () => p.locator('dl dd button.link-btn').nth(1).click(), s => s.route === 'profil' || s.route === 'telusuri');
   await step('kembali-ke-kejadian', () => p.click('.back-btn'), s => s.route === 'kejadian');

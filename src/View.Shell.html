@@ -58,6 +58,7 @@
         <span class="dot" :class="$store.app.status && !$store.app.status.ok ? 'bad' : ''"></span>
         <span x-text="'s.d. ' + KAI.fmt.day($store.app.dates.max) + ' · ' + KAI.fmt.time($store.app.meta && $store.app.meta.builtAt)"></span>
       </span>
+      <button class="btn ghost sm icon-btn help-btn" @click="$store.help.openAt('mulai')" aria-label="Bantuan & tur" title="Bantuan & tur (tekan ?)"><span class="qmark">?</span></button>
       <div class="bell-wrap" @click.outside="$store.app.notif.open = false">
         <button class="bell" :class="$store.app.notif.has && 'on'" @click="$store.app.notif.open = !$store.app.notif.open; $store.app.checkUpdates()"
           :aria-label="$store.app.notif.has ? 'Ada pembaruan data' : 'Notifikasi pembaruan data'" :title="$store.app.notif.has ? 'Ada pembaruan data' : 'Tidak ada pembaruan baru'">
@@ -235,3 +236,4 @@
     </div>
   </main>
 </div>
+<?!= include('View.Help'); ?>

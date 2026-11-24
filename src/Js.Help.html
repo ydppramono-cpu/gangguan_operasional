@@ -1,0 +1,231 @@
+<script>
+/**
+ * Js.Help — pusat bantuan & tur halaman (v3.19, tanpa pustaka tambahan).
+ *  - Tur: sorotan langkah demi langkah per halaman (KAIHelp.TOUR[route]); otomatis sekali pada kunjungan pertama, ulang dari tombol "?".
+ *  - Pusat bantuan (laci kanan): Mulai cepat · Panduan per ruang kerja · Alur klik · Glosarium KAI · FAQ.
+ *  - ⓘ per kartu: kartu yang judulnya cocok dengan KAIHelp.CARD mendapat tombol ⓘ (penjelasan singkat + "baca panduan").
+ * Pintasan: "?" buka bantuan, Esc tutup.
+ */
+window.KAIHelp = (function () {
+  var TOUR = {
+    _umum: [
+      { sel: '.sidebar nav', t: 'Lima ruang kerja', d: 'Ringkasan, Jaringan & prasarana, Armada, Pendapatan, Telusuri. Setiap ruang kerja menjawab satu jenis pertanyaan.' },
+      { sel: '.ws-sub', t: 'Halaman dalam ruang kerja', d: 'Pindah antarhalaman dalam ruang kerja yang sama tanpa kehilangan filter.' },
+      { sel: '.filterbar', t: 'Filter kontekstual', d: 'Periode, jam & kelas, pembanding (MoM/YoY), dan wilayah. Hanya filter yang relevan untuk halaman ini yang tampil.' },
+      { sel: '.gsearch', t: 'Cari apa saja', d: 'Ketik nomor KA, nomor sarana, kode stasiun, petak, JPL, atau depo untuk langsung membuka profilnya.' },
+      { sel: '.gapeka-sw', t: 'Sumber jadwal GAPEKA', d: 'GAPEKA 2025 dan 2026 dianalisis masing-masing. Pilihan ini berlaku untuk semua menu.' },
+      { sel: '.help-btn', t: 'Bantuan kapan saja', d: 'Buka tur, panduan, glosarium, dan FAQ dari tombol ini atau tekan tombol "?" di papan ketik.' }
+    ],
+    ringkasan: [
+      { sel: '.hero, .banner, .view h2', t: 'Jawaban dulu', d: 'Kalimat pertama merangkum kondisi bulan terpilih dibanding pembandingnya.' },
+      { sel: '.sorot', t: 'Tiga sorotan', d: 'Temuan terpenting. Klik sorotan untuk melompat ke grafik sumbernya, lengkap dengan tindakan yang disarankan.' },
+      { sel: '.cmp', t: 'Perbandingan MoM · YoY · YTD', d: 'Merah = memburuk, hijau = membaik. Baris "Menit …" per kelas bisa diklik untuk menelusuri.' },
+      { sel: '.pita', t: 'Pita temuan', d: 'Setiap grafik/tabel yang memicu temuan punya pita di bawahnya. Klik untuk membuka temuan, tindakan, dan rujukan.' },
+      { sel: '.tabulator', t: 'Kejadian terbesar', d: 'Klik baris untuk membuka rincian kejadian; dari sana lanjut ke profil lokasi, KA, atau sarana.' }
+    ],
+    tren: [
+      { sel: '.chart', t: 'Tren bulanan per kelas', d: 'Klik titik bulan untuk menelusuri kejadian bulan itu.' },
+      { sel: '.pita', t: 'Temuan menempel di grafik', d: 'Buka pita untuk melihat temuan dari grafik ini; klik temuan untuk menyorot bagian grafiknya.' }
+    ],
+    wilayah: [
+      { sel: '.tabs', t: 'Tiga sudut pandang', d: 'Peringkat wilayah & koridor, Kondisi prasarana (THI × WKP × gangguan, 3 bulan terakhir), dan Rute jalur (peta koridor).' },
+      { sel: '.tbl, .tabulator', t: 'Klik untuk profil', d: 'Nama wilayah, lokasi, dan lintas membuka profil dengan grafik yang saling menyaring.' }
+    ],
+    sarana: [
+      { sel: '.fleet-switch', t: 'Jenis sarana', d: 'Lokomotif, kereta, gerbong, KRD/KRL. Semua grafik di bawah mengikuti pilihan ini.' },
+      { sel: '.tabs', t: 'Analisis armada', d: 'Gangguan, kesehatan (RHI/skor turunan), depo, dan daftar unit.' },
+      { sel: '.tbl, .tabulator', t: 'Kartu unit', d: 'Klik nomor sarana untuk membuka kartu unit: dinasan, skor per periode, KA depo, perawatan.' }
+    ],
+    eksposur: [
+      { sel: '.view .card', t: 'Pendapatan terekspos', d: 'Perkiraan pendapatan KA yang terdampak gangguan = rate per jam perjalanan × menit kelambatan. Semua angka berlabel indikatif.' }
+    ],
+    perlintasan: [
+      { sel: '.view .card', t: 'Perlintasan sebidang', d: 'Kejadian di perlintasan, inventaris JPL program, titik berulang, dan status penjagaan.' }
+    ],
+    telusuri: [
+      { sel: '.tabulator', t: 'Daftar kejadian', d: 'Semua kejadian sesuai filter. Urutkan kolom, cari, unduh, dan klik baris untuk rincian.' }
+    ],
+    profil: [
+      { sel: '.phero', t: 'Kepala profil', d: 'Fakta kunci dan garis kelambatan 24 bulan.' },
+      { sel: '.ins-fold', t: 'Temuan & tindakan', d: 'Terlipat agar ringkas; buka bila perlu.' },
+      { sel: '.g-3x', t: 'Grafik saling menyaring', d: 'Klik bulan, irisan kelas, atau jam. Semua grafik, daftar jenis, dan riwayat ikut tersaring. Hapus saringan dari pita oranye di atasnya.' }
+    ]
+  };
+
+  var GUIDE = [
+    { id: 'mulai', h: 'Mulai cepat (3 menit)', b: [
+      'Buka <b>Ringkasan → Eksekutif</b>. Baca kalimat pertama, lalu tiga <b>Sorotan</b>.',
+      'Klik sorotan untuk melompat ke grafik sumbernya. Pita temuan di bawah grafik terbuka otomatis, berisi tindakan dan rujukan.',
+      'Klik <b>Lihat N kejadian</b> untuk daftar kejadiannya di Telusuri, lalu klik satu baris untuk rincian kejadian.',
+      'Dari rincian kejadian, klik lokasi, KA, atau sarana untuk membuka <b>profil</b>. Di profil, klik bulan/kelas/jam untuk menyaring semua grafik.',
+      'Tombol <b>tautan</b> (ikon rantai) menyalin alamat tampilan saat ini lengkap dengan filternya, siap dibagikan.'
+    ] },
+    { id: 'ws-ringkasan', h: 'Ruang kerja Ringkasan', b: [
+      '<b>Eksekutif</b>: jawaban bulan terpilih, 4 KPI (kelambatan, frekuensi, perlintasan, eksposur pendapatan), sorotan, perbandingan MoM/YoY/YTD, matriks prioritas, dan 50 kejadian terbesar.',
+      '<b>Tren & pola</b>: tren bulanan per kelas, kelambatan harian, pola jam dan hari × jam, matriks pembanding, serta Top 3 jenis gangguan per kelas.',
+      'Pembanding MoM = bulan sebelumnya; YoY = bulan yang sama tahun lalu; YTD = Januari s.d. bulan terpilih.'
+    ] },
+    { id: 'ws-jaringan', h: 'Ruang kerja Jaringan & prasarana', b: [
+      '<b>Wilayah & koridor</b>: peringkat wilayah dan lokasi berulang; kondisi prasarana (THI UPT Resor JR 3 bulan terakhir × WKP jalan rel × gangguan prasarana); peta koridor KA penumpang & barang.',
+      'Peta memakai geometri rel OpenStreetMap. Petak tanpa geometri yang cocok ±35% dengan km GAPEKA tidak digambar (bukan garis karangan); daftarnya ditulis di bawah peta.',
+      '<b>Perlintasan & JPL</b>: kejadian perlintasan sebidang, inventaris 1.404 JPL program, titik berulang, dan status penjagaan.'
+    ] },
+    { id: 'ws-armada', h: 'Ruang kerja Armada', b: [
+      'Pilih jenis sarana di atas. Tab Gangguan: tren, unit berulang, jenis berulang, kelompok komponen (treemap).',
+      'Tab Kesehatan: RHI lokomotif atau skor turunan kereta/gerbong, usia armada × laju gangguan.',
+      'Tab Depo: kekuatan depo (berperingkat). Balai Yasa dan unit tanpa depo di SAP ditampilkan terpisah, tidak diperingkat.',
+      'Kartu unit: dinasan & gangguan, skor per periode, KA yang dilayani depo, perawatan.'
+    ] },
+    { id: 'ws-pendapatan', h: 'Ruang kerja Pendapatan', b: [
+      'Pendapatan terekspos = rate pendapatan per jam perjalanan KA × menit kelambatan. Indikatif, bukan kerugian riil.',
+      'Rate KA penumpang dari tab Passenger, KA barang dari tab Freight; jam perjalanan dari GAPEKA × hari jalan (Laporan KA Jalan/Batal).',
+      'Nomor KA yang tidak ada di GAPEKA dicocokkan ke KA bernama sama dan searah; yang tetap tidak cocok didaftar terpisah beserta alasannya.'
+    ] },
+    { id: 'ws-telusuri', h: 'Ruang kerja Telusuri', b: [
+      'Daftar semua kejadian sesuai filter, kolomnya sama di seluruh aplikasi. Unduh ke Excel/CSV dari kepala tabel.',
+      'Kelas bertanda * diturunkan otomatis karena Kategori & Subgangguan kosong di sumber (pola teks atau kelas terdekat); rincian dan keyakinannya ada di kolom Kualitas.'
+    ] },
+    { id: 'profil', h: 'Profil (stasiun, petak, wilayah, lintas, KA, JPL, sarana, depo)', b: [
+      'Kepala profil berisi fakta kunci dan garis kelambatan 24 bulan; di bawahnya 4 angka periode (MoM/YoY/YTD).',
+      'Temuan & tindakan terlipat; klik pita untuk membuka.',
+      'Tab Riwayat: grafik bulan, komposisi kelas, dan pola jam saling menyaring. Klik lagi untuk melepas, atau "Atur ulang".',
+      'Isian profil tanpa data di sumber disembunyikan otomatis; jumlahnya dicatat di bawah daftar.'
+    ] },
+    { id: 'unduh', h: 'Unduh & laporan', b: [
+      'Tombol Unduh di kanan atas: laporan PPT/PDF bulanan, CSV/Excel data. Setiap grafik juga bisa diunduh (PNG/CSV) dari ikon di pojok kartunya.',
+      'Tombol perbesar (ikon kotak) membuka grafik layar penuh; di sana Ctrl + roda untuk zoom dan seret untuk menggeser.'
+    ] },
+    { id: 'data', h: 'Data & aturan', b: [
+      'Sumber utama: tab Gangguan_Induk, diperbarui otomatis tiap 15 menit. Lonceng di kanan atas memberi tahu bila ada data baru.',
+      'Angka tidak dikarang: bila sumber kosong, isian disembunyikan atau ditulis "–"; nilai perkiraan selalu berlabel. Rincian di Metodologi & sumber.'
+    ] }
+  ];
+
+  var FLOW = [
+    ['Ringkasan', 'Sorotan', 'Grafik sumber + pita temuan', 'Lihat N kejadian', 'Rincian kejadian', 'Profil lokasi / KA / sarana'],
+    ['Cari (kotak atas)', 'Profil', 'Klik bulan/kelas/jam', 'Riwayat tersaring', 'Rincian kejadian'],
+    ['Jaringan & prasarana', 'Peta koridor / tabel lokasi', 'Profil petak / wilayah', 'Tab JPL / jadwal KA'],
+    ['Armada', 'Unit berulang / daftar unit', 'Kartu unit', 'Dinasan & gangguan / skor RHI']
+  ];
+
+  var GLOS = [
+    ['Petak', 'Ruas jalur antara dua stasiun berurutan, ditulis A–B (kode stasiun).'],
+    ['Emplasemen', 'Area jalur di dalam batas stasiun.'],
+    ['Lintas', 'Rangkaian petak yang membentuk satu jalur, mis. Cikampek–Cirebon.'],
+    ['GAPEKA', 'Grafik Perjalanan Kereta Api — jadwal resmi. GAPEKA 2025 berlaku 1 Feb 2025; GAPEKA 2026 berlaku 1 Des 2026.'],
+    ['Daop / Divre', 'Daerah Operasi (Jawa) / Divisi Regional (Sumatera).'],
+    ['UPT Resor JR', 'Unit Pelaksana Teknis Resor Jalan Rel; kode seperti 4.22.'],
+    ['THI', 'Track Health Index — indeks kondisi jalan rel per UPT/petak (0–100).'],
+    ['RHI', 'Rolling-stock Health Index — indeks kesehatan lokomotif (HEALTHY / MONITOR / DECLINING).'],
+    ['WKP', 'Waktu kerja perawatan (pemeliharaan jalan rel dengan tutup jalur).'],
+    ['JPL', 'Jalan Perlintasan Langsung — perlintasan sebidang jalan raya dengan rel.'],
+    ['Duksar', 'Buku Dukungan Sarana GAPEKA: sarana siap guna dan penugasan depo per KA.'],
+    ['Kelka / andil', 'Kelambatan KA; andil = menit kelambatan yang dibebankan pada kejadian.'],
+    ['KLB / PLB', 'Kereta Luar Biasa / Perjalanan Luar Biasa (di luar jadwal reguler).'],
+    ['TBBT', 'Tidak Bisa Berangkat Tepat waktu.'],
+    ['MoM / YoY / YTD', 'Dibanding bulan lalu / bulan sama tahun lalu / sejak awal tahun.'],
+    ['Kelas *', 'Kelas diturunkan otomatis (kolom sumber kosong).'],
+    ['Pendapatan terekspos', 'Perkiraan pendapatan KA yang terdampak kelambatan; indikatif.']
+  ];
+
+  var FAQ = [
+    ['Mengapa angka di dashboard berbeda dengan laporan lama?', 'Dashboard mengikuti data sumber terbaru, termasuk koreksi di M_KOREKSI. Selisih yang diketahui dicatat di Metodologi.'],
+    ['Apa arti tanda * pada kelas?', 'Kategori & Subgangguan kosong di sumber, sehingga kelas diturunkan dari teks (judul/uraian) atau kelas terdekat. Keyakinannya ada di kolom Kualitas; < 60% masuk daftar periksa.'],
+    ['Mengapa ada petak yang tidak bergaris di peta?', 'Geometri OSM tidak cocok dengan km GAPEKA, atau koordinat stasiun diragukan. Petak itu tidak digambar daripada menggambar garis karangan; daftarnya ada di bawah peta.'],
+    ['Bagaimana membagikan tampilan tertentu?', 'Klik ikon tautan di bilah filter; alamat yang tersalin sudah memuat halaman, periode, wilayah, dan tab.'],
+    ['Grafik tidak bisa di-zoom dengan roda mouse?', 'Disengaja agar halaman tetap bisa digulir. Buka grafik besar (ikon kotak), lalu Ctrl + roda.'],
+    ['Data kapan diperbarui?', 'Sinkron otomatis tiap 15 menit dari Sheets tim. Lonceng menampilkan data baru; klik "Muat data terbaru".']
+  ];
+
+  /* ⓘ per kartu: pola judul kartu → penjelasan singkat + bagian panduan */
+  var CARD = [
+    [/^Perbandingan MoM/, 'Membandingkan indikator utama dengan bulan lalu, tahun lalu, dan YTD. Merah = memburuk.', 'ws-ringkasan'],
+    [/^Matriks/, 'Gelembung = kelas; sumbu X frekuensi, Y menit. Area oranye = sering dan berdampak besar (di atas kedua median).', 'ws-ringkasan'],
+    [/^Kejadian terbesar/, '50 kejadian dengan kelambatan terlama pada periode terpilih.', 'ws-ringkasan'],
+    [/^Pola jam/, 'Jumlah kejadian per jam mulai. Hanya kejadian dengan jam tercatat.', 'ws-ringkasan'],
+    [/^Hari × jam/, 'Kepadatan kejadian per hari dalam minggu dan jam.', 'ws-ringkasan'],
+    [/^Kekuatan depo/, 'Indeks 0–100 dari RHI/skor, laju gangguan per 100 unit, usia, dan kesiapan SG GAPEKA.', 'ws-armada'],
+    [/^Klasemen depo/, 'Depo berperingkat; Balai Yasa & unit tanpa depo di SAP dipisah.', 'ws-armada'],
+    [/^Unit berulang/, 'Unit dengan ≥ 2 kejadian dalam 3 bulan yang juga muncul di periode aktif.', 'ws-armada'],
+    [/^Komposisi kelas/, 'Menit kelambatan per kelas. Klik irisan untuk menyaring grafik lain.', 'profil'],
+    [/^Gangguan per bulan/, '24 bulan terakhir. Klik bulan untuk menyaring grafik lain dan riwayat.', 'profil'],
+    [/^THI/, 'THI UPT Resor JR, 3 bulan terakhir, dipadukan dengan WKP jalan rel dan gangguan prasarana.', 'ws-jaringan'],
+    [/^Kuadran UPT/, 'Prioritas UPT: THI di bawah median dan gangguan prasarana berulang = P1.', 'ws-jaringan'],
+    [/Inventaris JPL/, '1.404 titik program keselamatan (M_JPL) ditambah titik dari laporan kejadian.', 'ws-jaringan']
+  ];
+  function cardInfo(root) {
+    (root || document).querySelectorAll('.card-h h3').forEach(function (h) {
+      if (h.parentElement.querySelector('.ibtn')) return;
+      var t = (h.textContent || '').trim(), m = CARD.filter(function (c) { return c[0].test(t); })[0]; if (!m) return;
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'ibtn'; b.textContent = 'i'; b.title = m[1]; b.setAttribute('aria-label', 'Penjelasan: ' + m[1]);
+      b.addEventListener('click', function (e) { e.stopPropagation(); Alpine.store('help').openAt('panduan', m[2], m[1]); });
+      h.after(b);
+    });
+  }
+
+  /* ---- Mesin tur ---- */
+  var ov = null;
+  function visible(el) { if (!el) return false; var r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; }
+  function pick(sel) { var L = document.querySelectorAll(sel); for (var i = 0; i < L.length; i++) if (visible(L[i])) return L[i]; return null; }
+  function steps(route) {
+    var S = (TOUR[route] || []).concat(route === 'ringkasan' ? TOUR._umum : []);
+    return S.filter(function (s) { return pick(s.sel); });
+  }
+  function end() { if (ov) { ov.remove(); ov = null; } document.removeEventListener('keydown', key, true); }
+  function key(e) { if (!ov) return; if (e.key === 'Escape') { e.preventDefault(); end(); } else if (e.key === 'ArrowRight') ov._go(1); else if (e.key === 'ArrowLeft') ov._go(-1); }
+  function tour(route) {
+    end();
+    var S = steps(route || Alpine.store('app').route); if (!S.length) { Alpine.store('app').say('Belum ada tur untuk halaman ini.'); return; }
+    try { localStorage.setItem('kai.tour.' + (route || Alpine.store('app').route), '1'); } catch (e) { /* abaikan */ }
+    ov = document.createElement('div'); ov.className = 'tour'; ov.innerHTML = '<div class="tour-spot"></div><div class="tour-card" role="dialog" aria-live="polite"></div>';
+    document.body.appendChild(ov);
+    var i = 0, spot = ov.querySelector('.tour-spot'), card = ov.querySelector('.tour-card');
+    function show() {
+      var s = S[i], el = pick(s.sel); if (!el) { return go(1); }
+      el.scrollIntoView({ block: 'center', behavior: 'instant' in document.documentElement.style ? 'instant' : 'auto' });
+      setTimeout(function () {
+        var r = el.getBoundingClientRect(), pad = 6;
+        spot.style.cssText = 'left:' + (r.left - pad) + 'px;top:' + (r.top - pad) + 'px;width:' + (r.width + pad * 2) + 'px;height:' + Math.min(r.height + pad * 2, innerHeight - 20) + 'px';
+        card.innerHTML = '<div class="tour-n">' + (i + 1) + ' / ' + S.length + '</div><h4>' + s.t + '</h4><p>' + s.d + '</p><div class="tour-a">' +
+          '<button type="button" class="link-btn sm" data-x="end">Lewati</button><span class="spacer"></span>' +
+          (i ? '<button type="button" class="btn sm" data-x="-1">Sebelumnya</button>' : '') +
+          '<button type="button" class="btn sm primary" data-x="1">' + (i === S.length - 1 ? 'Selesai' : 'Berikutnya') + '</button></div>';
+        var cw = Math.min(340, innerWidth - 24), below = r.bottom + 14 + 180 < innerHeight;
+        var left = Math.max(12, Math.min(innerWidth - cw - 12, r.left));
+        card.style.cssText = 'width:' + cw + 'px;left:' + left + 'px;' + (below ? 'top:' + Math.min(innerHeight - 190, r.bottom + 14) + 'px' : 'top:' + Math.max(12, r.top - 194) + 'px');
+        var b = card.querySelector('[data-x="1"]'); b && b.focus();
+      }, 180);
+    }
+    function go(d) { i += d; if (i < 0) i = 0; if (i >= S.length) return end(); show(); }
+    ov._go = go;
+    ov.addEventListener('click', function (e) { var b = e.target.closest('[data-x]'); if (b) { if (b.dataset.x === 'end') end(); else go(+b.dataset.x); } else if (e.target === ov) end(); });
+    document.addEventListener('keydown', key, true);
+    show();
+  }
+  function autoTour() {
+    try { if (localStorage.getItem('kai.tour.ringkasan')) return; } catch (e) { return; }
+    var app = Alpine.store('app'); if (app.route !== 'ringkasan' || /[?&]tur=0/.test(location.search) || navigator.webdriver) return;
+    setTimeout(function () { if (app.route === 'ringkasan') tour('ringkasan'); }, 1200);
+  }
+
+  document.addEventListener('alpine:init', function () {
+    Alpine.store('help', {
+      open: false, tab: 'mulai', sec: '', note: '', q: '',
+      openAt: function (tab, sec, note) { this.tab = tab || 'mulai'; this.sec = sec || ''; this.note = note || ''; this.open = true;
+        var self = this; setTimeout(function () { var el = self.sec && document.getElementById('hlp-' + self.sec); el && el.scrollIntoView({ block: 'start' }); }, 80); },
+      tour: function () { this.open = false; setTimeout(function () { tour(); }, 150); },
+      get guide() { var q = this.q.toLowerCase().trim(); return !q ? GUIDE : GUIDE.filter(function (g) { return (g.h + ' ' + g.b.join(' ')).toLowerCase().indexOf(q) >= 0; }); },
+      get glos() { var q = this.q.toLowerCase().trim(); return !q ? GLOS : GLOS.filter(function (g) { return (g[0] + ' ' + g[1]).toLowerCase().indexOf(q) >= 0; }); },
+      FLOW: FLOW, FAQ: FAQ
+    });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '?' && !/input|textarea|select/i.test((e.target.tagName || '')) && !e.target.isContentEditable) { e.preventDefault(); var h = Alpine.store('help'); h.open ? (h.open = false) : h.openAt('mulai'); }
+    else if (e.key === 'Escape' && window.Alpine && Alpine.store('help') && Alpine.store('help').open) Alpine.store('help').open = false;
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof MutationObserver !== 'undefined') { var run = KAI.debounce(function () { cardInfo(); }, 200); new MutationObserver(run).observe(document.body, { childList: true, subtree: true }); }
+  });
+  return { TOUR: TOUR, GUIDE: GUIDE, GLOS: GLOS, FAQ: FAQ, CARD: CARD, tour: tour, autoTour: autoTour, end: end };
+})();
+</script>
