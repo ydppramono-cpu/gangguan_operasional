@@ -277,6 +277,7 @@ button.card:hover { box-shadow: 0 2px 10px rgba(23,34,59,.08); border-color: var
 .facts div { border-left: 2px solid var(--line); padding-left: 10px; }
 .facts dt { font-size: 11.5px; color: var(--muted); }
 .facts dd { margin: 0; font-weight: 600; font-size: 13.5px; }
+.fact-src { margin-left: 6px; font-weight: 500; font-size: 12px; color: inherit; opacity: .8; text-decoration: underline; text-underline-offset: 2px; }
 
 /* Hasil pencarian */
 .rgroup { margin-bottom: 12px; }
@@ -885,4 +886,14 @@ html { scroll-behavior: smooth; }
 .card.kpi:hover, .bb-kpi:hover { box-shadow: 0 6px 20px rgba(23,34,59,.10); transform: translateY(-1px); }
 .chart { transition: opacity .2s; }
 @media (prefers-reduced-motion: reduce) { .card, .card.kpi:hover, .bb-kpi:hover { transition: none; transform: none; } }
+/* v3.25 Profil rute berlapis */
+.rt-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 1100px) { .rt-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.rt-tile { padding: 12px 14px; display: flex; flex-direction: column; gap: 3px; }
+.rt-tile .lbl { font-size: 12px; color: var(--muted); } .rt-tile .val { font-size: 21px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); } .rt-tile .sub { font-size: 11.5px; color: var(--muted); }
+.rt-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: #F1F5F9; margin-top: 6px; } .rt-bar i { display: block; height: 100%; transition: width .4s; }
+.rt-mini { display: flex; flex-direction: column; gap: 3px; margin-top: 6px; } .rt-mini div { display: grid; grid-template-columns: 92px 1fr 28px; align-items: center; gap: 6px; font-size: 11px; color: var(--ink-2); }
+.rt-mini span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .rt-mini i { display: block; height: 6px; border-radius: 3px; background: var(--kai-orange); } .rt-mini b { text-align: right; font-variant-numeric: tabular-nums; }
+.rt-lay { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.rt-risks { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px 18px; }
 </style>

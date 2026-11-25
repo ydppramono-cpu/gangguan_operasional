@@ -34,6 +34,7 @@ document.addEventListener('alpine:init', function () {
         if (x.gapUp && x.gapUp[0]) t += ' · satu sepur ' + Math.round(Math.max(x.gapUp[0].dur, (x.gapDn && x.gapDn[0] || { dur: 0 }).dur)) + ' menit';
         return t;
       },
+      get steepLine() { return this.P.steep[0] ? 'Landai rata-rata terbesar: ' + this.steepTxt + '.' : ''; },
       get steepTxt() { var s = this.P.steep[0]; if (!s) return this.P.zN ? 'tidak terhitung (stasiun berelevasi terlalu jarang)' : 'belum ada data'; var R = KAI.data.ref; return KAI.fmt.d1(Math.abs(s.permil)) + '‰ antara ' + ((R.st[s.a] || {}).name || s.a) + ' – ' + ((R.st[s.b] || {}).name || s.b) + ' (' + KAI.fmt.d1(s.km1 - s.km0) + ' km, beda ' + KAI.fmt.n(Math.abs(s.dz)) + ' m)'; },
       get priRows() { return this.D.S.filter(function (x) { return x.flag; }).sort(function (a, b) { return a.flag.localeCompare(b.flag) || b.gM - a.gM; }).slice(0, 40); },
       get winRows() {
@@ -125,45 +126,86 @@ document.addEventListener('alpine:init', function () {
         };
       },
       onMapClick: function (p) { if (p && p.data && p.data.key) this.pickSeg(p.data.key); else if (p && p.seriesId === 'st') this.$store.app.open('stasiun', p.data.code); },
+      /** Lapisan diagram lintas (v3.25 "Profil rute berlapis"): urutan = baris; bisa dinyalakan/dimatikan. */
+      LAY: [['reg', 'Daop/Divre'], ['jalur', 'Jalur ganda/tunggal'], ['el', 'Elektrifikasi (OSM)'], ['br', 'Jembatan & terowongan (OSM)'], ['ka', 'KA/hari'], ['ggn', 'Gangguan prasarana'],
+        ['wkp', 'WKP'], ['thi', 'THI petak'], ['jpl', 'JPL'], ['nat', 'Kerentanan alam'], ['sec', 'Rawan keamanan']],
+      lay: { reg: 1, jalur: 1, el: 1, br: 1, ka: 1, ggn: 1, wkp: 0, thi: 1, jpl: 1, nat: 1, sec: 1, z: 1 },
+      toggleLay: function (k) { var o = Object.assign({}, this.lay); o[k] = o[k] ? 0 : 1; this.lay = o; },
+      layVal: function (x, k) { return k === 'ka' ? x.nTrip : k === 'ggn' ? x.gN : k === 'wkp' ? x.wkN : k === 'sec' ? x.secN : k === 'nat' ? x.natN : k === 'jpl' ? x.jpl : k === 'thi' ? (x.thi ? x.thi.hi : null)
+        : k === 'el' ? (x.osm ? x.osm.el : null) : k === 'br' ? (x.osm ? x.osm.br + x.osm.tn : null) : null; },
+      /** Isi tooltip satu petak: semua lapisan sekaligus (dibaca bersama). */
+      segTip: function (x) {
+        var f = KAI.fmt, L = [['Jalur', (x.track || 'tidak tercatat').toLowerCase()], ['Daop/Divre', x.region || '–'],
+          ['Elektrifikasi', x.osm ? f.d1(x.osm.el) + '%' : 'tidak tercatat'], ['Jembatan', x.osm ? f.n(x.osm.br) + ' (' + f.n(x.osm.brM) + ' m)' : 'tidak tercatat'], ['Terowongan', x.osm ? f.n(x.osm.tn) + (x.osm.tn ? ' (' + f.n(x.osm.tnM) + ' m)' : '') : 'tidak tercatat'],
+          ['KA/hari', x.nTrip != null ? f.n(x.nTrip) : '–'], ['Gangguan prasarana 12 bulan', f.n(x.gN) + ' kejadian · ' + f.n(x.gM) + ' menit'], ['WKP', f.n(x.wkN)], ['THI', x.thi ? f.d1(x.thi.hi) + ' (' + KAI.fmt.mon(x.thi.ym) + ')' : 'tidak tercatat'],
+          ['JPL terdaftar', f.n(x.jpl)], ['Alam 12 bulan', f.n(x.natN)], ['Keamanan 12 bulan', f.n(x.secN)]];
+        return '<b>' + KAI.esc(x.nmA + ' – ' + x.nmB) + '</b> · km ' + f.d1(x.km0) + '–' + f.d1(x.km1) + (x.flag ? ' · <b style="color:#C0392B">' + x.flag + '</b>' : '') +
+          '<table style="margin-top:4px;font-size:11.5px">' + L.map(function (r) { return '<tr><td style="color:#64748B;padding-right:10px">' + r[0] + '</td><td style="text-align:right;font-weight:600">' + KAI.esc(r[1]) + '</td></tr>'; }).join('') + '</table>' +
+          '<div style="color:#64748B;font-size:11px;margin-top:4px">Klik untuk rincian petak</div>';
+      },
       diagOpt: function () {
-        var D = this.D, C = this.C, self = this, S = D.S;
-        var rows = [['reg', 'Daop/Divre'], ['jalur', 'Jalur'], ['ka', 'KA/hari'], ['ggn', 'Gangguan prasarana'], ['wkp', 'WKP'], ['thi', 'THI petak'], ['sec', 'Keamanan'], ['nat', 'Alam']];
-        var mx = {}; ['ka', 'ggn', 'wkp', 'sec', 'nat'].forEach(function (k) { mx[k] = Math.max.apply(null, S.map(function (x) { return val(x, k) || 0; }).concat([1])); });
-        function val(x, k) { return k === 'ka' ? x.nTrip : k === 'ggn' ? x.gN : k === 'wkp' ? x.wkN : k === 'sec' ? x.secN : k === 'nat' ? x.natN : k === 'thi' ? (x.thi ? x.thi.hi : null) : null; }
+        var D = this.D, C = this.C, self = this, S = D.S, lay = this.lay;
+        var rows = this.LAY.filter(function (r) { return lay[r[0]]; });
+        var mx = {}; ['ka', 'ggn', 'wkp', 'sec', 'nat', 'jpl', 'br'].forEach(function (k) { mx[k] = Math.max.apply(null, S.map(function (x) { return self.layVal(x, k) || 0; }).concat([1])); });
+        var COL = { ka: '#252271', ggn: '#C0392B', wkp: '#0F766E', sec: '#7C3AED', nat: '#B45309', jpl: '#DB2777', br: '#0E7490' };
         var regIdx = {}, ri = 0; C.bands.forEach(function (b) { if (regIdx[b.region] == null) regIdx[b.region] = ri++; });
         var data = [];
         S.forEach(function (x, i) {
           rows.forEach(function (r, j) {
-            var v = val(x, r[0]), col;
-            if (r[0] === 'reg') col = REG_COL[regIdx[x.region] % REG_COL.length];
-            else if (r[0] === 'jalur') col = /GANDA/i.test(x.track) ? '#252271' : '#F06A25';
-            else if (r[0] === 'thi') col = v == null ? '#F1F5F9' : v >= 85 ? '#1F8A2E' : v >= 70 ? '#7FB24A' : v >= 55 ? '#E0A21A' : v >= 40 ? '#E0661A' : '#C0392B';
-            else col = v ? mix('#E2E8F0', { ka: '#252271', ggn: '#C0392B', wkp: '#0F766E', sec: '#7C3AED', nat: '#B45309' }[r[0]], 0.2 + 0.8 * v / mx[r[0]]) : '#F8FAFC';
-            data.push({ value: [x.km0, x.km1, j, i], key: x.key, itemStyle: { color: col, opacity: self.segKey && self.segKey !== x.key ? 0.55 : 1 }, r: r[0], v: v });
+            var k = r[0], v = self.layVal(x, k), col;
+            if (k === 'reg') col = REG_COL[regIdx[x.region] % REG_COL.length];
+            else if (k === 'jalur') col = /GANDA/i.test(x.track) ? '#252271' : /TUNGGAL/i.test(x.track) ? '#F06A25' : '#E2E8F0';
+            else if (k === 'thi') col = v == null ? '#F1F5F9' : v >= 85 ? '#1F8A2E' : v >= 70 ? '#7FB24A' : v >= 55 ? '#E0A21A' : v >= 40 ? '#E0661A' : '#C0392B';
+            else if (k === 'el') col = v == null ? '#F1F5F9' : mix('#E2E8F0', '#2563EB', v / 100);
+            else col = v ? mix('#E2E8F0', COL[k], 0.2 + 0.8 * v / mx[k]) : '#F8FAFC';
+            data.push({ value: [x.km0, x.km1, j, i], key: x.key, itemStyle: { color: col, opacity: self.segKey && self.segKey !== x.key ? 0.45 : 1, borderColor: self.segKey === x.key ? '#17223B' : null, borderWidth: self.segKey === x.key ? 1.5 : 0 }, r: k, v: v });
           });
         });
-        var bandLbl = C.bands.map(function (b) { return { value: [(b.km0 + b.km1) / 2, 0], name: b.region }; });
-        var anchors = [], lastKm = -1e9; D.ST.filter(function (s) { return s.anchor || s.i === 0 || s.i === D.ST.length - 1; }).forEach(function (s) { if (s.km - lastKm >= C.len * 0.035 || s.i === D.ST.length - 1) { if (s.i === D.ST.length - 1 && anchors.length && s.km - anchors[anchors.length - 1].km < C.len * 0.035) anchors.pop(); anchors.push(s); lastKm = s.km; } });
+        var bandLbl = lay.reg ? C.bands.map(function (b) { return { value: [(b.km0 + b.km1) / 2, 'Daop/Divre'], name: b.region }; }) : [];
+        var anchors = [], lastKm = -1e9; D.ST.filter(function (s) { return s.anchor || s.i === 0 || s.i === D.ST.length - 1; }).forEach(function (s) { if (s.km - lastKm >= C.len * 0.035 || s.i === D.ST.length - 1) { anchors.push(s); lastKm = s.km; } });
+        var zs = D.ST.filter(function (s) { return s.z != null; }), withZ = lay.z && zs.length >= 2, laneH = 22, top = 46, gridH = rows.length * laneH;
+        var zMaxKm = zs.length ? zs[zs.length - 1].km : 0, zMinKm = zs.length ? zs[0].km : 0;
+        var grids = [{ left: 150, right: 18, top: top, height: gridH }], xs = [{ type: 'value', gridIndex: 0, min: 0, max: Math.ceil(C.len), axisLabel: { show: !withZ, formatter: function (v) { return KAI.fmt.n(v); } }, splitLine: { show: false }, axisTick: { show: !withZ } }];
+        var ys = [{ type: 'category', gridIndex: 0, data: rows.map(function (r) { return r[1]; }), inverse: true, axisTick: { show: false }, axisLine: { show: false }, axisLabel: { fontSize: 11 } }];
+        if (withZ) { grids.push({ left: 150, right: 18, top: top + gridH + 14, height: 90 }); xs.push({ type: 'value', gridIndex: 1, min: 0, max: Math.ceil(C.len), name: 'km', nameLocation: 'end', axisLabel: { formatter: function (v) { return KAI.fmt.n(v); } } });
+          ys.push({ type: 'value', gridIndex: 1, name: 'Elevasi (m dpl)', nameLocation: 'middle', nameGap: 40, nameTextStyle: { fontSize: 11 }, splitNumber: 3 }); }
+        var series = [
+          { type: 'custom', xAxisIndex: 0, yAxisIndex: 0, renderItem: function (params, api) { var a = api.coord([api.value(0), api.value(2)]), b = api.coord([api.value(1), api.value(2)]), hgt = api.size([0, 1])[1] * 0.78;
+              return { type: 'rect', shape: { x: a[0], y: a[1] - hgt / 2, width: Math.max(1, b[0] - a[0] - 0.6), height: hgt, r: 2 }, style: api.style(), emphasis: { style: { stroke: '#17223B', lineWidth: 1.5 } } }; },
+            encode: { x: [0, 1], y: 2 }, data: data, clip: true },
+          { type: 'scatter', xAxisIndex: 0, yAxisIndex: 0, symbolSize: 0, silent: true, data: bandLbl, label: { show: true, formatter: function (p) { return p.name; }, fontSize: 11, color: '#17223B', fontWeight: 600 } },
+          { type: 'scatter', xAxisIndex: 0, yAxisIndex: 0, symbolSize: 0, silent: true, data: [], markLine: { silent: true, symbol: 'none', lineStyle: { color: '#94A3B8', type: 'dotted', width: 1 },
+            label: { position: 'start', fontSize: 10.5, color: '#475569', formatter: '{b}' }, data: anchors.map(function (s) { return { xAxis: s.km, name: s.code }; }) } }];
+        if (withZ) series.push({ type: 'line', xAxisIndex: 1, yAxisIndex: 1, name: 'Elevasi stasiun', data: zs.map(function (s) { return { value: [s.km, s.z], name: s.name }; }), smooth: 0.2, symbolSize: 5, color: '#B45309', areaStyle: { color: 'rgba(180,83,9,.12)' }, connectNulls: false,
+          markArea: zMaxKm < C.len - 1 || zMinKm > 1 ? { silent: true, itemStyle: { color: 'rgba(148,163,184,.12)' }, label: { color: '#64748B', fontSize: 10.5, formatter: 'elevasi tidak tercatat' },
+            data: [zMinKm > 1 ? [{ xAxis: 0 }, { xAxis: zMinKm }] : null, zMaxKm < C.len - 1 ? [{ xAxis: zMaxKm }, { xAxis: Math.ceil(C.len) }] : null].filter(Boolean) } : undefined });
         return {
-          animation: false, grid: { left: 112, right: 18, top: 44, bottom: 54 },
-          tooltip: { trigger: 'item', confine: true, formatter: function (p) {
-            if (p.seriesIndex !== 0) return '';
-            var x = S[p.data.value[3]], lab = rows[p.data.value[2]][1], v = p.data.v;
-            return '<b>' + x.nmA + ' – ' + x.nmB + '</b> · km ' + KAI.fmt.d1(x.km0) + '–' + KAI.fmt.d1(x.km1) + '<br>' + lab + ': ' + (p.data.r === 'reg' ? x.region : p.data.r === 'jalur' ? (x.track || '–').toLowerCase() : v == null ? 'tidak ada data' : KAI.fmt.d1(v));
-          } },
-          xAxis: { type: 'value', min: 0, max: Math.ceil(C.len), name: 'km', axisLabel: { formatter: function (v) { return KAI.fmt.n(v); } }, splitLine: { show: false } },
-          yAxis: { type: 'category', data: rows.map(function (r) { return r[1]; }), inverse: true, axisTick: { show: false }, axisLine: { show: false } },
-          dataZoom: [{ type: 'inside', xAxisIndex: 0, zoomOnMouseWheel: 'ctrl', filterMode: 'none' }, { type: 'slider', xAxisIndex: 0, height: 16, bottom: 6, brushSelect: false, showDetail: false, borderColor: '#D8DEEA', filterMode: 'none' }],
-          series: [
-            { type: 'custom', renderItem: function (params, api) { var a = api.coord([api.value(0), api.value(2)]), b = api.coord([api.value(1), api.value(2)]), hgt = api.size([0, 1])[1] * 0.78;
-                return { type: 'rect', shape: { x: a[0], y: a[1] - hgt / 2, width: Math.max(1, b[0] - a[0] - 0.6), height: hgt }, style: api.style() }; },
-              encode: { x: [0, 1], y: 2 }, data: data, clip: true },
-            { type: 'scatter', symbolSize: 0, silent: true, data: bandLbl.map(function (b) { return { value: [b.value[0], 'Daop/Divre'], name: b.name }; }), label: { show: true, formatter: function (p) { return p.name; }, fontSize: 11, color: '#17223B', fontWeight: 600 }, labelLayout: { hideOverlap: true } },
-            { type: 'scatter', symbolSize: 0, silent: true, data: [], markLine: { silent: true, symbol: 'none', lineStyle: { color: '#94A3B8', type: 'dotted', width: 1 },
-              label: { position: 'start', fontSize: 10.5, color: '#475569', formatter: '{b}' }, data: anchors.map(function (s) { return { xAxis: s.km, name: s.code }; }) } }
-          ]
+          animationDurationUpdate: 300, grid: grids, xAxis: xs, yAxis: ys,
+          tooltip: { trigger: 'item', confine: true, enterable: false, formatter: function (p) {
+            if (p.seriesIndex === 0) return self.segTip(S[p.data.value[3]]);
+            if (p.seriesType === 'line') return '<b>' + KAI.esc(p.data.name) + '</b><br>km ' + KAI.fmt.d1(p.value[0]) + ' · ' + KAI.fmt.n(p.value[1]) + ' m dpl';
+            return ''; } },
+          dataZoom: [{ type: 'inside', xAxisIndex: withZ ? [0, 1] : [0], zoomOnMouseWheel: 'ctrl', moveOnMouseWheel: false, filterMode: 'none' }, { type: 'slider', xAxisIndex: withZ ? [0, 1] : [0], height: 16, bottom: 6, brushSelect: false, showDetail: false, borderColor: '#D8DEEA', filterMode: 'none' }],
+          series: series
         };
       },
+      get diagH() { var n = this.LAY.filter(function (r) { return this.lay[r[0]]; }, this).length; return 46 + n * 22 + (this.lay.z ? 124 : 30) + 44; },
+      /** Kartu angka besar + visual mini profil rute (fakta dari detail koridor; tanpa nilai karangan). */
+      get tiles() {
+        var P = this.P, f = KAI.fmt, km = P.km || 0, S = this.D.S, thiB = [[85, 101, '#1F8A2E', '≥ 85'], [70, 85, '#7FB24A', '70–85'], [55, 70, '#E0A21A', '55–70'], [0, 55, '#C0392B', '< 55']];
+        var thiN = thiB.map(function (b) { return S.filter(function (x) { return x.thi && x.thi.hi >= b[0] && x.thi.hi < b[1]; }).length; });
+        return [
+          { l: 'Panjang koridor', v: f.d1(km) + ' km', s: P.nPetak + ' petak · ' + P.nSt + ' stasiun', bars: [[km ? P.kmGanda / km : 0, '#252271', 'ganda ' + f.d1(P.kmGanda) + ' km'], [km ? P.kmTunggal / km : 0, '#F06A25', 'tunggal ' + f.d1(P.kmTunggal) + ' km']] },
+          { l: 'Elektrifikasi (OSM)', v: f.d1(km ? P.elKm / km * 100 : 0) + '%', s: f.d1(P.elKm) + ' km · cakupan data ' + f.d1(P.osmCov * 100) + '% panjang', bars: [[km ? P.elKm / km : 0, '#2563EB', 'berlistrik'], [km ? 1 - P.elKm / km : 0, '#E2E8F0', 'tidak']] },
+          { l: 'Jembatan & terowongan (OSM)', v: f.n(P.br) + ' jembatan', s: f.n(P.brM) + ' m' + (P.tn ? ' · ' + f.n(P.tn) + ' terowongan (' + f.n(P.tnM) + ' m)' : ' · tanpa terowongan') + (P.vmax ? ' · vmax ' + P.vmax + ' km/jam' : '') },
+          { l: 'THI petak ' + (P.thiYm ? f.mon(P.thiYm) : ''), v: P.thiN ? 'median ' + f.d1(P.thiMed) : 'tidak tercatat', s: P.thiN ? P.thiLow + ' dari ' + P.thiN + ' petak di bawah 70' : '', bars: P.thiN ? thiB.map(function (b, i) { return [thiN[i] / P.thiN, b[2], b[3] + ': ' + thiN[i] + ' petak']; }) : null },
+          { l: 'Perlintasan (JPL)', v: f.n(P.jpl) + ' JPL', s: 'terdaftar di petak koridor' },
+          { l: 'Kerentanan alam 12 bulan', v: f.n(KAIA.sum(P.nat, function (t) { return t.n; })) + ' kejadian', s: P.nat.filter(function (t) { return t.n; }).slice(0, 3).map(function (t) { return t.label + ' ' + t.n; }).join(' · ') || 'tidak ada kejadian', mini: P.nat },
+          { l: 'Rawan keamanan 12 bulan', v: f.n(KAIA.sum(P.sec, function (t) { return t.n; })) + ' kejadian', s: P.sec.filter(function (t) { return t.n; }).slice(0, 3).map(function (t) { return t.label + ' ' + t.n; }).join(' · ') || 'tidak ada kejadian', mini: P.sec },
+          { l: 'Struktur', v: P.resor.length + ' UPT Resor JR', s: this.C.regions.map(function (r) { return r.region; }).join(' → ') }
+        ];
+      },
+      miniMax: function (L) { return Math.max.apply(null, (L || []).map(function (t) { return t.n; }).concat([1])); },
       onDiagClick: function (p) { if (p && p.data && p.data.key) this.pickSeg(p.data.key); },
       revOpt: function () {
         var C = this.C, B = this.B, mon = C.mon.filter(function (m) { return B.revYms.indexOf(m.ym) >= 0; });

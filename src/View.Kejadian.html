@@ -52,7 +52,6 @@
                 <dt>Depo induk</dt><dd :class="ev.drvSet.depo && 'drv'" :title="ev.drvSet.depo ? KAI.DRV_TIP : null" x-text="ev.depo ? KAI.tc(ev.depo) : KAI.NIL"></dd>
                 <dt>Kode laporan</dt><dd x-text="ev.kode || KAI.NIL"></dd>
                 <dt>Kunci asal</dt><dd><code x-text="ev.id"></code></dd>
-                <dt>Catatan kualitas</dt><dd :style="ev.q ? 'color:var(--warn)' : ''" x-text="ev.q || 'Tanpa temuan'"></dd>
                 <dt>Isian turunan</dt><dd x-text="Object.keys(ev.drvSet).length ? Object.keys(ev.drvSet).map(function (k) { return KAI.DRV_LABEL[k] || k; }).join(', ') + ' — diturunkan dari judul/uraian' : 'Tidak ada (semua dari kolom sumber)'"></dd>
               </dl>
             </div>

@@ -465,24 +465,19 @@ window.KAIReport = (function () {
       tbl(s, 7.3, 1.65, 5.4, 3.3, [['Jenis gangguan', 'Kejadian', 'Jumlah sarana', 'Total menit', 'Wilayah dominan']].concat(rk.length ? rk.map(function (x, i) {
         return [{ t: x.jenis, bold: true, fill: i < 2 ? 'FFF2DF' : null }, { t: x.n + 'x', fill: i < 2 ? 'FFF2DF' : null }, { t: x.units + ' unit', fill: i < 2 ? 'FFF2DF' : null }, { t: fm().n(x.menit), fill: i < 2 ? 'FFF2DF' : null }, { t: x.wilayah, fill: i < 2 ? 'FFF2DF' : null }];
       }) : [['Tidak ada', '0x', '0 unit', '0', '–']]), { fs: 8, colW: [1.6, 0.62, 0.78, 0.7, 1.7], headFill: NAVY2 });
-      var noUnit = L.filter(function (r) { return r.kelas === 'sarana' && !r.sarana.length; }).length;
-      note(s, 0.6, 5.07, 6.5, 0.32, 'Unit = nomor lokomotif per kejadian (kereta/KRL/KRD tidak dinilai); bila kolom Nomor sarana kosong, nomor diambil dari judul/uraian laporan. ' + noUnit + ' kejadian sarana ' + R.P.short + ' tanpa nomor sarana. Baris oranye = 2 unit dengan menit terbesar. RHI = healthy index hari terakhir data RHI.', 6.5);
-      note(s, 7.3, 5.07, 5.4, 0.32, "Kolom 'Jumlah sarana' menghitung nomor sarana unik; arsip JASUM tidak selalu mencatat nomor lokomotif.", 6.5);
+      note(s, 0.6, 5.07, 6.5, 0.32, 'Unit = nomor lokomotif per kejadian. Baris oranye = 2 unit dengan menit terbesar. RHI = healthy index hari terakhir data RHI.', 6.5);
       insrec(s, (ru[0] ? 'Unit berulang: ' + ru.slice(0, 2).map(function (x) { return fm().unit(x.unit) + ' (' + x.n + ' kejadian, ' + fm().n(x.menit) + ' menit)'; }).join(' dan ') + '. ' : 'Tidak ada unit berulang. ') + (rk[0] ? 'Pola sistemik: ' + rk.slice(0, 2).map(function (x) { return x.jenis.toLowerCase() + ' ' + x.n + ' kejadian di ' + x.units + ' unit'; }).join(', ') + '.' : ''),
         recFrom(s, ['Sarana'], ru[0] ? ['RCA unit ' + ru.slice(0, 2).map(function (x) { return fm().unit(x.unit); }).join(' dan ')] : [], 3), 5.46, 0.62, 0.62);
     }
     function expoSlide() {
       var E = R.expo, Ey = R.expoYtd, s = slide('Pendapatan terekspos ' + (sameYear ? mName(R.P) : R.P.base) + ' ' + fm().rp(K.exposure) + ', ' + (K.exposure <= Kp.exposure ? 'turun ' : 'naik ') + pctS(Math.abs(KAIA.pct(K.exposure, Kp.exposure) || 0)) + ' dari ' + (sameYear ? mName(R.prevP) : R.prevP.base), { toc: 'Pendapatan terekspos (revenue at risk) berdasarkan layanan KA' });
       cite(s, SRC.rate());
-      var X = KAI.data && KAI.data.rar && KAI.data.rar.ok ? KAI.data.rar : null, qP = X && X.rate('PENUMPANG', R.ym), qB = X && X.rate('BARANG', R.ym);
-      var DD = X ? KAIP.detail(X, R.L) : null;
-      text(s, 0.34, 0.86, 12.6, 0.26, 'Gross revenue at risk = menit KELKA ÷ 60 × rate pendapatan per jam ' + (X ? (X.hasProgram ? 'KA itu sendiri atau jenis KA per pulau (Σ pendapatan ÷ Σ jam perjalanan × hari jalan KA Jalan/Batal; tab Passenger & Freight)' : 'bulan kejadian (Σ pendapatan KA termatch GAPEKA ÷ Σ jam perjalanan; tab Passenger & Freight)') : '(rate tetap)') + '. Bukan kerugian akuntansi.', { size: 10.5 });
-      [['Rate KA Penumpang', qP ? qP.v : cfg.rate.PENUMPANG, 4.1, qP], ['Rate KA Barang', qB ? qB.v : cfg.rate.BARANG, 6.76, qB]].forEach(function (r) {
-        text(s, r[2], 1.17, 2.48, 0.24, r[0] + ' ' + KAI.fmt.mon(R.ym), { size: 11, bold: true, align: 'center' });
-        add(s, 'valbox', r[2], 1.47, 2.48, 0.49, { value: 'Rp ' + fm().n(Math.round(r[1])), fill: '2563EB', size: 17 });
-        text(s, r[2], 1.98, 2.48, 0.16, 'per jam perjalanan' + (r[3] && r[3].src === 'acuan' ? ' · rate acuan' : ''), { size: 7.5, align: 'right', color: MUTED });
+      var X = KAI.data && KAI.data.rar && KAI.data.rar.ok ? KAI.data.rar : null;
+      text(s, 0.34, 0.86, 12.6, 0.26, 'Pendapatan terekspos = menit kelambatan ÷ 60 × pendapatan per jam kereta api terkait' + (X ? '' : ' (perkiraan, rate tetap)') + '. Indikatif, bukan kerugian akuntansi.', { size: 10.5 });
+      [[(sameYear ? mName(R.prevP) : R.prevP.base), Kp.exposure, 4.1], ['YTD ' + R.cmp.ytdP.short, (Ey.penumpang || 0) + (Ey.barang || 0), 6.76]].forEach(function (r) {
+        text(s, r[2], 1.17, 2.48, 0.24, r[0], { size: 11, bold: true, align: 'center' });
+        add(s, 'valbox', r[2], 1.47, 2.48, 0.49, { value: fm().rp(r[1]).replace('miliar', 'Miliar').replace('juta', 'Juta'), fill: '2563EB', size: 17 });
       });
-      if (DD) text(s, 9.5, 1.2, 3.5, 0.9, 'Cakupan KA termatch: penumpang ' + fm().d1(DD.tot.covP * 100) + '% menit · barang ' + fm().d1(DD.tot.covB * 100) + '% menit.\nPendapatan Passenger termatch ' + fm().d1(((X.P.by[R.ym] || {}).cov || 0) * 100) + '% · Freight ' + fm().d1(((X.B.by[R.ym] || {}).cov || 0) * 100) + '%.', { size: 8.5, color: MUTED });
       band(s, 0.3, 2.33, 6.22, 0.3, 'Pendapatan terekspos ' + R.cmp.ytdP.label, { size: 12.5 });
       band(s, 6.84, 2.33, 6.22, 0.3, 'Pendapatan terekspos ' + R.P.base, { fill: '1F8A2E', size: 12.5 });
       [[0.3, 'KA Penumpang', Ey.penumpang, Ey.paretoP, '0F7A6C', 'Pareto Rp KA penumpang ' + R.cmp.ytdP.short], [3.59, 'KA Barang', Ey.barang, Ey.paretoB, '0F7A6C', 'Pareto Rp KA barang ' + R.cmp.ytdP.short],
@@ -752,7 +747,6 @@ window.KAIReport = (function () {
       tbl(s, 0.6, 1.58, 12.1, 2.25, [['Sumber', 'Fakta yang dilaporkan', 'Keterkaitan dengan data laporan', 'Implikasi']].concat(media.length ? media.map(function (r) { return [{ t: shortOf(r) + ' ' + libCite(s, r), bold: true }, clip(r.fakta, 220), link(r), clip(r.implikasi, 130)]; }) : [['–', 'Belum ada rujukan media yang relevan di M_RUJUKAN', '–', '–']]), { fs: 8, colW: [1.8, 5.1, 2.0, 3.2], headFill: NAVY, zebra: true });
       band(s, 0.6, 3.95, 12.1, 0.3, 'Kajian ilmiah & pedoman', { fill: NAVY2 });
       tbl(s, 0.6, 4.28, 12.1, 2.25, [['Rujukan', 'Temuan utama', 'Penerapan di KAI']].concat(sci.length ? sci.map(function (r) { return [{ t: shortOf(r) + ' ' + libCite(s, r), bold: true }, clip(r.fakta, 230), clip(r.implikasi, 170)]; }) : [['–', 'Belum ada kajian yang relevan di M_RUJUKAN', '–']]), { fs: 8, colW: [1.8, 6.3, 4.0], headFill: NAVY, zebra: true });
-      note(s, 0.6, 6.58, 12.1, 0.3, 'Rujukan dipilih otomatis bila topiknya cocok dengan jenis gangguan dan wilayahnya sama atau berlaku umum; rujukan yang terbit setelah batas periode laporan tidak dipakai.', 7.5);
     }
     function recSlide() {
       var s = slide('Rekomendasi: ' + (pairs.length ? pairs.length + ' tindakan berbasis temuan data' : 'pertahankan pemantauan'), { toc: 'Rekomendasi tindak lanjut' });
@@ -1012,7 +1006,7 @@ window.KAIReport = (function () {
       });
       if (rows.length === 1) rows.push(['–', 'Tidak ada gangguan lokomotif bernomor di RHI', '–', '–', '0', '–', '–', '–']);
       tbl(s, 4.6, 1.25, 8.25, 4.0, rows, { fs: 7.5, colW: [0.35, 1.45, 0.5, 2.0, 0.5, 1.15, 0.5, 1.75], headFill: NAVY });
-      note(s, 4.6, 5.28, 8.25, 0.24, Math.min(14, n) + ' kejadian terlama dari ' + n + '. Gangguan lokomotif tanpa nomor/di luar RHI: ' + f.n(SR.miss.filter(function (r) { return !regionMode || r.wilayah === regions[0]; }).length) + ' kejadian.', 7);
+      note(s, 4.6, 5.28, 8.25, 0.24, Math.min(14, n) + ' kejadian terlama dari ' + n + '.', 7);
       var dec = E.filter(function (e) { return e.at && LOW(e.at.st); }), big = E[0];
       duo(s, (pE('MONITOR') > pH('MONITOR') ? 'Status MONITOR hanya ' + KAI.fmt.d1(pH('MONITOR')) + '% hari-unit armada tetapi ' + KAI.fmt.d1(pE('MONITOR')) + '% gangguan — lokomotif berstatus MONITOR lebih rawan.' : 'Porsi gangguan saat MONITOR (' + KAI.fmt.d1(pE('MONITOR')) + '%) tidak melebihi porsi hari-unit armada (' + KAI.fmt.d1(pH('MONITOR')) + '%)' + (n < 10 ? '; jumlah kejadian kecil sehingga belum dapat disimpulkan.' : '.')) + (dec.length ? ' DECLINING saat terganggu: ' + dec.map(function (e) { return e.no + ' (' + e.r.d + ' ' + monS(R.ym) + ', ' + clip(subOf(e.r).replace(/^Gangguan\s+/i, ''), 40) + ')'; }).join('; ') + '.' : '') + (big ? ' Gangguan terlama: ' + big.no + ' ' + clip(subOf(big.r).replace(/^Gangguan\s+/i, ''), 44) + ' ' + f.n(big.r.menit) + ' menit (HI ' + d1(big.at && big.at.hi) + ').' : ''),
         'Integrasikan RHI harian ke penugasan lokomotif: unit MONITOR/DECLINING tidak ditempatkan pada KA prioritas tanpa pemeriksaan pradinas; catat komponen penyebab di laporan gangguan agar dapat dicocokkan dengan riwayat perawatan.', 5.58, 0.92);

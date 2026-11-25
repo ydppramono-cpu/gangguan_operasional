@@ -9,9 +9,11 @@
  *   Keandalan  = 100 − min(100, 15 × kejadian 12 bulan + menit 12 bulan ÷ 20)
  *   Usia       = 100 − 2,2 × max(0, usia − 5 th)            (5 th = 100 · ±50 th ≈ 0)
  *   Kesiapan   = 100 tercantum SIAP GUNA GAPEKA · 60 tidak tercantum · 30 sedang di Balai Yasa
- *   Kesehatan  = RHI (healthy index) bila ada; selain itu skor turunan = 0,35 usia + 0,45 keandalan + 0,20 kesiapan
+ *   Kesehatan  = RHI resmi saja (keputusan 25 Nov 2026): lokomotif = tab RHI; kereta & gerbong = spreadsheet "KAI | RHI Sarana"
+ *                (KAIRhiKG, HI & status hari terakhir data). Unit tanpa RHI = "RHI tidak tercatat", tidak ikut rata-rata.
+ *                Skor turunan tidak dipakai lagi di tampilan.
  *   Atribut 1–20 (gaya Football Manager) = skor ÷ 5, dibulatkan, minimum 1.
- *   Kekuatan depo = 0,35 kesehatan rata-rata + 0,30 keandalan (gangguan per 100 unit vs median jaringan) + 0,20 armada muda (% ≤ 30 th) + 0,15 kesiapan GAPEKA.
+ *   Kekuatan depo = 0,35 RHI rata-rata (bila ada; bila tidak, bobot dibagi ke komponen lain) + 0,30 keandalan (gangguan per 100 unit vs median jaringan) + 0,20 armada muda (% ≤ 30 th) + 0,15 kesiapan GAPEKA.
  */
 (function (root) {
   var KINDS = ['Lokomotif', 'Kereta', 'Gerbong'];
@@ -21,9 +23,7 @@
   function median(a) { if (!a.length) return null; var s = a.slice().sort(function (x, y) { return x - y; }), h = s.length >> 1; return s.length % 2 ? s[h] : (s[h - 1] + s[h]) / 2; }
   function mean(a) { return a.length ? sum(a) / a.length : null; }
   function attr(v) { return v == null ? null : Math.max(1, Math.min(20, Math.round(v / 5))); }
-  function band(v) { return v == null ? '' : v >= 85 ? 'HEALTHY' : v >= 70 ? 'MONITOR' : 'DECLINING'; }
-  /** Kelas skor turunan (bukan istilah RHI agar tidak dikira status resmi). */
-  function dband(v) { return v == null ? '' : v >= 80 ? 'Baik' : v >= 60 ? 'Pantau' : 'Prioritas'; }
+  function band(v) { return v == null ? '' : v >= 85 ? 'HEALTHY' : v >= 70 ? 'MONITOR' : v >= 55 ? 'DECLINING' : 'POOR'; }
   function ymShift(ym, n) { var y = +ym.slice(0, 4), m = +ym.slice(5, 7) - 1 + n; y += Math.floor(m / 12); m = ((m % 12) + 12) % 12; return y + '-' + (m < 9 ? '0' : '') + (m + 1); }
 
   /** Jenis sarana suatu kejadian: master unit → awalan Subgangguan → kolom Jenis sarana → jenis KA (rangkaian). */
@@ -55,9 +55,20 @@
     return out;
   }
 
-  function build(R, recs, endDay, cfg) {
+  /** RHI kereta & gerbong (KAIRhiKG.data): baris bulan terakhir per unit → HI akhir, status, RAMS, MI, CI, tanggal data. */
+  function rhiKG(KG) {
+    var out = {}; if (!KG || !KG.U) return out; var C = root.KAIRhiKG.C, ST = root.KAIRhiKG.ST;
+    Object.keys(KG.U).forEach(function (no) {
+      var L = KG.U[no], r = L[L.length - 1]; if (!r) return;
+      out[String(no).toUpperCase().replace(/\s+/g, '')] = { hi: r[C.hi], st: ST[r[C.st]] || '', rams: r[C.rams], mi: r[C.mi], ci: r[C.ci], asOf: r[C.last], ym: r[C.ym], kg: true,
+        trend: L.map(function (x) { return { ym: x[C.ym], hi: x[C.hi], hiAvg: x[C.avg], st: ST[x[C.st]] || '' }; }) };
+    });
+    return out;
+  }
+
+  function build(R, recs, endDay, cfg, KG) {
     var end = endDay, endYm = end.slice(0, 7), from12 = new Date(Date.parse(end + 'T00:00:00Z') - 364 * 864e5).toISOString().slice(0, 10);
-    var K = R.kondisi && !R.kondisi.error ? R.kondisi : null, RH = rhiIndex(K);
+    var K = R.kondisi && !R.kondisi.error ? R.kondisi : null, RH = rhiIndex(K), RK = rhiKG(KG);
     var dk = R.dukUnit || {}, ageWarn = (cfg && cfg.ageWarn) || 30;
     // kejadian sarana per unit (nomor sarana pertama)
     var byU = {}, evKind = {};
@@ -71,14 +82,14 @@
       var ev = (byU[f.no] || []).slice().sort(function (a, b) { return KAIA.sortKey(b).localeCompare(KAIA.sortKey(a)); });
       var e12 = ev.filter(function (r) { return r.date && r.date >= from12 && r.date <= end; }), n12 = e12.length, m12 = sum(e12, function (r) { return r.menit; });
       var sRel = clamp(100 - Math.min(100, 15 * n12 + m12 / 20)), sAge = age == null ? null : clamp(100 - 2.2 * Math.max(0, age - 5)), sRdy = inBY ? 30 : duk ? 100 : 60;
-      var rh = RH[f.no] || null, der = Math.round((0.35 * (sAge == null ? 60 : sAge) + 0.45 * sRel + 0.2 * sRdy) * 10) / 10;
+      var rh = (f.kind === 'Lokomotif' ? RH[f.no] : RK[f.no]) || null;
       var hi = rh && rh.hi != null ? rh.hi : null;
       var form = []; for (var i = 5; i >= 0; i--) { var ym = ymShift(endYm, -i), c = ev.filter(function (r) { return r.ym === ym; }); form.push({ ym: ym, n: c.length, menit: sum(c, function (r) { return r.menit; }) }); }
       var u = { no: f.no, kind: f.kind, cls: f.cls, depoId: f.depoId, depo: dp.code || dp.raw || f.depo, depoLabel: inBY && BY_NAME[byCode] ? BY_NAME[byCode] + ' (' + byCode + ')' : dp.label || f.depo, region: dp.region || '', age: age, ageRaw: f.age, ageBad: ageBad, since: f.since, manuf: f.manuf, kap: f.kap, spd: f.spd, bk: f.bk, model: f.model,
         duk: duk, inBY: inBY, events: ev, n12: n12, m12: m12, nAll: ev.length, mAll: sum(ev, function (r) { return r.menit; }), last: ev[0] || null, form: form,
-        rhi: rh, hi: hi, hiSrc: hi != null ? 'RHI' : 'turunan', health: hi != null ? hi : der, derived: der, status: hi != null ? (rh.st || band(hi)) : dband(der),
+        rhi: rh, hi: hi, hiSrc: hi != null ? 'RHI' : '', health: hi, status: hi != null ? (rh.st || band(hi)) : '',
         s: { rel: sRel, age: sAge, rdy: sRdy } };
-      u.attrs = [['Kesehatan' + (hi != null ? ' (RHI)' : ' (turunan)'), attr(u.health)], ['Keandalan', attr(sRel)], ['Usia', attr(sAge)], ['Kesiapan GAPEKA', attr(sRdy)]];
+      u.attrs = [['Kesehatan (RHI)', attr(u.health)], ['Keandalan', attr(sRel)], ['Usia', attr(sAge)], ['Kesiapan GAPEKA', attr(sRdy)]];
       if (rh) u.attrs = u.attrs.concat([['RAMS', attr(rh.rams)], ['Maintenance index', attr(rh.mi)]]);
       u.overall = Math.round(mean(u.attrs.map(function (a) { return a[1]; }).filter(function (v) { return v != null; })) * 5);
       U[f.no] = u; list.push(u);
@@ -94,7 +105,8 @@
       var rhis = L.filter(function (u) { return u.hi != null; }), n12 = sum(L, function (u) { return u.n12; }), m12 = sum(L, function (u) { return u.m12; });
       return { n: L.length, sg: L.filter(function (u) { return u.duk; }).length, by: L.filter(function (u) { return u.inBY; }).length, ageMed: median(ages), old: ages.filter(function (a) { return a > ageWarn; }).length,
         health: hs.length ? Math.round(mean(hs) * 10) / 10 : null, rhiN: rhis.length, rhiMean: rhis.length ? Math.round(mean(rhis.map(function (u) { return u.hi; })) * 10) / 10 : null,
-        H: L.filter(function (u) { return u.status === 'HEALTHY' || u.status === 'Baik'; }).length, M: L.filter(function (u) { return u.status === 'MONITOR' || u.status === 'Pantau'; }).length, Dc: L.filter(function (u) { return u.status === 'DECLINING' || u.status === 'Prioritas'; }).length,
+        H: L.filter(function (u) { return u.status === 'HEALTHY'; }).length, M: L.filter(function (u) { return u.status === 'MONITOR'; }).length, Dc: L.filter(function (u) { return u.status === 'DECLINING'; }).length,
+        Pc: L.filter(function (u) { return u.status === 'POOR' || u.status === 'CRITICAL'; }).length, noRhi: L.filter(function (u) { return u.hi == null; }).length,
         n12: n12, m12: m12, rate: L.length ? n12 / L.length * 100 : 0, hit: L.filter(function (u) { return u.n12; }).length };
     }
     var byKind = {};
@@ -104,7 +116,8 @@
       var medRate = median(deps.map(function (d) { return d.rate; })) || 0;
       deps.forEach(function (d) {
         var rel = clamp(100 - (medRate ? (d.rate / Math.max(medRate, 1)) * 50 : d.rate * 5)), young = d.n ? 100 * (1 - d.old / d.n) : 0, rdy = d.n ? Math.min(100, d.sg / d.n * 100) : 0;
-        d.strength = Math.round(0.35 * (d.health == null ? 60 : d.health) + 0.30 * rel + 0.20 * young + 0.15 * rdy);
+        // tanpa RHI di depo itu: bobot kesehatan dibagi ke komponen lain (tidak diisi nilai karangan)
+        d.strength = d.health == null ? Math.round((0.30 * rel + 0.20 * young + 0.15 * rdy) / 0.65) : Math.round(0.35 * d.health + 0.30 * rel + 0.20 * young + 0.15 * rdy);
         d.parts = { kesehatan: d.health, keandalan: Math.round(rel), muda: Math.round(young), siap: Math.round(rdy) };
         d.top = d.list.filter(function (u) { return u.n12; }).sort(function (a, b) { return b.m12 - a.m12; }).slice(0, 3);
         d.dinas = k === 'Lokomotif' && R.duksar && R.duksar.lok ? R.duksar.lok[d.code] || null : null;
@@ -125,6 +138,6 @@
     var E = L.filter(function (r) { return S.kindOfEvent(r) === kind; });
     return { E: E, n: E.length, menit: sum(E, function (r) { return r.menit; }), units: KAIA.unitsOf(E), kinds: KAIA.repeatKindsOf(E, 2), noUnit: E.filter(function (r) { return !r.sarana || !r.sarana[0]; }).length };
   }
-  root.KAIS = { build: build, periodOf: periodOf, kindOfEvent: kindOfEvent, KINDS: KINDS, attr: attr, band: band, dband: dband };
+  root.KAIS = { build: build, periodOf: periodOf, kindOfEvent: kindOfEvent, KINDS: KINDS, attr: attr, band: band };
 })(typeof window !== 'undefined' ? window : this);
 </script>

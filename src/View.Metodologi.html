@@ -1,127 +1,8 @@
-<!-- View.Metodologi — status sinkronisasi, kualitas data, definisi, cara kerja perkiraan, dan daftar rujukan. -->
+<!-- View.Metodologi — definisi singkat: periode & pembanding, ukuran, kelas gangguan, rujukan rekomendasi.
+     v3.25: penyusun angka (cakupan pencocokan, catatan kualitas, waktu muat, catatan versi) tidak tampil — ada di spreadsheet Diagnostik. -->
 <template x-if="$store.app.route === 'metodologi' && $store.app.R">
   <section class="view" x-data="vMeta">
-    <div class="grid g-3">
-      <div class="card kpi"><div class="lbl">Snapshot</div><div class="val num" style="font-size:20px" x-text="meta.version"></div>
-        <div class="note" x-text="'Dibangun ' + KAI.fmt.time(meta.builtAt) + ' · sumber diubah ' + KAI.fmt.time(meta.sourceUpdatedAt)"></div></div>
-      <div class="card kpi" :style="'--kpi-c:' + (st && !st.ok ? 'var(--bad)' : 'var(--good)')"><div class="lbl">Sinkronisasi terakhir</div>
-        <div class="val" style="font-size:15px;line-height:1.35" x-text="st ? st.message : 'Belum ada catatan'"></div>
-        <div class="note" x-text="st ? KAI.fmt.time(st.at) + ' · ' + st.trigger + ' · ' + Math.round(st.ms / 1000) + ' detik · otomatis tiap 15 menit bila sumber berubah' : ''"></div></div>
-      <div class="card kpi"><div class="lbl">Cakupan</div><div class="val num" style="font-size:20px" x-text="KAI.fmt.n(meta.rows) + ' kejadian'"></div>
-        <div class="note" x-text="KAI.fmt.day($store.app.dates.min) + ' s.d. ' + KAI.fmt.day($store.app.dates.max) + ' · aturan ' + meta.rule"></div></div>
-    </div>
-
-    <div class="card mt" x-data="{ L: KAI.perf.list(), d: function (v) { return v == null ? '–' : KAI.fmt.d1(v / 1000) + ' detik'; } }">
-      <div class="card-h"><div><h3>Waktu muat di perangkat ini</h3><p>Diukur di browser ini, 10 kali buka terakhir. Disimpan lokal, tidak dikirim ke mana pun. Waktu dihitung sejak alamat dibuka.</p></div></div>
-      <div class="card-b tbl-wrap">
-        <p class="note" x-show="!L.length">Belum ada catatan. Muat ulang halaman sekali, lalu buka Metodologi lagi.</p>
-        <table class="tbl sm" x-show="L.length" data-no-csv><thead><tr><th>Waktu buka</th><th class="num">Halaman dirakit server</th><th class="num">Halaman diterima</th><th class="num">Skrip siap</th><th class="num">Pustaka grafik/tabel</th><th class="num">Data inti (server / total)</th><th class="num">Layar pertama</th><th class="num">Referensi & GAPEKA</th></tr></thead>
-          <tbody><template x-for="(r, i) in L" :key="i"><tr>
-            <td x-text="KAI.fmt.time(r.at) + ' · ' + (r.ua || '')"></td>
-            <td class="num" x-text="d(r.render)"></td><td class="num" x-text="d(r.html) + (r.kb ? ' · ' + KAI.fmt.n(r.kb) + ' KB' : '')"></td><td class="num" x-text="d(r.dcl)"></td><td class="num" x-text="d(r.libs)"></td>
-            <td class="num" x-text="r.api && r.api.apiBootstrap ? d(r.api.apiBootstrap.srv) + ' / ' + d(r.api.apiBootstrap.total) : '–'"></td>
-            <td class="num" x-text="d(r.layar) + (r.masuk === false ? ' (dari beranda)' : '')"></td><td class="num" x-text="d(r.ref)"></td></tr></template></tbody></table>
-        <p class="note mt-s">Cara membaca: bagian terbesar menunjukkan apa yang perlu dipercepat — perakitan di server (Apps Script), unduhan halaman (jaringan), atau pengolahan data di perangkat. "Data inti server" = lama kerja server membaca snapshot; sisanya antrean Apps Script dan jaringan.</p>
-      </div>
-    </div>
-
-    <div class="card mt">
-      <div class="card-h"><div><h3>Batubara — WTT & Papan skenario (v3.21)</h3><p>Pengganti aplikasi WTT lama · sumber: Database_KA_Batubara_Sumsel (hanya baca)</p></div></div>
-      <div class="card-b">
-        <dl class="kv">
-          <dt>Sinkron</dt><dd>Script Property <code>BB_DB_ID</code> menunjuk DB Batubara. ETL tiap 15 menit membaca tab master/SOP/program dan REAL_PERJALANAN, REAL_TERMINAL, REAL_THN, REAL_HAMBATAN, REAL_JEJAK bila DB berubah; disimpan sebagai snapshot gzip. Tab REAL_GANGGUAN tidak dibaca (gangguan tetap dari Gangguan_Induk). Penurunan baris REAL_PERJALANAN &gt; 20% dibandingkan sinkron sebelumnya ditolak (snapshot lama dipakai).</dd>
-          <dt>Capaian</dt><dd>Rumus WTT, WPKA, WPG (program · realisasi · evaluasi), OTP, indeks kinerja terminal (4 komponen), dan 8 tahap siklus dipindahkan apa adanya dari aplikasi WTT lama. OTP = porsi KA dengan kelambatan ≤ toleransi SIPOKA KELKA (Divre III berangkat 20 / datang 30 menit; Divre IV 10 / 25 menit) kecuali bila tab KPI_TARGET mengisi lain.</dd>
-          <dt>Papan skenario</dt><dd>Jaringan kejadian–kegiatan (propagasi kelambatan max-plus): waktu tempuh & headway PRASARANA_PETAK, persilangan jalur tunggal, siklus rangkaian PRG_SIKLUS/PRG_TERMINAL, nomor bersambung, dinasan awak O.20 (GAPEKA 2025). Skenario tanpa perubahan = GAPEKA persis. Antrean terminal: kapasitas = jumlah jalur M_STASIUN atau puncak GAPEKA bila lebih besar.</dd>
-          <dt>Uji ulang</dt><dd>Model diuji ke REAL_JEJAK: simpangan pertama tiap KA dimasukkan sebagai geser, batas siklus/sambung/awak tidak dipakai (rangkaian dan awak di lapangan sering dipertukarkan). Hasil per tanggal tampil di Papan skenario (tombol Realisasi). Selisih masih besar karena KA batubara sering menyimpang jam-jam dari GAPEKA dan urutan nyata di petak tidak dimodelkan — pakai untuk membandingkan skenario, bukan meramal jam.</dd>
-        </dl>
-      </div>
-    </div>
-    <div class="card mt">
-      <div class="card-h"><div><h3>Rute jalur (v3.10)</h3><p>Wilayah & koridor → tab Rute jalur · 13 koridor KA penumpang & barang</p></div></div>
-      <div class="card-b">
-        <dl class="kv">
-          <dt>Koridor</dt><dd>Stasiun jangkar disambung jalur terpendek graf LIST PETAK JALAN GAPEKA 2025. Daop/Divre per petak dari LIST PETAK; UPT Resor JR dari PETA WILAYAH.</dd>
-          <dt>KA lewat</dt><dd>Perjalanan Daftar Waktu GAPEKA yang dipilih di switch pojok kanan atas (2025 atau 2026) (jam pasti; stasiun langsung tanpa jam diinterpolasi km) + LIST KA tanpa Daftar Waktu (jam perkiraan). Kategori: penumpang, KRL (Commuter Line), barang, dinas. Hanya perjalanan harian (REG/PLB) untuk jam kosong & hitungan harian.</dd>
-          <dt>Pendapatan</dt><dd>Apa adanya dari tab Passenger (per nomor KA) & Freight (per Nama KA). Penuh = seluruh pendapatan KA yang lewat; alokasi = × km KA di koridor ÷ km rute KA (barang: digabung atas semua perjalanan bernama sama). Tanpa skor produktivitas.</dd>
-          <dt>Jam kosong</dt><dd>24 jam dikurangi waktu tempuh petak tiap perjalanan harian ± 5 menit. Petak ganda juga per sepur (WKP satu sepur). Rekomendasi WKP memakai jendela ≥ 60 menit, diutamakan 21:00–05:00.</dd>
-          <dt>Status petak</dt><dd>P1 = gangguan prasarana ≥ 2 & (THI &lt; 70 atau WKP jalan rel ≤ 1) · P2 = gangguan tanpa WKP jalan rel · P3 = THI &lt; 70 tanpa gangguan. WKP dipetakan ke petak dari teks lokasi (petak, rentang stasiun, atau emplasemen; 97% baris).</dd>
-          <dt>Peta & profil fisik</dt><dd>Geometri OpenStreetMap (ODbL) dari ubin github.com/enwo02/train-tracker, garis pantai Natural Earth — tertanam di aplikasi, tanpa ubin & kunci API. Koordinat stasiun: sandihex86/masterdataprasarana, DenShubi/Indonesian-Railway-, jeffersonsetiawan/TMConfiguration, ekadanis/stasiun_map_app; diuji ≤ 1,5 km dari rel, sisanya interpolasi km. Jembatan/terowongan/elektrifikasi/vmax hanya dari petak yang panjang OSM-nya cocok ±25%.</dd>
-          <dt>Landai</dt><dd>Beda elevasi stasiun (m_stasiun) ÷ jarak = landai rata-rata (‰), bukan landai penentu. Elevasi yang landainya &gt; 40‰ ke semua tetangga dibuang (salah ketik sumber).</dd>
-          <dt>Isian tanpa sumber</dt><dd>Persinyalan, jenis rel/bantalan, demografi tidak ada di sumber aplikasi → tidak diperkirakan. Baris profil yang isinya kosong disembunyikan otomatis, dengan catatan jumlah isian yang disembunyikan (v3.19).</dd>
-        </dl>
-      </div>
-    </div>
-    <div class="card mt">
-      <div class="card-h"><div><h3>Sarana & armada (v3.9)</h3><p>Lokomotif · kereta · gerbong — KRL/KRD belum dihitung</p></div></div>
-      <div class="card-b">
-        <dl class="kv">
-          <dt>Sumber</dt><dd>Referensi Sarana SAP (unit, depo, mulai dinas, spesifikasi) · Buku Dukungan Sarana GAPEKA 2025 Jawa, Sumbar, Sumsel, Sumut (nomor sarana siap guna per depo induk, dinasan lok, km/lok/hari) · RHI lokomotif harian · Gangguan_Induk (nomor sarana pertama).</dd>
-          <dt>Siap guna GAPEKA</dt><dd>Nomor sarana diekstrak dari PDF Duksar dan dicocokkan ke SAP: 499 lokomotif, 1.975 kereta, 7.948 gerbong tercantum. Unit SAP yang tidak tercantum ditandai "tidak tercantum" (bisa konservasi, rusak berat, atau baru).</dd>
-          <dt>Kesehatan</dt><dd>Lokomotif = healthy index RHI (≥ 85 HEALTHY, 70–85 MONITOR, &lt; 70 DECLINING). Kereta & gerbong: RHI resmi belum tersedia → skor turunan = 0,35 usia + 0,45 keandalan + 0,20 kesiapan (Baik ≥ 80, Pantau 60–80, Prioritas &lt; 60). Indikator internal, bukan RHI.</dd>
-          <dt>Skor komponen</dt><dd>Keandalan = 100 − min(100, 15 × kejadian 12 bulan + menit 12 bulan ÷ 20) · Usia = 100 − 2,2 × (usia − 5 th) · Kesiapan = 100 siap guna GAPEKA, 60 tidak tercantum, 30 di Balai Yasa. Usia &gt; 80 th dianggap tanggal SAP salah (tidak dinilai).</dd>
-          <dt>Atribut 1–20 & rating</dt><dd>Atribut = skor ÷ 5 (gaya Football Manager). Rating = rata-rata atribut × 5.</dd>
-          <dt>Kekuatan depo</dt><dd>0,35 kesehatan armada + 0,30 keandalan (gangguan per 100 unit dibanding median depo sejenis; 2× median = 0) + 0,20 porsi armada ≤ 30 th + 0,15 kesiapan GAPEKA. Peringkat hanya depo ≥ 10 unit.</dd>
-          <dt>Dinasan</dt><dd>Proksi: KA yang dilayani dinasan lok depo (lok) atau depo induk rangkaian (kereta) menurut Duksar, ditambah KA pada gangguan unit. Bukan catatan dinasan harian per unit. Sejak v3.15 daftar ini dibersihkan: deret 1–23/25 di awal tiap dipo (artefak tabel PDF) dibuang, nomor KA Sumatera tanpa awalan diberi awalan S/U/B, dan nomor yang pulaunya berbeda dengan depo ditolak.</dd>
-          <dt>GAPEKA 2025 / 2026</dt><dd>GAPEKA 2025 berlaku 1 Feb 2025, GAPEKA 2026 berlaku 1 Des 2026. Keduanya tersedia dan dianalisis masing-masing (tanpa angka selisih). Switch di pojok kanan atas memilih sumber jadwal (Daftar Waktu, grafik perjalanan, KA per jam, rute KA) untuk semua menu; bawaan = versi yang berlaku hari ini. Master stasiun, petak, dan LIST KA tetap dari GAPEKA 2025.</dd>
-        </dl>
-      </div>
-    </div>
-    <div class="card mt">
-      <div class="card-h"><div><h3>Aturan penyajian v3.8</h3><p>Keputusan 16 Okt 2026: acuan angka = data Gangguan_Induk; pendapatan terekspos = jenis KA dari LIST KA GAPEKA 2025 × rate bulanan dari tab Passenger/Freight; varian "Imbas" digabung (bisa dipisah)</p></div></div>
-      <div class="card-b">
-        <dl class="kv">
-          <dt>Kolom kosong</dt><dd>Tidak ada sel kosong. Bila kolom sumber kosong, nilai diturunkan dari judul/uraian hanya dengan pola tegas (nomor KA "Ka 39"/"Plb 167B", jam "Waktu: 08.35", lokasi "petak jalan Malang (Ml) – Malangkota Lama (Mlk)" atau "Sta Kesamben (Ksb)", KM "km 50+4/5", nomor lokomotif, penyebab "Penyebab: …", depo dari Referensi Sarana, wilayah dari lokasi). Nilai turunan bergaris bawah titik oranye dan bertooltip. Bila tidak ada pola, ditulis "Tidak tercatat" — tidak ada nilai karangan.</dd>
-          <dt>Kelas tanpa subgangguan</dt><dd>Bila Kategori dan Subgangguan sama-sama kosong: (1) kata kunci tegas di judul, lalu uraian (mis. "wesel", "LAA" → prasarana; "lokomotif", "tenaga lemah" → sarana; "gempa", "banjir" → alam; "tertemper", "TBBT" → operasional); (2) bila tetap tidak tegas → <b>kelas terdekat</b>: kelas yang kata-katanya paling mirip dengan kejadian berkelas sumber pada data yang sama (Naive Bayes, keyakinan dicatat di kolom Kualitas; &lt; 60% masuk daftar periksa). Semua kelas turunan bertanda *. Tidak ada lagi kelompok "belum terkelas" (keputusan 24 Nov 2026).</dd>
-          <dt>Eksposur</dt><dd>Hanya kejadian dengan nomor KA di kolom sumber yang dinilai. Nomor KA hasil turunan uraian ditampilkan di tabel, tetapi tidak dihitung ke eksposur (kelompok "nomor KA hanya dari uraian").</dd>
-          <dt>Top 3 & jenis gangguan</dt><dd>Bawaan: "Alam - Imbas Gempa bumi" dan "Alam - Gempa bumi" digabung menjadi "Gempa bumi"; "Gangguan Tenaga Lemah" (JASUM) dan "Lokomotif - Gangguan Tenaga Lemah" digabung menjadi "Tenaga Lemah". Tombol "Pisah per subgangguan" di halaman Tren menampilkan rincian asli.</dd>
-          <dt>Selisih dengan laporan v2</dt><dd>Laporan September 2026 v2 tidak memuat baris yang uraiannya bersambung ke baris berikutnya (mis. PLB 167B, 15 Sep, 2 menit) sehingga menulis 318 kejadian/14.375 menit; data mencatat 319/14.377. Laporan juga menggolongkan Gempa lintas Kts–Tal (27 Jun) sebagai operasional. Dashboard mengikuti data sumber.</dd>
-          <dt>Wilayah</dt><dd>Seluruh 13 wilayah (Daop 1–9, Divre 1–4) selalu tampil; wilayah tanpa kejadian ditandai agar kelengkapan input dapat dikonfirmasi.</dd>
-        </dl>
-      </div>
-    </div>
-
-    <div class="grid g-2 mt">
-      <div class="card">
-        <div class="card-h"><div><h3>Kecocokan ke data master</h3><p>Seberapa banyak isian yang dikenali master</p></div></div>
-        <div class="card-b">
-          <div class="tbl-x"><table class="tbl"><thead><tr><th>Isian</th><th class="num">Dikenali</th><th class="num">Terisi</th><th class="num">%</th></tr></thead><tbody>
-            <template x-for="m in match" :key="m.label"><tr><td x-text="m.label"></td><td class="num" x-text="KAI.fmt.n(m.ok)"></td><td class="num" x-text="KAI.fmt.n(m.all)"></td>
-              <td class="num"><b x-text="m.all ? KAI.fmt.d1(m.ok / m.all * 100) : '–'"></b></td></tr></template>
-          </tbody></table></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-h"><div><h3>Catatan kualitas data</h3><p>Baris tidak dihapus; ditandai agar bisa diperbaiki di sumber · klik untuk menelusuri</p></div></div>
-        <div class="card-b tbl-wrap" style="max-height:300px">
-          <table class="tbl"><thead><tr><th>Temuan</th><th class="num">Baris</th></tr></thead><tbody>
-            <template x-for="q in quality" :key="q.flag"><tr class="click" @click="$store.app.go('telusuri', { ids: KAI.data.all.filter(function (r) { return r.q.indexOf(q.flag) >= 0; }).map(function (r) { return r.id; }), label: q.flag, period: 'all' })"><td x-text="q.flag"></td><td class="num" x-text="KAI.fmt.n(q.n)"></td></tr></template>
-            <tr><td>Tanpa "Jam mulai" yang terbaca</td><td class="num" x-text="KAI.fmt.n(noHour)"></td></tr>
-          </tbody></table>
-        </div>
-      </div>
-    </div>
-
-    <div class="card mt">
-      <div class="card-h"><div><h3>Pemeriksaan pulau (Jawa / Sumatera)</h3><p>Tautan KA dan sarana hanya dipakai bila pulaunya sama dengan wilayah kejadian · unit yang tercatat ≥ 2 kali di pulau lain dianggap mutasi</p></div></div>
-      <div class="card-b">
-        <div class="kv-row">
-          <div><span>Kelas diturunkan (teks / kelas terdekat)</span><b x-text="KAI.fmt.n(pulau.turun)"></b></div>
-          <div><span>Nomor KA beda pulau (tidak ditautkan)</span><b x-text="KAI.fmt.n(pulau.kaBeda)"></b></div>
-          <div><span>Unit mutasi antarpulau</span><b x-text="KAI.fmt.n(pulau.mut.length)"></b></div>
-          <div><span>Nomor sarana perlu verifikasi</span><b x-text="KAI.fmt.n(pulau.ver.length)"></b></div>
-        </div>
-        <div class="grid g-2 mt-s">
-          <div class="tbl-x"><table class="tbl" data-unduh="mutasi_sarana_antarpulau"><caption class="cap">Mutasi antarpulau (dari bukti kejadian)</caption><thead><tr><th>Unit</th><th>Pulau</th><th>Pertama</th><th>Terakhir</th><th class="num">Kejadian</th></tr></thead><tbody>
-            <template x-for="m in pulau.mut" :key="m[0] + m[1]"><tr class="click" @click="$store.app.openUnit(m[0])"><td x-text="KAI.fmt.unit(m[0])"></td><td x-text="m[1]"></td><td x-text="m[2]"></td><td x-text="m[3]"></td><td class="num" x-text="m[4]"></td></tr></template>
-          </tbody></table><div class="empty" x-show="!pulau.mut.length">Tidak ada unit yang tercatat di pulau lain.</div></div>
-          <div class="tbl-x"><table class="tbl" data-unduh="sarana_perlu_verifikasi"><caption class="cap">Nomor sarana perlu verifikasi (dilepas dari kejadian)</caption><thead><tr><th>Tanggal</th><th>Nomor</th><th>Pulau kejadian</th><th>Depo SAP</th></tr></thead><tbody>
-            <template x-for="v in pulau.ver" :key="v[0] + v[1]"><tr class="click" @click="$store.app.openEvent(v[0])"><td x-text="v[3]"></td><td x-text="KAI.fmt.unit(v[1])"></td><td x-text="v[2]"></td><td x-text="v[4]"></td></tr></template>
-          </tbody></table><div class="empty" x-show="!pulau.ver.length">Tidak ada nomor sarana yang perlu diverifikasi.</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid g-2 mt">
+    <div class="grid g-2">
       <div class="card">
         <div class="card-h"><div><h3>Periode, jam, dan pembanding</h3></div></div>
         <div class="card-b">
@@ -136,36 +17,6 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-h"><div><h3>Jadwal KA, rute, dan JPL</h3><p>Bagian yang dihitung, bukan tercatat langsung</p></div></div>
-        <div class="card-b">
-          <template x-if="!$store.app.refReady"><div class="skel" style="height:160px"></div></template>
-          <template x-if="$store.app.refReady">
-            <dl class="kv">
-              <dt>Jadwal KA</dt><dd x-text="'Sumber aktif: ' + KAI.gapeka.label($store.app.gapeka || '2025') + ' (switch pojok kanan atas). GAPEKA 2025: Buku Daftar Waktu (KA Antar Kota, Perkotaan, KRL, Barang — Jawa; Sumatera Utara, Barat, Selatan) → tab M_JADWAL; GAPEKA 2026: Buku Daftar Waktu 2026 (seed 19_SeedGapeka26). Termuat: ' + KAI.fmt.n(rs.tt) + ' perjalanan, jam datang/berangkat, status berhenti/langsung/berhenti sebentar, dan catatan silang/susul. Jam asal & tujuan 1.830 KA yang juga ada di LIST KA cocok 100%.'"></dd>
-              <dt>Rute & jam perkiraan</dt><dd x-text="'Hanya untuk KA di LIST KA yang tidak punya Daftar Waktu (mis. KA dinas, varian nomor): rute dari Lintas + Jarak dan jaringan petak — ' + KAI.fmt.n(rs.ok) + ' cocok ≤2% jarak, ' + KAI.fmt.n(rs.approx) + ' mendekati, ' + KAI.fmt.n(rs.bad) + ' tidak pasti (tidak dipakai), ' + KAI.fmt.n(rs.none) + ' tidak terpetakan. Jam antara = interpolasi menurut km (≈, bisa meleset ±30 menit).'"></dd>
-              <dt>Dinas tutup / non operasi</dt><dd>PTDO GAPEKA 2025 Bab IV → tab M_STASIUN_OPS; tampil di profil stasiun.</dd>
-              <dt>KA/hari</dt><dd>Jumlah perjalanan berstatus REG (reguler) yang rutenya melewati petak. KA fakultatif, KLB, dan PLB tidak dihitung.</dd>
-              <dt>JPL</dt><dd x-text="KAI.fmt.n(jplStat.total) + ' titik dari daftar 1.404 titik program peningkatan keselamatan (tab M_JPL, ' + KAI.fmt.n(jplStat.p190) + ' prioritas 190). ' + KAI.fmt.n(jplStat.pair) + ' dipetakan ke pasangan stasiun, ' + KAI.fmt.n(jplStat.seg) + ' ke petak GAPEKA. Daftar ini bukan seluruh JPL nasional; tidak ada koordinat.'"></dd>
-              <dt>Kaitan kejadian ↔ JPL</dt><dd x-text="'Petak sama dan nomor JPL disebut di laporan, atau selisih KM ≤ ' + String(cfg.jplKm).replace('.', ',') + ' km. Kejadian tanpa JPL program diinventaris per nomor JPL/KM dari laporan.'"></dd>
-              <dt>Usia sarana</dt><dd x-text="'Dari mulai_dinas Referensi Sarana (SAP) s.d. hari ini. Peringatan bila > ' + cfg.ageWarn + ' tahun. Fasilitas & gedung tidak dihitung.'"></dd>
-            </dl>
-          </template>
-        </div>
-      </div>
-    </div>
-
-    <div class="card mt">
-      <div class="card-h"><div><h3>Aturan 4 kelas (urutan = prioritas)</h3><p x-text="'Versi ' + cfg.rule + ' · diuji: September 2026 sama dengan laporan (Alam 2.900, Prasarana 991, Sarana 5.435, Operasional 5.049 menit)'"></p></div></div>
-      <div class="card-b">
-        <div class="tbl-x"><table class="tbl"><thead><tr><th>#</th><th>Kelas</th><th>Kategori sumber</th><th>Pola Subgangguan</th><th>Catatan</th></tr></thead><tbody>
-          <template x-for="(r, i) in cfg.classRules" :key="i"><tr><td x-text="i + 1"></td><td><b x-text="$store.app.classLabel(r.kelas)"></b></td><td x-text="r.kategori.join(', ') || 'Semua kategori (pola Subgangguan)'"></td><td><code style="font-size:12px" x-text="r.sub"></code></td><td x-text="r.catatan"></td></tr></template>
-          <tr><td x-text="cfg.classRules.length + 1"></td><td><b>Operasional, pelayanan & keamanan</b></td><td colspan="3">Semua yang tidak cocok aturan di atas.</td></tr>
-        </tbody></table></div>
-      </div>
-    </div>
-
-    <div class="grid g-2 mt">
-      <div class="card">
         <div class="card-h"><div><h3>Definisi</h3></div></div>
         <div class="card-b">
           <dl class="kv">
@@ -175,11 +26,25 @@
             <dt>Lokasi</dt><dd>Petak jalan bila tercatat dan dikenali GAPEKA, selain itu stasiun.</dd>
             <dt>Perlintasan</dt><dd>Tertemper kendaraan, kendaraan mogok, palang tertabrak, rombongan pejabat, perlintasan ramai. Temperan orang/hewan dihitung terpisah.</dd>
             <dt>Unit sarana</dt><dd>Nomor sarana pertama per kejadian, dicocokkan ke Referensi Sarana.</dd>
-            <dt>Eksposur</dt><dd x-text="'Menit ÷ 60 × rate (Penumpang Rp ' + KAI.fmt.n(cfg.rate.PENUMPANG) + ', Barang Rp ' + KAI.fmt.n(cfg.rate.BARANG) + ' per jam). Jenis KA dari LIST KA/Daftar Waktu GAPEKA 2025. Indikatif — rincian di halaman Eksposur pendapatan.'"></dd>
-            <dt>Insight</dt><dd>Setiap kalimat dihitung dari kejadian yang sedang dipilih; tidak ada teks bebas.</dd>
+            <dt>Eksposur</dt><dd>Pendapatan terekspos = menit kelambatan ÷ 60 × pendapatan per jam kereta api terkait. Indikatif, bukan kerugian akuntansi.</dd>
+            <dt>RHI</dt><dd>Healthy index resmi sarana (Healthy ≥ 85, Monitor 70–85, Declining 55–70, Poor &lt; 55, Critical), nilai hari terakhir data.</dd>
+            <dt>Perkiraan</dt><dd>Angka yang tidak tercatat langsung selalu diberi label "perkiraan"; data yang tidak ada ditulis "tidak tercatat".</dd>
           </dl>
         </div>
       </div>
+    </div>
+
+    <div class="card mt">
+      <div class="card-h"><div><h3>Aturan 4 kelas (urutan = prioritas)</h3><p>Kelas setiap kejadian ditentukan berurutan; aturan pertama yang cocok dipakai</p></div></div>
+      <div class="card-b">
+        <div class="tbl-x"><table class="tbl"><thead><tr><th>#</th><th>Kelas</th><th>Kategori sumber</th><th>Catatan</th></tr></thead><tbody>
+          <template x-for="(r, i) in cfg.classRules" :key="i"><tr><td x-text="i + 1"></td><td><b x-text="$store.app.classLabel(r.kelas)"></b></td><td x-text="r.kategori.join(', ') || 'Semua kategori (pola Subgangguan)'"></td><td x-text="r.catatan"></td></tr></template>
+          <tr><td x-text="cfg.classRules.length + 1"></td><td><b>Operasional, pelayanan & keamanan</b></td><td colspan="2">Semua yang tidak cocok aturan di atas.</td></tr>
+        </tbody></table></div>
+      </div>
+    </div>
+
+    <div class="mt">
       <div class="card">
         <div class="card-h"><div><h3>Rujukan rekomendasi</h3><p>Diperiksa ke sumber asli (Okt 2026). Rekomendasi tampil hanya bila pemicunya ada di data.</p></div></div>
         <div class="card-b tbl-wrap" style="max-height:420px">
@@ -189,34 +54,14 @@
         </div>
       </div>
     </div>
-
-    <div class="card mt">
-      <div class="card-h"><div><h3>Kata kunci kelompok komponen</h3><p x-text="'Versi ' + cfg.componentRule + ' · dicocokkan ke teks Subgangguan kelas sarana'"></p></div></div>
-      <div class="card-b"><div class="tbl-x"><table class="tbl"><tbody><template x-for="c in cfg.components" :key="c.id"><tr><td style="width:220px"><b x-text="c.label"></b></td><td><code style="font-size:11.5px" x-text="c.re || '(sisanya)'"></code></td></tr></template></tbody></table></div></div>
-    </div>
   </section>
 </template>
 <script>
 document.addEventListener('alpine:init', function () {
   Alpine.data('vMeta', function () {
     return {
-      get meta() { return this.$store.app.meta || {}; },
-      get st() { return this.$store.app.status; },
       get cfg() { return this.$store.app.config; },
-      get quality() { void this.$store.app.ver; return KAIA.quality(KAI.data.all); },
-      get noHour() { void this.$store.app.ver; return KAI.data.all.filter(function (r) { return r.hm < 0; }).length; },
-      get lit() { return Object.keys(KAIInsight.LIT).map(function (k) { return KAIInsight.LIT[k]; }); },
-      get rs() { return this.$store.app.refReady ? KAIRef.ensureRoutes(KAI.data.ref).stats : {}; },
-      get jplStat() { var R = this.$store.app.refReady && KAI.data.ref; if (!R) return {}; return { total: R.jpl.length, p190: R.jpl.filter(function (j) { return j.p190; }).length, pair: R.jpl.filter(function (j) { return j.pairKey; }).length, seg: R.jpl.filter(function (j) { return j.segKey; }).length }; },
-      get pulau() { var s = this.meta.stats || {}; return { turun: s.kelasDiturunkan || 0, kaBeda: s.kaBedaPulau || 0, mut: s.saranaMutasi || [], ver: s.saranaVerifikasi || [] }; },
-      get match() {
-        var s = (this.meta.stats || {});
-        return [{ label: 'Nomor sarana → Referensi Sarana', ok: s.saranaMatched, all: s.saranaAny },
-          { label: 'Lokasi (petak/stasiun) → GAPEKA', ok: s.lokMatched, all: s.lokAny },
-          { label: 'Nomor KA → LIST KA / Daftar Waktu (termasuk ' + KAI.fmt.n(s.kaViaJoint || 0) + ' via nomor gabungan, ' + KAI.fmt.n(s.kaViaBase || 0) + ' via nomor dasar)', ok: s.kaMatched, all: s.kaAny },
-          { label: 'Baris dengan tanggal valid', ok: (s.source || 0) - (s.noDate || 0), all: s.source },
-          { label: 'Baris dengan jam mulai terbaca', ok: s.timeOk, all: s.source }];
-      }
+      get lit() { return Object.keys(KAIInsight.LIT).map(function (k) { return KAIInsight.LIT[k]; }); }
     };
   });
 });

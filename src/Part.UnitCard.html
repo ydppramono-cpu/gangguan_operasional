@@ -9,7 +9,7 @@
           <div class="uc-kind" x-text="u.kind + ' · ' + (u.cls || '')"></div>
           <div class="uc-no" x-text="KAI.fmt.unit(u.no)"></div>
           <div class="uc-chips">
-            <span class="st" :class="stCls(u.status)" x-text="KAI.fmt.st(u.status) + (u.hiSrc === 'RHI' ? '' : ' · turunan')"></span>
+            <span class="st" :class="stCls(u.status)" x-text="u.health == null ? 'RHI tidak tercatat' : 'RHI ' + KAI.fmt.d1(u.health) + ' · ' + KAI.fmt.st(u.status)"></span>
             <span class="chip" :class="u.inBY ? 'warn' : u.duk ? 'good' : ''" x-text="u.inBY ? 'Di Balai Yasa' : u.duk ? 'Siap guna GAPEKA · ' + u.duk.depo : 'Tidak tercantum di GAPEKA 2025'"></span>
             <span class="chip bad" x-show="u.age > ageWarn" x-text="'Usia > ' + ageWarn + ' th'"></span>
           </div>
@@ -34,7 +34,7 @@
               <b class="attr-v" :class="attrCls(a[1])" x-text="a[1] == null ? '–' : a[1]"></b>
             </div>
           </template>
-          <p class="note">Kesehatan = healthy index RHI bila ada; selain itu skor turunan (usia, keandalan 12 bulan, kesiapan GAPEKA). Indikator internal.</p>
+          <p class="note">Kesehatan = RHI resmi hari terakhir data. Keandalan, usia, dan kesiapan = indikator internal.</p>
         </div>
         <div class="uc-side">
           <div class="uc-ring" :style="'--v:' + u.overall" :class="ringCls(u.overall)"><b x-text="u.overall"></b><small>rating</small></div>
@@ -84,7 +84,7 @@
                 <td class="num" x-text="r.mi != null ? KAI.fmt.d1(r.mi) : '–'"></td><td class="num" x-text="r.ci != null ? KAI.fmt.d1(r.ci) : '–'"></td>
                 <td class="num" x-text="r.hmd"></td><td class="num" x-text="r.n"></td><td class="num" x-text="KAI.fmt.n(r.menit)"></td></tr></template>
             </tbody></table></div>
-            <p class="note" x-text="u.kind === 'Lokomotif' ? 'RHI dan kategori = nilai hari terakhir data bulan itu (tab RHI basis data utama); rata-rata = rerata harian. Hari H/M/D/P = jumlah hari Healthy/Monitor/Declining/Poor-Critical. Condition kosong bila sumber hanya memuat nilai turunan.' : 'RHI dan kategori = nilai hari terakhir data bulan itu (spreadsheet KAI | RHI Sarana); rata-rata = rerata harian. Hari H/M/D/P = jumlah hari Healthy/Monitor/Declining/Poor-Critical. HI harian kereta & gerbong tersedia di arsip Drive 02_DB_Database/RHI.'"></p>
+            <p class="note">RHI dan kategori = nilai hari terakhir data bulan itu; rata-rata = rerata harian. Hari H/M/D/P = jumlah hari Healthy/Monitor/Declining/Poor-Critical.</p>
           </div>
           <!-- KA depo (rencana) -->
           <div x-show="ht === 'k'">
@@ -129,7 +129,7 @@
           <dl class="uc-facts">
             <div><dt>Unit SAP</dt><dd x-text="KAI.fmt.n(d.d.n)"></dd></div><div><dt>Siap guna GAPEKA</dt><dd x-text="KAI.fmt.n(d.d.sg)"></dd></div>
             <div><dt>Median usia</dt><dd x-text="KAI.fmt.age(d.d.ageMed)"></dd></div><div><dt x-text="'> ' + ageWarn + ' tahun'"></dt><dd x-text="KAI.fmt.n(d.d.old)"></dd></div>
-            <div><dt x-text="d.kind === 'Lokomotif' ? 'RHI rata-rata' : 'Skor turunan'"></dt><dd x-text="KAI.fmt.d1(d.d.health)"></dd></div><div><dt x-text="d.kind === 'Lokomotif' ? 'H / M / D' : 'Baik / Pantau / Prioritas'"></dt><dd x-text="d.d.H + ' / ' + d.d.M + ' / ' + d.d.Dc"></dd></div>
+            <div><dt>RHI rata-rata</dt><dd x-text="d.d.health == null ? 'tidak tercatat' : KAI.fmt.d1(d.d.health)"></dd></div><div><dt>Healthy / Monitor / Declining / Poor</dt><dd x-text="d.d.H + ' / ' + d.d.M + ' / ' + d.d.Dc + ' / ' + d.d.Pc"></dd></div>
             <div><dt>Gangguan 12 bulan</dt><dd x-text="d.d.n12 + ' · ' + KAI.fmt.n(d.d.m12) + ' menit'"></dd></div><div><dt>Per 100 unit</dt><dd x-text="KAI.fmt.d1(d.d.rate)"></dd></div>
           </dl>
           <dl class="uc-facts" x-show="d.d.dinas">

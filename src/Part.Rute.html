@@ -51,11 +51,6 @@
         </div>
       </div>
 
-      <div class="card mt">
-        <div class="card-h"><div><h3 x-text="'Diagram lintas · ' + C.sub"></h3><p>Sumbu = km dari stasiun awal · tiap kolom = satu petak (LIST PETAK JALAN) · warna makin pekat = nilai makin tinggi · klik petak untuk rincian</p></div></div>
-        <div class="card-b fill"><div class="chart rt-diag" x-chart="diagOpt()" @chart-click="onDiagClick($event.detail)"></div></div>
-      </div>
-
       <div class="mt">
         <div class="card">
           <template x-if="!seg"><div class="card-b"><p class="note">Pilih petak di peta, diagram lintas, atau tabel petak prioritas.</p></div></template>
@@ -137,35 +132,30 @@
       </div>
 
       <h3 class="page-title mt" style="font-size:18px">Profil rute</h3>
-      <div class="grid g-3">
-        <div class="card"><div class="card-h"><div><h3>Struktur & kepemilikan</h3><p>LIST PETAK JALAN GAPEKA 2025 · PETA WILAYAH (UPT Resor JR)</p></div></div>
-          <div class="card-b"><dl class="kv">
-            <dt>Panjang</dt><dd x-text="KAI.fmt.d1(P.km) + ' km · ' + P.nPetak + ' petak · ' + P.nSt + ' stasiun'"></dd>
-            <dt>Jalur</dt><dd x-text="'ganda ' + KAI.fmt.d1(P.kmGanda) + ' km · tunggal ' + KAI.fmt.d1(P.kmTunggal) + ' km'"></dd>
-            <dt>Wilayah</dt><dd x-text="C.regions.map(function (r) { return r.region; }).join(' → ')"></dd>
-            <dt>UPT Resor JR</dt><dd x-text="P.resor.length ? P.resor.length + ' resor (' + P.resor.join(', ') + ')' : 'belum ada data'"></dd>
-            <dt>Perlintasan</dt><dd x-text="KAI.fmt.n(P.jpl) + ' JPL terdaftar di petak koridor'"></dd>
-          </dl></div></div>
-        <div class="card"><div class="card-h"><div><h3>Bangunan & elektrifikasi</h3><p x-text="'OpenStreetMap · cakupan ' + KAI.fmt.d1(P.osmCov * 100) + '% panjang koridor (petak cocok ±25%)'"></p></div></div>
-          <div class="card-b"><dl class="kv">
-            <dt>Jembatan</dt><dd x-text="KAI.fmt.n(P.br) + ' (total ' + KAI.fmt.n(P.brM) + ' m)'"></dd>
-            <dt>Terowongan</dt><dd x-text="KAI.fmt.n(P.tn) + (P.tn ? ' (total ' + KAI.fmt.n(P.tnM) + ' m)' : '')"></dd>
-            <dt>Elektrifikasi</dt><dd x-text="KAI.fmt.d1(P.elKm) + ' km (' + KAI.fmt.d1(P.km ? P.elKm / P.km * 100 : 0) + '%)'"></dd>
-            <dt>vmax tertinggi (OSM)</dt><dd x-text="P.vmax ? P.vmax + ' km/j' : 'belum ada data'"></dd>
-            <dt>Nama lintas (OSM)</dt><dd><template x-for="n in P.names.slice(0, 6)" :key="n.name"><div class="sm" x-text="n.name"></div></template><span class="muted" x-show="!P.names.length">–</span></dd>
-          </dl><p class="muted sm">Jumlah dari jalur terpendek pada satu sepur; jembatan pendek (gorong-gorong) yang ditandai OSM sebagai jembatan ikut terhitung.</p></div></div>
-        <div class="card"><div class="card-h"><div><h3>Kondisi & topografi</h3><p x-text="'THI tingkat petak ' + (P.thiYm ? KAI.fmt.mon(P.thiYm) : '–') + ' · elevasi stasiun m_stasiun (' + P.zN + ' stasiun)'"></p></div></div>
-          <div class="card-b"><dl class="kv">
-            <dt>THI petak</dt><dd x-text="P.thiN ? 'median ' + KAI.fmt.d1(P.thiMed) + ' · ' + P.thiLow + ' dari ' + P.thiN + ' petak < 70' : 'belum ada data'"></dd>
-            <dt>Elevasi</dt><dd x-text="P.zN ? KAI.fmt.n(P.zMin) + '–' + KAI.fmt.n(P.zMax) + ' m dpl' : 'belum ada data'"></dd>
-            <dt>Landai rata-rata terbesar</dt><dd x-text="steepTxt"></dd>
-          </dl><div class="rt-elev" x-show="P.zN >= 2"><div class="chart sm-h" x-chart="P.zN >= 2 ? elevOpt() : null"></div></div></div></div>
-        <div class="card"><div class="card-h"><div><h3>Kerentanan alam</h3><p>Gangguan_Induk 12 bulan (tanpa imbas) · titik terbanyak</p></div></div>
-          <div class="card-b"><template x-for="t in P.nat" :key="t.k"><div class="rt-risk"><b x-text="t.label"></b><span class="num" x-text="t.n + ' kejadian'"></span><div class="muted sm" x-text="t.top.map(function (x) { return x.label + ' (' + x.n + ')'; }).join(' · ')"></div></div></template>
-            <p class="muted" x-show="!P.nat.length">Tidak ada kejadian alam tercatat di koridor dalam 12 bulan.</p></div></div>
-        <div class="card"><div class="card-h"><div><h3>Rawan keamanan</h3><p>Tertemper orang, pelemparan batu, vandalisme, pencurian · 12 bulan</p></div></div>
-          <div class="card-b"><template x-for="t in P.sec" :key="t.k"><div class="rt-risk"><b x-text="t.label"></b><span class="num" x-text="t.n + ' kejadian'"></span><div class="muted sm" x-text="t.top.map(function (x) { return x.label + ' (' + x.n + ')'; }).join(' · ')"></div></div></template>
-            <p class="muted" x-show="!P.sec.length">Tidak ada kejadian keamanan tercatat di koridor dalam 12 bulan.</p></div></div>
+      <div class="rt-tiles">
+        <template x-for="t in tiles" :key="t.l"><div class="card rt-tile">
+          <div class="lbl" x-text="t.l"></div><div class="val" x-text="t.v"></div><div class="sub" x-text="t.s"></div>
+          <div class="rt-bar" x-show="t.bars"><template x-for="(b, i) in (t.bars || [])" :key="i"><i :style="'width:' + Math.max(0, b[0] * 100) + '%;background:' + b[1]" :title="b[2]"></i></template></div>
+          <div class="rt-mini" x-show="t.mini && t.mini.some(function (m) { return m.n; })"><template x-for="m in (t.mini || []).filter(function (m) { return m.n; }).slice(0, 5)" :key="m.k">
+            <div :title="m.top.map(function (x) { return x.label + ' (' + x.n + ')'; }).join(' · ')"><span x-text="m.label"></span><i :style="'width:' + (m.n / miniMax(t.mini) * 100) + '%'"></i><b x-text="m.n"></b></div></template></div>
+        </div></template>
+      </div>
+
+      <div class="card mt">
+        <div class="card-h"><div><h3 x-text="'Diagram lintas berlapis · ' + C.sub"></h3><p>Sumbu = km dari stasiun awal · tiap kolom = satu petak · warna makin pekat = nilai makin tinggi · arahkan kursor = semua lapisan petak itu · klik petak = rincian · Ctrl + roda / penggeser = perbesar</p></div></div>
+        <div class="card-b">
+          <div class="rt-lay" role="group" aria-label="Lapisan diagram"><template x-for="r in LAY.concat([['z', 'Elevasi stasiun']])" :key="r[0]">
+            <button type="button" class="chip" :class="lay[r[0]] && 'on'" :aria-pressed="!!lay[r[0]]" @click="toggleLay(r[0])" x-text="r[1]"></button></template></div>
+          <div class="chart rt-diag" :style="'height:' + diagH + 'px'" x-chart="diagOpt()" @chart-click="onDiagClick($event.detail)"></div>
+          <p class="note" x-text="(P.zN < D.ST.length ? 'Elevasi tercatat di ' + P.zN + ' dari ' + D.ST.length + ' stasiun (m_stasiun); bagian tanpa data diarsir, tidak diisi perkiraan. ' : '') + steepLine"></p>
+        </div>
+      </div>
+
+      <div class="grid g-2-1 mt">
+        <div class="card"><div class="card-h"><div><h3>Titik kerentanan alam &amp; keamanan</h3><p>Gangguan_Induk 12 bulan (tanpa imbas) · lokasi terbanyak per jenis</p></div></div>
+          <div class="card-b rt-risks">
+            <template x-for="t in P.nat.concat(P.sec).filter(function (t) { return t.n; })" :key="t.k"><div class="rt-risk"><b x-text="t.label"></b><span class="num" x-text="t.n + ' kejadian'"></span><div class="muted sm" x-text="t.top.map(function (x) { return x.label + ' (' + x.n + ')'; }).join(' · ')"></div></div></template>
+            <p class="muted" x-show="!P.nat.concat(P.sec).some(function (t) { return t.n; })">Tidak ada kejadian alam atau keamanan tercatat di koridor dalam 12 bulan.</p></div></div>
         <div class="card"><div class="card-h"><div><h3>Riset publik</h3><p>Fakta bersumber; diakses 13 Nov 2026</p></div></div>
           <div class="card-b"><template x-for="(f, j) in facts" :key="j"><div class="rt-fact"><p x-text="f.t"></p><a :href="f.url" target="_blank" rel="noopener" x-text="f.src"></a></div></template>
             <p class="muted" x-show="!facts.length">Belum ada fakta publik terverifikasi untuk koridor ini — tidak diisi dengan perkiraan.</p></div></div>

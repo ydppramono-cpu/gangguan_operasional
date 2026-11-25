@@ -10,7 +10,7 @@ function mkSheet(name, rows) {
     rows, name,
     getName: () => name, getLastRow: () => rows.length, getLastColumn: () => rows.reduce((m, r) => Math.max(m, r.length), 0),
     getMaxRows: () => Math.max(rows.length, 1000), getMaxColumns: () => Math.max(sh.getLastColumn(), 26),
-    insertRowsAfter() {}, insertColumnsAfter() {}, setFrozenRows() {},
+    insertRowsAfter() {}, insertColumnsAfter() {}, setFrozenRows() {}, clearContents() { rows.length = 0; return sh; },
     getDataRange() { const w = sh.getLastColumn(); return rng(1, 1, rows.length, w); },
     getRange(r, c, n, m) { return rng(r, c, n || 1, m || 1); },
     appendRow(r) { rows.push(r.slice()); }
@@ -151,7 +151,7 @@ const ctx = {
       return f.replace('yyyy', j.getUTCFullYear()).replace('MM', p(j.getUTCMonth() + 1)).replace('dd', p(j.getUTCDate())).replace('HH', p(j.getUTCHours())).replace('mm', p(j.getUTCMinutes())).replace('ss', p(j.getUTCSeconds())); },
     computeDigest: (a, s) => [...crypto.createHash('sha256').update(String(s)).digest()].map(x => x > 127 ? x - 256 : x), DigestAlgorithm: { SHA_256: 'sha256' }, Charset: { UTF_8: 'utf8' }, sleep() {}, getUuid: () => crypto.randomUUID()
   },
-  HtmlService: {}, ScriptApp: {}, Session: { getActiveUser: () => ({ getEmail: () => process.env.EMU_USER || '' }), getEffectiveUser: () => ({ getEmail: () => 'pemilik@contoh.id' }) }
+  HtmlService: { createHtmlOutputFromFile: n => { const f = path.join(SRC, n + '.html'); if (!fs.existsSync(f)) throw new Error('no file ' + n); const t = fs.readFileSync(f, 'utf8'); return { getContent: () => t }; } }, ScriptApp: {}, Session: { getActiveUser: () => ({ getEmail: () => process.env.EMU_USER || '' }), getEffectiveUser: () => ({ getEmail: () => 'pemilik@contoh.id' }) }
 };
 vm.createContext(ctx);
 fs.readdirSync(SRC).filter(f => f.endsWith('.gs')).sort().forEach(f => vm.runInContext(fs.readFileSync(path.join(SRC, f), 'utf8'), ctx, { filename: f }));

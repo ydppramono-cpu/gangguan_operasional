@@ -13,7 +13,7 @@
             <p x-text="M.sub"></p>
             <div class="tags"><template x-for="t in M.tags" :key="t.t"><span class="tag" :class="t.c" x-text="t.t"></span></template></div>
           </div>
-          <dl class="facts"><template x-for="f in M.facts" :key="f[0]"><div><dt x-text="f[0]"></dt><dd x-text="f[1]"></dd></div></template></dl>
+          <dl class="facts"><template x-for="f in M.facts" :key="f[0]"><div><dt x-text="f[0]"></dt><dd><span x-text="f[1]"></span><a x-show="f[2]" :href="f[2]" target="_blank" rel="noopener" class="fact-src" x-text="f[3] || 'sumber'"></a></dd></div></template></dl>
           <div class="phero-spark"><span x-text="'Menit kelambatan · 24 bulan · ' + KAI.fmt.n(M.all.length) + ' kejadian tercatat'"></span><div class="chart" x-chart="spark"></div></div>
         </div>
         <?!= include('Part.UnitCard'); ?>
@@ -83,11 +83,12 @@ document.addEventListener('alpine:init', function () {
     inv.points.forEach(function (p) { if (p.jpl) byJ[p.jpl.id] = p; });
     R.jpl.filter(predJ).forEach(function (j) {
       var p = byJ[j.id];
-      rows.push({ key: j.id, jplId: j.id, titik: 'JPL ' + (j.no || KAI.NIL) + ' · ' + (j.antara || KAI.NIL), km: j.kmText, alamat: [j.kab, j.prov].filter(Boolean).join(', '), kat: j.kat, lebar: j.lebar,
+      rows.push({ key: j.id, jplId: j.id, titik: 'JPL ' + (j.no || KAI.NIL) + ' · ' + (j.antara || KAI.NIL), km: j.kmText, alamat: [j.kab, j.prov].filter(Boolean).join(', '), kat: j.kat, lebar: j.lebar, jalan: j.jalan || '', jalanSrc: j.jalanSrc || '', pengelola: j.pengelola || '',
         jaga: j.jaga, status: j.status || j.penjaga || '', p190: j.p190 ? 'Ya' : '', n: p ? p.n : 0, menit: p ? p.menit : 0, last: p ? p.last : '', ids: p ? p.recs.map(function (r) { return r.id; }) : [], src: 'JPL program' });
     });
     inv.points.filter(function (p) { return !p.jpl && predP(p); }).forEach(function (p) {
-      rows.push({ key: p.key, jplId: '', titik: p.label, km: p.km != null ? KAI.fmt.km(p.km) : '', alamat: '', kat: '', lebar: '', jaga: 'tidak tercatat', status: 'di luar daftar program', p190: '',
+      var L = KAIRef.jplLookup(R, p.segKey, p.noJpl);
+      rows.push({ key: p.key, jplId: '', titik: p.label, km: p.km != null ? KAI.fmt.km(p.km) : '', alamat: '', kat: '', lebar: '', jalan: L.jalan, jalanSrc: L.src, pengelola: '', jaga: L.jaga || 'tidak tercatat', status: 'di luar daftar program', p190: '',
         n: p.n, menit: p.menit, last: p.last, ids: p.recs.map(function (r) { return r.id; }), src: 'Laporan' });
     });
     return rows.sort(function (a, b) { return b.n - a.n || String(a.km).localeCompare(String(b.km)); });
@@ -268,6 +269,12 @@ document.addEventListener('alpine:init', function () {
       M.title = 'JPL ' + (j.no || KAI.NIL) + ' · ' + (j.antara || 'petak tidak tercantum'); M.sub = 'KM ' + j.kmText + ' · ' + [j.kab, j.prov].filter(Boolean).join(', ') + ' · ' + j.region;
       traffic = j.segKey ? KAIRef.trafficOnSeg(R, j.segKey) : null;
       M.facts = [['Alamat', [j.kab, j.prov].filter(Boolean).join(', ') || KAI.NIL], ['Kategori jalan', j.kat || KAI.NIL], ['Lebar', j.lebar ? j.lebar + ' m' : KAI.NIL], ['Status', j.statusTxt || KAI.NIL], ['Penjaga', j.penjagaTxt || KAI.NIL], ['KA reguler/hari', traffic != null ? String(traffic) : 'petak tidak terpetakan']];
+      var osmUrl = j.osm ? 'https://www.openstreetmap.org/?mlat=' + j.osm.lat + '&mlon=' + j.osm.lon + '#map=18/' + j.osm.lat + '/' + j.osm.lon : '';
+      M.facts.splice(1, 0, ['Jalan', j.jalan ? j.jalan + (j.osm && j.osm.kelas && j.jalanSrc !== 'riset web' ? ' (' + KAIRef.roadClass(j.osm.kelas) + ')' : '') + ' · ' + j.jalanSrc : (j.osmKandidat.length ? 'kandidat OSM di petak: ' + j.osmKandidat.slice(0, 4).join('; ') : 'tidak tercatat'),
+        j.riset && j.riset.jalan ? j.riset.url : osmUrl, j.riset && j.riset.jalan ? 'sumber' : osmUrl ? 'peta OSM' : '']);
+      M.facts.push(['Pengelola (PM 94/2018)', j.pengelola || 'tidak tercatat (kategori jalan kosong)']);
+      if (j.riset && j.riset.penjaga) M.facts.push(['Penjaga (riset web)', j.riset.penjaga + (j.riset.terbit ? ' · ' + j.riset.terbit : ''), j.riset.url, 'sumber']);
+      if (j.riset && j.riset.catatan) M.facts.push(['Catatan riset', j.riset.catatan, j.riset.url, j.riset.judul.split(' — ')[0]]);
       M.tags.push({ t: KAI.cap(j.jaga), c: j.jaga === 'tidak dijaga' ? 'bad' : j.jaga === 'dijaga' ? 'good' : '' });
       if (j.p190) M.tags.push({ t: '190 prioritas', c: 'warn' });
       var inv = inventoryAll(app, cfg), pt = inv.points.filter(function (x) { return x.jpl && x.jpl.id === j.id; })[0], ids = {};
@@ -518,7 +525,9 @@ document.addEventListener('alpine:init', function () {
         var M = this.M; if (!M.ok || !M.jplRows.length) return null;
         return { id: 'pjpl', index: 'key', data: M.jplRows, pageSize: 25, initialSort: [{ column: 'n', dir: 'desc' }], columns: [
           { title: 'Titik', field: 'titik', minWidth: 200, formatter: function (c) { var d = c.getData(); return '<b>' + c.getValue() + '</b>' + (d.p190 ? ' <span class="badge k" style="background:#F06A25">190</span>' : ''); } },
-          { title: 'KM', field: 'km', width: 96 }, { title: 'Alamat', field: 'alamat', minWidth: 170 }, { title: 'Kategori jalan', field: 'kat', width: 112 }, { title: 'Lebar', field: 'lebar', width: 64 },
+          { title: 'KM', field: 'km', width: 96 },
+          { title: 'Jalan', field: 'jalan', minWidth: 170, formatter: function (c) { var d = c.getData(), v = c.getValue(); return v ? KAI.esc(v) + (/perkiraan/.test(d.jalanSrc) ? ' <span class="badge">perkiraan</span>' : '') : '<span class="muted">tidak tercatat</span>'; } },
+          { title: 'Kab/kota', field: 'alamat', minWidth: 150 }, { title: 'Kategori jalan', field: 'kat', width: 112 }, { title: 'Pengelola (PM 94/2018)', field: 'pengelola', minWidth: 170 }, { title: 'Lebar', field: 'lebar', width: 64 },
           { title: 'Jaga', field: 'jaga', width: 110, formatter: function (c) { var v = c.getValue(); return '<span class="badge ' + (v === 'tidak dijaga' ? 'bad' : v === 'dijaga' ? 'good' : '') + '">' + KAI.cap(v) + '</span>'; } },
           { title: 'Kejadian', field: 'n', hozAlign: 'right', width: 86 }, { title: 'Menit', field: 'menit', hozAlign: 'right', width: 76, formatter: function (c) { return KAI.fmt.n(c.getValue()); } }, { title: 'Terakhir', field: 'last', width: 100 }] };
       },
@@ -540,7 +549,7 @@ document.addEventListener('alpine:init', function () {
         KAIExport.xlsx([{ name: 'Jadwal', columns: cols, rows: this.schedRows }], 'Jadwal_' + M.title, this.$store.app.meta);
       },
       expJpl: function () {
-        var M = this.M, cols = ['titik', 'src', 'km', 'alamat', 'kat', 'lebar', 'jaga', 'status', 'p190', 'n', 'menit', 'last'].map(function (k) { return { title: k, field: k }; });
+        var M = this.M, cols = ['titik', 'src', 'km', 'jalan', 'jalanSrc', 'alamat', 'kat', 'pengelola', 'lebar', 'jaga', 'status', 'p190', 'n', 'menit', 'last'].map(function (k) { return { title: k, field: k }; });
         KAIExport.xlsx([{ name: 'JPL', columns: cols, rows: M.jplRows }], 'JPL_' + M.title, this.$store.app.meta);
       }
     };

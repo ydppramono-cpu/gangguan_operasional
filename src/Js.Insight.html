@@ -121,9 +121,7 @@
       if (dated >= 20) add({ tone: 'info', area: 'Operasional', src: src('Grafik harian', 'tren', 'Sebaran hari'), metric: pctTxt(share(H.dowN[dmax], dated)),
         head: 'Hari terbanyak: ' + KAIA.DOW[dmax], text: 'Dari kejadian bertanggal; rata-rata per hari 14,3%.' });
     }
-    if (H.total >= 10 && share(H.total - H.known, H.total) > 0.2) add({ tone: 'warn', area: 'Data', src: src('Mutu data', 'metodologi', 'Mutu data'),
-      metric: pctTxt(share(H.total - H.known, H.total)), head: 'Kejadian tanpa jam mulai', text: 'Pola jam belum utuh karena "Jam mulai" kosong/tidak terbaca.',
-      rec: { area: 'Data', title: 'Lengkapi isian laporan gangguan', actions: ['Wajibkan "Jam mulai" (HH:MM), "Kilometer" (km+hm), dan nomor JPL untuk kejadian perlintasan.', 'Tambahkan kata kunci cuaca bila relevan.'], lit: ['ferranti2017'] } });
+    // v3.25: temuan kelengkapan isian (data) tidak tampil di web app & PPT — ada di spreadsheet Diagnostik (30_Diagnostik.gs).
     // 8. Sarana: unit berulang & usia
     // Profil satu unit: temuan tingkat armada (unit berulang, usia armada, komposisi kelas) tidak bermakna → dilewati.
     var oneUnit = ctx.kind === 'sarana';

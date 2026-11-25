@@ -103,7 +103,8 @@ function runSync_(force, trigger) {
     var idx = Domain.buildIndex(mastersFromValues_(m.ka, m.st, m.pj, m.sar, extra.jadwal));
     var values = readSheet_(cfg_('SOURCE_SPREADSHEET_ID'), cfg_('SOURCE_SHEET'));
     var out = transformRows_(values, idx, null, koreksiMap_(extra.koreksi));
-    var ref = buildRef_({ ka: m.ka, st: m.st, pj: m.pj, sar: m.sar, jpl: extra.jpl, jadwal: extra.jadwal, ops: extra.ops, depo: extra.depo, ruj: extra.ruj });
+    var ref = buildRef_({ ka: m.ka, st: m.st, pj: m.pj, sar: m.sar, jpl: extra.jpl, jadwal: extra.jadwal, ops: extra.ops, depo: extra.depo, ruj: extra.ruj,
+      jplOsm: (function () { try { return JplOsm.read(); } catch (eo) { console.warn('Perlintasan OSM: ' + eo.message); return []; } })() });
     // Kondisi prasarana & sarana (THI, RHI, WKP). Opsional: kegagalan tidak menahan snapshot gangguan.
     try {
       var kb = readKondisiAuto_();   // 22_Bq.gs: BigQuery bila KONDISI_SUMBER=bq, selain itu Google Sheets
@@ -134,6 +135,8 @@ function runSync_(force, trigger) {
     logChange_(prev, meta);
     Store.publish(version, { fields: out.fields, rows: out.rows, units: out.units }, out.narr, ref, meta);
     props.setProperty('SOURCE_UPDATED_AT', String(updated));
+    // Diagnostik untuk tim (30_Diagnostik.gs): penyusun angka disimpan di spreadsheet terpisah, tidak tampil di web app.
+    if (Date.now() - started < 240000) { try { Diag.write(Diag.build({ fields: out.fields, rows: out.rows }, ref)); } catch (ed) { console.warn('Diagnostik gagal: ' + ed); } }
     setStatus_({ ok: true, at: started, trigger: trigger, message: 'Snapshot ' + version + ' terbit: ' + out.rows.length + ' kejadian, ' +
       ref.counts.jpl + ' JPL, ' + ref.counts.ka + ' KA, ' + ref.counts.jadwal + ' jadwal KA, ' + ref.counts.fleet + ' sarana.', ms: Date.now() - started });
     return { ok: true, changed: true, version: version, rows: out.rows.length, ref: ref.counts };

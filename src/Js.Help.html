@@ -33,8 +33,8 @@ window.KAIHelp = (function () {
     ],
     sarana: [
       { sel: '.fleet-switch', t: 'Jenis sarana', d: 'Lokomotif, kereta, gerbong, KRD/KRL. Semua grafik di bawah mengikuti pilihan ini.' },
-      { sel: '.tabs', t: 'Analisis armada', d: 'Gangguan, kesehatan (RHI/skor turunan), depo, dan daftar unit.' },
-      { sel: '.tbl, .tabulator', t: 'Kartu unit', d: 'Klik nomor sarana untuk membuka kartu unit: dinasan, skor per periode, KA depo, perawatan.' }
+      { sel: '.tabs', t: 'Analisis armada', d: 'Gangguan, kesehatan (RHI resmi), depo, dan daftar unit.' },
+      { sel: '.tbl, .tabulator', t: 'Kartu unit', d: 'Klik nomor sarana untuk membuka kartu unit: dinasan, RHI per periode, KA depo, perawatan.' }
     ],
     eksposur: [
       { sel: '.view .card', t: 'Pendapatan terekspos', d: 'Perkiraan pendapatan KA yang terdampak gangguan = rate per jam perjalanan × menit kelambatan. Semua angka berlabel indikatif.' }
@@ -44,11 +44,6 @@ window.KAIHelp = (function () {
     ],
     telusuri: [
       { sel: '.tabulator', t: 'Daftar kejadian', d: 'Semua kejadian sesuai filter. Urutkan kolom, cari, unduh, dan klik baris untuk rincian.' }
-    ],
-    mutu: [
-      { sel: '.mutu-t', t: 'Kelengkapan per wilayah', d: 'Skor = kejadian tanpa masalah isian wajib. Klik baris wilayah untuk menyaring daftar di bawah.' },
-      { sel: '.mutu-chips', t: 'Pilih masalah', d: 'Saring per isian yang perlu dilengkapi, lalu klik baris untuk melihat kejadiannya.' },
-      { sel: '.view .btn.primary', t: 'Kirim ke Daop/Divre', d: 'Unduh Excel berisi ringkasan per wilayah dan daftar kejadian beserta saran perbaikannya.' }
     ],
     batubara: [
       { sel: '.sk-ctl', t: 'Atur skenario', d: 'Pilih koridor, jendela waktu, dan aturan bila KA berebut petak (urutan tetap seperti GAPEKA, atau prioritas penumpang > batubara isi > lainnya).' },
@@ -98,14 +93,13 @@ window.KAIHelp = (function () {
     ] },
     { id: 'ws-armada', h: 'Ruang kerja Armada', b: [
       'Pilih jenis sarana di atas. Tab Gangguan: tren, unit berulang, jenis berulang, kelompok komponen (treemap).',
-      'Tab Kesehatan: RHI lokomotif atau skor turunan kereta/gerbong, usia armada × laju gangguan.',
+      'Tab Kesehatan: RHI resmi lokomotif, kereta dan gerbong; unit tanpa RHI ditandai "RHI tidak tercatat".',
       'Tab Depo: kekuatan depo (berperingkat). Balai Yasa dan unit tanpa depo di SAP ditampilkan terpisah, tidak diperingkat.',
-      'Kartu unit: dinasan & gangguan, skor per periode, KA yang dilayani depo, perawatan.'
+      'Kartu unit: dinasan & gangguan, RHI per periode, KA yang dilayani depo, perawatan.'
     ] },
     { id: 'ws-pendapatan', h: 'Ruang kerja Pendapatan', b: [
-      'Pendapatan terekspos = rate pendapatan per jam perjalanan KA × menit kelambatan. Indikatif, bukan kerugian riil.',
-      'Rate KA penumpang dari tab Passenger, KA barang dari tab Freight; jam perjalanan dari GAPEKA × hari jalan (Laporan KA Jalan/Batal).',
-      'Nomor KA yang tidak ada di GAPEKA dicocokkan ke KA bernama sama dan searah; yang tetap tidak cocok didaftar terpisah beserta alasannya.'
+      'Pendapatan terekspos = pendapatan KA yang terdampak menit kelambatan. Angkanya perkiraan, bukan kerugian riil.',
+      'Sumber: pendapatan KA penumpang (Passenger) dan KA barang (Freight), jadwal GAPEKA terpilih.'
     ] },
     { id: 'ws-batubara', h: 'Ruang kerja Batubara — Papan skenario GAPEKA', b: [
       'Grafik perjalanan koridor batubara Sumsel (TMB–Tarahan, TMB–Kertapati, Sukacinta–Kertapati, Lubuk Linggau–Muara Enim) memuat KA batubara dan KA penumpang dari GAPEKA yang dipilih di switch kanan atas.',
@@ -188,7 +182,7 @@ window.KAIHelp = (function () {
     [/^Kejadian terbesar/, '50 kejadian dengan kelambatan terlama pada periode terpilih.', 'ws-ringkasan'],
     [/^Pola jam/, 'Jumlah kejadian per jam mulai. Hanya kejadian dengan jam tercatat.', 'ws-ringkasan'],
     [/^Hari × jam/, 'Kepadatan kejadian per hari dalam minggu dan jam.', 'ws-ringkasan'],
-    [/^Kekuatan depo/, 'Indeks 0–100 dari RHI/skor, laju gangguan per 100 unit, usia, dan kesiapan SG GAPEKA.', 'ws-armada'],
+    [/^Kekuatan depo/, 'Indeks 0–100 dari RHI resmi, laju gangguan per 100 unit, usia, dan kesiapan SG GAPEKA.', 'ws-armada'],
     [/^Klasemen depo/, 'Depo berperingkat; Balai Yasa & unit tanpa depo di SAP dipisah.', 'ws-armada'],
     [/^Unit berulang/, 'Unit dengan ≥ 2 kejadian dalam 3 bulan yang juga muncul di periode aktif.', 'ws-armada'],
     [/^Komposisi kelas/, 'Menit kelambatan per kelas. Klik irisan untuk menyaring grafik lain.', 'profil'],

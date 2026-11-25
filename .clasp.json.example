@@ -29,6 +29,6 @@
     "src/26_Batubara.gs",
     "src/27_SeedBatubara.gs",
     "src/28_BatubaraSync.gs",
-    "src/29_RhiSarana.gs"
+    "src/29_RhiSarana.gs", "src/30_Diagnostik.gs", "src/31_SeedJplRiset.gs", "src/32_JplOsm.gs"
   ]
 }

@@ -38,6 +38,9 @@ Teks UI & laporan PPT: satuan dan istilah ditulis lengkap (jam, menit, ton, keja
 ## Kelas & temuan (v3.19)
 Kategori & Subgangguan kosong → kelas diturunkan (pola teks, lalu kelas terdekat), bertanda * + keyakinan; tidak ada kelas "belum". Temuan tampil sebagai pita di bawah grafik sumbernya (`Js.Pita` MAP: src.label → `rute:kartu`); Ringkasan = 3 sorotan. Bantuan: `Js.Help` (tur, panduan, glosarium, FAQ).
 
+## v3.25 — RHI resmi, Diagnostik, Profil rute, JPL
+RHI kereta/gerbong hanya RHI resmi (`Js.Sarana` `rhiKG`); unit tanpa RHI = "RHI tidak tercatat", tidak ikut rata-rata; skor turunan dihapus. Penyusun angka (mutu data, rate pendapatan, KA belum cocok GAPEKA, sarana tanpa depo) tidak tampil di web/PPT → spreadsheet Diagnostik (`30_Diagnostik.gs`, `DIAG_DB_ID`, ditulis tiap sinkron; `diagnostikNow`); halaman Mutu dihapus (Js.Mutu tetap untuk server, `test:mutu`). Profil rute: ubin + diagram lintas berlapis (`Part.RuteData` `LAY`). JPL: pengelola PM 94/2018 dari Kategori jalan; riset web bersumber `db/sumber/jpl_riset_web.csv` → `tools/jpl/build_jpl_riset.py` → `31_SeedJplRiset.gs`; nama jalan OSM via `jplOsmNow` (`32_JplOsm.gs`, Overpass, `JPL_OSM_DB_ID`) → `KAIRef.jplLookup` (nomor sama = pasti, satu-satunya = perkiraan, selain itu kandidat).
+
 ## Lima kunci penghubung data
 kode stasiun · petak `A-B` · nomor KA · nomor sarana (dinormalkan tanpa spasi) · kode UPT Resor JR (`4.22`). Master stasiun gabungan: `db/csv/master_stasiun.csv`.
 

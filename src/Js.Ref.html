@@ -102,6 +102,7 @@
       j.statusTxt = tc(j.status); j.penjagaTxt = tc(j.penjaga);
       R.jpl.push(j);
     });
+    jplJalan(R, raw);
 
     var ref = new Date(R.today + 'T00:00:00Z').getTime();
     (raw.fleet || []).forEach(function (r) {
@@ -148,6 +149,50 @@
   }
 
   /** Nama/kode stasiun di teks bebas (mis. "LEMAHABANG", "KDG", "TANAH ABANG") → kode. */
+  var ROAD = { motorway: 'jalan tol', trunk: 'jalan arteri utama', primary: 'jalan primer', secondary: 'jalan sekunder', tertiary: 'jalan tersier', unclassified: 'jalan lokal', residential: 'jalan permukiman',
+    service: 'jalan akses', track: 'jalan setapak/kebun', living_street: 'jalan lingkungan', footway: 'jalan kaki', path: 'jalan setapak', cycleway: 'jalur sepeda' };
+  function roadClass(h) { h = String(h || '').replace(/_link$/, ''); return ROAD[h] || (h ? 'jalan ' + h : ''); }
+  /** Pengelola perlintasan sebidang menurut PM 94/2018 Pasal 2 (berdasarkan status jalan di M_JPL "Kategori jalan"). */
+  function pengelola(j) {
+    var k = String(j.kat || '').toUpperCase(), kab = String(j.kab || '').replace(/^(Kab\.?|Kabupaten)\s+/i, '');
+    if (/NASIONAL/.test(k)) return 'Menteri Perhubungan (jalan nasional)';
+    if (/PROVINSI/.test(k)) return 'Gubernur ' + (j.prov || '') + ' (jalan provinsi)';
+    if (/KABUPATEN|KOTA|KECAMATAN|DESA/.test(k)) return (/^Kota\b/i.test(j.kab) ? 'Wali Kota ' + j.kab.replace(/^Kota\s+/i, '') : 'Bupati ' + kab) + ' (jalan ' + (/DESA/.test(k) ? 'desa' : /KECAMATAN/.test(k) ? 'kecamatan' : 'kabupaten/kota') + ')';
+    if (/PERKEBUNAN|INDUSTRI|PRIBADI|KHUSUS/.test(k)) return 'Badan hukum/lembaga pemilik jalan khusus (' + KAI.cap(k.toLowerCase()) + ')';
+    return '';
+  }
+  function njpl(s) { return String(s || '').toUpperCase().replace(/^JPL\s*/, '').replace(/[^0-9A-Z]/g, ''); }
+  /** Indeks riset web (per petak#nomor) & perlintasan OSM (per petak), lalu isi nama jalan/pengelola tiap JPL program. */
+  function jplJalan(R, raw) {
+    R.jplRiset = {}; R.jplOsmSeg = {};
+    (raw.jplRiset || []).forEach(function (r) {
+      var pr = String(r[2] || '').split(/\s*[–-]\s*/), a = stationOf(R, pr[0]), b = stationOf(R, pr[1] || ''); if (!a || !b) return;
+      R.jplRiset[[a, b].sort().join('-') + '#' + njpl(r[1])] = { region: r[0], jalan: r[4], penjaga: r[5], status: r[6], catatan: r[7], judul: r[8], url: r[9], terbit: r[10] };
+    });
+    (raw.jplOsm || []).forEach(function (o) { (R.jplOsmSeg[o[0]] = R.jplOsmSeg[o[0]] || []).push({ urut: o[1], t: o[2], lat: o[3], lon: o[4], jalan: o[5], ref: o[6], kelas: o[7], lain: o[8], refOsm: o[9], palang: o[10], dijaga: o[11] }); });
+    var known = {}; R.jpl.forEach(function (j) { if (j.pairKey) (known[j.pairKey] = known[j.pairKey] || {})[njpl(j.no)] = 1; });
+    R.jplKnown = known;
+    R.jpl.forEach(function (j) {
+      j.pengelola = pengelola(j);
+      var L = jplLookup(R, j.pairKey, j.no);
+      j.riset = L.riset; j.osm = L.osm; j.osmKandidat = L.kandidat; j.jalan = L.jalan; j.jalanSrc = L.src;
+      if (j.riset && j.riset.penjaga && j.jaga === 'tidak tercatat') j.jaga = L.jaga || j.jaga;
+    });
+  }
+  /** Nama jalan satu JPL: riset web bersumber → OSM ref sama (pasti) → satu-satunya perlintasan & satu-satunya nomor JPL di petak (perkiraan) → kandidat OSM. */
+  function jplLookup(R, seg, no) {
+    var out = { riset: null, osm: null, kandidat: [], jalan: '', src: '', jaga: '' }; if (!seg) return out;
+    var k = njpl(no), rs = k && R.jplRiset ? R.jplRiset[seg + '#' + k] : null, C = (R.jplOsmSeg && R.jplOsmSeg[seg]) || [], kn = (R.jplKnown && R.jplKnown[seg]) || {};
+    var nm = function (c) { return c.jalan || (c.ref ? 'jalan ' + c.ref : ''); };
+    var byRef = k ? C.filter(function (c) { return c.refOsm && njpl(c.refOsm) === k; }) : [], o = null, how = '';
+    if (byRef.length === 1) { o = byRef[0]; how = 'OSM (nomor JPL sama)'; }
+    else if (C.length === 1 && Object.keys(kn).length <= 1 && (!Object.keys(kn).length || kn[k])) { o = C[0]; how = 'perkiraan (satu-satunya perlintasan di petak)'; }
+    out.riset = rs; out.osm = o ? { jalan: nm(o), kelas: o.kelas, lain: o.lain, lat: o.lat, lon: o.lon, how: how } : null;
+    out.kandidat = o ? [] : C.map(nm).filter(function (x, i, A) { return x && A.indexOf(x) === i; });
+    if (rs && rs.jalan) { out.jalan = rs.jalan; out.src = 'riset web'; } else if (out.osm && out.osm.jalan) { out.jalan = out.osm.jalan; out.src = how; }
+    if (rs && rs.penjaga) out.jaga = /tidak dijaga|tak dijaga|swadaya/i.test(rs.penjaga + ' ' + rs.status) ? 'tidak dijaga' : /dijaga/i.test(rs.penjaga) ? 'dijaga' : '';
+    return out;
+  }
   function stationOf(R, txt) {
     var k = norm(txt); if (!k) return '';
     if (R.st[k]) return k;
@@ -412,7 +457,7 @@
     return res.slice(0, limit || 30).map(function (x) { return x.e; });
   }
 
-  root.KAIRef = { build: build, norm: norm, toMin: toMin, fmtMin: fmtMin, stationOf: stationOf, routeFor: routeFor, ensureRoutes: ensureRoutes,
+  root.KAIRef = { build: build, roadClass: roadClass, pengelola: pengelola, jplLookup: jplLookup, norm: norm, toMin: toMin, fmtMin: fmtMin, stationOf: stationOf, routeFor: routeFor, ensureRoutes: ensureRoutes,
     timesFor: timesFor, kaInfo: kaInfo, opsOf: opsOf, KET: KET, crossingInventory: crossingInventory, trafficOnSeg: trafficOnSeg, fleetSummary: fleetSummary, searchIndex: searchIndex,
     search: search, regionOrder: regionOrder };
 })(typeof window !== 'undefined' ? window : globalThis);

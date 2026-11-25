@@ -145,6 +145,8 @@ function buildRef_(raw) {
   }
   out.duksar = typeof SEED_DUKSAR !== 'undefined' ? SEED_DUKSAR : null;   // Buku Dukungan Sarana GAPEKA (17_SeedDuksar.gs)
   out.peta = typeof SEED_PETA !== 'undefined' ? SEED_PETA : null;   // geometri jalur OSM + koordinat stasiun (18_SeedPeta.gs)
+  out.jplRiset = typeof SEED_JPL_RISET !== 'undefined' ? SEED_JPL_RISET : [];   // riset web alamat/penjaga JPL bersumber (31_SeedJplRiset.gs)
+  out.jplOsm = raw.jplOsm || [];   // perlintasan OSM per petak (32_JplOsm.gs, diambil pemilik sekali jalan)
   Object.keys(out).forEach(function (key) { if (Array.isArray(out[key])) out.counts[key] = out[key].length; });
   return out;
 }

@@ -13,7 +13,6 @@ KAI.ROUTES = [
   { id: 'sarana', title: 'Sarana & armada', icon: 'i-train', group: 'Laporan' },
   { id: 'eksposur', title: 'Pendapatan terekspos', icon: 'i-coin', group: 'Laporan' },
   { id: 'telusuri', title: 'Telusuri kejadian', icon: 'i-list', group: 'Analisis' },
-  { id: 'mutu', title: 'Mutu data per wilayah', icon: 'i-list', group: 'Analisis' },
   { id: 'bb-hariini', title: 'Batubara hari ini', icon: 'i-route', group: 'Batubara' },
   { id: 'bb-capaian', title: 'Capaian angkutan batubara', icon: 'i-route', group: 'Batubara' },
   { id: 'bb-siklus', title: 'Penyebab: siklus, terminal, hambatan, gangguan', icon: 'i-route', group: 'Batubara' },
@@ -32,7 +31,7 @@ KAI.WORKSPACES = [
   { id: 'ws-jaringan', title: 'Jaringan & prasarana', icon: 'i-map', pages: [{ id: 'wilayah', label: 'Wilayah & koridor' }, { id: 'perlintasan', label: 'Perlintasan & JPL' }] },
   { id: 'ws-armada', title: 'Armada', icon: 'i-train', pages: [{ id: 'sarana', label: 'Sarana & armada' }] },
   { id: 'ws-pendapatan', title: 'Pendapatan', icon: 'i-coin', pages: [{ id: 'eksposur', label: 'Pendapatan terekspos' }] },
-  { id: 'ws-telusuri', title: 'Telusuri', icon: 'i-list', pages: [{ id: 'telusuri', label: 'Telusuri kejadian' }, { id: 'mutu', label: 'Mutu data' }] },
+  { id: 'ws-telusuri', title: 'Telusuri', icon: 'i-list', pages: [{ id: 'telusuri', label: 'Telusuri kejadian' }] },
   { id: 'ws-batubara', title: 'Batubara', icon: 'i-route', pages: [{ id: 'bb-hariini', label: 'Hari ini' }, { id: 'bb-capaian', label: 'Capaian' }, { id: 'bb-siklus', label: 'Penyebab' }, { id: 'batubara', label: 'Skenario' }] }
 ];
 KAI.wsOf = function (route) { return KAI.WORKSPACES.filter(function (w) { return w.pages.some(function (p) { return p.id === route; }); })[0] || null; };
