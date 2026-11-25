@@ -1,0 +1,32 @@
+// Uji Js.Emplasemen (KAIEmp) dengan data SINTETIS emulator (tests/emulator/bb_fixture.json). Pemakaian: node tests/batubara/test_emplasemen.js
+const fs = require('fs'), vm = require('vm'), path = require('path');
+globalThis.window = globalThis;
+vm.runInThisContext(fs.readFileSync(path.resolve(__dirname, '../../src/Js.Emplasemen.html'), 'utf8').replace(/^<script>/, '').replace(/document\.addEventListener\('alpine:init'[\s\S]*$/, ''));
+const E = globalThis.KAIEmp, fx = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../emulator/bb_fixture.json'), 'utf8')).core.t;
+const rows = t => fx[t].r.map(r => Object.fromEntries(fx[t].c.map((c, i) => [c, r[i]])));
+let fails = 0; const ok = (x, m) => { if (!x) { fails++; console.log('GAGAL:', m); } else console.log('ok  ', m); };
+const S = E.schemas(rows('EMPLASEMEN_SKEMA'));
+ok(S.length === 1 && S[0].d && S[0].d.paths.length === 4, 'gambar terpecah 2 bagian digabung urut bagian');
+const M = E.model(S[0], rows('EMPLASEMEN_JALUR'));
+const t1 = M.tracks.find(k => k.j === 'I');
+ok(t1 && t1.x1 === 40 && t1.x2 === 380 && t1.y === 40, 'jalur I ditemukan sebagai garis 40–380 pada y 40');
+ok(M.tracks.filter(k => k.x1 != null).length === 4, 'keempat jalur punya garis');
+ok(M.labels.filter(l => l.kind === 'terminal').map(l => l.s).join(',') === 'TLS I,TLS III', 'label TLS = fasilitas terminal');
+ok(M.labels.find(l => l.s === 'Me').kind === 'arah' && M.labels.find(l => l.s === 'Tmb').kind === 'stasiun', 'label arah & nama stasiun dikenali');
+ok(M.tracks.every(k => k.kind === 'stasiun'), 'jalur tanpa keterangan CY/TLS = emplasemen stasiun');
+const F = E.flowsAt('TMB', rows('M_UPT'));
+ok(F.length === 1 && F[0].tipe === 'muat_tls', 'alur dari M_UPT: TMB + MUAT → muat_tls');
+const st = E.steps('muat_tls', rows('ALUR_KEGIATAN'), M);
+ok(st.length === 5 && st.every(s => s.P.length > 0), 'kelima langkah punya letak (perkiraan)');
+ok(st[2].P.every(p => /TLS/.test(p.how)), 'langkah muat menunjuk label TLS');
+ok(E.resolve('rcd', M).length === 0, 'titik yang tidak ada di gambar tidak ditebak');
+const R = E.route(st, null);
+ok(R.filter(p => !p.wp).length === 5 && R[0].how.indexOf('arah') === 0, 'lintasan mulai dari label arah, satu titik per langkah');
+const pick = M.labels.find(l => l.s === 'TLS III').id, R2 = E.route(st, pick);
+ok(R2.some(p => p.ref === pick), 'fasilitas pilihan dipakai pada langkah yang memuatnya');
+const svg = E.svg(M, { route: R, step: st[1] });
+ok(/data-trk="/.test(svg) && /data-lbl="/.test(svg) && /data-step="2"/.test(svg) && /emp-route/.test(svg) && !/<script/i.test(svg), 'SVG: jalur, label, pin, lintasan; tanpa skrip');
+const g = E.stage('TMB', 'muat', [{ stasiun_muat: 'TMB', sop_inti_muat_min: 100, sop_inti_muat_maks: 120 }, { stasiun_muat: 'TMB', sop_inti_muat_min: 90, sop_inti_muat_maks: 90 }],
+  [{ stasiun_muat: 'TMB', stasiun_bongkar: 'KPT', muat: 80 }, { stasiun_muat: 'TMB', stasiun_bongkar: 'KPT', muat: 130 }], () => 110);
+ok(g.sopLo === 90 && g.sopHi === 120 && g.med === 105 && g.over === 0.5, 'tahap: rentang SOP 90–120, median 105, 50% melewati SOP relasi');
+console.log(fails ? 'GAGAL ' + fails : 'LULUS'); process.exit(fails ? 1 : 0);

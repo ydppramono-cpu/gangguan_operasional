@@ -72,14 +72,14 @@ document.addEventListener('alpine:init', function () {
     /** Nomor KA batubara (M_KA, kedua nomor pasangan "4000-4001") untuk menautkan Gangguan_Induk. */
     get coalKa() {
       if (!this.ready) return {};
-      return this.memo('coalKa', function () { var S = {}; BBK.rows('M_KA').forEach(function (k) { String(k.no_ka || '').split(/[-\/]/).forEach(function (x) { x = x.trim().toUpperCase(); if (x) S[x] = k; }); }); return S; });
+      return this.memo('coalKa', function () { var S = {}; BBK.rows('M_KA').forEach(function (k) { String(k.no_ka || '').split(/[-/]/).forEach(function (x) { x = x.trim().toUpperCase(); if (x) S[x] = k; }); }); return S; });
     },
     /** Gangguan_Induk dengan nomor KA batubara (M_KA) pada bulan filter Batubara (tahun data realisasi). */
-    gangguan: function () {
-      var self = this, K = this.coalKa, y = (this.months[this.months.length - 1] || '2026').slice(0, 4), f = this.f;
-      return this.memo('ggn', function () {
+    gangguan: function (allMonths) {
+      var K = this.coalKa, y = (this.months[this.months.length - 1] || '2026').slice(0, 4), f = this.f;
+      return this.memo('ggn' + (allMonths ? 'A' : ''), function () {
         return (KAI.data.all || []).filter(function (r) {
-          if (!r.date || r.date.slice(0, 4) !== y) return false; var m = +r.date.slice(5, 7); if (m < f.m0 || m > f.m1) return false;
+          if (!r.date || r.date.slice(0, 4) !== y) return false; var m = +r.date.slice(5, 7); if (!allMonths && (m < f.m0 || m > f.m1)) return false;
           var k = K[String(r.ka || '').toUpperCase().replace(/\s+/g, '')]; if (!k) return false;
           if (f.wil !== 'Sumsel' && k.divre_asal !== f.wil.toUpperCase() && k.divre_tujuan !== f.wil.toUpperCase()) return false;
           if (f.mut !== 'Semua' && k.muatan !== f.mut) return false;
@@ -99,8 +99,10 @@ document.addEventListener('alpine:init', function () {
       get groups() {
         var C = this.KW ? this.KW.cards : [], by = {}; C.forEach(function (c) { by[c.id] = c; });
         return [['Terminal', ['wtt_muat', 'wtt_bongkar', 'kin_muat', 'kin_bongkar']], ['Perjalanan', ['wpka_isi', 'wpka_kosong', 'otp_brk', 'otp_tiba']], ['Peredaran & stasiun', ['wpg', 'kin_st']]]
-          .map(function (g) { return { n: g[0], cards: g[1].map(function (id) { return by[id]; }).filter(Boolean) }; });
+          .map(function (g) { return { n: g[0], cards: g[1].map(function (id) { return by[id]; }).filter(Boolean) }; }).filter(function (g) { return g.cards.length; });
       },
+      /** Satu baris kartu (urut kelompok), label kelompok di tiap kartu. */
+      get rail() { var out = []; this.groups.forEach(function (g) { g.cards.forEach(function (c) { out.push(Object.assign({ grp: g.n }, c)); }); }); return out; },
       get answer() {
         var C = this.KW ? this.KW.cards : []; if (!C.length) return '';
         var bad = C.filter(function (c) { return c.st === 'bad'; }), warn = C.filter(function (c) { return c.st === 'warn'; }), w = bad[0] || warn[0];
@@ -134,41 +136,80 @@ document.addEventListener('alpine:init', function () {
     };
   });
 
-  /* ---------- Hari ini: KPI utama + pengecualian hari terakhir data ---------- */
+  /* ---------- Hari ini: KPI utama + pengecualian pada tanggal pilihan (bawaan = tanggal terakhir yang tercakup semua sumber) ---------- */
+  var d10 = function (v) { return String(v || '').slice(0, 10); };
+  var dayDiff = function (a, b) { return Math.round((Date.parse(a + 'T00:00:00Z') - Date.parse(b + 'T00:00:00Z')) / 864e5); };
+  /** REAL_HAMBATAN harian saja: baris "Tidak (rekap bulanan)" bertanggal tanggal 1 dan bukan kejadian hari itu. */
+  var harian = function (H) { return (H || []).filter(function (h) { return /^ya/i.test(String(h.tanggal_tercatat || '')); }); };
+  var nosOf = function (v) { return String(v || '').toUpperCase().split(/[-/]/).map(function (x) { return x.trim(); }).filter(Boolean); };
   Alpine.data('vBbHariIni', function () {
     return {
-      init: function () { this.$store.bb.need(['core', 'perjalanan', 'terminal', 'hambatan']); },
+      day: '', open: {}, nLate: 10,
+      init: function () {
+        var p = this.$store.app.params || {}; if (/^\d{4}-\d{2}-\d{2}$/.test(p.d || '')) this.day = p.d;
+        this.$store.bb.need(['core', 'perjalanan', 'terminal', 'hambatan']);
+      },
       get N() { return this.$store.bb.north; },
+      /** Filter tanpa batas bulan: tanggal dipilih bebas di rentang data. */
+      get Fd() { return Object.assign({}, this.$store.bb.F, { m0: 1, m1: 12 }); },
+      /** Tanggal terakhir per sumber ("data s.d.") — dari baris yang lolos saringan wilayah/pemilik/muatan. */
+      get SRC() {
+        var bb = this.$store.bb, Fd = this.Fd; if (!bb.KW) return null;
+        return bb.memo('hiSrc', function () {
+          var mx = function (L, f) { return L.reduce(function (a, r) { var v = f(r); return v && v > a ? v : a; }, ''); }, mn = function (L, f) { return L.reduce(function (a, r) { var v = f(r); return v && (!a || v < a) ? v : a; }, ''); };
+          var P = BBK.perjalanan(Fd) || [], T = BBK.terminal(Fd) || [], H = harian(BBK.hambatan(Fd)), G = bb.gangguan(true);
+          var tD = function (r) { return d10(r.mulai_muat || r.mulai_bongkar); };
+          var L = [{ id: 'pj', n: 'Perjalanan', s: 'REAL_PERJALANAN', d0: mn(P, function (r) { return r.tanggal; }), d: mx(P, function (r) { return r.tanggal; }) },
+            { id: 'tm', n: 'Terminal', s: 'REAL_TERMINAL', d0: mn(T, tD), d: mx(T, tD) },
+            { id: 'hb', n: 'Hambatan', s: 'REAL_HAMBATAN', d0: mn(H, function (r) { return r.tanggal; }), d: mx(H, function (r) { return r.tanggal; }) },
+            { id: 'gg', n: 'Gangguan KA batubara', s: 'Gangguan_Induk', d0: mn(G, function (r) { return r.date; }), d: mx(G, function (r) { return r.date; }) }];
+          var have = L.filter(function (x) { return x.d; }), common = have.reduce(function (a, x) { return !a || x.d < a ? x.d : a; }, '');
+          var lo = have.reduce(function (a, x) { return !a || x.d0 < a ? x.d0 : a; }, ''), hi = have.reduce(function (a, x) { return x.d > a ? x.d : a; }, '');
+          return { L: L, common: common, lo: lo, hi: hi };
+        });
+      },
+      get sel() { var S = this.SRC; if (!S) return ''; var d = this.day; return d && d >= S.lo && d <= S.hi ? d : S.common; },
+      /** Sumber yang belum mencakup tanggal terpilih → lencana kuning, angka sumber itu "tidak tercatat". */
+      cover: function (x) { return x.d && x.d0 && this.sel >= x.d0 && this.sel <= x.d; },
+      shift: function (n) { var S = this.SRC; if (!S) return; var t = new Date(Date.parse(this.sel + 'T00:00:00Z') + n * 864e5).toISOString().slice(0, 10); if (t >= S.lo && t <= S.hi) this.day = t; this.open = {}; },
+      setDay: function (v) { this.day = v; this.open = {}; this.nLate = 10; },
       get D() {
-        var bb = this.$store.bb; if (!bb.KW) return null;
-        return bb.memo('hariini', function () {
-          var P = BBK.perjalanan(bb.F) || [], last = P.reduce(function (a, r) { return r.tanggal > a ? r.tanggal : a; }, '');
-          if (!last) return null;
+        var bb = this.$store.bb, last = this.sel, Fd = this.Fd, S = this.SRC; if (!bb.KW || !last) return null;
+        var cov = {}; S.L.forEach(function (x) { cov[x.id] = !!(x.d && last >= x.d0 && last <= x.d); });
+        return bb.memo('hariini|' + last, function () {
+          var P = BBK.perjalanan(Fd) || [], T = BBK.terminal(Fd) || [], Hall = harian(BBK.hambatan(Fd)), Gall = bb.gangguan(true);
+          var near = function (d) { return d && Math.abs(dayDiff(d, last)) <= 1; };
           var day = P.filter(function (r) { return r.tanggal === last; }), run = day.filter(function (r) { return !r.batal; });
+          // Terminal: kegiatan yang dimulai pada tanggal itu, pra+inti+pasca dibanding SOP kontrak (K.sop)
+          var wtt = [], nAct = 0, sopRow = function (r, u) {
+            var rel = r.stasiun_muat + '-' + r.stasiun_bongkar, ids = ['pra_' + u, u, 'pasca_' + u], real = 0, sop = 0, ok = true, sopOk = true, st = u === 'muat' ? r.stasiun_muat : r.stasiun_bongkar;
+            ids.forEach(function (id) { var v = r[id]; if (v == null || isNaN(v)) ok = false; else real += +v; var x = BBK.sop(rel, st, id); if (x == null) sopOk = false; else sop += x; });
+            return { ka: r.no_ka, st: st, uj: u, rel: rel, real: ok ? real : null, sop: sopOk ? sop : null, d: ok && sopOk ? real - sop : null, mulai: u === 'muat' ? r.mulai_muat : r.mulai_bongkar, selesai: u === 'muat' ? r.selesai_muat : r.selesai_bongkar };
+          };
+          T.forEach(function (r) { ['muat', 'bongkar'].forEach(function (u) { if (d10(r['mulai_' + u]) !== last) return; nAct++; var x = sopRow(r, u); if (x.d != null && x.d > 0) wtt.push(x); }); });
+          wtt.sort(function (a, b) { return b.d - a.d; });
+          var H = Hall.filter(function (h) { return h.tanggal === last; }).sort(function (a, b) { return (b.menit || 0) - (a.menit || 0); });
+          var G = Gall.filter(function (r) { return r.date === last; });
+          // Rantai per KA: perjalanan → terminal → hambatan → gangguan (KA sama, tanggal ±1 hari)
           var late = [];
           run.forEach(function (r) {
             var tb = BBK.otpTol(BBK.divOf(r.asal), 'brk'), tt = BBK.otpTol(BBK.divOf(r.tujuan), 'tiba');
             var lb = typeof r.lambat_brk === 'number' && r.lambat_brk > tb ? r.lambat_brk : null, lt = typeof r.lambat_tiba === 'number' && r.lambat_tiba > tt ? r.lambat_tiba : null;
-            if (lb != null || lt != null) late.push({ ka: r.no_ka, rel: r.asal + '–' + r.tujuan, mut: r.muatan, lb: lb, lt: lt, tb: tb, tt: tt, brk: r.brk_prog + ' → ' + (r.brk_real || '–'), tiba: r.tiba_prog + ' → ' + (r.tiba_real || '–'), max: Math.max(lb || 0, lt || 0) });
+            if (lb == null && lt == null) return;
+            var nos = nosOf(r.no_ka), has = function (v) { return nosOf(v).some(function (n) { return nos.indexOf(n) >= 0; }); };
+            var tc = []; T.forEach(function (t) { if (!has(t.no_ka)) return; ['muat', 'bongkar'].forEach(function (u) { if (near(d10(t['mulai_' + u]))) tc.push(sopRow(t, u)); }); });
+            tc.sort(function (a, b) { return String(a.mulai).localeCompare(String(b.mulai)); });
+            // REAL_HAMBATAN tidak mencatat nomor KA → dikaitkan lewat terminal & jenis kegiatan yang sama pada tanggal mulai kegiatan
+            var hk = {}; tc.forEach(function (t) { hk[t.st + '|' + (t.uj === 'muat' ? 'MUAT' : 'BONGKAR') + '|' + d10(t.mulai)] = 1; });
+            var hc = Hall.filter(function (h) { return hk[String(h.lokasi || '').split('-')[0] + '|' + h.jenis + '|' + h.tanggal] || (h.no_ka && has(h.no_ka) && near(h.tanggal)); }).sort(function (a, b) { return (b.menit || 0) - (a.menit || 0); }), gc = Gall.filter(function (g) { return near(g.date) && has(g.ka); });
+            late.push({ ka: r.no_ka, rel: r.asal + '–' + r.tujuan, mut: r.muatan, lb: lb, lt: lt, tb: tb, tt: tt, brk: r.brk_prog + ' → ' + (r.brk_real || '–'), tiba: r.tiba_prog + ' → ' + (r.tiba_real || '–'), max: Math.max(lb || 0, lt || 0),
+              tc: tc, hc: hc, hm: BBK.sum(hc, function (h) { return h.menit; }), gc: gc, gm: BBK.sum(gc, function (g) { return g.menit; }), links: tc.length + hc.length + gc.length });
           });
           late.sort(function (a, b) { return b.max - a.max; });
-          // Terminal: kegiatan yang dimulai pada hari itu, total pra+inti+pasca dibanding SOP kontrak (K.sop)
-          var T = (BBK.terminal(bb.F) || []).filter(function (r) { return String(r.mulai_muat || '').slice(0, 10) === last || String(r.mulai_bongkar || '').slice(0, 10) === last; }), wtt = [], nAct = 0;
-          T.forEach(function (r) {
-            var rel = r.stasiun_muat + '-' + r.stasiun_bongkar;
-            [['muat', r.stasiun_muat, r.mulai_muat], ['bongkar', r.stasiun_bongkar, r.mulai_bongkar]].forEach(function (u) {
-              if (String(u[2] || '').slice(0, 10) !== last) return; nAct++;
-              var ids = ['pra_' + u[0], u[0], 'pasca_' + u[0]], real = 0, sop = 0, ok = true, sopOk = true;
-              ids.forEach(function (id) { var v = r[id]; if (v == null || isNaN(v)) ok = false; else real += +v; var x = BBK.sop(rel, u[1], id); if (x == null) sopOk = false; else sop += x; });
-              if (ok && sopOk && real > sop) wtt.push({ ka: r.no_ka, st: u[1], uj: u[0], rel: rel, real: real, sop: sop, d: real - sop });
-            });
-          });
-          wtt.sort(function (a, b) { return b.d - a.d; });
-          var H = (BBK.hambatan(bb.F) || []).filter(function (h) { return h.tanggal === last; }).sort(function (a, b) { return (b.menit || 0) - (a.menit || 0); });
-          var G = bb.gangguan().filter(function (r) { return r.date === last; });
-          return { last: last, n: day.length, run: run.length, batal: day.length - run.length, late: late, wtt: wtt, nT: nAct, H: H, hMenit: BBK.sum(H, function (h) { return h.menit; }), G: G };
+          return { last: last, n: day.length, run: run.length, batal: day.length - run.length, late: late, nLink: late.filter(function (x) { return x.links; }).length, wtt: wtt, nT: nAct, H: H, hMenit: BBK.sum(H, function (h) { return h.menit; }), G: G, cov: cov };
         });
       },
+      toggle: function (k) { var o = Object.assign({}, this.open); o[k] = !o[k]; this.open = o; },
       dur: function (m) { return m == null ? '–' : BBK.fmt.dur(m); },
       sign: function (d) { return (d > 0 ? '+' : d < 0 ? '−' : '±') + BBK.fmt.dur(Math.abs(d)); },
       get compOpt() {
@@ -223,14 +264,166 @@ document.addEventListener('alpine:init', function () {
           .filter(function (r) { return r.coal; }).sort(function (a, b) { return (a.siap == null) - (b.siap == null) || a.siap - b.siap; });
       },
       get G() { return this.$store.bb.KW ? this.$store.bb.gangguan() : []; },
-      get Gsum() {
-        var G = this.G, by = {}, lok = {};
-        G.forEach(function (r) { var k = r.kelas || 'lain'; var o = by[k] = by[k] || { k: k, n: 0, m: 0 }; o.n++; o.m += r.menit || 0;
-          var l = r.lokasi || 'tidak tercatat', x = lok[l] = lok[l] || { l: l, n: 0, m: 0 }; x.n++; x.m += r.menit || 0; });
-        return { n: G.length, m: BBK.sum(G, function (r) { return r.menit; }), kelas: Object.keys(by).map(function (k) { return by[k]; }).sort(function (a, b) { return b.m - a.m; }),
-          lokasi: Object.keys(lok).map(function (k) { return lok[k]; }).sort(function (a, b) { return b.m - a.m || b.n - a.n; }).slice(0, 8) };
+      gx: { kelas: '', sub: '', day: '', lin: '', m: '' },
+      setG: function (k, v) { var o = Object.assign({}, this.gx); o[k] = o[k] === v ? '' : v; if (k === 'kelas') o.sub = ''; this.gx = o; },
+      /** Gangguan setelah saringan silang (kelas → subgangguan, tanggal, lintas, bulan): semua grafik & daftar memakai ini. */
+      gPass: function (r, skip) {
+        var x = this.gx, P = this.gPos;
+        return (skip === 'kelas' || !x.kelas || (r.kelas || 'lain') === x.kelas) && (skip === 'sub' || !x.sub || (r.sub || 'tidak tercatat') === x.sub) && (skip === 'day' || !x.day || r.date === x.day) &&
+          (skip === 'm' || !x.m || String(r.date).slice(0, 7) === x.m) && (skip === 'lin' || !x.lin || (P[r.id] && P[r.id].lin === x.lin));
+      },
+      get Gf() { var self = this; return this.G.filter(function (r) { return self.gPass(r); }); },
+      get gAny() { var x = this.gx; return !!(x.kelas || x.sub || x.day || x.lin || x.m); },
+      /** Letak kejadian pada lintas batubara (M_LINTAS + km M_STASIUN DB Batubara): stasiun = km stasiun, petak = tengah km kedua ujung. */
+      get gPos() {
+        var bb = this.$store.bb, G = this.G; if (!bb.ready) return {};
+        return bb.memo('gpos', function () {
+          var st = {}; BBK.rows('M_STASIUN').forEach(function (x) { if (+x.km > 0) st[x.kode] = x; });
+          var lin = {}; BBK.rows('M_LINTAS').forEach(function (l) { String(l.stasiun || '').split(',').forEach(function (k) { (lin[k.trim()] = lin[k.trim()] || []).push(l.id); }); });
+          var out = {};
+          G.forEach(function (r) {
+            var c = String(r.lokCode || '').toUpperCase(), parts = c.split('-').filter(Boolean), A = st[parts[0]], B = parts[1] ? st[parts[1]] : null;
+            if (!A) return; var L = (lin[parts[0]] || []).filter(function (id) { return !B || (lin[parts[1]] || []).indexOf(id) >= 0; })[0]; if (!L) return;
+            out[r.id] = { lin: L, km: B ? (+A.km + +B.km) / 2 : +A.km, at: parts.join('–') };
+          });
+          return out;
+        });
+      },
+      /** Ringkasan cerita gangguan: laju per 100 KA (REAL_PERJALANAN tidak batal), Pareto, kalender, kaitan ke ketepatan datang. */
+      get GS() {
+        var bb = this.$store.bb; if (!bb.KW) return null; var self = this, Gf = this.Gf, x = this.gx;
+        return bb.memo('gs|' + JSON.stringify(x), function () {
+          var P = BBK.perjalanan(bb.F) || [], trips = {}, kaDay = {};
+          P.forEach(function (r) { if (r.batal) return; var m = String(r.tanggal).slice(0, 7); trips[m] = (trips[m] || 0) + 1;
+            String(r.no_ka).split('-').forEach(function (n) { (kaDay[n.trim().toUpperCase() + '|' + r.tanggal] = kaDay[n.trim().toUpperCase() + '|' + r.tanggal] || []).push(r); }); });
+          var Gm = self.G.filter(function (r) { return self.gPass(r, 'm'); }), mon = {};
+          Gm.forEach(function (r) { var m = String(r.date).slice(0, 7), o = mon[m] = mon[m] || { n: 0, min: 0 }; o.n++; o.min += r.menit || 0; });
+          var months = Object.keys(trips).sort().map(function (m) { var o = mon[m] || { n: 0, min: 0 }; return { m: m, n: o.n, min: o.min, ka: trips[m], rate: trips[m] ? 100 * o.n / trips[m] : null }; });
+          var nKa = BBK.sum(months.filter(function (o) { return !x.m || o.m === x.m; }), function (o) { return o.ka; });
+          // Pareto kelas (atau subgangguan bila kelas dipilih)
+          var lv = x.kelas ? 'sub' : 'kelas', by = {};
+          self.G.filter(function (r) { return self.gPass(r, lv); }).forEach(function (r) { var k = lv === 'kelas' ? (r.kelas || 'lain') : (r.sub || 'tidak tercatat'), o = by[k] = by[k] || { k: k, n: 0, m: 0 }; o.n++; o.m += r.menit || 0; });
+          var par = Object.keys(by).map(function (k) { return by[k]; }).sort(function (a, b) { return b.m - a.m || b.n - a.n; }), totM = BBK.sum(par, function (o) { return o.m; }), cum = 0;
+          par.forEach(function (o) { cum += o.m; o.cum = totM ? 100 * cum / totM : null; });
+          // ketepatan datang: perjalanan KA yang sama pada tanggal kejadian vs perjalanan lain pada periode
+          var hit = {}; Gf.forEach(function (r) { (kaDay[String(r.ka).toUpperCase() + '|' + r.date] || []).forEach(function (t) { hit[t.tanggal + '|' + t.no_ka + '|' + t.muatan] = t; }); });
+          var late = function (t) { return typeof t.lambat_tiba === 'number' ? t.lambat_tiba > BBK.otpTol(BBK.divOf(t.tujuan), 'tiba') : null; };
+          var a = { n: 0, l: 0, sum: 0 }, b = { n: 0, l: 0, sum: 0 };
+          P.forEach(function (t) { if (t.batal) return; if (x.m && String(t.tanggal).slice(0, 7) !== x.m) return; var v = late(t); if (v == null) return; var o = hit[t.tanggal + '|' + t.no_ka + '|' + t.muatan] ? a : b; o.n++; if (v) o.l++; o.sum += Math.max(0, t.lambat_tiba); });
+          return { n: Gf.length, m: BBK.sum(Gf, function (r) { return r.menit; }), nKa: nKa, rate: nKa ? 100 * Gf.length / nKa : null, months: months, lv: lv, par: par,
+            otp: { a: a.n ? { n: a.n, pct: 100 * a.l / a.n, avg: a.sum / a.n } : null, b: b.n ? { n: b.n, pct: 100 * b.l / b.n, avg: b.sum / b.n } : null },
+            unplaced: Gf.filter(function (r) { return !self.gPos[r.id]; }).length };
+        });
+      },
+      get gMonOpt() {
+        var S = this.GS, sel = this.gx.m; if (!S) return null; var M = S.months;
+        return { tooltip: { trigger: 'axis', formatter: function (ps) { var o = M[ps[0].dataIndex]; return '<b>' + MON[+o.m.slice(5) - 1] + ' ' + o.m.slice(0, 4) + '</b><br>' + o.n + ' gangguan · ' + KAI.fmt.n(o.min) + ' menit<br>' + KAI.fmt.n(o.ka) + ' perjalanan KA batubara<br>Laju ' + KAI.fmt.d1(o.rate) + ' per 100 KA'; } },
+          legend: { top: 0, left: 0 }, grid: { left: 36, right: 40, top: 34, bottom: 24 }, xAxis: { type: 'category', data: M.map(function (o) { return MON[+o.m.slice(5) - 1]; }) },
+          yAxis: [{ type: 'value', minInterval: 1 }, { type: 'value', splitLine: { show: false } }],
+          series: [{ name: 'Kejadian', type: 'bar', barWidth: '46%', itemStyle: { color: '#252271' }, data: M.map(function (o) { return { value: o.n, m: o.m, itemStyle: { color: sel && o.m !== sel ? 'rgba(37,34,113,.2)' : '#252271', borderRadius: [4, 4, 0, 0] } }; }) },
+            { name: 'Laju per 100 KA', type: 'line', yAxisIndex: 1, smooth: 0.3, symbolSize: 7, data: M.map(function (o) { return o.rate == null ? null : +o.rate.toFixed(2); }), lineStyle: { color: '#F06A25', width: 2.4 }, itemStyle: { color: '#F06A25' }, areaStyle: { color: 'rgba(240,106,37,.08)' } }] };
+      },
+      get gCalOpt() {
+        var self = this, S = this.GS; if (!S || !S.months.length) return null;
+        var D = {}; this.G.filter(function (r) { return self.gPass(r, 'day'); }).forEach(function (r) { var o = D[r.date] = D[r.date] || [0, 0]; o[0]++; o[1] += r.menit || 0; });
+        var M = S.months, y0 = M[0].m, y1 = M[M.length - 1].m, last = new Date(Date.UTC(+y1.slice(0, 4), +y1.slice(5), 0)).toISOString().slice(0, 10), mx = 1;
+        var data = Object.keys(D).map(function (d) { if (D[d][0] > mx) mx = D[d][0]; return [d, D[d][0], D[d][1]]; });
+        return { tooltip: { formatter: function (p) { return '<b>' + KAI.fmt.day(p.value[0]) + '</b><br>' + p.value[1] + ' gangguan · ' + KAI.fmt.n(p.value[2]) + ' menit'; } },
+          visualMap: { min: 0, max: mx, orient: 'horizontal', left: 'center', bottom: 0, itemHeight: 110, inRange: { color: ['#FDEBDF', '#F6A878', '#C0392B'] }, textStyle: { fontSize: 10 } },
+          calendar: { top: 24, left: 34, right: 12, bottom: 44, range: [y0 + '-01', last], cellSize: ['auto', 13], splitLine: { lineStyle: { color: '#CBD5E1' } }, itemStyle: { borderColor: '#fff', borderWidth: 2, color: '#F8FAFC' },
+            dayLabel: { firstDay: 1, nameMap: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'], fontSize: 9 }, monthLabel: { nameMap: MON, fontSize: 10 }, yearLabel: { show: false } },
+          series: [{ type: 'heatmap', coordinateSystem: 'calendar', data: data }] };
+      },
+      get gStripOpt() {
+        var self = this, bb = this.$store.bb, P = this.gPos; if (!bb.ready) return null;
+        var L = BBK.rows('M_LINTAS'), st = {}; BBK.rows('M_STASIUN').forEach(function (x) { if (+x.km > 0) st[x.kode] = x; });
+        var pts = this.G.filter(function (r) { return self.gPass(r, 'lin') && P[r.id]; }), sel = this.gx.lin, mxm = Math.max.apply(null, pts.map(function (r) { return r.menit || 0; }).concat([1]));
+        var stations = [], ev = [];
+        L.forEach(function (l, i) { String(l.stasiun).split(',').forEach(function (k) { var x = st[k.trim()]; if (x) stations.push({ value: [+x.km, i], name: x.kode, n: x.nama }); }); });
+        pts.forEach(function (r) { var p = P[r.id], i = L.map(function (l) { return l.id; }).indexOf(p.lin); ev.push({ value: [p.km, i], r: r, symbolSize: 7 + 20 * Math.sqrt((r.menit || 0) / mxm), itemStyle: { color: sel && p.lin !== sel ? 'rgba(148,163,184,.35)' : 'rgba(192,57,43,.72)', borderColor: '#fff', borderWidth: 1 } }); });
+        return { tooltip: { formatter: function (p) { if (p.data.r) { var r = p.data.r; return '<b>KA ' + r.ka + '</b> · ' + KAI.fmt.day(r.date) + '<br>' + BBK.esc(r.judul || '') + '<br>' + (P[r.id] ? P[r.id].at : '') + ' · km ' + KAI.fmt.d1(P[r.id].km) + ' · ' + KAI.fmt.n(r.menit) + ' menit'; } return '<b>' + p.data.n + '</b> (' + p.data.name + ') · km ' + KAI.fmt.d1(p.value[0]); } },
+          grid: { left: 8, right: 18, top: 10, bottom: 40, containLabel: true }, dataZoom: [{ type: 'inside', xAxisIndex: 0, zoomOnMouseWheel: 'ctrl', moveOnMouseWheel: false }, { type: 'slider', xAxisIndex: 0, height: 14, bottom: 6, showDetail: false }],
+          xAxis: { type: 'value', name: 'km', scale: true, splitLine: { lineStyle: { type: 'dashed', color: '#E2E8F0' } } },
+          yAxis: { type: 'category', data: L.map(function (l) { return l.nama; }), axisLabel: { width: 210, overflow: 'truncate', fontSize: 11 }, splitArea: { show: true, areaStyle: { color: ['#FAFBFD', '#F3F5F9'] } } },
+          series: [{ type: 'scatter', symbol: 'rect', symbolSize: [2, 14], data: stations, itemStyle: { color: '#94A3B8' }, label: { show: true, position: 'top', formatter: '{b}', fontSize: 8.5, color: '#64748B' }, labelLayout: { hideOverlap: true }, z: 1, silent: false },
+            { type: 'scatter', data: ev, z: 3, emphasis: { scale: 1.3 } }] };
+      },
+      get gParOpt() {
+        var S = this.GS; if (!S) return null; var D = S.par.slice(0, 12), lv = S.lv, sel = lv === 'kelas' ? this.gx.kelas : this.gx.sub;
+        var lab = function (k) { return lv === 'kelas' ? KAI.classLabel(k) : k; };
+        return { tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: function (ps) { var o = D[ps[0].dataIndex]; return '<b>' + lab(o.k) + '</b><br>' + o.n + ' kejadian · ' + KAI.fmt.n(o.m) + ' menit<br>kumulatif ' + KAI.fmt.d1(o.cum) + '% menit'; } },
+          grid: { left: 8, right: 40, top: 26, bottom: 8, containLabel: true }, xAxis: { type: 'category', data: D.map(function (o) { return lab(o.k); }), axisLabel: { interval: 0, rotate: D.length > 5 ? 28 : 0, fontSize: 10.5, width: 120, overflow: 'truncate' } },
+          yAxis: [{ type: 'value', name: 'menit' }, { type: 'value', max: 100, axisLabel: { formatter: '{value}%' }, splitLine: { show: false } }],
+          series: [{ type: 'bar', barWidth: '52%', data: D.map(function (o, i) { return { value: o.m, k: o.k, itemStyle: { color: sel && sel !== o.k ? 'rgba(37,34,113,.2)' : i < 3 ? '#C0392B' : '#252271', borderRadius: [4, 4, 0, 0] } }; }) },
+            { type: 'line', yAxisIndex: 1, data: D.map(function (o) { return +o.cum.toFixed(1); }), symbolSize: 6, lineStyle: { color: '#F06A25' }, itemStyle: { color: '#F06A25' },
+              markLine: { silent: true, symbol: 'none', data: [{ yAxis: 80 }], lineStyle: { type: 'dashed', color: '#94A3B8' }, label: { formatter: '80%', position: 'insideStartTop', color: '#64748B' } } }] };
       },
       get awakFlag() { return this.awak.filter(function (r) { return r.siap != null && r.siap < 60; }).length; },
+      upt: '',
+      /**
+       * Awak KA batubara: beban per UPT crew + perkiraan jam dinas bila KA terlambat.
+       * Program = Buku Dinasan O.20 (DINASAN_AWAK). Keterlambatan = REAL_PERJALANAN lambat datang KA yang sama, arah sama,
+       * HANYA bila ujung lintas dinas = stasiun tujuan KA (bila awak berganti di tengah, keterlambatan di titik ganti tidak tercatat).
+       * Perkiraan jam dinas = jam dinas program + keterlambatan datang (bagian positif), P50 & P85 — label "perkiraan".
+       * Dinas malam = menit dinas di antara 22.00–06.00 (definisi tampilan). Batas maksimal jam dinas belum ada di DB.
+       */
+      get AW() {
+        var bb = this.$store.bb; if (!bb.KW) return null; var self = this;
+        return bb.memo('awakX', function () {
+          var P = BBK.perjalanan(bb.F) || [], idx = {};
+          P.forEach(function (r) { if (r.batal || typeof r.lambat_tiba !== 'number') return; String(r.no_ka).split('-').forEach(function (n) { var k = n.trim() + '|' + r.tujuan; (idx[k] = idx[k] || []).push(r); }); });
+          var night = function (a, b) { var m = 0; for (var t = a; t < b; t++) { var h = Math.floor((((t % 1440) + 1440) % 1440) / 60); if (h >= 22 || h < 6) m++; } return m; };
+          var L = self.awak.map(function (r) {
+            var a = BBK.mins(r.mulai), b = BBK.mins(r.habis); var dur = r.jd != null ? r.jd : (a != null && b != null ? (b - a + 1440) % 1440 : null);
+            var end = String(r.lin || '').split('-').pop(), relEnd = String(r.rel || '').split('-').pop(), same = end === relEnd;
+            var R = []; if (same) { var seen = {}; String(r.no).split('-').forEach(function (n) { (idx[n.trim() + '|' + relEnd] || []).forEach(function (x) { if (!seen[x.tanggal + x.no_ka]) { seen[x.tanggal + x.no_ka] = 1; R.push(x); } }); }); }
+            var lam = R.map(function (x) { return x.lambat_tiba; });
+            var tol = BBK.otpTol(BBK.divOf(relEnd), 'tiba'), pos = lam.map(function (v) { return Math.max(0, v); });
+            var p50 = pos.length ? BBK.q(pos, 0.5) : null, p85 = pos.length ? BBK.q(pos, 0.85) : null;
+            return Object.assign({}, r, { a: a, dur: dur, nite: a != null && dur != null ? night(a, a + dur) : null, nTrip: R.length, same: same,
+              lateShare: lam.length ? lam.filter(function (v) { return v > tol; }).length / lam.length : null, tol: tol, add50: p50, add85: p85,
+              est50: dur != null && p50 != null ? dur + p50 : null, est85: dur != null && p85 != null ? dur + p85 : null });
+          });
+          var U = {}; L.forEach(function (r) { var o = U[r.upt] = U[r.upt] || { upt: r.upt, n: 0, min: 0, nite: 0, siap: 0, est: [], add: [], hr: new Array(24).fill(0) };
+            o.n++; o.min += r.dur || 0; o.nite += r.nite || 0; if (r.siap != null && r.siap < 60) o.siap++; if (r.add85 != null) { o.add.push(r.add85); o.est.push(r.est85); }
+            if (r.a != null && r.dur) for (var h = Math.floor(r.a / 60); h <= Math.floor((r.a + r.dur - 1) / 60); h++) o.hr[((h % 24) + 24) % 24]++; });
+          var ups = Object.keys(U).map(function (k) { var o = U[k]; o.add85 = o.add.length ? BBK.q(o.add, 0.5) : null; o.nitePct = o.min ? o.nite / o.min : null; return o; }).sort(function (a, b) { return b.min - a.min; });
+          var tot = BBK.sum(L, function (r) { return r.dur || 0; }), nite = BBK.sum(L, function (r) { return r.nite || 0; });
+          var risk = L.filter(function (r) { return r.add85 != null; }).sort(function (a, b) { return b.add85 - a.add85 || b.est85 - a.est85; });
+          return { L: L, U: ups, n: L.length, nUpt: ups.length, med: BBK.q(L.map(function (r) { return r.dur; }).filter(function (x) { return x != null; }), 0.5), nitePct: tot ? nite / tot : null,
+            siap: L.filter(function (r) { return r.siap != null && r.siap < 60; }).length, nLinked: risk.length, nSplit: L.filter(function (r) { return !r.same; }).length, risk: risk, top: risk[0] || null };
+        });
+      },
+      get awRows() { var A = this.AW, u = this.upt; if (!A) return []; return (u ? A.L.filter(function (r) { return r.upt === u; }) : A.L).slice().sort(function (a, b) { return (a.add85 == null) - (b.add85 == null) || (b.add85 || 0) - (a.add85 || 0) || (b.dur || 0) - (a.dur || 0); }); },
+      get awUptOpt() {
+        var A = this.AW, sel = this.upt; if (!A) return null; var U = A.U.slice().reverse();
+        var c = function (o, col) { return sel && o.upt !== sel ? 'rgba(148,163,184,.35)' : col; };
+        return { tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: function (ps) { var o = U[ps[0].dataIndex];
+            return '<b>' + o.upt + '</b><br>' + o.n + ' dinasan · ' + BBK.fmt.dur(o.min) + ' per hari program<br>Dinas malam (22.00–06.00) ' + BBK.fmt.pct0(o.nitePct) + '<br>Hadir &lt; 60 menit sebelum berangkat: ' + o.siap + (o.add85 != null ? '<br>Tambahan jam dinas P85 (median dinasan): ' + BBK.fmt.dur(o.add85) + ' <i>perkiraan</i>' : ''); } },
+          legend: { top: 0 }, grid: { left: 8, right: 20, top: 30, bottom: 36, containLabel: true }, xAxis: { type: 'value', name: 'jam dinas per hari', nameLocation: 'middle', nameGap: 24, axisLabel: { formatter: function (v) { return Math.round(v / 60); } } }, yAxis: { type: 'category', data: U.map(function (o) { return o.upt; }) },
+          series: [{ name: 'Siang (06.00–22.00)', type: 'bar', stack: 'd', barWidth: 16, itemStyle: { color: '#F6A878' }, data: U.map(function (o) { return { value: o.min - o.nite, itemStyle: { color: c(o, '#F6A878') } }; }) },
+            { name: 'Malam (22.00–06.00)', type: 'bar', stack: 'd', itemStyle: { color: '#252271' }, data: U.map(function (o) { return { value: o.nite, itemStyle: { color: c(o, '#252271'), borderRadius: [0, 4, 4, 0] } }; }) }] };
+      },
+      get awHourOpt() {
+        var A = this.AW; if (!A) return null; var U = A.U, data = [], mx = 1;
+        U.forEach(function (o, i) { o.hr.forEach(function (v, h) { data.push([h, i, v]); if (v > mx) mx = v; }); });
+        return { tooltip: { formatter: function (p) { return '<b>' + U[p.value[1]].upt + '</b> · jam ' + (p.value[0] < 10 ? '0' : '') + p.value[0] + '.00<br>' + p.value[2] + ' dinasan sedang bertugas (program)'; } },
+          grid: { left: 8, right: 16, top: 8, bottom: 44, containLabel: true }, xAxis: { type: 'category', data: Array.from({ length: 24 }, function (_, h) { return (h < 10 ? '0' : '') + h; }), splitArea: { show: true } }, yAxis: { type: 'category', data: U.map(function (o) { return o.upt; }) },
+          visualMap: { min: 0, max: mx, calculable: false, orient: 'horizontal', left: 'center', bottom: 0, itemHeight: 120, inRange: { color: ['#F3F3FA', '#A5A8D6', '#252271'] }, textStyle: { fontSize: 10 } },
+          series: [{ type: 'heatmap', data: data, itemStyle: { borderColor: '#fff', borderWidth: 1 }, emphasis: { itemStyle: { borderColor: '#F06A25', borderWidth: 2 } } }] };
+      },
+      get awRiskOpt() {
+        // warna bergradasi menurut porsi datang melewati toleransi (0% biru tua → 100% merah), tanpa ambang buatan
+        var mix = function (t) { var a = [37, 34, 113], b = [192, 57, 43]; return 'rgb(' + a.map(function (x, i) { return Math.round(x + (b[i] - x) * Math.max(0, Math.min(1, t))); }).join(',') + ')'; };
+        var A = this.AW, sel = this.upt; if (!A) return null; var R = A.risk, mx = Math.max.apply(null, R.map(function (r) { return Math.max(r.est85, r.dur); }).concat([60]));
+        return { tooltip: { formatter: function (p) { var r = p.data.r; if (!r) return ''; return '<b>KA ' + r.no + ' ' + r.nama + '</b> · ' + r.upt + ' kode ' + r.kode + '<br>' + r.lin + ' · mulai ' + r.mulai + ' habis ' + r.habis +
+            '<br>Jam dinas program ' + BBK.fmt.dur(r.dur) + '<br>Perkiraan bila terlambat: P50 ' + BBK.fmt.dur(r.est50) + ' · P85 ' + BBK.fmt.dur(r.est85) + '<br>' + r.nTrip + ' perjalanan · ' + BBK.fmt.pct0(r.lateShare) + ' datang melewati toleransi ' + r.tol + ' menit'; } },
+          grid: { left: 52, right: 24, top: 34, bottom: 44 }, dataZoom: [{ type: 'inside', xAxisIndex: 0, zoomOnMouseWheel: 'ctrl', moveOnMouseWheel: false }, { type: 'inside', yAxisIndex: 0, zoomOnMouseWheel: 'ctrl', moveOnMouseWheel: false }], xAxis: { type: 'value', name: 'jam dinas program (jam)', nameLocation: 'middle', nameGap: 26, scale: true, axisLabel: { formatter: function (v) { return Math.round(v / 60); } } },
+          yAxis: { type: 'value', name: 'perkiraan P85 (jam)', nameTextStyle: { align: 'left' }, scale: true, axisLabel: { formatter: function (v) { return Math.round(v / 60); } } },
+          series: [{ type: 'scatter', data: R.map(function (r) { return { value: [r.dur, r.est85], r: r, symbolSize: Math.max(7, Math.min(22, 5 + Math.sqrt(r.nTrip) * 1.6)), itemStyle: { color: sel && r.upt !== sel ? 'rgba(148,163,184,.3)' : mix(r.lateShare || 0), opacity: 0.85 } }; }),
+            markLine: { silent: true, symbol: 'none', lineStyle: { type: 'dashed', color: '#94A3B8' }, label: { formatter: 'sama dengan program', color: '#64748B' }, data: [[{ coord: [0, 0] }, { coord: [mx, mx] }]] } }] };
+      },
+      clickUpt: function (n) { if (n) this.upt = this.upt === n ? '' : n; },
       insFor: function (tags) { return this.$store.bb.INS.filter(function (i) { return i.tag.some(function (t) { return tags.indexOf(t) >= 0; }); }); },
       bar: function (v) { return v == null ? 0 : Math.max(2, Math.min(100, v)); }
     };
@@ -262,7 +455,7 @@ document.addEventListener('alpine:init', function () {
           return { t: bb.relName(id), s: 'Relasi muat → bongkar · ' + (o ? KAI.fmt.n(o.nKa) + ' siklus tercatat' : 'siklus tidak tercatat'),
             facts: [['Program (GAPEKA)', o && o.prgTotal != null ? BBK.fmt.dur(o.prgTotal) + ' per siklus' : '–'], ['Realisasi', o ? BBK.fmt.dur(o.real) : '–'], ['Lewat batas SOP', o ? BBK.fmt.dur(o.lewat) + ' per siklus' : '–'], ['Status SOP kontrak', g ? (g.sopStatus || 'tunggal') : '–']],
             kpi: [['WPG realisasi', g && g.real != null ? KAI.fmt.d1(g.real) + ' hari' : '–', g && g.prog != null ? 'program ' + KAI.fmt.d1(g.prog) + ' hari' : ''], ['OTP berangkat', ot ? KAI.fmt.d1(ot.brk.pct) + '%' : '–', ot ? KAI.fmt.n(ot.brk.n) + ' KA' : ''],
-              ['OTP datang', ot ? KAI.fmt.d1(ot.tiba.pct) + '%' : '–', ot ? 'lambat rata-rata ' + KAI.fmt.n(ot.tiba.lambat) + ' menit' : ''], ['Kebutuhan rangkaian', g && g.tsReal != null ? KAI.fmt.n(g.tsReal) + ' TS' : '–', g && g.so != null ? 'Duksar SO ' + KAI.fmt.n(g.so) : '']] };
+              ['OTP datang', ot ? KAI.fmt.d1(ot.tiba.pct) + '%' : '–', ot ? KAI.fmt.n(ot.tiba.nLate) + ' KA terlambat' + (ot.tiba.lateMean != null ? ', rata-rata ' + KAI.fmt.n(Math.round(ot.tiba.lateMean)) + ' menit' : '') : ''], ['Kebutuhan rangkaian', g && g.tsReal != null ? KAI.fmt.n(g.tsReal) + ' TS' : '–', g && g.so != null ? 'Duksar SO ' + KAI.fmt.n(g.so) : '']] };
         }
         var R = BBK.rows('PRG_SIKLUS').filter(function (r) { return r.rangkaian === id && r.versi === bb.versi; }).sort(function (a, b) { return +a.urut - +b.urut; });
         return { t: 'Rangkaian ' + id, s: bb.versi + ' · ' + R.length + ' kaki perjalanan dalam satu putaran', facts: [['Terminal', BBK.uniq(R.map(function (r) { return r.terminal; })).join(', ')], ['Nomor KA', R.map(function (r) { return r.ka_jalan; }).join(' → ')], ['WTT program', R.map(function (r) { return r.terminal + ' ' + r.wtt + ' menit'; }).join(' · ')]],

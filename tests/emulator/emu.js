@@ -167,7 +167,7 @@ if (require.main === module) {
   out.apiRhiSarana = vm.runInContext('apiRhiSarana()', ctx);
   // apiBatubaraPart: data SINTETIS (tools/batubara/fixture_sintetis.py) — server asli membaca DB Batubara lewat BB_DB_ID.
   try {
-    const fx = JSON.parse(fs.readFileSync(path.join(__dirname, 'bb_fixture.json'), 'utf8'));
+    const fx = JSON.parse(fs.readFileSync(process.env.BB_FIXTURE || path.join(__dirname, 'bb_fixture.json'), 'utf8')); // BB_FIXTURE: uji lokal data asli (di luar repo)
     out.apiBatubaraPart = { __byArg: true };
     Object.keys(fx).forEach(k => { out.apiBatubaraPart[k] = { ok: true, version: 'sintetis', built: '2026-11-24 00:00', sourceUpdated: '2026-11-24 00:00', db: 'DATA SINTETIS (emulator)', counts: {}, gz: zlib.gzipSync(Buffer.from(JSON.stringify(fx[k]))).toString('base64') }; });
   } catch (eb) { console.log('fixture Batubara tidak ada: ' + eb.message); }

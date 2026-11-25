@@ -50,6 +50,18 @@ let fails = 0; const ok = (x, m) => { if (!x) { fails++; console.log('GAGAL:', m
   const c1 = Object.keys(B.term).sort((a, b) => B.term[b].max - B.term[a].max)[0], cap1 = {}; cap1[c1] = Math.max(1, B.term[c1].max - 2);
   const Q1 = Sim.run(P, [], { antrean: cap1 });
   ok(!Q1.error && Q1.nQ >= 1 && Q1.trains.some(x => x.cause === 'antrean'), v + ': kapasitas ' + c1 + ' = ' + cap1[c1] + ' → ' + (Q1.nQ || 0) + ' antrean, puncak ' + (Q1.term && Q1.term[c1].max));
+  // perputaran rangkaian dengan batas SOP per KA (buatan, tanpa data asli): dasar tetap = GAPEKA; KA datang terlambat →
+  // pasangan berikutnya "putus"; mode tukar rangkaian tidak lebih buruk dan menandai pasangan yang ditukar
+  const sopF = (cc, kd, kb, prog) => ({ w: Math.max(30, prog - 20), src: 'tunggal', lo: Math.max(30, prog - 20), hi: prog });
+  const Bs = Sim.run(P, [], { sop: sopF });
+  ok(!Bs.error && Bs.trains.every(x => x.max < 1) && Bs.turn.length === Bs.nSik && Bs.turn.every(x => x.st === 'ok'), v + ': batas SOP per KA: dasar tetap = GAPEKA, ' + Bs.turn.length + ' perputaran tersambung');
+  const tr = Bs.turn.find(x => P.trains[P.byNo[x.kd]] && P.trains[P.byNo[x.kd]].pts.length > 1 && x.ta < 1440);
+  const eT = [{ jenis: 'tahan', no: tr.kd, st: P.trains[P.byNo[tr.kd]].pts[0].c, m: 240 }];
+  const S1 = Sim.run(P, eT, { sop: sopF }), S2 = Sim.run(P, eT, { sop: sopF, tukar: true });
+  const put = S1.turn.filter(x => x.st === 'putus');
+  ok(!S1.error && put.some(x => x.kd === tr.kd), v + ': KA ' + tr.kd + ' ditahan 240 menit → perputaran ' + tr.c + ' ' + tr.kd + '→' + tr.kb + ' tidak tersambung (' + put.length + ' putus)');
+  const c1m = Sim.compare(P, Bs, S1, eT).menit, c2m = S2.error ? null : Sim.compare(P, Bs, S2, eT).menit;
+  ok(!S2.error && c2m <= c1m, v + ': tukar rangkaian: menit tambahan ' + c2m + ' ≤ rangkaian tetap ' + c1m + ' (' + S2.turn.filter(x => x.sw).length + ' pasangan ditukar)');
 });
 console.log(fails ? 'GAGAL ' + fails : 'LULUS');
 process.exit(fails ? 1 : 0);

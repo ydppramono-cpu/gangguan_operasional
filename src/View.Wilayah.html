@@ -18,7 +18,7 @@
           <p>Lokasi = petak jalan bila tercatat, selain itu stasiun · klik nama wilayah untuk profil lengkap, klik lokasi untuk profil lokasi</p></div></div>
         <div class="card-b tbl-wrap" style="max-height:none">
           <table class="tbl" data-pg="20">
-            <thead><tr><th>Wilayah</th><th>Lokasi paling sering</th><th>Lokasi kelambatan terbesar</th><th class="num">Total wilayah</th></tr></thead>
+            <thead><tr><th>Wilayah</th><th>Lokasi paling sering</th><th>Lokasi kelambatan terbesar</th><th class="num">Total wilayah</th><th title="Kejadian per bulan, 12 bulan terakhir data (semua periode, tanpa saringan)">Tren 12 bulan</th></tr></thead>
             <tbody>
               <template x-for="r in R.regions" :key="r.wilayah">
                 <tr>
@@ -26,6 +26,7 @@
                   <td class="wrap"><button class="link-btn plain" x-show="r.freq" @click="openLoc(r.freq)" x-text="r.freq && r.freq.lokasi"></button><span class="sub-n" x-show="r.freq" x-text="r.freq && r.freq.n + '×'"></span><span class="nil" x-show="!r.freq" x-text="r.n ? 'Lokasi tidak tercatat' : 'Tidak ada kejadian'"></span></td>
                   <td class="wrap"><button class="link-btn plain" x-show="r.worst" @click="openLoc(r.worst)" x-text="r.worst && r.worst.lokasi"></button><span class="sub-n" x-show="r.worst" x-text="r.worst && KAI.fmt.n(r.worst.menit) + ' menit'"></span><span class="nil" x-show="!r.worst" x-text="r.n ? 'Lokasi tidak tercatat' : 'Tidak ada kejadian'"></span></td>
                   <td class="num bar-cell"><div class="b" :style="'width:' + (maxMenit ? r.menit / maxMenit * 100 : 0) + '%'"></div><span x-text="KAI.fmt.n(r.menit) + ' menit · ' + r.n + ' kejadian'"></span></td>
+                  <td x-spark="KAI.spark12('wilayah', r.wilayah, 'n')"></td>
                 </tr>
               </template>
             </tbody>

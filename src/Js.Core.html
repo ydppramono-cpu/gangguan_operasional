@@ -160,6 +160,22 @@ window.KAI = window.KAI || {};
   K.v = function (x) { return x == null || x === '' || x === '–' || (Array.isArray(x) && !x.length) ? K.NIL : x; };
   K.DRV_LABEL = { ka: 'Nomor KA', jam: 'Jam mulai', lokasi: 'Lokasi', sarana: 'Nomor sarana', km: 'KM', penyebab: 'Penyebab', depo: 'Depo', wilayah: 'Wilayah', kelas: 'Kelas' };
   K.DRV_TIP = 'Diturunkan otomatis dari judul/uraian laporan karena kolom sumbernya kosong';
+  /**
+   * Deret 12 bulan terakhir data (Gangguan_Induk) untuk garis mini di tabel: field = kolom baris (mis. 'wilayah'), v = nilainya,
+   * metric = 'n' (kejadian) | 'menit'. Bulan tanpa kejadian = 0. Memo per isi data.
+   */
+  var spMemo = { n: -1, m: {} };
+  K.spark12 = function (field, v, metric) {
+    var all = (K.data && K.data.all) || []; if (spMemo.n !== all.length) spMemo = { n: all.length, m: {}, yms: null };
+    if (!spMemo.yms) { var last = all.reduce(function (a, r) { return r.ym > a ? r.ym : a; }, ''); var y = +last.slice(0, 4), m = +last.slice(5, 7), L = [];
+      for (var i = 11; i >= 0; i--) { var mm = m - i, yy = y; while (mm < 1) { mm += 12; yy--; } L.push(yy + '-' + (mm < 10 ? '0' : '') + mm); } spMemo.yms = last ? L : []; }
+    var k = field + '|' + v + '|' + metric; if (spMemo.m[k]) return spMemo.m[k];
+    var ix = {}; spMemo.yms.forEach(function (ym, i) { ix[ym] = i; }); var out = spMemo.yms.map(function () { return 0; });
+    all.forEach(function (r) { if (r[field] !== v) return; var i = ix[r.ym]; if (i == null) return; out[i] += metric === 'menit' ? (r.menit || 0) : 1; });
+    return (spMemo.m[k] = out);
+  };
+  /** Teks aman untuk HTML (tooltip grafik, dsb.). */
+  K.esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   K.cap = function (s) { s = String(s == null ? '' : s); return s.charAt(0).toUpperCase() + s.slice(1); };
   K.tc = function (s) {
     if (s == null) return s; s = String(s); if (!s.trim()) return s;

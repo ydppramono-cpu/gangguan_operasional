@@ -19,6 +19,12 @@
           <button :aria-pressed="!prio" @click="prio = false" title="Urutan KA di setiap petak mengikuti GAPEKA; KA belakang selalu menunggu">Urutan tetap</button>
           <button :aria-pressed="prio" @click="prio = true" title="KA penumpang > batubara isi > lainnya: mesin boleh menukar urutan bila KA prioritas tertahan > 3 menit">Prioritas</button></div></div>
         <label class="fld sk-chk" title="KA yang tiba saat semua jalur terminal terisi menunggu di sinyal masuk (kapasitas = jumlah jalur M_STASIUN, atau puncak GAPEKA bila lebih besar)"><span>Terminal</span><span><input type="checkbox" x-model="antre"> antrean jalur</span></label>
+        <div class="fld"><span>Batas di terminal (SOP ganda)</span><div class="seg" :title="sopReady ? 'SOP kontrak PROGRAM_KA per KA; KA ber-SOP ganda punya dua durasi' : 'SOP kontrak belum tersedia (DB Batubara belum disinkron): batas = WTT program'">
+          <button :aria-pressed="sopMode === 'min'" @click="sopMode = 'min'" :disabled="!sopReady">Terpendek</button>
+          <button :aria-pressed="sopMode === 'maks'" @click="sopMode = 'maks'" :disabled="!sopReady">Terpanjang</button></div></div>
+        <div class="fld"><span>Rangkaian bila terlambat</span><div class="seg">
+          <button :aria-pressed="!tukar" @click="tukar = false" title="Rangkaian mengikuti PRG_SIKLUS: KA berikutnya ikut terlambat">Tetap</button>
+          <button :aria-pressed="tukar" @click="tukar = true" title="Rangkaian lain (kelompok & relasi sama) yang siap paling awal di terminal yang sama mengisi slot">Tukar</button></div></div>
         <label class="fld sk-q"><span>Saring KA</span><input class="ctl sm" type="search" x-model.debounce.200ms="q" placeholder="Nomor atau nama KA, mis. Rajabasa" aria-label="Saring garis perjalanan menurut nomor atau nama KA"></label>
         <span class="spacer"></span>
         <button class="btn sm" :class="realOn && 'primary'" @click="toggleReal()" title="Tampilkan jejak realisasi Rolink satu tanggal dan uji ketepatan model">Realisasi</button>
@@ -74,6 +80,7 @@
           <span><i style="background:#F06A25"></i>Penumpang</span><span><i style="background:#1E1B5E"></i>Batubara isi</span><span><i class="dash" style="border-color:#7C89A8"></i>Kosong</span>
           <span><i style="background:#C0392B"></i>Terdampak</span><span><i style="background:#CBD2DC"></i>Rencana GAPEKA</span>
           <span><b class="dot" style="background:#2563EB"></b>Headway</span><span><b class="dot" style="background:#9333EA"></b>Silang</span><span><b class="dot" style="background:#0E9F6E"></b>Siklus</span><span><b class="dot" style="background:#B45309"></b>Awak</span><span><b class="dot" style="background:#0891B2"></b>Antrean terminal</span>
+          <span><i class="tline" style="background:#1F8A2E"></i>Perputaran tersambung</span><span><i class="tline" style="background:#E0861A"></i>Jadwal &lt; SOP</span><span><i class="tline" style="background:#C0392B"></i>Tidak tersambung</span>
           <span x-show="realOn"><i class="dash" style="border-color:#0E9F6E"></i>Realisasi Rolink</span><span><i class="bar1"></i>Petak jalur tunggal</span><span><b class="sq"></b>Stasiun melebihi jalur</span>
         </div>
         <div class="sk-wrap" x-ref="wrap" @pointerleave="tip = ''">
@@ -81,6 +88,18 @@
           <div class="sk-tip" x-show="tip" :style="'left:' + tipX + 'px;top:' + tipY + 'px'" x-text="tip"></div>
         </div>
         <p class="note" x-show="Y && Y.miss" x-text="(Y ? Y.miss : 0) + ' petak koridor tanpa jarak di PRASARANA_PETAK — digambar 5 km (perkiraan), tanpa headway.'"></p>
+        <div class="card mt-s sk-turn"><div class="card-h"><div><h3>Pola perputaran rangkaian di terminal</h3>
+            <p class="full" x-text="turnSum ? turnSum.all + ' perputaran (PRG_SIKLUS ' + KAI.gapeka.label(ver) + '): ' + turnSum.ok + ' tersambung · ' + turnSum.prog + ' jadwal lebih pendek dari SOP · ' + turnSum.putus + ' tidak tersambung' + (tukar ? ' · ' + turnSum.sw + ' ditukar' : '') + (sopReady ? ' · ' + turnSum.tanpa + ' tanpa SOP kontrak (pakai WTT program)' : ' · SOP kontrak belum tersedia: batas = WTT program') : ''"></p></div>
+            <span class="spacer"></span><label class="sk-chk2"><input type="checkbox" x-model="turnAll"> tampilkan semua</label></div>
+          <div class="card-b">
+            <p class="note" x-show="!turns.length">Saring KA (mis. 3104 atau Barapati) atau klik garis KA untuk melihat kapan rangkaiannya datang, lama di terminal, dan berangkat lagi — garis penghubung tergambar di baris terminal.</p>
+            <div class="tbl-wrap" x-show="turns.length" style="max-height:340px"><table class="tbl sm"><thead><tr><th>Terminal</th><th>KA datang</th><th class="num">Datang (rencana → simulasi)</th><th class="num">Lama di terminal</th><th>Batas</th><th>KA berangkat lagi</th><th class="num">Berangkat (rencana → simulasi)</th><th>Status</th></tr></thead>
+              <tbody><template x-for="(x, i) in turns.slice(0, 120)" :key="i"><tr :class="x.st === 'putus' && 'late'">
+                <td><b x-text="x.c"></b></td><td><b x-text="x.kd"></b></td><td class="num nowrap" x-text="hm(x.pa) + ' → ' + hm(x.ta)"></td><td class="num" x-text="dur(x.dwell)"></td>
+                <td x-text="sopTxt(x)"></td><td><b x-text="x.kb"></b> <span class="tag warn" x-show="x.sw">tukar</span></td><td class="num nowrap" x-text="hm(x.pb0) + ' → ' + hm(x.tb)"></td>
+                <td><span class="tag" :class="x.st === 'ok' ? 'good' : x.st === 'prog' ? 'warn' : 'bad'" x-text="stTxt(x.st)" :title="'Rangkaian siap ' + hm(x.ready) + ' (datang + batas)'"></span></td></tr></template></tbody></table></div>
+            <p class="note mt-s">Tersambung = rangkaian siap (datang + batas) sebelum jadwal berangkat KA berikutnya. Jadwal &lt; SOP = jadwal program memberi waktu lebih pendek dari SOP; KA berikutnya tidak ditahan karena itu. Tidak tersambung = KA berikutnya berangkat terlambat karena rangkaiannya belum siap. Batas = SOP kontrak PROGRAM_KA (pra + inti + pasca) KA isi pasangan itu.</p>
+          </div></div>
       </div>
 
       <div class="sk-side">
@@ -122,7 +141,7 @@
         <li><b>Model:</b> jaringan kejadian–kegiatan (propagasi kelambatan max-plus). Setiap datang/berangkat KA adalah kejadian; batas antar kejadian: waktu tempuh, berhenti, headway, persilangan jalur tunggal, siklus rangkaian, dan dinasan awak. Skenario tanpa perubahan = GAPEKA persis.</li>
         <li><b>Waktu tempuh minimum</b> = waktu tempuh petak (wp_menit) atau rencana bila lebih kecil; cadangan waktu di jadwal dipakai untuk mengejar keterlambatan. KA tidak berangkat lebih awal dari jadwal.</li>
         <li><b>Headway & persilangan</b> dari PRASARANA_PETAK (Data_Prasarana_GAPEKA_2026): jalur ganda = headway_dipakai; jalur tunggal = waktu bebas blok (headway − wp, min 1 menit) dari kedatangan KA sebelumnya.</li>
-        <li><b>Siklus rangkaian</b> dari PRG_SIKLUS & PRG_TERMINAL; WTT minimum = WTT program terpendek di terminal yang sama. <b>Awak</b>: Buku Dinasan O.20 GAPEKA 2025 (GAPEKA 2026 belum ada dinasan → tidak dihitung).</li>
+        <li><b>Siklus rangkaian</b> dari PRG_SIKLUS: batas waktu di terminal = SOP kontrak PROGRAM_KA (pra + inti + pasca) per KA isi pasangan itu — muat memakai KA isi yang berangkat, bongkar memakai KA isi yang datang; SOP ganda memakai durasi terpendek atau terpanjang (pilihan); KA tanpa SOP memakai WTT program. Bila DB Batubara belum disinkron, batas = WTT program terpendek di terminal. Pasangan yang tidak diubah dibatasi selisih rencananya (skenario kosong = GAPEKA). <b>Tukar rangkaian</b>: bila rangkaian program belum siap, rangkaian bebas dengan kelompok & relasi KA datang yang sama yang siap paling awal di terminal itu mengisi slot. <b>Awak</b>: Buku Dinasan O.20 GAPEKA 2025 (GAPEKA 2026 belum ada dinasan → tidak dihitung).</li>
         <li><b>Jalur stasiun</b> (M_STASIUN): stasiun lintas hanya diperiksa. <b>Terminal</b> (peran terminal di M_STASIUN) dengan antrean aktif: KA yang tiba saat semua jalur terisi menunggu rangkaian yang paling cepat keluar; okupansi = KA berhenti + rangkaian dalam siklus. Kapasitas = jumlah jalur, atau puncak GAPEKA bila lebih besar (data jalur belum mencerminkan pola GAPEKA). Stasiun dengan jumlah jalur kosong/0 tidak diperiksa.</li>
         <li><b>KLB</b>: salinan rute & waktu tempuh rencana KA pola, sekali jalan (hari-0). <b>Cari slot kosong</b> mencari geser tanpa benturan petak (headway/persilangan) terhadap hasil skenario saat ini.</li>
         <li>Simulasi 2 hari (hari ini + salinan esok) agar rambatan lewat siklus terlihat. Alat perencanaan "bagaimana jika", bukan pengatur perjalanan waktu-nyata.</li>

@@ -17,11 +17,14 @@ document.addEventListener('alpine:init', function () {
       kor: 'TMB-KPT', h0: 0, h1: 24, prio: false, edits: [], sel: -1, hover: null, drag: null, preview: null,
       form: { no: '', jenis: 'tahan', st: '', m: 30 }, tipX: 0, tipY: 0, tip: '',
       realOn: false, realDate: '', bt: null, P0: null, cap: null, antre: true, q: '', slots: null, A: null, Ares: null,
+      sopMode: 'min', tukar: false, turnAll: false, sopReady: false, _sopC: null,
       init: function () {
         var self = this, p = self.$store.app.params || {};
         if (p.kor && /^[A-Z]{2,6}-[A-Z]{2,6}$/.test(p.kor)) self.kor = p.kor;
         if (p.urut === 'p') self.prio = true;
         if (p.aq === '0') self.antre = false;
+        if (p.sop === 'maks') self.sopMode = 'maks';
+        if (p.tk === '1') self.tukar = true;
         if (p.q) self.q = String(p.q).slice(0, 40);
         if (p.skA) self.A = KAISim.decode(p.skA);
         if (p.sk) self.edits = KAISim.decode(p.sk);
@@ -31,6 +34,9 @@ document.addEventListener('alpine:init', function () {
         self.$watch('kor', function () { self.sel = -1; self.sync(); self.draw(); });
         self.$watch('prio', function () { self.recalc(); });
         self.$watch('antre', function () { self.recalc(); });
+        self.$watch('tukar', function () { self.recalc(); });
+        self.$watch('sopMode', function () { self._sopC = null; self.rebase(); });
+        self.$watch('turnAll', function () { self.draw(); });
         self.$watch('q', function () { self.sync(); self.draw(); });
         var ro = new ResizeObserver(KAI.debounce(function () { self.draw(); }, 80)); self.$nextTick(function () { self.$refs.wrap && ro.observe(self.$refs.wrap); });
       },
@@ -38,8 +44,10 @@ document.addEventListener('alpine:init', function () {
         var self = this, ver = self.$store.app.gapeka || KAI.gapeka.initial();
         self.busy = true; self.err = '';
         var bbP = BBcache ? Promise.resolve(BBcache) : KAI.api('apiBatubara').then(function (r) { return KAI.gunzipJson(r.gz); }).then(function (d) { BBcache = d; return d; });
-        Promise.all([bbP, KAIG.load(KAI.api, KAI.gunzipJson, ver)]).then(function (x) {
-          self.BB = x[0]; self.ver = ver; self.P0 = KAISim.prepare(x[1], x[0], ver); self.P = self.P0; self.base = KAISim.run(self.P0, []); self.cap = KAISim.capOf(self.base); self.slots = null;
+        // PROGRAM_KA (SOP kontrak per KA) dari DB Batubara tersinkron; bila belum ada, batas = WTT program (diberi tahu di layar)
+        var core = self.$store.bb.need(['core']).then(function () { self.sopReady = !!(self.$store.bb.ready && BBK.has('PROGRAM_KA')); }, function () { self.sopReady = false; });
+        Promise.all([bbP, KAIG.load(KAI.api, KAI.gunzipJson, ver), core]).then(function (x) {
+          self.BB = x[0]; self.ver = ver; self._sopC = null; self.P0 = KAISim.prepare(x[1], x[0], ver); self.P = self.P0; self.base = KAISim.run(self.P0, [], { sop: self.sopFn() }); self.cap = KAISim.capOf(self.base); self.slots = null;
           if (!self.BB.cor.some(function (c) { return c.id === self.kor; })) self.kor = self.BB.cor[0].id;
           self.busy = false; self.recalc();
         }).catch(function (e) { self.busy = false; self.err = e.message || String(e); });
@@ -64,9 +72,44 @@ document.addEventListener('alpine:init', function () {
         else this.Ares = null;
         this.sync(); this.draw();
       },
-      opt: function () { return { prioritas: this.prio, antrean: this.antre ? this.cap : null }; },
+      opt: function () { return { prioritas: this.prio, antrean: this.antre ? this.cap : null, sop: this.sopFn(), tukar: this.tukar }; },
+      rebase: function () { if (!this.P0) return; this.base = KAISim.run(this.P0, [], { sop: this.sopFn() }); this.recalc(); },
+      /**
+       * Batas waktu rangkaian di terminal per pasangan KA (PRG_SIKLUS): SOP kontrak PROGRAM_KA pra+inti+pasca untuk KA isi
+       * (muat: KA isi yang berangkat; bongkar: KA isi yang datang). SOP ganda: durasi terpendek atau terpanjang (pilihan).
+       * KA tanpa SOP / tidak ditemukan → WTT program pasangan itu (label "tanpa SOP").
+       */
+      sopFn: function () {
+        if (!this.sopReady) return null; if (this._sopC) return this._sopC;
+        var versi = 'GAPEKA ' + this.ver, mode = this.sopMode, memo = {};
+        var f = function (c, kd, kb, prog) {
+          var k = c + '|' + kd + '|' + kb; if (memo[k]) return memo[k];
+          var res = { w: prog, src: 'tanpa', lo: null, hi: null, ka: '' };
+          [kb, kd].some(function (no) {
+            var r = BBK.progKa(versi, no); if (!r) return false;
+            var side = r.stasiun_muat === c ? 'muat' : r.stasiun_bongkar === c ? 'bongkar' : null; if (!side) return false;
+            var lo = r['sop_' + side + '_min'], hi = r['sop_' + side + '_maks'];
+            if (lo == null || lo === '' || isNaN(lo)) { res = { w: prog, src: 'tanpa', lo: null, hi: null, ka: r.no_ka_isi, side: side }; return true; }
+            hi = hi == null || hi === '' || isNaN(hi) ? +lo : +hi; lo = +lo;
+            res = { w: mode === 'maks' ? hi : lo, src: lo !== hi ? 'ganda' : 'tunggal', lo: lo, hi: hi, ka: r.no_ka_isi, side: side, status: r.status_sop }; return true;
+          });
+          memo[k] = res; return res;
+        };
+        this._sopC = f; return f;
+      },
+      /** Garis perputaran yang ditampilkan: KA tersaring/terpilih, atau semua bila diminta. */
+      get turns() {
+        var sc = this.sc, H = this.qHit, self = this; if (!sc || !sc.turn) return [];
+        var selNo = this.sel >= 0 && sc.T[this.sel] ? this.P.trains[sc.T[this.sel].ti].no : null, hasNo = function (v, set) { return String(v).split('-').some(function (n) { return set[n] || set[v]; }); };
+        return sc.turn.filter(function (x) { if (self.turnAll) return true; if (H && (hasNo(x.kd, H) || hasNo(x.kb, H))) return true; return selNo && (x.kd === selNo || x.kb === selNo || String(selNo).split('-').indexOf(x.kd) >= 0 || String(selNo).split('-').indexOf(x.kb) >= 0); })
+          .sort(function (a, b) { return a.ta - b.ta; });
+      },
+      get turnSum() { var sc = this.sc; if (!sc || !sc.turn) return null; var n = { ok: 0, prog: 0, putus: 0, sw: 0, tanpa: 0 }; sc.turn.forEach(function (x) { n[x.st]++; if (x.sw) n.sw++; if (!x.so || x.so.src === 'tanpa') n.tanpa++; }); n.all = sc.turn.length; return n; },
+      sopTxt: function (x) { var so = x.so; if (!so || so.src === 'tanpa') return 'WTT program ' + this.dur(x.w) + ' (tanpa SOP)'; return 'SOP ' + (so.src === 'ganda' ? this.dur(so.lo) + '–' + this.dur(so.hi) + ' (dipakai ' + this.dur(x.w) + ')' : this.dur(x.w)); },
+      dur: function (m) { return m == null ? '–' : BBK.fmt.dur(Math.round(m)); },
+      stTxt: function (st) { return st === 'ok' ? 'Tersambung' : st === 'prog' ? 'Jadwal < SOP' : 'Tidak tersambung'; },
       sync: function () {
-        var p = { kor: this.kor }; if (this.edits.length) p.sk = KAISim.encode(this.edits); if (this.prio) p.urut = 'p'; if (!this.antre) p.aq = '0'; if (this.qn) p.q = this.q.trim(); if (this.A && this.A.length) p.skA = KAISim.encode(this.A);
+        var p = { kor: this.kor }; if (this.edits.length) p.sk = KAISim.encode(this.edits); if (this.prio) p.urut = 'p'; if (!this.antre) p.aq = '0'; if (this.sopMode === 'maks') p.sop = 'maks'; if (this.tukar) p.tk = '1'; if (this.qn) p.q = this.q.trim(); if (this.A && this.A.length) p.skA = KAISim.encode(this.A);
         this.$store.app.params = p;
         if (window.google && google.script && google.script.history) google.script.history.replace({ route: 'batubara', params: p }, this.$store.app.urlQuery('batubara', p));
       },
@@ -139,7 +182,7 @@ document.addEventListener('alpine:init', function () {
       },
       /** Daftar KA cocok yang lewat koridor ini (untuk chip). */
       get qList() {
-        var H = this.qHit, Y = this.C, self = this; if (!H || !this.P || !Y) return [];
+        var H = this.qHit, Y = this.C; if (!H || !this.P || !Y) return [];
         var st = {}; Y.st.forEach(function (x) { st[x] = 1; });
         return this.P.trains.filter(function (t) { return H[t.no] && t.pts.some(function (p) { return st[p.c]; }); }).map(function (t) { return { no: t.no, nama: t.nama || '', relasi: t.relasi || '' }; })
           .sort(function (a, b) { return String(a.no).localeCompare(String(b.no), 'id', { numeric: true }); });
@@ -293,6 +336,20 @@ document.addEventListener('alpine:init', function () {
           c.fillStyle = TYC[l.ty] || '#64748B'; c.beginPath(); c.arc(xb, yb, 4, 0, 6.3); c.fill();
           c.strokeStyle = TYC[l.ty] || '#64748B'; c.lineWidth = 1.5; c.setLineDash([3, 2]); c.beginPath(); c.moveTo(xb, yb); c.lineTo(g.x(sc.t[Bt.d[sB]] - l.m), yb); c.stroke(); c.setLineDash([]);
         });
+        // garis perputaran rangkaian di terminal (datang → berangkat lagi), warna = status terhadap batas SOP
+        if (!self.preview) self.turns.forEach(function (x) {
+          var i = Y.idx[x.c]; if (i == null) return; var y = g.y(i), xa = g.x(x.ta), xb = g.x(x.tb), xr = g.x(Math.min(x.ready, x.tb + 600));
+          if (xb < g.L || xa > g.W - g.R) return; xa = Math.max(g.L, xa); xb = Math.min(g.W - g.R, xb);
+          var col = x.st === 'ok' ? '#1F8A2E' : x.st === 'prog' ? '#E0861A' : '#C0392B';
+          c.fillStyle = col; c.globalAlpha = 0.14; c.fillRect(xa, y - 6, Math.max(1, Math.min(xr, g.W - g.R) - xa), 12); c.globalAlpha = 1;   // pita batas SOP
+          c.strokeStyle = col; c.lineWidth = 3; c.setLineDash(x.sw ? [6, 3] : []); c.beginPath(); c.moveTo(xa, y); c.lineTo(xb, y); c.stroke(); c.setLineDash([]);
+          c.fillStyle = col; c.beginPath(); c.arc(xa, y, 3.5, 0, 6.3); c.fill(); c.beginPath(); c.moveTo(xb, y - 5); c.lineTo(xb + 6, y); c.lineTo(xb, y + 5); c.fill();
+          if (xr > xa && xr < g.W - g.R) { c.strokeStyle = col; c.lineWidth = 1.5; c.beginPath(); c.moveTo(xr, y - 8); c.lineTo(xr, y + 8); c.stroke(); }
+          var txt = x.kd + ' → ' + x.kb + (x.sw ? ' (tukar)' : '') + ' · ' + self.dur(x.dwell) + ' / batas ' + self.dur(x.w);
+          c.font = '600 10px Inter, system-ui, sans-serif'; var tw = c.measureText(txt).width + 6, lx = Math.min(Math.max(g.L, xa), g.W - tw - 4), ly = y + 14;
+          for (var k3 = 0; k3 < 6 && labels.some(function (r) { return lx < r[0] + r[2] && lx + tw > r[0] && Math.abs(ly - r[1]) < 12; }); k3++) ly += 13;
+          labels.push([lx, ly, tw]); c.fillStyle = 'rgba(255,255,255,.9)'; c.fillRect(lx - 2, ly - 7, tw, 13); c.fillStyle = col; c.fillText(txt, lx, ly);
+        });
         // kebuntuan stasiun
         (self.cmp ? self.cmp.over : []).forEach(function (o) { var i = Y.idx[o.st]; if (i == null) return; var x = g.x(o.t); if (x < g.L || x > g.W) return; c.fillStyle = '#B42318'; c.fillRect(x - 3, g.y(i) - 3, 6, 6); });
         if (self.drag && self.drag.label) { c.fillStyle = '#111827'; c.font = '600 12px Inter, system-ui, sans-serif'; c.fillText(self.drag.label, self.drag.x + 10, self.drag.y - 12); }
@@ -330,7 +387,7 @@ document.addEventListener('alpine:init', function () {
         if (!D.raf) D.raf = requestAnimationFrame(function () {
           D.raf = 0; if (!self.drag) return;
           var ed = self.edits.concat(D.m ? [D.st ? { jenis: 'tahan', no: D.no, st: D.st, m: D.m } : { jenis: 'geser', no: D.no, m: D.m }] : []);
-          var r = KAISim.run(self.P, ed, { prioritas: self.prio }); self.preview = r.error ? null : r; self.draw();
+          var r = KAISim.run(self.P, ed, { prioritas: self.prio, sop: self.sopFn(), tukar: self.tukar }); self.preview = r.error ? null : r; self.draw();
         });
       },
       up: function () {

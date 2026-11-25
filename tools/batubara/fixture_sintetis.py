@@ -67,9 +67,29 @@ def main():
            ['PS01', 'BONGKAR', 'PASCA', 'PASCA BONGKAR', 'Tunggu lok (sintetis)', 'Manusia', 'KAI', 'Non-allowance', '']]
     core['KATALOG_HAMBATAN'] = T(['kode_std', 'jenis', 'fase', 'tahap', 'nama', 'akar', 'pic', 'sifat', 'contoh_kode_asal'], kat)
     core['KPI_TARGET'] = T(['kode', 'kpi', 'divre', 'ukuran', 'nilai', 'satuan', 'arah', 'sumber'], [])
-    for n in ['M_MITRA_RELASI', 'M_UPT', 'OTP_RESMI', 'KINERJA_TAHUNAN', 'KINERJA_2026', 'KINERJA_LOSSES', 'SARANA_LOK', 'SARANA_REKAP', 'PROGRAM_KA',
-              'KAPASITAS_LINTAS', 'EMPLASEMEN_SKEMA', 'TEMUAN_REGULASI', 'PUSTAKA', 'ALUR_KEGIATAN']:
+    for n in ['M_MITRA_RELASI', 'OTP_RESMI', 'KINERJA_TAHUNAN', 'KINERJA_2026', 'KINERJA_LOSSES', 'SARANA_LOK', 'SARANA_REKAP', 'PROGRAM_KA',
+              'KAPASITAS_LINTAS', 'TEMUAN_REGULASI', 'PUSTAKA']:
         core[n] = T([], [])
+    # Emplasemen SINTETIS (gambar buatan, bukan lembar GAPEKA) agar emulator menguji Part.BbEmplasemen & Js.Emplasemen.
+    core['M_UPT'] = T(['lokasi', 'terminal', 'nama', 'angkutan', 'jenis', 'relasi', 'fasilitas', 'catatan_sop', 'skema_kode'],
+                      [['TMB', 'TMB', 'Terminal sintetis TMB', 'PTBA', 'MUAT', 'SINTETIS', 'SINTETIS', 'SINTETIS', 'TMB']])
+    sk = {'w': 400, 'h': 160, 'paths': [
+        {'d': 'M40 40L380 40', 'w': 2, 'f': None, 's': '#000000', 'da': 0},
+        {'d': 'M60 60L360 60M80 80L340 80', 'w': 2, 'f': None, 's': '#000000', 'da': 0},
+        {'d': 'M40 40C20 40 10 120 40 120L120 120', 'w': 2, 'f': None, 's': '#000000', 'da': 0},
+        {'d': 'M100 100L300 100', 'w': 2, 'f': None, 's': '#000000', 'da': 0}],
+        'text': [['I-900', 150, 44, 10, 0, 1, 1], ['II-800', 150, 64, 10, 0, 1, 1], ['III-700', 150, 84, 10, 0, 1, 1], ['4-300', 150, 104, 10, 0, 1, 0],
+                 ['TLS I', 20, 130, 8, 0, 0, 0], ['TLS III', 120, 130, 8, 0, 0, 0], ['Me', 382, 36, 12, 0, 0, 0], ['Tmb', 200, 20, 12, 0, 0, 0]],
+        'tracks': [{'j': 'I', 'm': 900, 'p': [0], 'ket': ''}]}
+    core['EMPLASEMEN_SKEMA'] = T(['id', 'kode', 'jenis', 'judul', 'sumber', 'bagian', 'data'],
+                                 [['SK-TMB', 'TMB', 'skema', 'Skema SINTETIS (emulator)', 'SINTETIS', 1, json.dumps(sk)[:200]],
+                                  ['SK-TMB', 'TMB', 'skema', 'Skema SINTETIS (emulator)', 'SINTETIS', 2, json.dumps(sk)[200:]]])
+    core['ALUR_KEGIATAN'] = T(['tipe', 'urut', 'tahap', 'langkah', 'titik', 'kode_hambatan', 'keterangan'], [
+        ['muat_tls', 1, 'pra_muat', 'Langkah sintetis 1', 'arah,jterima', 'PM01', 'SINTETIS'],
+        ['muat_tls', 2, 'pra_muat', 'Langkah sintetis 2', 'jterima,tls12,tls34', 'PM01', 'SINTETIS'],
+        ['muat_tls', 3, 'muat', 'Langkah sintetis 3', 'tls12,tls34', 'MT01', 'SINTETIS'],
+        ['muat_tls', 4, 'pasca_muat', 'Langkah sintetis 4', 'jlangsir,ppka', 'PA01', 'SINTETIS'],
+        ['muat_tls', 5, 'pasca_muat', 'Langkah sintetis 5', 'arah,ppka', 'PA01', 'SINTETIS']])
     core['SARANA_RANGKAIAN'] = T(['tahun', 'nama_ka', 'no_ka', 'relasi', 'jenis_lok', 'km_tempuh_per_grb', 'sf', 'jenis_gerbong', 'kebutuhan_gerbong', 'rangkaian', 'ka_per_hari', 'kapasitas_ton_hari', 'komoditi', 'sumber'],
                                  [[2025, 'SINTETIS', '', rel, 'CC 205', 0, 0, 'KKBW', 60, 8, 4, 0, 'Batubara', 'SINTETIS'] for rel in rels])
 

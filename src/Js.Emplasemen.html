@@ -1,0 +1,303 @@
+<script>
+/**
+ * Js.Emplasemen — gambar emplasemen interaktif untuk profil terminal Batubara (keputusan 25 Nov 2026, opsi 2).
+ * Sumber (DB Batubara): EMPLASEMEN_SKEMA (gambar vektor lembar GAPEKA 2025 & tata letak persinyalan; satu gambar bisa
+ * terpecah ke beberapa baris "bagian"), EMPLASEMEN_JALUR (panjang & keterangan jalur), ALUR_KEGIATAN (langkah & "titik"),
+ * M_UPT (jenis kegiatan & skema per lokasi), PRG_TERMINAL (jalur/TLS/RCD/CY per KA program), PROGRAM_KA (SOP kontrak),
+ * REAL_TERMINAL & REAL_THN (realisasi).
+ *
+ * Yang BUKAN data asli dan selalu berlabel "perkiraan": letak titik langkah di gambar dan garis lintasan antarlangkah.
+ * Titik dipetakan dari kemiripan nama (TLS I → label "TLS I", RCD → "(RCD I)", jterima → jalur utama stasiun, arah → label
+ * stasiun tetangga). Titik yang tidak ditemukan di gambar ditulis "tidak tergambar", tidak ditebak.
+ * Pembeda: jalur/label fasilitas bongkar-muat (TLS, RCD, CY, apron, AF, dermaga, sepur simpang PT …) = "terminal";
+ * jalur lain = "emplasemen stasiun".
+ * Fungsi murni kecuali KAIEmp.svg (hanya membangun teks SVG). Diuji di Node: tests/batubara/test_emplasemen.js.
+ */
+(function (root) {
+  'use strict';
+  var TERM_RE = /\bTLS\b|RCD|\bCY|Apron|\bAF\s?\d|Dermaga|Emplasemen PT|\bPT\.|Pertamina|DEPO/i;
+  var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+  var roman = { I: 1, II: 2, III: 3, IV: 4, V: 5, VI: 6, VII: 7, VIII: 8, IX: 9, X: 10, XI: 11, XII: 12, XIII: 13, XIV: 14, XV: 15 };
+
+  /** Gabung baris EMPLASEMEN_SKEMA per id (urut bagian) → [{ id, kode, jenis, judul, sumber, d }]. Baris rusak dilewati. */
+  function schemas(rows) {
+    var g = {};
+    (rows || []).forEach(function (r) { var o = g[r.id] = g[r.id] || { id: r.id, kode: r.kode, jenis: r.jenis, judul: r.judul, sumber: r.sumber, parts: [] }; o.parts.push([+r.bagian || 1, String(r.data || '')]); });
+    return Object.keys(g).map(function (k) {
+      var o = g[k]; o.parts.sort(function (a, b) { return a[0] - b[0]; });
+      try { o.d = JSON.parse(o.parts.map(function (p) { return p[1]; }).join('')); } catch (e) { o.d = null; }
+      delete o.parts; return o;
+    }).filter(function (o) { return o.d && o.d.paths; });
+  }
+
+  /** Pecah atribut d (M/L/H/V/C/Z, absolut) menjadi ruas garis lurus; kurva diwakili ruas ujung ke ujung. */
+  function segs(d) {
+    var out = [], tk = String(d).match(/[MLHVCZmlhvcz]|-?\d*\.?\d+(?:e-?\d+)?/g) || [], i = 0, cmd = '', x = 0, y = 0, sx = 0, sy = 0;
+    var num = function () { return +tk[i++]; };
+    while (i < tk.length) {
+      if (/[A-Za-z]/.test(tk[i])) cmd = tk[i++];
+      var C = cmd.toUpperCase(), nx = x, ny = y;
+      if (C === 'Z') { out.push([x, y, sx, sy]); x = sx; y = sy; continue; }
+      if (C === 'M') { x = sx = num(); y = sy = num(); cmd = cmd === 'm' ? 'l' : 'L'; continue; }
+      if (C === 'L') { nx = num(); ny = num(); }
+      else if (C === 'H') nx = num();
+      else if (C === 'V') ny = num();
+      else if (C === 'C') { num(); num(); num(); num(); nx = num(); ny = num(); }
+      else { i++; continue; }
+      out.push([x, y, nx, ny]); x = nx; y = ny;
+    }
+    return out;
+  }
+
+  /** Model gambar: jalur (garis yang bisa diklik), label fasilitas, label arah. */
+  function model(sc, jalurRows) {
+    var d = sc.d, S = [], J = {};
+    d.paths.forEach(function (p) { segs(p.d).forEach(function (s) { if (Math.abs(s[3] - s[1]) < 0.8 && Math.abs(s[2] - s[0]) > 2) S.push([Math.min(s[0], s[2]), (s[1] + s[3]) / 2, Math.max(s[0], s[2])]); }); });
+    (jalurRows || []).forEach(function (j) { if (j.kode === sc.kode) J[String(j.jalur)] = j; });
+    var texts = d.text || [], tracks = [], labels = [];
+    texts.forEach(function (t, k) {
+      var s = String(t[0]), x = +t[1], y = +t[2], sz = +t[3] || 10;
+      if (t[5] === 1 || t[5] === '1') {
+        var m = s.match(/^([0-9A-Z]+)-(\d+)\s*(\(.*\))?/); if (!m) return;
+        var jl = m[1], meta = J[jl] || {}, ket = (m[3] || '').replace(/[()]/g, '') || meta.keterangan || '';
+        // ruas mendatar terdekat di atas garis dasar label yang melintasi x label, lalu disambung ke ruas segaris
+        var best = null; S.forEach(function (s) { var dy = y - s[1]; if (dy >= -2 && dy <= sz * 0.9 && s[0] - 4 <= x && s[2] + 4 >= x) { if (!best || Math.abs(dy - sz * 0.35) < Math.abs(y - best[1] - sz * 0.35)) best = s; } });
+        var x1 = null, x2 = null, ly = null;
+        if (best) {
+          ly = best[1]; x1 = best[0]; x2 = best[2]; var grow = true;
+          while (grow) { grow = false; S.forEach(function (s) { if (Math.abs(s[1] - ly) < 0.9 && s[2] >= x1 - 3 && s[0] <= x2 + 3 && (s[0] < x1 || s[2] > x2)) { x1 = Math.min(x1, s[0]); x2 = Math.max(x2, s[2]); grow = true; } }); }
+        }
+        tracks.push({ id: 'j' + k, j: jl, m: +m[2] || +meta.panjang_m || null, ket: ket, tx: x, ty: y, sz: sz, x1: x1, x2: x2, y: ly,
+          kind: TERM_RE.test(ket) || TERM_RE.test(s) ? 'terminal' : 'stasiun', main: !!roman[jl], status: meta.status || '', sumber: meta.sumber || '' });
+      } else {
+        var kind = TERM_RE.test(s) ? 'terminal' : /^[A-Z][a-z]{1,3}$/.test(s) && s.toUpperCase() !== String(sc.kode).toUpperCase() ? 'arah'
+          : s.toUpperCase() === String(sc.kode).toUpperCase() || /PPKA|STASIUN/i.test(s) ? 'stasiun' : t[5] === 'label' || t[5] === 0 || t[5] === '0' ? 'teks' : 'lain';
+        labels.push({ id: 't' + k, s: s, x: x, y: y, sz: sz, rot: +t[4] || 0, kind: kind, cls: t[5] });
+      }
+    });
+    return { sc: sc, w: +d.w, h: +d.h, tracks: tracks, labels: labels };
+  }
+
+  /** Alur kegiatan yang berlaku di lokasi: dari M_UPT (jenis + skema_kode). */
+  var FLOW_OF = { 'TMB|MUAT': 'muat_tls', 'SWASTA|MUAT': 'muat_cy', 'THN|BONGKAR': 'bongkar_rcd', 'DERTI|BONGKAR': 'bongkar_apron', 'SWASTA|BONGKAR': 'bongkar_cy' };
+  function flowsAt(kode, uptRows) {
+    var out = [], seen = {};
+    (uptRows || []).forEach(function (u) { if (u.terminal !== kode && u.lokasi !== kode) return; var f = FLOW_OF[String(u.skema_kode || '').toUpperCase() + '|' + String(u.jenis || '').toUpperCase()];
+      if (f && !seen[f]) { seen[f] = 1; out.push({ tipe: f, upt: u.nama || u.lokasi, jenis: String(u.jenis || '').toLowerCase() }); } });
+    return out;
+  }
+
+  /** Letak titik langkah (perkiraan) pada model. Mengembalikan [{ x, y, ref, how }]. */
+  function resolve(titik, M) {
+    var t = String(titik || '').toLowerCase(), L = M.labels, T = M.tracks, out = [];
+    var lab = function (re) { L.forEach(function (l) { if (re.test(l.s)) out.push({ x: l.x, y: l.y, ref: l.id, how: 'label "' + l.s + '"' }); }); };
+    var trk = function (f) { T.forEach(function (k) { if (f(k)) out.push({ x: k.x1 != null ? (k.x1 + k.x2) / 2 : k.tx, y: k.y != null ? k.y : k.ty, x1: k.x1, x2: k.x2, ref: k.id, how: 'jalur ' + k.j }); }); };
+    if (/^arah/.test(t)) L.forEach(function (l) { if (l.kind === 'arah') out.push({ x: l.x, y: l.y, ref: l.id, how: 'arah ' + l.s }); });
+    else if (t === 'ppka') {
+      lab(/PPKA/i);
+      if (!out.length) L.forEach(function (l) { if (l.kind === 'stasiun') out.push({ x: l.x, y: l.y, ref: l.id, how: 'nama stasiun (letak PPKA tidak digambar)' }); });
+    }
+    else if (t === 'pos') lab(/^Pos\b/i);
+    else if (t === 'jterima' || t === 'jstasiun' || t === 'antre') trk(function (k) { return k.kind === 'stasiun' && k.main; });
+    else if (t === 'jlangsir') trk(function (k) { return k.kind === 'stasiun' && !k.main; });
+    else if (/^j\d+$/.test(t)) { var n = t.slice(1); trk(function (k) { return k.j === n || roman[k.j] === +n; }); }
+    else if (t === 'tls12') lab(/^TLS (I|II|1|2)$/i);
+    else if (t === 'tls34') lab(/^TLS (III|IV|3|4)$/i);
+    else if (t === 'rcd') lab(/RCD/i);
+    else if (t === 'balon') lab(/balon/i);
+    else if (t === 'dipo') lab(/DEPO|DIPO/i);
+    else if (t === 'apron') lab(/Apron/i);
+    else if (t === 'ptba') lab(/PT\.?\s?BA\b|Emplasemen PT\. BA/i);
+    else if (t === 'ptsb' || t === 'cyswasta') lab(/BMSS|BAU|SWASTA/i);
+    else if (t === 'af') lab(/\bAF/i);
+    else if (/^cy\d$/.test(t)) { var c = t.slice(2); lab(new RegExp('CY\\s?' + c + '\\b|CY\\s?' + ['', 'I', 'II', 'III'][+c] + '\\b', 'i')); trk(function (k) { return new RegExp('CY\\s?' + c).test(k.ket); }); }
+    else if (t === 'cy') { lab(/\bCY/i); trk(function (k) { return /CY/i.test(k.ket); }); }
+    else if (t === 'rmk' || t === 'wbs' || t === 'fms') lab(new RegExp(t, 'i'));
+    // nama fasilitas di gambar tidak sama persis (mis. CY tertulis "PT. BAU"): pakai semua fasilitas terminal di gambar itu
+    if (!out.length && /^(cy\d?|rmk|wbs|fms|af|apron|ptba|ptsb|cyswasta)$/.test(t)) {
+      L.forEach(function (l) { if (l.kind === 'terminal' && !/DEPO|Pertamina/i.test(l.s)) out.push({ x: l.x, y: l.y, ref: l.id, how: 'fasilitas terminal "' + l.s + '" (nama tidak sama persis)' }); });
+      T.forEach(function (k) { if (k.kind === 'terminal') out.push({ x: k.x1 != null ? (k.x1 + k.x2) / 2 : k.tx, y: k.y != null ? k.y : k.ty, x1: k.x1, x2: k.x2, ref: k.id, how: 'jalur ' + k.j + ' (' + k.ket + ')' }); });
+    }
+    return out;
+  }
+
+  /** Langkah alur + letak perkiraan; pusat tiap langkah untuk garis lintasan. */
+  function steps(tipe, alurRows, M) {
+    return (alurRows || []).filter(function (a) { return a.tipe === tipe; }).sort(function (a, b) { return +a.urut - +b.urut; }).map(function (a) {
+      var P = [], seen = {};
+      String(a.titik || '').split(',').forEach(function (t) { resolve(t.trim(), M).forEach(function (p) { if (!seen[p.ref]) { seen[p.ref] = 1; p.titik = t.trim(); P.push(p); } }); });
+      var cx = P.length ? P.reduce(function (s, p) { return s + p.x; }, 0) / P.length : null, cy = P.length ? P.reduce(function (s, p) { return s + p.y; }, 0) / P.length : null;
+      return { urut: +a.urut, tahap: a.tahap, langkah: a.langkah, titik: a.titik, kode: a.kode_hambatan, ket: a.keterangan, P: P, cx: cx, cy: cy };
+    });
+  }
+
+  /**
+   * Lintasan perkiraan: satu titik wakil per langkah. Langkah pertama mulai dari label arah; titik fasilitas memakai
+   * fasilitas pilihan (pick = ref label/jalur) bila ada di langkah itu; selain itu titik terdekat dari langkah sebelumnya.
+   * Titik di jalur diproyeksikan ke ujung jalur yang terdekat (lebih mirip gerak KA daripada titik tengah).
+   */
+  function route(S, pick) {
+    var out = [], prev = null, last = S.filter(function (s) { return s.P.length; }).slice(-1)[0];
+    S.forEach(function (s) {
+      if (!s.P.length) return;
+      var c = pick ? s.P.filter(function (p) { return p.ref === pick; })[0] : null;
+      if (!c && (!prev || s === last)) c = s.P.filter(function (p) { return /^arah/.test(p.titik); })[0] || (prev ? null : s.P[0]);
+      if (!c) { var bd = Infinity; s.P.forEach(function (p) { var px = p.x1 != null ? Math.max(p.x1, Math.min(p.x2, prev.x)) : p.x, dd = Math.pow(px - prev.x, 2) + Math.pow(p.y - prev.y, 2); if (dd < bd) { bd = dd; c = p; } }); }
+      var x = c.x1 != null && prev ? Math.max(c.x1, Math.min(c.x2, prev.x)) : c.x;
+      // dari jalur ke titik lain: susuri jalur dulu sampai sejajar titik tujuan (titik bantu tanpa nomor)
+      if (prev && prev.x1 != null && c.ref !== prev.ref) { var wx = Math.max(prev.x1, Math.min(prev.x2, x)); if (Math.abs(wx - prev.x) > 1) out.push({ x: wx, y: prev.y, wp: true }); }
+      prev = { x: x, y: c.y, x1: c.x1, x2: c.x2, urut: s.urut, tahap: s.tahap, ref: c.ref, how: c.how }; out.push(prev);
+    });
+    return out;
+  }
+
+  var q = function (a, p) { if (!a.length) return null; var s = a.slice().sort(function (x, y) { return x - y; }), i = (s.length - 1) * p, lo = Math.floor(i); return s[lo] + (s[Math.min(lo + 1, s.length - 1)] - s[lo]) * (i - lo); };
+  /**
+   * Batas & realisasi per tahap di lokasi. tahap = pra_muat|muat|pasca_muat|pra_bongkar|bongkar|pasca_bongkar.
+   * SOP: rentang PROGRAM_KA (min terkecil – maks terbesar) KA bermuatan di lokasi itu pada versi GAPEKA aktif;
+   * realisasi: REAL_TERMINAL (median, P85) + porsi kegiatan di atas SOP kontrak relasinya (sopOf(rel, st, tahap)).
+   */
+  function stage(kode, tahap, prog, real, sopOf) {
+    var uj = /muat/.test(tahap) ? 'muat' : 'bongkar', part = tahap.split('_')[0], key = part === 'pra' || part === 'pasca' ? part : 'inti';
+    var lo = null, hi = null, n = 0;
+    (prog || []).forEach(function (p) { if ((uj === 'muat' ? p.stasiun_muat : p.stasiun_bongkar) !== kode) return;
+      var a = p['sop_' + key + '_' + uj + '_min'], b = p['sop_' + key + '_' + uj + '_maks']; if (a == null || a === '') return; n++;
+      lo = lo == null ? +a : Math.min(lo, +a); hi = hi == null ? +(b == null || b === '' ? a : b) : Math.max(hi, +(b == null || b === '' ? a : b)); });
+    var v = [], over = 0, withSop = 0;
+    (real || []).forEach(function (r) { if ((uj === 'muat' ? r.stasiun_muat : r.stasiun_bongkar) !== kode) return; var x = r[tahap]; if (x == null || x === '' || isNaN(x)) return; v.push(+x);
+      var s = sopOf ? sopOf(r.stasiun_muat + '-' + r.stasiun_bongkar, kode, tahap) : null; if (s != null) { withSop++; if (+x > s) over++; } });
+    return { tahap: tahap, sopLo: lo, sopHi: hi, nKa: n, n: v.length, med: q(v, 0.5), p85: q(v, 0.85), over: withSop ? over / withSop : null, nSop: withSop };
+  }
+
+  /** Pemakaian fasilitas (label "TLS I", "RCD 3", "CY FMS", "AF1") oleh KA program PRG_TERMINAL versi aktif. */
+  var normF = function (s) { return String(s || '').toUpperCase().replace(/[()]/g, '').replace(/\bTLS\s*1\b/, 'TLS I').replace(/\s+/g, ' ').replace(/\s?T$/, '').trim(); };
+  function romanize(s) { return s.replace(/\b(\d)\b/g, function (m, d) { return ['', 'I', 'II', 'III', 'IV', 'V'][+d] || d; }); }
+  function usage(kode, label, prgRows, versi) {
+    var key = romanize(normF(label)).replace(/\.\d$/, '');
+    return (prgRows || []).filter(function (r) { if (r.stasiun !== kode || r.versi !== versi || !r.jalur) return false; var j = romanize(normF(r.jalur)).replace(/\.\d$/, '');
+      return j === key || j.replace(/\s/g, '') === key.replace(/\s/g, ''); });
+  }
+
+  /** SVG lengkap (teks). sel = { track, label, step } untuk sorot; route = langkah dengan pusat. */
+  function svg(M, opt) {
+    opt = opt || {};
+    var base = Math.max(0.6, M.w / 700), out = [], sel = opt.sel || {}, act = opt.step || null;
+    out.push('<svg class="emp-svg" viewBox="' + (-M.w * 0.02) + ' ' + (-M.h * 0.04) + ' ' + (M.w * 1.04) + ' ' + (M.h * 1.08) + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="' + esc(M.sc.judul) + '">');
+    out.push('<g class="emp-base">');
+    // isi DB diperlakukan sebagai data: d hanya angka & huruf perintah path, warna isian hanya #hex
+    M.sc.d.paths.forEach(function (p) { var d = String(p.d || '').replace(/[^MLHVCZmlhvcz0-9.,\s-]/g, ''), f = /^#[0-9a-f]{3,8}$/i.test(p.f || '') ? p.f : 'none';
+      out.push('<path d="' + d + '" fill="' + f + '" stroke="' + (p.s ? '#64748B' : 'none') + '" stroke-width="' + (+p.w || 1) + '"' + (p.da ? ' stroke-dasharray="' + 2 * base + ' ' + 2 * base + '"' : '') + '/>'); });
+    out.push('</g>');
+    // jalur: garis tebal transparan (target klik) + warna jenis
+    M.tracks.forEach(function (k) {
+      if (k.x1 == null) return; var on = sel.track === k.id || (act && act.P.some(function (p) { return p.ref === k.id; }));
+      out.push('<line class="emp-trk ' + k.kind + (on ? ' on' : '') + '" data-trk="' + k.id + '" x1="' + k.x1 + '" y1="' + k.y + '" x2="' + k.x2 + '" y2="' + k.y + '" stroke-width="' + 4 * base + '"><title>' + esc('Jalur ' + k.j + (k.m ? ' · ' + k.m + ' m' : '') + (k.ket ? ' · ' + k.ket : '') + ' · ' + (k.kind === 'terminal' ? 'fasilitas terminal' : 'emplasemen stasiun')) + '</title></line>');
+    });
+    M.tracks.forEach(function (k) {
+      var fz = Math.min(k.sz * 0.62, 10 * base);
+      out.push('<text class="emp-tl ' + k.kind + '" data-trk="' + k.id + '" x="' + (k.x1 != null ? k.x1 + 3 * base : k.tx) + '" y="' + ((k.y != null ? k.y : k.ty) - 1.6 * base) + '" font-size="' + fz + '">' + esc(k.j + (k.m ? ' · ' + k.m + ' m' : '')) + '</text>');
+    });
+    M.labels.forEach(function (l) {
+      if (l.kind === 'lain' && M.labels.length > 60) return; // tata letak: sembunyikan kode sinyal/wesel/km agar terbaca
+      var on = sel.label === l.id || (act && act.P.some(function (p) { return p.ref === l.id; })), fz = l.kind === 'lain' || l.kind === 'teks' ? Math.min(l.sz, 12 * base) : Math.max(6.5 * base, Math.min(l.sz * (l.kind === 'arah' ? 0.8 : 1), 14 * base));
+      out.push('<text class="emp-lb ' + l.kind + (on ? ' on' : '') + '"' + (l.kind === 'terminal' ? ' data-lbl="' + l.id + '"' : '') + ' x="' + l.x + '" y="' + l.y + '" font-size="' + fz + '"' + (l.rot ? ' transform="rotate(' + (-l.rot) + ' ' + l.x + ' ' + l.y + ')"' : '') + '>' + esc(l.s) + '</text>');
+    });
+    // lintasan perkiraan antarlangkah (titik wakil dari route())
+    var R = opt.route || [];
+    if (R.length > 1) {
+      var dpath = R.map(function (p, i) { return (i ? 'L' : 'M') + p.x + ' ' + p.y; }).join(' ');
+      out.push('<path class="emp-route" d="' + dpath + '" stroke-width="' + 2.2 * base + '" stroke-dasharray="' + 6 * base + ' ' + 4 * base + '"/>');
+      R.forEach(function (p, i) { if (!i) return; var a = R[i - 1], mx = (a.x + p.x) / 2, my = (a.y + p.y) / 2, ang = Math.atan2(p.y - a.y, p.x - a.x) * 180 / Math.PI;
+        if (Math.abs(p.x - a.x) + Math.abs(p.y - a.y) > 12 * base) out.push('<path class="emp-arw" d="M' + (-4 * base) + ' ' + (-3 * base) + 'L' + 3 * base + ' 0L' + (-4 * base) + ' ' + 3 * base + 'Z" transform="translate(' + mx + ' ' + my + ') rotate(' + ang + ')"/>'); });
+    }
+    if (act) act.P.forEach(function (p) { out.push('<circle class="emp-hit" cx="' + p.x + '" cy="' + p.y + '" r="' + 4.5 * base + '"><title>' + esc(p.how) + '</title></circle>'); });
+    var used = {};
+    R.forEach(function (p) {
+      if (p.wp) return;
+      var on = act && act.urut === p.urut, r = (on ? 8.5 : 6.5) * base, k = Math.round(p.x) + '|' + Math.round(p.y), off = (used[k] = (used[k] || 0) + 1) - 1, cx = p.x + off * r * 1.9, cy = p.y - r * 1.2;
+      out.push('<g class="emp-pin' + (on ? ' on' : '') + ' t-' + String(p.tahap).split('_')[0] + '" data-step="' + p.urut + '"><line x1="' + p.x + '" y1="' + p.y + '" x2="' + cx + '" y2="' + cy + '" stroke-width="' + base + '"/><circle cx="' + cx + '" cy="' + cy + '" r="' + r + '"/><text x="' + cx + '" y="' + (cy + r * 0.38) + '" font-size="' + r * 1.05 + '">' + p.urut + '</text><title>' + esc('Langkah ' + p.urut + ' · ' + p.how + ' (letak perkiraan)') + '</title></g>');
+    });
+    out.push('</svg>');
+    return out.join('');
+  }
+
+  root.KAIEmp = { schemas: schemas, segs: segs, model: model, flowsAt: flowsAt, resolve: resolve, steps: steps, route: route, stage: stage, usage: usage, svg: svg, q: q, TERM_RE: TERM_RE };
+})(typeof window !== 'undefined' ? window : this);
+
+/* ---------- Komponen profil terminal: emplasemen interaktif ---------- */
+document.addEventListener('alpine:init', function () {
+  var STAGE_N = { pra_muat: 'Pra muat', muat: 'Muat (inti)', pasca_muat: 'Pasca muat', pra_bongkar: 'Pra bongkar', bongkar: 'Bongkar (inti)', pasca_bongkar: 'Pasca bongkar' };
+  var cache = { tick: -1, S: [] };
+  Alpine.data('vBbEmp', function () {
+    return {
+      sid: '', tipe: '', pick: '', stepN: 0, sel: {},
+      get bb() { return this.$store.bb; },
+      get kode() { return this.$store.app.params && this.$store.app.params.id || ''; },
+      get all() { var bb = this.bb; if (!bb.ready) return []; if (cache.tick !== bb.tick) { cache = { tick: bb.tick, S: KAIEmp.schemas(BBK.rows('EMPLASEMEN_SKEMA')) }; } return cache.S; },
+      get list() { var k = this.kode; return this.all.filter(function (o) { return o.kode === k; }).sort(function (a, b) { return a.jenis === 'skema' ? -1 : b.jenis === 'skema' ? 1 : 0; }); },
+      get cur() { var L = this.list, id = this.sid; return L.filter(function (o) { return o.id === id; })[0] || L[0] || null; },
+      get M() { var c = this.cur; if (!c) return null; var k = 'emp|' + c.id; return this.bb.memo(k, function () { return KAIEmp.model(c, BBK.rows('EMPLASEMEN_JALUR')); }); },
+      get term() { var k = this.kode; return BBK.rows('M_TERMINAL').filter(function (t) { return t.kode === k; })[0] || {}; },
+      get flows() { return KAIEmp.flowsAt(this.kode, BBK.rows('M_UPT')); },
+      get flow() { var F = this.flows, t = this.tipe; return F.filter(function (f) { return f.tipe === t; })[0] || F[0] || null; },
+      get steps() {
+        var M = this.M, f = this.flow, bb = this.bb, kode = this.kode; if (!M || !f) return [];
+        var S = KAIEmp.steps(f.tipe, BBK.rows('ALUR_KEGIATAN'), M), prog = BBK.rows('PROGRAM_KA').filter(function (p) { return p.versi === bb.versi; });
+        var real = bb.memo('ter', function () { return BBK.terminal(bb.F) || []; }), st = {};
+        S.forEach(function (s) { if (!st[s.tahap]) st[s.tahap] = KAIEmp.stage(kode, s.tahap, prog, real, BBK.sop); s.stat = st[s.tahap]; s.tn = STAGE_N[s.tahap] || s.tahap; });
+        return S;
+      },
+      get route() { return KAIEmp.route(this.steps, this.pick); },
+      get act() { var n = this.stepN; return this.steps.filter(function (s) { return s.urut === n; })[0] || null; },
+      get html() { var M = this.M; return M ? KAIEmp.svg(M, { route: this.route, step: this.act, sel: this.sel }) : ''; },
+      /** Fasilitas bongkar/muat di gambar (untuk memilih lintasan). */
+      get facs() { var M = this.M; if (!M) return []; return M.labels.filter(function (l) { return l.kind === 'terminal' && !/DEPO|Pertamina/i.test(l.s); }).map(function (l) { return { ref: l.id, n: l.s }; })
+        .concat(M.tracks.filter(function (k) { return k.kind === 'terminal'; }).map(function (k) { return { ref: k.id, n: 'Jalur ' + k.j + (k.ket ? ' (' + k.ket + ')' : '') }; })); },
+      get nTrk() { var M = this.M; return M ? { st: M.tracks.filter(function (k) { return k.kind === 'stasiun'; }).length, tm: M.tracks.filter(function (k) { return k.kind === 'terminal'; }).length + this.facs.filter(function (f) { return f.ref[0] === 't'; }).length } : null; },
+      tap: function (e) {
+        var el = e.target.closest('[data-trk],[data-lbl],[data-step]'); if (!el) { this.sel = {}; return; }
+        if (el.dataset.step) { var n = +el.dataset.step; this.stepN = this.stepN === n ? 0 : n; return; }
+        if (el.dataset.trk) { this.sel = this.sel.track === el.dataset.trk ? {} : { track: el.dataset.trk }; return; }
+        var r = el.dataset.lbl; this.sel = this.sel.label === r ? {} : { label: r }; this.pick = r;
+      },
+      setPick: function (r) { this.pick = r; this.sel = r ? (r[0] === 't' ? { label: r } : { track: r }) : {}; },
+      dur: function (m) { return m == null ? '–' : BBK.fmt.dur(Math.round(m)); },
+      sopTxt: function (st) { return !st || st.sopLo == null ? 'tanpa SOP kontrak' : st.sopLo === st.sopHi ? 'SOP ' + this.dur(st.sopLo) : 'SOP ' + this.dur(st.sopLo) + '–' + this.dur(st.sopHi); },
+      barW: function (v, st) { var mx = Math.max(st.p85 || 0, st.sopHi || 0, 1); return v == null ? 0 : Math.max(2, Math.min(100, 100 * v / mx)); },
+      /** Rincian jalur/fasilitas terpilih: data jalur + pemakaian program + realisasi (perkiraan bila lewat nomor KA). */
+      get detail() {
+        var M = this.M, s = this.sel, bb = this.bb, kode = this.kode; if (!M || (!s.track && !s.label)) return null;
+        if (s.track) {
+          var k = M.tracks.filter(function (x) { return x.id === s.track; })[0]; if (!k) return null;
+          var use = k.kind === 'terminal' ? KAIEmp.usage(kode, k.ket || k.j, BBK.rows('PRG_TERMINAL'), bb.versi) : [];
+          return this.facDetail({ t: 'Jalur ' + k.j, kind: k.kind, facts: [['Panjang', k.m ? KAI.fmt.n(k.m) + ' m' : 'tidak tercatat'], ['Keterangan', k.ket || '–'], ['Jenis', k.kind === 'terminal' ? 'Fasilitas terminal bongkar/muat' : 'Jalur emplasemen stasiun'], ['Sumber', (k.status ? k.status + ' · ' : '') + (k.sumber || M.sc.sumber)]] }, use);
+        }
+        var l = M.labels.filter(function (x) { return x.id === s.label; })[0]; if (!l) return null;
+        return this.facDetail({ t: l.s, kind: 'terminal', facts: [['Jenis', 'Fasilitas terminal bongkar/muat'], ['Sumber gambar', M.sc.sumber]] }, KAIEmp.usage(kode, l.s, BBK.rows('PRG_TERMINAL'), bb.versi), l.s);
+      },
+      facDetail: function (o, use, name) {
+        var bb = this.bb, kode = this.kode;
+        o.use = use.map(function (r) { return { dat: r.ka_dat, jd: BBK.fmt.hm(r.jam_dat), ber: r.ka_ber, jb: BBK.fmt.hm(r.jam_ber), wtt: +r.wtt || null }; });
+        o.wttProg = use.length ? KAIEmp.q(use.map(function (r) { return +r.wtt; }).filter(function (x) { return x > 0; }), 0.5) : null;
+        // realisasi: Tarahan punya nomor RCD di REAL_THN; fasilitas lain lewat nomor KA program (perkiraan)
+        var rcd = name && /RCD\s*(I{1,3}|IV|\d)\b(?!\s*T)/i.exec(name);
+        if (kode === 'THN' && rcd && BBK.has('REAL_THN')) {
+          var no = { I: 1, II: 2, III: 3, IV: 4 }[rcd[1].toUpperCase()] || +rcd[1], R = BBK.rows('REAL_THN').filter(function (r) { return +r.rcd === no; });
+          var b = R.map(function (r) { return +r.bongkar; }).filter(function (x) { return x > 0; }), w = R.map(function (r) { return +r.wtt; }).filter(function (x) { return x > 0; }), sop = R.map(function (r) { return +r.sop_bongkar_rcd; }).filter(function (x) { return x > 0; });
+          var sp = sop.length ? KAIEmp.q(sop, 0.5) : null;
+          o.real = { how: 'REAL_THN, rangkaian dibongkar di RCD ' + no + ' (seluruh periode rekon)', n: R.length, rows: [['Bongkar di RCD (batas = SOP RCD di rekon Tarahan)', KAIEmp.q(b, 0.5), KAIEmp.q(b, 0.85), sp, sp != null ? b.filter(function (x) { return x > sp; }).length / b.length : null], ['WTT di Tarahan', KAIEmp.q(w, 0.5), KAIEmp.q(w, 0.85), null, null]] };
+        } else if (use.length) {
+          var nos = {}; use.forEach(function (r) { nos[String(r.ka_ber)] = 1; nos[String(r.ka_dat)] = 1; });
+          var T = bb.memo('ter', function () { return BBK.terminal(bb.F) || []; }), side = BBK.rows('M_TERMINAL').some(function (t) { return t.kode === kode && /MUAT/.test(t.peran) && !/BONGKAR/.test(t.peran); }) ? 'muat' : 'bongkar';
+          var R2 = T.filter(function (r) { return (side === 'muat' ? r.stasiun_muat : r.stasiun_bongkar) === kode && String(r.no_ka).split('-').some(function (n) { return nos[n]; }); });
+          var tot = R2.map(function (r) { var a = [r['pra_' + side], r[side], r['pasca_' + side]]; return a.every(function (x) { return x != null && x !== ''; }) ? +a[0] + +a[1] + +a[2] : null; }).filter(function (x) { return x != null; });
+          var inti = R2.map(function (r) { return r[side]; }).filter(function (x) { return x != null && x !== ''; }).map(Number);
+          o.real = { how: 'Perkiraan: kegiatan ' + side + ' KA yang diprogram di fasilitas ini (REAL_TERMINAL tidak mencatat jalur/fasilitas nyata) · saringan bulan aktif', n: R2.length,
+            rows: [['Pra + inti + pasca', KAIEmp.q(tot, 0.5), KAIEmp.q(tot, 0.85), o.wttProg, o.wttProg != null && tot.length ? tot.filter(function (x) { return x > o.wttProg; }).length / tot.length : null], [side === 'muat' ? 'Muat (inti)' : 'Bongkar (inti)', KAIEmp.q(inti, 0.5), KAIEmp.q(inti, 0.85), null, null]] };
+        }
+        return o;
+      }
+    };
+  });
+});
+</script>

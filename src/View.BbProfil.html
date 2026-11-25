@@ -14,6 +14,8 @@
         <div class="card mt" x-show="legsOpt"><div class="card-h"><div><h3>Satu putaran rangkaian (program)</h3><p>Abu tua = WTT di terminal · biru = perjalanan isi · kelabu-biru = perjalanan kosong (PRG_SIKLUS)</p></div></div>
           <div class="card-b fill"><div class="chart short" x-chart="legsOpt"></div></div></div>
 
+        <template x-if="type === 'terminal'"><div><?!= include('Part.BbEmplasemen'); ?></div></template>
+
         <div class="xf-bar mt" x-show="xm"><span class="note">Disaring:</span><button type="button" class="chip on" @click="xm = ''"><span x-text="$store.bb.MON[+xm.slice(5) - 1] + ' ' + xm.slice(0, 4)"></span> ✕</button></div>
         <p class="note xf-hint mt" x-show="!xm && monthOpt">Klik bulan pada grafik untuk menyaring tahap dan hambatan di sampingnya.</p>
         <div class="grid g-3x mt">

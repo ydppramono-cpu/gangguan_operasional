@@ -12,7 +12,11 @@
  *     headway  KA searah berurutan di petak: jalur ganda w = headway_dipakai antar keberangkatan dan antar kedatangan;
  *              jalur tunggal w = waktu bebas blok (headway − wp, min 1) dari kedatangan KA depan
  *     silang   jalur tunggal, KA berlawanan: KA kedua berangkat setelah KA pertama tiba + waktu bebas blok
- *     siklus   rangkaian datang di terminal → berangkat lagi: w = min(rencana, WTT program terpendek di terminal itu)
+ *     siklus   rangkaian datang di terminal → berangkat lagi: w = batas SOP kontrak per KA (opt.sop: PROGRAM_KA pra+inti+pasca,
+ *              SOP ganda = durasi terpendek atau terpanjang pilihan pengguna; KA tanpa SOP = WTT program); tanpa opt.sop =
+ *              WTT program terpendek di terminal itu; dibatasi selisih rencana bila pasangan tidak diubah.
+ *              opt.tukar: rangkaian program belum siap → rangkaian siap paling awal di terminal yang sama, kelompok & relasi KA
+ *              datang sama (FIFO, maks 3 putaran).
  *     sambung  satu perjalanan berganti nomor di batas Divre (M_KA "4000-4001"): tiba nomor A → berangkat nomor B
  *     awak     dinasan masinis O.20 (hanya GAPEKA 2025): KA berikutnya awak yang sama, w = min(rencana, 30 menit)
  *     antrean  (opsi antrean) terminal penuh: KA yang datang saat semua jalur terisi menunggu di sinyal masuk sampai
@@ -147,7 +151,7 @@
     var instOf = function (no, day) { var ti = P.byNo[no]; if (ti == null) return null; for (var j = 0; j < T.length; j++) if (T[j].ti === ti && T[j].day === day) return T[j]; return null; };
     var lastAt = function (I, c) { var p = P.trains[I.ti].pts; for (var s = p.length - 1; s >= 0; s--) if (p[s].c === c) return s; return -1; };
     var firstAt = function (I, c) { var p = P.trains[I.ti].pts; for (var s = 0; s < p.length; s++) if (p[s].c === c) return s; return -1; };
-    var nSik = 0, sikP = [];
+    var nSik = 0, sikP = [], sikL = [];
     ((!opt.replay && BB.sik && BB.sik[P.versi]) || []).forEach(function (r) {
       var c = norm(r[0]), wmin = (BB.wtt && BB.wtt[P.versi] && BB.wtt[P.versi][c]) || r[3];
       [0, 1].forEach(function (day) {
@@ -160,10 +164,17 @@
           var g = N[B.d[sb]].plan0 - N[A.a[sa]].plan0;
           if (g < 0 || g > 2 * DAY) return false;
           if (Math.abs(g - r[3]) > 90 && d2 === day) return false;   // pasangan hari yang cocok dengan WTT program
-          add(A.a[sa], B.d[sb], Math.min(wmin, r[3]), 'siklus', A.moved || B.moved ? null : 1); nSik++; sikP.push([A.a[sa], B.d[sb], c]); return true;
+          // batas waktu di terminal: SOP kontrak per KA bila diberikan (opt.sop), selain itu WTT program terpendek di terminal
+          var so = opt.sop ? opt.sop(c, r[1], r[2], r[3]) : null;
+          var tA = P.trains[A.ti];
+          sikL.push({ c: c, a: A.a[sa], b: B.d[sb], kd: r[1], kb: r[2], w: so ? so.w : Math.min(wmin, r[3]), so: so, prog: r[3], g: g, moved: A.moved || B.moved, day: day, grp: (tA.grp || '') + '|' + (tA.relasi || '') });
+          return true;
         });
       });
     });
+    // tukar rangkaian (FIFO): pasangan pengganti hasil putaran sebelumnya (opt._pairs: simpul berangkat → entri kedatangan)
+    if (opt._pairs) sikL.forEach(function (e) { var x = opt._pairs[e.b]; if (x && x.a !== e.a) { e.a = x.a; e.kd = x.kd; e.sw = true; e.w = x.w; e.so = x.so; } });
+    sikL.forEach(function (e) { add(e.a, e.b, e.w, 'siklus', e.moved || e.sw ? null : 1); nSik++; sikP.push([e.a, e.b, e.c]); });
     ((!opt.replay && BB.sam && BB.sam[P.versi]) || []).forEach(function (r) {
       [0, 1].forEach(function (day) {
         var A = instOf(r[0], day) || instOf(r[1], day), B = instOf(r[2], day); if (!A || !B || A === B) return;
@@ -200,6 +211,11 @@
       });
     }
     if (seen < N.length) return { error: 'siklus', N: N, T: T };
+    /* ---- tukar rangkaian: rangkaian program belum siap saat jadwal berangkat → rangkaian siap paling awal di terminal sama ---- */
+    if (opt.tukar && (opt._tr || 0) < 3 && sikL.length) {
+      var asg = fifo(sikL, t, N);
+      if (asg) { var rt = run(P, edits, Object.assign({}, opt, { _pairs: Object.assign({}, opt._pairs || {}, asg), _tr: (opt._tr || 0) + 1 })); if (!rt.error) return rt; }
+    }
     /* ---- mode prioritas: tukar urutan yang menahan KA prioritas lebih tinggi ---- */
     if (opt.prioritas && (opt._round || 0) < 6) {
       var cand = null;
@@ -242,7 +258,41 @@
     }
     var out2 = summarize(P, N, T, t, by, byT, nSik, Object.keys(swaps).length);
     out2.term = TO.pk; out2.nQ = (opt._q || []).length;
+    out2.turn = turnaround(sikL, t, N, byT);
     return out2;
+  }
+
+  /**
+   * Penugasan FIFO per terminal. Siap = datang + batas (pasangan program tanpa perubahan: batas dibatasi selisih rencana, agar
+   * skenario kosong = GAPEKA). Tiap keberangkatan (urut rencana) memakai rangkaian programnya bila siap tepat waktu; bila tidak,
+   * rangkaian bebas yang siap paling awal. Mengembalikan pasangan yang berubah, atau null.
+   */
+  function fifo(L, t, N) {
+    var by = {}, out = {}, ch = 0;
+    L.forEach(function (e) { (by[e.c] = by[e.c] || []).push(e); });
+    Object.keys(by).forEach(function (c) {
+      var E = by[c], pool = E.map(function (e) { return { a: e.a, kd: e.kd, w: e.w, so: e.so, grp: e.grp, ready: t[e.a] + (e.moved || e.sw ? e.w : Math.min(e.w, Math.max(0, e.g))), used: false }; });
+      E.slice().sort(function (x, y) { return N[x.b].plan - N[y.b].plan; }).forEach(function (e) {
+        var due = N[e.b].plan + 0.5, own = pool.filter(function (p) { return p.a === e.a && !p.used; })[0], pick = own && own.ready <= due ? own : null;
+        if (!pick) { var free = pool.filter(function (p) { return !p.used && p.grp === e.grp && t[p.a] <= N[e.b].plan + 0.5; }).sort(function (x, y) { return x.ready - y.ready; }); pick = free[0] && (!own || free[0].ready < own.ready - 0.5) ? free[0] : own; }
+        if (!pick) return; pick.used = true;
+        if (pick.a !== e.a) { out[e.b] = { a: pick.a, kd: pick.kd, w: pick.w, so: pick.so }; ch++; }
+      });
+    });
+    return ch ? out : null;
+  }
+
+  /**
+   * Garis perputaran rangkaian di terminal: datang (KA ka_dat) → berangkat lagi (KA ka_ber).
+   * st: 'ok' = rangkaian siap (datang + batas) sebelum jadwal berangkat; 'prog' = jadwal program sendiri lebih pendek dari batas,
+   * KA berikutnya tidak tertunda karena rangkaian; 'putus' = KA berikutnya berangkat terlambat karena rangkaian belum siap.
+   */
+  function turnaround(L, t, N, byT) {
+    return L.map(function (e) {
+      var ta = t[e.a], tb = t[e.b], pb = N[e.b].plan, ready = ta + e.w, late = tb > pb + 0.5 && byT[e.b] === 'siklus';
+      return { c: e.c, a: e.a, b: e.b, kd: e.kd, kb: e.kb, w: e.w, so: e.so || null, prog: e.prog, g: e.g, sw: !!e.sw, ta: ta, tb: tb, pa: N[e.a].plan0, pb: pb, pb0: N[e.b].plan0,
+        dwell: tb - ta, ready: ready, st: ready <= pb + 0.5 ? 'ok' : late ? 'putus' : 'prog' };
+    });
   }
 
   /** Okupansi terminal (stasiun berperan terminal di M_STASIUN): interval [simpul masuk, simpul keluar] + puncak. */

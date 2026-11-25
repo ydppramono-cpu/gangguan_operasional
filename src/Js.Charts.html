@@ -17,7 +17,15 @@ window.KAIChart = (function () {
       categoryAxis: { axisLine: { lineStyle: { color: '#C9D1DE' } }, axisTick: { show: false }, axisLabel: { color: C.axis }, splitLine: { show: false } },
       valueAxis: { axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: C.axis }, splitLine: { lineStyle: { color: C.grid } } },
       legend: { textStyle: { color: C.axis }, icon: 'circle', itemWidth: 9, itemHeight: 9 },
-      tooltip: { backgroundColor: '#fff', borderColor: '#D8DEEA', textStyle: { color: C.ink, fontSize: 12.5 }, extraCssText: 'box-shadow:0 8px 24px rgba(23,34,59,.14);border-radius:10px;' }
+      tooltip: { backgroundColor: 'rgba(255,255,255,.97)', borderColor: '#D8DEEA', padding: [8, 11], textStyle: { color: C.ink, fontSize: 12.5 }, extraCssText: 'box-shadow:0 10px 28px rgba(23,34,59,.16);border-radius:12px;backdrop-filter:blur(4px);',
+        axisPointer: { lineStyle: { color: '#94A3B8', type: 'dashed' }, crossStyle: { color: '#94A3B8' }, shadowStyle: { color: 'rgba(37,34,113,.06)' } } },
+      // v3.24 sistem visual terpadu: satu gaya garis/batang/titik di semua grafik
+      line: { symbol: 'circle', symbolSize: 6, lineStyle: { width: 2.4 }, emphasis: { lineStyle: { width: 3.4 } } },
+      bar: { barMaxWidth: 34, emphasis: { itemStyle: { shadowBlur: 8, shadowColor: 'rgba(23,34,59,.18)' } } },
+      scatter: { emphasis: { itemStyle: { borderColor: '#fff', borderWidth: 2, shadowBlur: 8, shadowColor: 'rgba(23,34,59,.25)' } } },
+      dataZoom: { borderColor: '#D8DEEA', fillerColor: 'rgba(37,34,113,.10)', handleStyle: { color: '#fff', borderColor: '#94A3B8' }, dataBackground: { lineStyle: { color: '#A5A8D6' }, areaStyle: { color: 'rgba(37,34,113,.08)' } }, textStyle: { color: C.axis } },
+      visualMap: { textStyle: { color: C.axis } },
+      markLine: { label: { color: C.axis } }
     });
   }
   var REDUCE = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -260,7 +268,38 @@ window.KAIChart = (function () {
       if (ax.minInterval == null && /kejadian|perjalanan|jumlah|\bKA\b/i.test(ax.name || '')) ax.minInterval = 1; } });
     if (g && A.y[0] && A.y[0].name && A.y[0].nameLocation === 'middle' && (g.left || 0) < 30) g.left = 30;
     if (g && A.y[1] && A.y[1].name && A.y[1].nameLocation === 'middle' && (g.right || 0) < 40) g.right = 40;
+    interact(o, A, idn);
     return o;
+  }
+  /**
+   * v3.24 interaksi baku semua grafik: sorot seri saat diarahkan (seri lain meredup), transisi halus saat saringan berubah,
+   * tooltip tetap di dalam grafik, dan tooltip sumbu kaya: nilai per seri + perubahan terhadap kategori sebelumnya
+   * (hanya bila sumbu kategori adalah urutan waktu: bulan/tanggal/jam) + keterangan sumber dari subjudul kartu.
+   */
+  var TIME_CAT = /^(Jan|Feb|Mar|Apr|Mei|Jun|Jul|Agu|Sep|Okt|Nov|Des)\b|^\d{4}-\d{2}|^\d{1,2}(:00)?$|^\d{1,2} (Jan|Feb|Mar|Apr|Mei|Jun|Jul|Agu|Sep|Okt|Nov|Des)/;
+  function interact(o, A, idn) {
+    var S = (o.series || []).filter(function (s) { return s && /^(bar|line|scatter)$/.test(s.type); });
+    S.forEach(function (s) {
+      if (S.length > 1 && !s.emphasis) s.emphasis = { focus: 'series', blurScope: 'coordinateSystem' };
+      if (s.universalTransition == null) s.universalTransition = { enabled: true };
+    });
+    if (!o.tooltip) return;
+    o.tooltip.confine = true;
+    var tt = o.tooltip, xa = A.x[0], cats = xa && xa.type === 'category' ? (xa.data || []).map(function (c) { return String(c && c.value != null ? c.value : c); }) : null;
+    if (tt.trigger !== 'axis' || tt.formatter || !cats || !cats.length || o.series.length > 6) return;
+    var isTime = cats.filter(function (c) { return TIME_CAT.test(c); }).length >= Math.max(2, cats.length * 0.8), vf = tt.valueFormatter || idn;
+    tt.formatter = function (ps) {
+      if (!ps || !ps.length) return '';
+      var i = ps[0].dataIndex, h = '<div style="font-weight:700;margin-bottom:4px">' + KAI.esc(ps[0].axisValueLabel || ps[0].name || '') + '</div>';
+      ps.forEach(function (p) {
+        var v = val(p.data), prev = isTime && i > 0 && o.series[p.seriesIndex] ? val((o.series[p.seriesIndex].data || [])[i - 1]) : null, d = v != null && prev != null && !Array.isArray(v) && !Array.isArray(prev) ? v - prev : null;
+        h += '<div style="display:flex;gap:10px;align-items:center;justify-content:space-between;min-width:180px">' + '<span>' + p.marker + KAI.esc(p.seriesName || '') + '</span><b style="font-variant-numeric:tabular-nums">' + vf(p.value) +
+          (d ? ' <span style="font-weight:600;font-size:11px;color:' + (d > 0 ? '#B42318' : '#1F8A2E') + '">' + (d > 0 ? '▲' : '▼') + ' ' + idn(Math.abs(d)) + '</span>' : '') + '</b></div>';
+      });
+      if (isTime && i > 0) h += '<div style="color:#64748B;font-size:11px;margin-top:4px">▲▼ dibanding ' + KAI.esc(cats[i - 1]) + '</div>';
+      if (tt.__src) h += '<div style="color:#64748B;font-size:11px;margin-top:2px;max-width:280px;white-space:normal">' + KAI.esc(tt.__src) + '</div>';
+      return h;
+    };
   }
   /**
    * Zoom. Di halaman: TANPA zoom 'inside' (zoom 'inside' menangkap roda mouse sehingga halaman tidak bisa digulir);
@@ -439,8 +478,18 @@ window.KAIChart = (function () {
     KAIExport.csv(rows, cols, 'Grafik_' + info.title);
   }
 
+  /** Direktif Alpine x-spark="[angka…]": garis mini SVG di sel tabel (titik akhir ditandai; judul = rentang & nilai akhir). */
+  function sparkSvg(a) {
+    a = (a || []).map(function (v) { return v == null || isNaN(v) ? null : +v; }); var V = a.filter(function (v) { return v != null; });
+    if (V.length < 2) return '<span class="nil">–</span>';
+    var W = 84, H = 22, mn = Math.min.apply(null, V), mx = Math.max.apply(null, V), r = mx - mn || 1, n = a.length;
+    var pts = [], last = null; a.forEach(function (v, i) { if (v == null) return; var x = 2 + i * (W - 4) / (n - 1), y = H - 3 - (v - mn) / r * (H - 6); pts.push(x.toFixed(1) + ',' + y.toFixed(1)); last = [x, y]; });
+    return '<svg class="spark" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="tren"><title>' + 'terendah ' + KAI.fmt.n(mn) + ' · tertinggi ' + KAI.fmt.n(mx) + ' · terakhir ' + KAI.fmt.n(V[V.length - 1]) + '</title>' +
+      '<polyline points="' + pts.join(' ') + '" fill="none" stroke="#252271" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="2.4" fill="#F06A25"/></svg>';
+  }
   /** Direktif Alpine x-chart: grafik reaktif + bilah alat (perbesar, perkecil, atur ulang, layar besar, unduh). */
   function register(Alpine) {
+    Alpine.directive('spark', function (el, d, u) { var get = u.evaluateLater(d.expression); u.effect(function () { get(function (a) { el.innerHTML = sparkSvg(a); }); }); });
     Alpine.directive('chart', function (el, d, u) {
       var get = u.evaluateLater(d.expression), inst = null, ro = null, cur = null;
       var bar = document.createElement('div'); bar.className = 'cbar no-print';
@@ -466,7 +515,8 @@ window.KAIChart = (function () {
         get(function (opt) {
           if (!opt || !window.echarts) { bar.style.visibility = 'hidden'; return; }
           bar.style.visibility = '';
-          theme(); standard(opt, el.clientWidth); withZoom(opt); cur = opt;
+          theme(); if (opt.tooltip && opt.tooltip.__src == null) { var cx = contextOf(el); opt.tooltip.__src = cx.sub ? cx.sub.slice(0, 140) : ''; }
+          standard(opt, el.clientWidth); withZoom(opt); cur = opt;
           var zoomable = !!opt.dataZoom && opt.dataZoom.length;
           [].forEach.call(bar.querySelectorAll('[data-a="reset"]'), function (b) { b.style.display = zoomable ? '' : 'none'; });
           if (!inst) {
@@ -497,7 +547,7 @@ window.KAIChart = (function () {
     stackClass: function (rows, metric) { return named(stackClass(rows, metric), NM(metric), 'Wilayah'); },
     monthly: function (rows) { return named(monthly(rows), 'Bulan', 'Kejadian (kejadian)', 'Kelambatan (menit)'); },
     expoMonthly: function (m, f) { return named(expoMonthly(m, f), 'Bulan', 'Eksposur (Rp)'); },
-    toImage: toImage, describe: describe, register: register, CLASS_LABEL: CLASS_LABEL
+    toImage: toImage, describe: describe, register: register, sparkSvg: sparkSvg, CLASS_LABEL: CLASS_LABEL
   };
 })();
 </script>

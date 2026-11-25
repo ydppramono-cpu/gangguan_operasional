@@ -1,0 +1,54 @@
+<!-- Part.BbEmplasemen — profil terminal: gambar emplasemen interaktif (Js.Emplasemen). Jalur & fasilitas dapat diklik; langkah alur
+     kegiatan berbatas SOP kontrak dan realisasi; letak langkah & garis lintasan = perkiraan (dipetakan dari nama titik). -->
+<div class="card mt" x-data="vBbEmp" x-show="list.length">
+  <div class="card-h"><div><h3>Emplasemen &amp; alur kegiatan</h3>
+    <p x-text="cur ? cur.judul + ' · ' + cur.sumber : ''"></p></div>
+    <span class="spacer"></span>
+    <div class="seg" x-show="list.length > 1"><template x-for="o in list" :key="o.id"><button type="button" :aria-pressed="!!(cur && cur.id === o.id)" @click="sid = o.id; sel = {}; stepN = 0" x-text="o.jenis === 'skema' ? 'Skema jalur' : 'Tata letak & persinyalan'"></button></template></div>
+  </div>
+  <div class="card-b">
+    <div class="emp-bar">
+      <div class="emp-leg"><span class="k st"></span>Jalur emplasemen stasiun <b x-text="nTrk ? nTrk.st : ''"></b>
+        <span class="k tm"></span>Fasilitas terminal bongkar/muat <b x-text="nTrk ? nTrk.tm : ''"></b>
+        <span class="k rt"></span>Lintasan langkah <em>perkiraan</em></div>
+      <div class="emp-ctl">
+        <label x-show="flows.length > 1">Alur <select class="inp sm" x-model="tipe"><template x-for="f in flows" :key="f.tipe"><option :value="f.tipe" x-text="f.upt + ' · ' + f.jenis"></option></template></select></label>
+        <label x-show="facs.length">Lintasan lewat <select class="inp sm" :value="pick" @change="setPick($event.target.value)"><option value="">fasilitas terdekat</option><template x-for="f in facs" :key="f.ref"><option :value="f.ref" x-text="f.n"></option></template></select></label>
+      </div>
+    </div>
+    <div class="emp-wrap" @click="tap($event)" x-html="html"></div>
+    <p class="note" x-show="!flow">Lokasi ini bukan terminal batubara di M_UPT: hanya jalur yang ditampilkan, tanpa alur kegiatan.</p>
+
+    <div class="emp-detail mt-s" x-show="detail" x-transition.opacity>
+      <template x-if="detail"><div>
+        <div class="emp-dh"><span class="tag" :class="detail.kind === 'terminal' ? 'warn' : ''" x-text="detail.kind === 'terminal' ? 'Terminal' : 'Stasiun'"></span><b x-text="detail.t"></b><span class="spacer"></span><button class="btn sm ghost" @click="sel = {}" aria-label="Tutup">✕</button></div>
+        <dl class="emp-facts"><template x-for="f in detail.facts" :key="f[0]"><div><dt x-text="f[0]"></dt><dd x-text="f[1]"></dd></div></template></dl>
+        <template x-if="detail.real"><div class="mt-s"><div class="note" x-text="detail.real.how + ' · ' + KAI.fmt.n(detail.real.n) + ' kegiatan'"></div>
+          <table class="tbl sm"><thead><tr><th>Ukuran</th><th class="num">Median</th><th class="num">P85</th><th class="num">Batas</th><th class="num">Melewati batas</th></tr></thead>
+            <tbody><template x-for="r in detail.real.rows" :key="r[0]"><tr><td x-text="r[0]"></td><td class="num" x-text="dur(r[1])"></td><td class="num" x-text="dur(r[2])"></td><td class="num" x-text="r[3] != null ? dur(r[3]) : '–'"></td>
+              <td class="num" :class="r[4] > 0.5 && 'bad-t'" x-text="r[4] != null ? BBK.fmt.pct0(r[4]) : '–'"></td></tr></template></tbody></table></div></template>
+        <template x-if="detail.use && detail.use.length"><div class="mt-s"><div class="note" x-text="'Dipakai ' + detail.use.length + ' KA program ' + $store.bb.versi + ' (PRG_TERMINAL) · WTT program median ' + dur(detail.wttProg)"></div>
+          <div class="emp-use"><template x-for="(u, i) in detail.use" :key="i"><span class="tag" x-text="u.dat + ' ' + u.jd + ' → ' + u.ber + ' ' + u.jb + ' · ' + dur(u.wtt)"></span></template></div></div></template>
+        <p class="note" x-show="detail.kind === 'terminal' && !(detail.use && detail.use.length) && !detail.real">Tidak ada KA program yang tercatat memakai fasilitas ini di PRG_TERMINAL.</p>
+      </div></template>
+    </div>
+
+    <div class="emp-steps mt" x-show="steps.length">
+      <template x-for="s in steps" :key="s.urut">
+        <button type="button" class="emp-step" :class="[stepN === s.urut && 'on', 't-' + s.tahap.split('_')[0]]" @click="stepN = stepN === s.urut ? 0 : s.urut">
+          <div class="emp-sh"><span class="n" x-text="s.urut"></span><span x-text="s.langkah"></span></div>
+          <div class="emp-st" x-text="s.tn"></div>
+          <div class="emp-sv" x-show="s.stat && s.stat.n">
+            <div class="emp-bars"><i class="r" :style="'width:' + barW(s.stat.med, s.stat) + '%'"></i><i class="p" :style="'width:' + barW(s.stat.p85, s.stat) + '%'"></i>
+              <b class="s" x-show="s.stat.sopHi != null" :style="'left:' + barW(s.stat.sopLo, s.stat) + '%;width:' + Math.max(1, barW(s.stat.sopHi, s.stat) - barW(s.stat.sopLo, s.stat)) + '%'"></b></div>
+            <div x-text="'Realisasi median ' + dur(s.stat.med) + ' · P85 ' + dur(s.stat.p85)"></div>
+            <div :class="s.stat.over > 0.5 && 'bad-t'" x-text="sopTxt(s.stat) + (s.stat.over != null ? ' · ' + BBK.fmt.pct0(s.stat.over) + ' melewati' : '')"></div>
+          </div>
+          <div class="emp-sv muted" x-show="!s.stat || !s.stat.n">Realisasi tidak tercatat untuk tahap ini</div>
+          <div class="emp-where" x-text="s.P.length ? 'Di gambar: ' + s.P.slice(0, 3).map(function (p) { return p.how; }).join(', ') + (s.P.length > 3 ? ' +' + (s.P.length - 3) : '') : 'Titik ' + s.titik + ' tidak tergambar di gambar ini'"></div>
+        </button>
+      </template>
+    </div>
+    <p class="note mt-s" x-show="steps.length">Batas per tahap = SOP kontrak PROGRAM_KA (rentang semua KA di lokasi ini, SOP ganda ditulis rentang) · realisasi REAL_TERMINAL pada saringan bulan · "melewati" dibanding SOP relasi masing-masing kegiatan. Langkah dalam satu tahap berbagi angka yang sama karena realisasi dicatat per tahap, bukan per langkah. Letak langkah dan garis lintasan adalah <b>perkiraan</b> dari nama titik ALUR_KEGIATAN, belum dikonfirmasi.</p>
+  </div>
+</div>

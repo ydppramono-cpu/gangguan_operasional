@@ -47,34 +47,75 @@
     </div>
 
     <div x-show="tab === 'awak'" class="mt">
-      <div class="card"><div class="card-h"><div><h3>Dinasan masinis KA batubara</h3><p x-text="'Buku Dinasan O.20 GAPEKA 2025 · ' + awakFlag + ' dinasan hadir < 60 menit sebelum berangkat (SOP Pengoperasian KA 2025 Bab II C.2.a)'"></p></div></div>
-        <div class="card-b tbl-wrap" style="max-height:520px"><table class="tbl sm"><thead><tr><th>UPT crew</th><th>Kode</th><th>KA</th><th>Nama</th><th>Lintas dinas</th><th class="num">Mulai</th><th class="num">Berangkat</th><th class="num">Siap (menit)</th><th class="num">Habis</th><th class="num">Jam dinas</th></tr></thead>
-          <tbody><template x-for="(r, i) in awak" :key="i"><tr :class="r.siap != null && r.siap < 60 && 'late'"><td x-text="r.upt"></td><td x-text="r.kode"></td><td><b x-text="r.no"></b></td><td x-text="r.nama"></td><td x-text="r.lin"></td>
-            <td class="num" x-text="r.mulai"></td><td class="num" x-text="r.brk"></td><td class="num"><b x-text="r.siap == null ? '–' : r.siap"></b></td><td class="num" x-text="r.habis"></td><td class="num" x-text="r.jd != null ? BBK.fmt.dur(r.jd) : '–'"></td></tr></template></tbody></table></div>
-        <div x-data="{ get L() { return insFor(['awak']); } }"><?!= include('Part.BbPita'); ?></div></div>
+      <template x-if="AW"><div>
+        <p class="note story" x-text="'Dinasan masinis KA batubara (Buku Dinasan O.20 GAPEKA 2025) dihubungkan dengan realisasi keterlambatan KA yang sama (' + $store.bb.periodTxt() + '). Angka perkiraan = jam dinas program + keterlambatan datang; belum ada regulasi batas maksimal jam dinas di DB, jadi status melewati batas belum ditampilkan.'"></p>
+        <div class="grid g-4 mt-s">
+          <div class="card kpi"><div class="lbl">Dinasan KA batubara</div><div class="val num" x-text="KAI.fmt.n(AW.n)"></div><div class="note" x-text="AW.nUpt + ' UPT crew · median ' + BBK.fmt.dur(AW.med) + ' per dinasan'"></div></div>
+          <div class="card kpi" style="--kpi-c:var(--kai-navy)"><div class="lbl">Porsi dinas malam</div><div class="val num" x-text="BBK.fmt.pct0(AW.nitePct)"></div><div class="note">menit dinas di antara 22.00–06.00 (definisi tampilan)</div></div>
+          <div class="card kpi" :style="AW.siap ? '--kpi-c:var(--warn)' : '--kpi-c:var(--good)'"><div class="lbl">Hadir &lt; 60 menit sebelum berangkat</div><div class="val num" x-text="KAI.fmt.n(AW.siap)"></div><div class="note">dinasan · SOP Pengoperasian KA 2025 Bab II C.2.a</div></div>
+          <div class="card kpi" style="--kpi-c:var(--bad)"><div class="lbl">Paling berisiko molor <em class="tag warn" style="height:18px">perkiraan</em></div><div class="val" style="font-size:18px" x-text="AW.top ? 'KA ' + AW.top.no + ' · +' + BBK.fmt.dur(AW.top.add85) : '–'"></div>
+            <div class="note" x-text="AW.top ? AW.top.upt + ' kode ' + AW.top.kode + ' · program ' + BBK.fmt.dur(AW.top.dur) + ' → P85 ' + BBK.fmt.dur(AW.top.est85) : 'tidak tercatat'"></div></div>
+        </div>
+        <div class="xf-bar mt" x-show="upt"><span class="note">Disaring:</span><button type="button" class="chip on" @click="upt = ''"><span x-text="upt"></span> ✕</button></div>
+        <div class="grid g-2 mt">
+          <div class="card"><div class="card-h"><div><h3>Beban per UPT crew</h3><p>Jam dinas program per hari · siang/malam · klik UPT untuk menyaring semua grafik &amp; tabel</p></div></div>
+            <div class="card-b fill"><div class="chart" x-chart="tab === 'awak' ? awUptOpt : null" @chart-click="clickUpt($event.detail.name)"></div></div></div>
+          <div class="card"><div class="card-h"><div><h3>Kapan awak paling banyak bertugas</h3><p>Jumlah dinasan sedang bertugas per jam (program) · warna makin gelap = makin banyak · klik UPT</p></div></div>
+            <div class="card-b fill"><div class="chart" x-chart="tab === 'awak' ? awHourOpt : null" @chart-click="clickUpt($event.detail.data && AW.U[$event.detail.data[1]] ? AW.U[$event.detail.data[1]].upt : '')"></div></div></div>
+        </div>
+        <div class="card mt"><div class="card-h"><div><h3>Jam dinas program vs perkiraan bila terlambat <span class="tag warn">perkiraan</span></h3>
+          <p x-text="'Titik = dinasan (' + AW.nLinked + ' terhubung ke realisasi; ' + AW.nSplit + ' berganti awak di tengah perjalanan sehingga keterlambatan di titik ganti tidak tercatat) · di atas garis = molor · ukuran = jumlah perjalanan · warna makin merah = makin sering datang melewati toleransi'"></p></div></div>
+          <div class="card-b fill"><div class="chart tall" x-chart="tab === 'awak' ? awRiskOpt : null" @chart-click="$event.detail.data && $event.detail.data.r && clickUpt($event.detail.data.r.upt)"></div></div></div>
+        <div class="card mt"><div class="card-h"><div><h3>Daftar dinasan menurut risiko molor</h3><p>Urut tambahan jam dinas P85 · baris kuning = hadir &lt; 60 menit sebelum berangkat</p></div></div>
+          <div class="card-b tbl-wrap"><table class="tbl sm" data-pg="15"><thead><tr><th>UPT crew</th><th>Kode</th><th>KA</th><th>Lintas dinas</th><th class="num">Mulai–habis</th><th class="num">Siap (menit)</th><th class="num">Jam dinas program</th><th class="num">Perjalanan</th><th class="num">Datang lewat toleransi</th><th class="num">Tambahan P50 / P85</th><th class="num">Perkiraan P85</th></tr></thead>
+            <tbody><template x-for="(r, i) in awRows" :key="r.upt + r.kode + r.no + i"><tr :class="r.siap != null && r.siap < 60 && 'late'">
+              <td x-text="r.upt"></td><td x-text="r.kode"></td><td><b x-text="r.no"></b> <small x-text="r.nama"></small></td><td x-text="r.lin"></td><td class="num nowrap" x-text="r.mulai + '–' + r.habis"></td>
+              <td class="num" x-text="r.siap == null ? '–' : r.siap"></td><td class="num" x-text="BBK.fmt.dur(r.dur)"></td><td class="num" x-text="r.same ? KAI.fmt.n(r.nTrip) : 'ganti awak'"></td>
+              <td class="num"><span class="bb-mini" x-show="r.lateShare != null" :style="'--v:' + Math.round((r.lateShare || 0) * 100) + '%'" :title="BBK.fmt.pct0(r.lateShare)"><i></i></span> <span x-text="r.lateShare != null ? BBK.fmt.pct0(r.lateShare) : 'tidak tercatat'"></span></td>
+              <td class="num" x-text="r.add85 != null ? '+' + BBK.fmt.dur(r.add50) + ' / +' + BBK.fmt.dur(r.add85) : '–'"></td><td class="num"><b x-text="r.est85 != null ? BBK.fmt.dur(r.est85) : '–'"></b></td></tr></template></tbody></table></div>
+          <div x-data="{ get L() { return insFor(['awak']); } }"><?!= include('Part.BbPita'); ?></div></div>
+      </div></template>
     </div>
 
     <div x-show="tab === 'gangguan'" class="mt">
-      <p class="note story">Kejadian di basis data gangguan (Gangguan_Induk) yang nomor KA-nya terdaftar sebagai KA batubara di M_KA DB Batubara, pada bulan saringan di atas. Gangguan tanpa nomor KA tidak ikut terhitung.</p>
-      <div class="grid g-3 mt-s">
-        <div class="card kpi" style="--kpi-c:var(--bad)"><div class="lbl">Gangguan KA batubara</div><div class="val num" x-text="KAI.fmt.n(Gsum.n)"></div><div class="note" x-text="$store.bb.periodTxt()"></div></div>
-        <div class="card kpi" style="--kpi-c:var(--warn)"><div class="lbl">Kelambatan</div><div class="val num" x-text="KAI.fmt.n(Gsum.m)"></div><div class="note">menit (Total Andil Kelka)</div></div>
-        <div class="card kpi"><div class="lbl">Kelas terbesar</div><div class="val" style="font-size:18px" x-text="Gsum.kelas[0] ? KAI.classLabel(Gsum.kelas[0].k) : 'Tidak ada'"></div><div class="note" x-text="Gsum.kelas[0] ? KAI.fmt.n(Gsum.kelas[0].n) + ' kejadian · ' + KAI.fmt.n(Gsum.kelas[0].m) + ' menit' : ''"></div></div>
-      </div>
-      <div class="grid g-2 mt">
-        <div class="card"><div class="card-h"><div><h3>Per kelas gangguan</h3><p>Kejadian dan menit</p></div></div>
-          <div class="card-b tbl-wrap"><table class="tbl nopg"><thead><tr><th>Kelas</th><th class="num">Kejadian</th><th class="num">Menit</th></tr></thead>
-            <tbody><template x-for="k in Gsum.kelas" :key="k.k"><tr><td x-text="KAI.classLabel(k.k)"></td><td class="num" x-text="KAI.fmt.n(k.n)"></td><td class="num" x-text="KAI.fmt.n(k.m)"></td></tr></template>
-              <tr x-show="!Gsum.kelas.length"><td colspan="3" class="muted">Tidak ada gangguan KA batubara pada periode ini.</td></tr></tbody></table></div></div>
-        <div class="card"><div class="card-h"><div><h3>Lokasi terbanyak</h3><p>Urut menit</p></div></div>
-          <div class="card-b tbl-wrap"><table class="tbl nopg"><thead><tr><th>Lokasi</th><th class="num">Kejadian</th><th class="num">Menit</th></tr></thead>
-            <tbody><template x-for="k in Gsum.lokasi" :key="k.l"><tr><td x-text="k.l"></td><td class="num" x-text="KAI.fmt.n(k.n)"></td><td class="num" x-text="KAI.fmt.n(k.m)"></td></tr></template>
-              <tr x-show="!Gsum.lokasi.length"><td colspan="3" class="muted">–</td></tr></tbody></table></div></div>
-      </div>
-      <div class="card mt"><div class="card-h"><div><h3>Daftar kejadian</h3><p>Urut menit terbesar · klik untuk rincian kejadian</p></div></div>
-        <div class="card-b tbl-wrap"><table class="tbl" data-pg="15"><thead><tr><th>Tanggal</th><th>KA</th><th>Kelas</th><th>Judul</th><th>Lokasi</th><th class="num">Menit</th></tr></thead>
-          <tbody><template x-for="r in G" :key="r.id"><tr class="click" @click="$store.app.openEvent(r.id)"><td class="nowrap" x-text="KAI.fmt.day(r.date)"></td><td><b x-text="r.ka"></b></td><td x-text="KAI.classLabel(r.kelas)"></td><td class="wrap" x-text="r.judul"></td><td x-text="r.lokasi || 'tidak tercatat'"></td><td class="num" x-text="KAI.fmt.n(r.menit)"></td></tr></template>
-            <tr x-show="!G.length"><td colspan="6" class="muted">Tidak ada gangguan KA batubara pada periode ini.</td></tr></tbody></table></div></div>
+      <template x-if="GS"><div>
+        <p class="note story">Kejadian di Gangguan_Induk yang nomor KA-nya terdaftar sebagai KA batubara (M_KA DB Batubara) pada bulan saringan. Klik bulan, tanggal, lintas, kelas atau subgangguan: semua grafik dan daftar ikut tersaring. Gangguan tanpa nomor KA tidak terhitung.</p>
+        <div class="xf-bar mt-s" x-show="gAny"><span class="note">Disaring:</span>
+          <button type="button" class="chip on" x-show="gx.m" @click="setG('m', gx.m)" x-text="(gx.m ? $store.bb.MON[+gx.m.slice(5) - 1] + ' ' + gx.m.slice(0, 4) : '') + ' ✕'"></button>
+          <button type="button" class="chip on" x-show="gx.day" @click="setG('day', gx.day)" x-text="(gx.day ? KAI.fmt.day(gx.day) : '') + ' ✕'"></button>
+          <button type="button" class="chip on" x-show="gx.lin" @click="setG('lin', gx.lin)" x-text="gx.lin + ' ✕'"></button>
+          <button type="button" class="chip on" x-show="gx.kelas" @click="setG('kelas', gx.kelas)" x-text="KAI.classLabel(gx.kelas) + ' ✕'"></button>
+          <button type="button" class="chip on" x-show="gx.sub" @click="setG('sub', gx.sub)" x-text="gx.sub + ' ✕'"></button>
+          <button type="button" class="link-btn sm" @click="gx = { kelas: '', sub: '', day: '', lin: '', m: '' }">Hapus semua</button></div>
+        <div class="grid g-4 mt-s">
+          <div class="card kpi" style="--kpi-c:var(--bad)"><div class="lbl">Gangguan KA batubara</div><div class="val num" x-text="KAI.fmt.n(GS.n)"></div><div class="note" x-text="KAI.fmt.n(GS.m) + ' menit kelambatan (Total Andil Kelka)'"></div></div>
+          <div class="card kpi" style="--kpi-c:var(--warn)"><div class="lbl">Laju per 100 perjalanan KA</div><div class="val num" x-text="GS.rate != null ? KAI.fmt.d1(GS.rate) : '–'"></div><div class="note" x-text="'dari ' + KAI.fmt.n(GS.nKa) + ' perjalanan KA batubara tidak batal (REAL_PERJALANAN)'"></div></div>
+          <div class="card kpi"><div class="lbl">Datang melewati toleransi</div><div class="val num" x-text="GS.otp.a ? KAI.fmt.d1(GS.otp.a.pct) + '%' : '–'"></div>
+            <div class="note" x-text="GS.otp.a ? 'KA pada hari gangguannya (' + KAI.fmt.n(GS.otp.a.n) + ' perjalanan) vs ' + (GS.otp.b ? KAI.fmt.d1(GS.otp.b.pct) + '% perjalanan lain' : '–') : 'perjalanan KA ini tidak tercatat di REAL_PERJALANAN'"></div></div>
+          <div class="card kpi"><div class="lbl" x-text="GS.lv === 'kelas' ? 'Kelas terbesar' : 'Subgangguan terbesar'"></div><div class="val" style="font-size:17px" x-text="GS.par[0] ? (GS.lv === 'kelas' ? KAI.classLabel(GS.par[0].k) : GS.par[0].k) : 'Tidak ada'"></div>
+            <div class="note" x-text="GS.par[0] ? KAI.fmt.n(GS.par[0].n) + ' kejadian · ' + KAI.fmt.n(GS.par[0].m) + ' menit (' + KAI.fmt.d1(GS.par[0].cum) + '%)' : ''"></div></div>
+        </div>
+        <div class="grid g-2 mt">
+          <div class="card"><div class="card-h"><div><h3>Laju gangguan per bulan</h3><p>Batang = kejadian · garis = per 100 perjalanan KA batubara · klik bulan</p></div></div>
+            <div class="card-b fill"><div class="chart" x-chart="tab === 'gangguan' ? gMonOpt : null" @chart-click="$event.detail.data && $event.detail.data.m && setG('m', $event.detail.data.m)"></div></div></div>
+          <div class="card"><div class="card-h"><div><h3>Kalender kejadian</h3><p>Jumlah gangguan per hari · klik tanggal</p></div></div>
+            <div class="card-b fill"><div class="chart" x-chart="tab === 'gangguan' ? gCalOpt : null" @chart-click="$event.detail.value && setG('day', $event.detail.value[0])"></div></div></div>
+        </div>
+        <div class="card mt"><div class="card-h"><div><h3>Di mana sepanjang lintas batubara</h3><p x-text="'Titik = kejadian (ukuran = menit) pada km stasiun/petak M_STASIUN · garis abu = stasiun · perbesar dengan Ctrl + roda atau penggeser di bawah · klik titik untuk rincian' + (GS.unplaced ? ' · ' + GS.unplaced + ' kejadian di luar lintas batubara atau tanpa lokasi tidak tergambar' : '')"></p></div></div>
+          <div class="card-b fill"><div class="chart" style="height:300px" x-chart="tab === 'gangguan' ? gStripOpt : null" @chart-click="$event.detail.data && $event.detail.data.r ? $store.app.openEvent($event.detail.data.r.id) : null"></div></div></div>
+        <div class="grid g-2-1 mt">
+          <div class="card"><div class="card-h"><div><h3 x-text="GS.lv === 'kelas' ? 'Pareto kelas gangguan' : 'Pareto subgangguan: ' + KAI.classLabel(gx.kelas)"></h3><p x-text="GS.lv === 'kelas' ? 'Menit kelambatan · garis = kumulatif · klik kelas untuk turun ke subgangguan' : 'Klik subgangguan untuk menyaring · klik chip kelas di atas untuk kembali'"></p></div></div>
+            <div class="card-b fill"><div class="chart" x-chart="tab === 'gangguan' ? gParOpt : null" @chart-click="$event.detail.data && $event.detail.data.k && setG(GS.lv, $event.detail.data.k)"></div></div></div>
+          <div class="card"><div class="card-h"><div><h3>Per lintas</h3><p>Klik untuk menyaring</p></div></div>
+            <div class="card-b"><template x-for="l in $store.bb.ready ? BBK.rows('M_LINTAS') : []" :key="l.id">
+              <button type="button" class="bb-linrow" :class="gx.lin === l.id && 'on'" @click="setG('lin', l.id)"><span x-text="l.nama"></span>
+                <b x-text="KAI.fmt.n(G.filter(function (r) { return gPass(r, 'lin') && gPos[r.id] && gPos[r.id].lin === l.id; }).length)"></b></button></template></div></div>
+        </div>
+        <div class="card mt"><div class="card-h"><div><h3>Daftar kejadian</h3><p x-text="KAI.fmt.n(Gf.length) + ' kejadian · urut menit terbesar · klik untuk rincian'"></p></div></div>
+          <div class="card-b tbl-wrap"><table class="tbl" data-pg="15"><thead><tr><th>Tanggal</th><th>KA</th><th>Kelas</th><th>Judul</th><th>Lokasi</th><th class="num">Menit</th></tr></thead>
+            <tbody><template x-for="r in Gf" :key="r.id"><tr class="click" @click="$store.app.openEvent(r.id)"><td class="nowrap" x-text="KAI.fmt.day(r.date)"></td><td><b x-text="r.ka"></b></td><td x-text="KAI.classLabel(r.kelas)"></td><td class="wrap" x-text="r.judul"></td><td x-text="r.lokasi || 'tidak tercatat'"></td><td class="num" x-text="KAI.fmt.n(r.menit)"></td></tr></template>
+              <tr x-show="!Gf.length"><td colspan="6" class="muted">Tidak ada gangguan KA batubara pada saringan ini.</td></tr></tbody></table></div></div>
+      </div></template>
     </div>
   </section>
 </template>

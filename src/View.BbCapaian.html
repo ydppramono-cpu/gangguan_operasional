@@ -16,13 +16,15 @@
       </div></div>
     </div>
 
-    <template x-for="g in groups" :key="g.n">
-      <div class="bb-band mt">
-        <div class="bb-band-h" x-text="g.n"></div>
-        <div class="bb-kpis">
-          <template x-for="c in g.cards" :key="c.id">
-            <div class="bb-kpi" :title="c.def || ''">
+    <div class="card mt" x-show="groups.length">
+      <div class="card-h"><div><h3>KPI wajib</h3><p>Terminal · Perjalanan · Peredaran &amp; stasiun — geser ke samping atau pakai tombol panah · arahkan kursor ke kartu untuk definisi</p></div></div>
+      <div class="card-b bb-rail-wrap" x-data="{ sc(d) { $refs.rail.scrollBy({ left: d * 250, behavior: 'smooth' }); } }">
+        <button type="button" class="bb-rail-btn l" aria-label="Geser ke kiri" @click="sc(-1)">‹</button>
+        <div class="bb-rail" x-ref="rail" role="list">
+          <template x-for="(c, i) in rail" :key="c.id">
+            <div class="bb-kpi" role="listitem" :title="c.def || ''">
               <span class="bb-dot" :style="'background:' + stc(c.st)"></span>
+              <div class="grp" x-text="c.grp"></div>
               <div class="lbl" x-text="c.l"></div>
               <div class="val"><span x-text="c.v"></span><small x-text="c.u || ''"></small></div>
               <div class="tgt" x-text="c.t"></div>
@@ -30,8 +32,9 @@
             </div>
           </template>
         </div>
+        <button type="button" class="bb-rail-btn r" aria-label="Geser ke kanan" @click="sc(1)">›</button>
       </div>
-    </template>
+    </div>
 
     <div class="grid g-2 mt" x-show="KW">
       <div class="card"><div class="card-h"><div><h3>On Time Performance per bulan</h3><p>KA batubara berangkat & datang · toleransi KELKA per Divre · garis putus = target</p></div></div>

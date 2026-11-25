@@ -27,6 +27,9 @@ Lokomotif: tab RHI basis data utama (ekspor 22 kolom). Kereta & gerbong: spreads
 ## Batubara alur 4 langkah (v3.23)
 Hari ini (`bb-hariini`, KPI utama siklus rangkaian vs program + pengecualian hari terakhir data) → Capaian → Penyebab (`bb-siklus`, + tab Gangguan KA batubara: Gangguan_Induk bernomor KA di M_KA) → Skenario.
 
+## Batubara v3.24
+Hari ini: pilih tanggal (bawaan = tanggal terakhir tercakup semua sumber), lencana "data s.d.", rantai per KA (REAL_HAMBATAN tanpa nomor KA → dikaitkan terminal+jenis+tanggal; baris "Tidak (rekap bulanan)" tidak dipakai harian). Profil terminal: `Js.Emplasemen` (`KAIEmp`, murni; `vBbEmp`) + `Part.BbEmplasemen` — letak langkah & lintasan = "perkiraan". Awak: beban + perkiraan jam dinas (program + lambat datang KA sama, hanya bila ujung lintas dinas = tujuan KA). Skenario: `opt.sop` (SOP kontrak PROGRAM_KA per KA, ganda terpendek/terpanjang) + `opt.tukar` (FIFO kelompok & relasi sama) → `sc.turn` (garis perputaran ok/prog/putus). Sistem visual terpadu di `Js.Charts` (tema, `interact`, `x-spark`, `KAI.spark12`). Uji: `npm run test:sim` (termasuk `test_emplasemen.js`).
+
 ## Mutu data & waktu muat (v3.22)
 Halaman `mutu` (ruang kerja Telusuri): skor kelengkapan per Daop/Divre dari kolom Gangguan_Induk + catatan kualitas (`q`) dan isian turunan (`drv`) — `Js.Mutu` (`KAIMutu`, fungsi murni, `npm run test:mutu`). Isian wajib = tanggal, kategori & subgangguan, menit, lokasi, jam; lainnya pelengkap. `02_Transform` menandai "Menit kosong" (data lama: label jujur "Menit 0 atau kosong").
 Waktu muat: `guard_` menambah `_ms` (lama kerja server) ke tiap respons API; `doGet` mengganti `__KAI_RENDER_MS__`; `KAI.perf` menyimpan 10 kali buka terakhir di localStorage (tidak dikirim) → kartu "Waktu muat di perangkat ini" di Metodologi. Lazy-load diputuskan setelah ada angka produksi.

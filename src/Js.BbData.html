@@ -422,7 +422,12 @@ window.BBK = (function () {
   function relOf(r) { return r.muatan === 'Isi' ? r.asal + '-' + r.tujuan : r.tujuan + '-' + r.asal; }
   function acc() { return { n: 0, ok: 0, tgtW: 0, lam: [] }; }
   function add(a, lam, tol, tgt) { a.n++; if (lam <= tol) a.ok++; a.tgtW += tgt; a.lam.push(lam); }
-  function fin(a) { return { n: a.n, ok: a.ok, pct: a.n ? 100 * a.ok / a.n : null, tgt: a.n ? a.tgtW / a.n : null, lambat: a.lam.length ? K.mean(a.lam) : null, med: a.lam.length ? K.med(a.lam) : null }; }
+  function fin(a) {
+    var L = a.lam.filter(function (v) { return v > 0; }), E = a.lam.filter(function (v) { return v < 0; });
+    return { n: a.n, ok: a.ok, pct: a.n ? 100 * a.ok / a.n : null, tgt: a.n ? a.tgtW / a.n : null, lambat: a.lam.length ? K.mean(a.lam) : null, med: a.lam.length ? K.med(a.lam) : null,
+      // pisah terlambat (> 0) dan lebih awal (< 0): rata-rata gabungan bisa negatif dan menyesatkan
+      nLate: L.length, lateMean: L.length ? K.mean(L) : null, nEarly: E.length, earlyMean: E.length ? -K.mean(E) : null };
+  }
 
   /* ---------------- On Time Performance ---------------- */
   K.otp = function (f) {
@@ -619,8 +624,9 @@ window.BBK = (function () {
     }
     C.push({ id: 'wpg', l: 'WPG (waktu peredaran gerbong)', v: G.real != null ? fm.d1(G.real) + ' hari' : '–', t: G.prog != null ? 'Program ' + fm.d1(G.prog) + ' hari' : '', s: G.eval != null ? 'Evaluasi SO÷Dip×hari: ' + fm.d1(G.eval) + ' hari' : '', st: st(G.real, G.prog, true), def: 'Program = (DPI + DPK + SOP muat + SOP bongkar) ÷ 24 jam. Realisasi = siklus satu putaran realisasi ÷ 24 jam. Evaluasi = SO (rangkaian siap operasi Duksar) ÷ Dip (KA isi berangkat) × hari operasi.', go: 'banding_pr' });
     if (O) {
-      C.push({ id: 'otp_brk', l: 'On Time Performance berangkat', v: fm.pct(O.brk.pct / 100), t: 'Target ' + fm.pct(O.brk.tgt / 100), s: 'Rata-rata lambat ' + fm.sgn(O.brk.lambat) + ' menit · ' + fm.n(O.brk.n) + ' KA', st: st(O.brk.pct, O.brk.tgt), def: 'Porsi KA berangkat dengan LAMBAT ≤ toleransi Divre stasiun berangkat (Divre III 20 menit, Divre IV 10 menit; sheet SIPOKA KELKA). Target tertimbang Divre.', go: 'banding_pr' });
-      C.push({ id: 'otp_tiba', l: 'On Time Performance datang', v: fm.pct(O.tiba.pct / 100), t: 'Target ' + fm.pct(O.tiba.tgt / 100), s: 'Rata-rata lambat ' + fm.sgn(O.tiba.lambat) + ' menit · ' + fm.n(O.tiba.n) + ' KA', st: st(O.tiba.pct, O.tiba.tgt), def: 'Porsi KA datang dengan LAMBAT ≤ toleransi Divre stasiun tujuan (Divre III 30 menit, Divre IV 25 menit).', go: 'banding_pr' });
+      var lateTxt = function (o) { return fm.n(o.n) + ' KA · terlambat ' + fm.n(o.nLate) + (o.lateMean != null ? ' (rata-rata ' + fm.n(Math.round(o.lateMean)) + ' menit)' : '') + ' · lebih awal ' + fm.n(o.nEarly) + (o.earlyMean != null ? ' (rata-rata ' + fm.n(Math.round(o.earlyMean)) + ' menit)' : ''); };
+      C.push({ id: 'otp_brk', l: 'On Time Performance berangkat', v: fm.pct(O.brk.pct / 100), t: 'Target ' + fm.pct(O.brk.tgt / 100), s: lateTxt(O.brk), st: st(O.brk.pct, O.brk.tgt), def: 'Porsi KA berangkat dengan LAMBAT ≤ toleransi Divre stasiun berangkat (Divre III 20 menit, Divre IV 10 menit; sheet SIPOKA KELKA). Target tertimbang Divre.', go: 'banding_pr' });
+      C.push({ id: 'otp_tiba', l: 'On Time Performance datang', v: fm.pct(O.tiba.pct / 100), t: 'Target ' + fm.pct(O.tiba.tgt / 100), s: lateTxt(O.tiba), st: st(O.tiba.pct, O.tiba.tgt), def: 'Porsi KA datang dengan LAMBAT ≤ toleransi Divre stasiun tujuan (Divre III 30 menit, Divre IV 25 menit).', go: 'banding_pr' });
     }
     var im = idx(KT, 'MUAT'), ib = idx(KT, 'BONGKAR'), is = idx(KS, '');
     C.push({ id: 'kin_muat', l: 'Kinerja terminal muat', v: im != null ? fm.n(im) : '–', u: '/100', t: 'Indeks 4 komponen', s: KT.filter(function (x) { return x.uj === 'muat'; }).length + ' terminal', st: im == null ? 'na' : im >= 80 ? 'ok' : im >= 65 ? 'warn' : 'bad', def: 'Rata-rata tertimbang: kepatuhan SOP WTT, ketepatan melepas KA isi, KA terlayani vs program per hari, keandalan alat muat. Bobot di CONFIG bobot_kinerja_terminal.', go: 'operasi:kinerja' });
@@ -647,7 +653,7 @@ window.BBK = (function () {
       var worstArr = Object.keys(O.arr).map(function (s) { return { s: s, o: O.arr[s] }; }).filter(function (x) { return x.o.n >= 50; }).sort(function (a, b) { return a.o.pct - b.o.pct; })[0];
       var t = worstArr ? topH(worstArr.s, null) : null;
       push({ lvl: 'bad', tag: ['otp', 'wtt', 'antrean', 'kapasitas'], judul: 'OTP datang ' + fm.pct(O.tiba.pct / 100) + ' di bawah target ' + fm.pct(O.tiba.tgt / 100),
-        teks: (worstArr ? 'Paling rendah di <b>' + K.esc(K.stName(worstArr.s)) + '</b> (' + fm.pct(worstArr.o.pct / 100) + ', rata-rata lambat ' + fm.sgn(worstArr.o.lambat) + ' menit). ' : '') +
+        teks: (worstArr ? 'Paling rendah di <b>' + K.esc(K.stName(worstArr.s)) + '</b> (' + fm.pct(worstArr.o.pct / 100) + ', ' + fm.n(worstArr.o.nLate) + ' KA terlambat' + (worstArr.o.lateMean != null ? ' rata-rata ' + fm.n(Math.round(worstArr.o.lateMean)) + ' menit' : '') + '). ' : '') +
           (t ? 'Penyebab terbesar di stasiun itu: ' + K.esc(t.kode + ' ' + t.nama) + ' (' + fm.n(t.m) + ' menit, PIC ' + K.esc(t.picUtama) + '). ' : '') +
           'Kedatangan terlambat lebih sering akibat antrean di terminal tujuan daripada perjalanan; atur kedatangan sesuai kapasitas bongkar (slot) dan pantau harian.',
         dasar: 'Toleransi datang KELKA (SIPOKA): Divre III ≤ 30 menit, Divre IV ≤ 25 menit; Kinerja Operasi Area 2 Sep 2026', pic: t ? t.picUtama : 'Pusdalopka & UPT terminal' });
