@@ -110,14 +110,14 @@ document.addEventListener('alpine:init', function () {
         function jal(L) { return L.jalan || (L.kandidat && L.kandidat.length ? 'kandidat: ' + L.kandidat.slice(0, 3).join('; ') : ''); }
         function traffic(seg) { return seg ? KAIRef.trafficOnSeg(Ref, seg) : null; }
         var rows = inv.points.map(function (p) {
-          var j = p.jpl, L = j ? { jalan: j.jalan, src: j.jalanSrc, kandidat: j.osmKandidat || [], riset: j.riset } : KAIRef.jplLookup(Ref, p.segKey, p.noJpl);
-          return { key: p.key, jplId: j ? j.id : '', segKey: p.segKey || '', titik: p.label, wilayah: p.region || '', alamat: j ? j.kab + ', ' + j.prov : '', jalan: jal(L), jalanSrc: L.src, pengelola: j ? j.pengelola : '', url: L.riset ? L.riset.url : '',
+          var j = p.jpl, L = j ? { jalan: j.jalan, src: j.jalanSrc, kandidat: j.osmKandidat || [], riset: j.riset } : KAIRef.jplLookup(Ref, p.segKey, p.noJpl, p.stCode);
+          return { key: p.key, jplId: j ? j.id : '', segKey: p.segKey || '', titik: p.label, wilayah: p.region || '', alamat: j ? j.kab + ', ' + j.prov : '', jalan: jal(L), jalanSrc: L.src, pengelola: j ? j.pengelola : '', url: L.riset ? L.riset.url : '', rstat: L.riset ? L.riset.status : '',
             km: j ? j.kmText : (p.km != null ? KAI.fmt.km(p.km) : ''), jaga: j ? j.jaga : L.jaga || 'tidak tercatat', p190: j && j.p190 ? 'Ya' : '', lebar: j ? j.lebar : '',
             ka: traffic(p.segKey), nP: p.recs.filter(inP).length, n12: p.recs.filter(in12).length, n: p.n, menit: p.menit, last: p.last, ids: p.recs.map(function (r) { return r.id; }), src: j ? 'JPL program' : 'Laporan' };
         });
         var byJ = {}; rows.forEach(function (r) { if (r.jplId) byJ[r.jplId] = r; });
         var master = Ref.jpl.filter(function (j) { return !app.f.wilayah.length || app.f.wilayah.indexOf(j.region) >= 0; }).map(function (j) {
-          return byJ[j.id] || { key: j.id, jplId: j.id, segKey: j.segKey, titik: 'JPL ' + (j.no || '–') + ' · ' + (j.antara || 'petak tidak tercantum'), wilayah: j.region, alamat: j.kab + ', ' + j.prov, jalan: jal({ jalan: j.jalan, kandidat: j.osmKandidat || [] }), jalanSrc: j.jalanSrc, pengelola: j.pengelola, url: j.riset ? j.riset.url : '',
+          return byJ[j.id] || { key: j.id, jplId: j.id, segKey: j.segKey, titik: 'JPL ' + (j.no || '–') + ' · ' + (j.antara || 'petak tidak tercantum'), wilayah: j.region, alamat: j.kab + ', ' + j.prov, jalan: jal({ jalan: j.jalan, kandidat: j.osmKandidat || [] }), jalanSrc: j.jalanSrc, pengelola: j.pengelola, url: j.riset ? j.riset.url : '', rstat: j.riset ? j.riset.status : '',
             km: j.kmText, jaga: j.jaga, p190: j.p190 ? 'Ya' : '', lebar: j.lebar, ka: traffic(j.segKey), nP: 0, n12: 0, n: 0, menit: 0, last: '', ids: [], src: 'JPL program' };
         });
         var S = { master: master.length, p190: master.filter(function (r) { return r.p190; }).length, unguarded: master.filter(function (r) { return r.jaga === 'tidak dijaga'; }).length,
@@ -138,9 +138,9 @@ document.addEventListener('alpine:init', function () {
         var cols = [
           { title: 'Titik', field: 'titik', minWidth: 230, formatter: function (c) { var d = c.getData(); return '<b>' + c.getValue() + '</b>' + (d.p190 ? ' <span class="badge k" style="background:#F06A25">190</span>' : ''); } },
           { title: 'Wilayah', field: 'wilayah', width: 90 },
-          { title: 'Jalan', field: 'jalan', minWidth: 200, headerTooltip: 'Nama jalan: riset web bersumber, atau OpenStreetMap (nomor JPL sama = pasti; satu-satunya di petak = perkiraan). © kontributor OpenStreetMap, ODbL',
-            formatter: function (c) { var d = c.getData(), v = c.getValue(); if (!v) return '<span class="muted">tidak tercatat</span>'; var tag = /perkiraan/.test(d.jalanSrc) ? ' <span class="badge">perkiraan</span>' : /^kandidat/.test(v) ? '' : d.jalanSrc === 'riset web' ? ' <span class="badge good">web</span>' : ' <span class="badge">OSM</span>';
-              return (/^kandidat/.test(v) ? '<span class="muted">' + KAI.esc(v) + '</span>' : KAI.esc(v)) + tag; } },
+          { title: 'Jalan / lokasi', field: 'jalan', minWidth: 220, headerTooltip: 'Nama jalan: riset web bersumber, atau OpenStreetMap (nomor JPL sama = pasti; satu-satunya di petak = perkiraan). © kontributor OpenStreetMap, ODbL',
+            formatter: function (c) { var d = c.getData(), v = c.getValue(); if (!v) return d.rstat ? '<span class="muted">' + KAI.esc(d.rstat) + '</span> <span class="badge good">web</span>' : '<span class="muted">tidak tercatat</span>'; var tag = /perkiraan/.test(d.jalanSrc) ? ' <span class="badge">perkiraan</span>' : /^kandidat/.test(v) ? '' : d.jalanSrc === 'riset web' ? ' <span class="badge good">web</span>' : ' <span class="badge">OSM</span>';
+              return (/^kandidat/.test(v) ? '<span class="muted">' + KAI.esc(v) + '</span>' : KAI.esc(v)) + tag + (d.rstat ? '<div class="note">' + KAI.esc(d.rstat) + '</div>' : ''); } },
           { title: 'Kab/kota', field: 'alamat', minWidth: 150 },
           { title: 'Pengelola (PM 94/2018)', field: 'pengelola', minWidth: 190, headerTooltip: 'Pengelola perlintasan sebidang menurut status jalan (PM 94/2018 Pasal 2), dari kolom Kategori jalan M_JPL',
             formatter: function (c) { var v = c.getValue(); return v ? KAI.esc(v) : '<span class="muted">tidak tercatat</span>'; } },
@@ -163,7 +163,7 @@ document.addEventListener('alpine:init', function () {
         if (d.ids && d.ids.length) app.go('telusuri', { ids: d.ids, label: d.titik, period: 'all' });
       },
       exp: function (kind) {
-        var cols = [{ title: 'Titik', field: 'titik' }, { title: 'Sumber', field: 'src' }, { title: 'Wilayah', field: 'wilayah' }, { title: 'Jalan', field: 'jalan' }, { title: 'Sumber jalan', field: 'jalanSrc' }, { title: 'Kab/kota', field: 'alamat' }, { title: 'Pengelola (PM 94/2018)', field: 'pengelola' }, { title: 'Tautan riset', field: 'url' }, { title: 'KM', field: 'km' },
+        var cols = [{ title: 'Titik', field: 'titik' }, { title: 'Sumber', field: 'src' }, { title: 'Wilayah', field: 'wilayah' }, { title: 'Jalan', field: 'jalan' }, { title: 'Sumber jalan', field: 'jalanSrc' }, { title: 'Kab/kota', field: 'alamat' }, { title: 'Pengelola (PM 94/2018)', field: 'pengelola' }, { title: 'Status (riset web)', field: 'rstat' }, { title: 'Tautan riset', field: 'url' }, { title: 'KM', field: 'km' },
           { title: 'Status jaga', field: 'jaga' }, { title: 'Prioritas 190', field: 'p190' }, { title: 'Lebar (m)', field: 'lebar' }, { title: 'KA/hari', field: 'ka' },
           { title: 'Kejadian periode', field: 'nP' }, { title: 'Kejadian 12 bulan', field: 'n12' }, { title: 'Kejadian semua', field: 'n' }, { title: 'Menit semua', field: 'menit' }, { title: 'Terakhir', field: 'last' }];
         var name = 'Inventaris_JPL_' + this.mode;

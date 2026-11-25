@@ -161,13 +161,14 @@
     if (/PERKEBUNAN|INDUSTRI|PRIBADI|KHUSUS/.test(k)) return 'Badan hukum/lembaga pemilik jalan khusus (' + KAI.cap(k.toLowerCase()) + ')';
     return '';
   }
-  function njpl(s) { return String(s || '').toUpperCase().replace(/^JPL\s*/, '').replace(/[^0-9A-Z]/g, ''); }
+  function njpl(s) { return String(s || '').toUpperCase().replace(/^JPL\s*/, '').replace(/[^0-9A-Z]/g, '').replace(/^0+(?=\d)/, ''); }
   /** Indeks riset web (per petak#nomor) & perlintasan OSM (per petak), lalu isi nama jalan/pengelola tiap JPL program. */
   function jplJalan(R, raw) {
     R.jplRiset = {}; R.jplOsmSeg = {};
     (raw.jplRiset || []).forEach(function (r) {
-      var pr = String(r[2] || '').split(/\s*[–-]\s*/), a = stationOf(R, pr[0]), b = stationOf(R, pr[1] || ''); if (!a || !b) return;
-      R.jplRiset[[a, b].sort().join('-') + '#' + njpl(r[1])] = { region: r[0], jalan: r[4], penjaga: r[5], status: r[6], catatan: r[7], judul: r[8], url: r[9], terbit: r[10] };
+      var pr = String(r[2] || '').split(/\s*[–-]\s*/), a = stationOf(R, pr[0]), b = pr.length > 1 ? stationOf(R, pr[1]) : '';
+      var key = a && b ? [a, b].sort().join('-') : a && pr.length === 1 ? 'ST:' + a : ''; if (!key) return;
+      R.jplRiset[key + '#' + njpl(r[1])] = { region: r[0], jalan: r[4], penjaga: r[5], status: r[6], catatan: r[7], judul: r[8], url: r[9], terbit: r[10] };
     });
     (raw.jplOsm || []).forEach(function (o) { (R.jplOsmSeg[o[0]] = R.jplOsmSeg[o[0]] || []).push({ urut: o[1], t: o[2], lat: o[3], lon: o[4], jalan: o[5], ref: o[6], kelas: o[7], lain: o[8], refOsm: o[9], palang: o[10], dijaga: o[11] }); });
     var known = {}; R.jpl.forEach(function (j) { if (j.pairKey) (known[j.pairKey] = known[j.pairKey] || {})[njpl(j.no)] = 1; });
@@ -180,9 +181,16 @@
     });
   }
   /** Nama jalan satu JPL: riset web bersumber → OSM ref sama (pasti) → satu-satunya perlintasan & satu-satunya nomor JPL di petak (perkiraan) → kandidat OSM. */
-  function jplLookup(R, seg, no) {
-    var out = { riset: null, osm: null, kandidat: [], jalan: '', src: '', jaga: '' }; if (!seg) return out;
-    var k = njpl(no), rs = k && R.jplRiset ? R.jplRiset[seg + '#' + k] : null, C = (R.jplOsmSeg && R.jplOsmSeg[seg]) || [], kn = (R.jplKnown && R.jplKnown[seg]) || {};
+  function jplLookup(R, seg, no, st) {
+    var out = { riset: null, osm: null, kandidat: [], jalan: '', src: '', jaga: '' }; if (!seg && !st) return out;
+    var k = njpl(no), RI = R.jplRiset || {}, ends = seg ? seg.split('-') : [st];
+    // Petak sama → nomor sama; JPL emplasemen tercatat per stasiun berlaku juga bagi petak yang berujung di stasiun itu.
+    var rs = k ? (seg && RI[seg + '#' + k]) || RI['ST:' + ends[0] + '#' + k] || (ends[1] && RI['ST:' + ends[1] + '#' + k]) || null : null;
+    if (!rs && k && !seg && st) {   // laporan emplasemen tanpa petak: petak riset yang berujung di stasiun itu, bila hanya satu
+      var hit = Object.keys(RI).filter(function (x) { var q = x.split('#'); return q[1] === k && q[0].split('-').indexOf(st) >= 0; });
+      if (hit.length === 1) rs = RI[hit[0]];
+    }
+    var C = (seg && R.jplOsmSeg && R.jplOsmSeg[seg]) || [], kn = (seg && R.jplKnown && R.jplKnown[seg]) || {};
     var nm = function (c) { return c.jalan || (c.ref ? 'jalan ' + c.ref : ''); };
     var byRef = k ? C.filter(function (c) { return c.refOsm && njpl(c.refOsm) === k; }) : [], o = null, how = '';
     if (byRef.length === 1) { o = byRef[0]; how = 'OSM (nomor JPL sama)'; }
@@ -378,6 +386,7 @@
       var p;
       if (j) { linked++; p = point(j.id, { jpl: j, segKey: j.segKey || seg, label: 'JPL ' + (j.no || '–') + ' · ' + (j.antara || ''), region: j.region, km: j.km }); }
       else if (seg && r.jpl) p = point(seg + '#' + norm(r.jpl), { jpl: null, segKey: seg, label: 'JPL ' + r.jpl + ' · ' + r.lokasi, region: r.wilayah, km: r.kmv, noJpl: r.jpl });
+      else if (!seg && r.jpl && r.stCode) p = point('S:' + r.stCode + '#' + norm(r.jpl), { jpl: null, segKey: '', stCode: r.stCode, label: 'JPL ' + r.jpl + ' · ' + r.lokasi, region: r.wilayah, km: r.kmv, noJpl: r.jpl });
       else if (seg && r.kmv != null) { var b = Math.round(r.kmv * 10) / 10; p = point(seg + '@' + b, { jpl: null, segKey: seg, label: r.lokasi + ' · KM ' + String(b).replace('.', ','), region: r.wilayah, km: b }); }
       else if (r.lokasi) p = point('L:' + r.lokasi, { jpl: null, segKey: seg, label: r.lokasi + ' (titik tidak tercatat)', region: r.wilayah, km: null });
       else return;
