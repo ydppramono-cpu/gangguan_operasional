@@ -8,8 +8,8 @@
 const assert = require('assert'), fs = require('fs'), path = require('path');
 const { run } = require('../emulator/emu.js');
 const SRC = path.resolve(__dirname, '../../src');
-const API = ['doGet', 'include', 'apiBootstrap', 'apiNarratives', 'apiRef', 'apiGapeka26', 'apiGapeka', 'apiStatus', 'apiReportAssets', 'apiKaOps', 'apiBatubara', 'apiBatubaraPart'];
-const ADMIN = ['setupOtomatis', 'syncNow', 'installTrigger', 'showStatus', 'bersihkanSisaV2', 'ujiKondisiBq', 'syncBatubaraNow'];
+const API = ['doGet', 'include', 'apiBootstrap', 'apiNarratives', 'apiRef', 'apiGapeka26', 'apiGapeka', 'apiStatus', 'apiReportAssets', 'apiKaOps', 'apiBatubara', 'apiBatubaraPart', 'apiRhiSarana'];
+const ADMIN = ['setupOtomatis', 'syncNow', 'installTrigger', 'showStatus', 'bersihkanSisaV2', 'ujiKondisiBq', 'syncBatubaraNow', 'syncRhiSaranaNow'];
 const pub = [];
 fs.readdirSync(SRC).filter(f => f.endsWith('.gs')).forEach(f => {
   for (const m of fs.readFileSync(path.join(SRC, f), 'utf8').matchAll(/^function ([A-Za-z0-9]+)\s*\(/gm)) if (!m[1].endsWith('_')) pub.push(m[1]);

@@ -5,10 +5,10 @@
 -- Semua angka = hasil hitung langsung dari kolom sumber; tidak ada nilai perkiraan. Nilai indeks > 100 dianggap rusak (sama dengan web app).
 
 CREATE OR REPLACE TABLE `${PROJECT}.kai_agg.rhi_bulanan`
-OPTIONS(description="RHI per sarana per bulan: hari data, HI (pulih) rata-rata/min/akhir, hari per status") AS
+OPTIONS(description="RHI lokomotif per sarana per bulan: hari data, HI rata-rata/min/akhir, hari per status (ekspor 22 kolom sejak 25 Nov 2026)") AS
 WITH d AS (
   SELECT UPPER(REGEXP_REPLACE(nomor_sarana, r'\s+', '')) AS nomor_sarana, UPPER(tipe_sarana) AS tipe_sarana, tgl_data,
-         IF(healthy_index_pulih <= 100, healthy_index_pulih, NULL) AS hi, UPPER(healthy_status) AS status, rams_index
+         IF(healthy_index <= 100, healthy_index, NULL) AS hi, UPPER(healthy_status) AS status, rams_index
   FROM `${PROJECT}.kai_snap.rhi`
   WHERE nomor_sarana IS NOT NULL AND tgl_data IS NOT NULL
 )
@@ -18,6 +18,7 @@ SELECT nomor_sarana, ANY_VALUE(tipe_sarana) AS tipe_sarana, FORMAT_DATE('%Y-%m',
   ARRAY_AGG(STRUCT(tgl_data, hi, status, rams_index) ORDER BY tgl_data DESC LIMIT 1)[OFFSET(0)].status AS status_akhir,
   ARRAY_AGG(STRUCT(tgl_data, hi, status, rams_index) ORDER BY tgl_data DESC LIMIT 1)[OFFSET(0)].rams_index AS rams_akhir,
   COUNTIF(status = 'HEALTHY') AS hari_healthy, COUNTIF(status = 'MONITOR') AS hari_monitor, COUNTIF(status = 'DECLINING') AS hari_declining,
+  COUNTIF(status = 'POOR') AS hari_poor, COUNTIF(status = 'CRITICAL') AS hari_critical,
   MAX(tgl_data) AS tgl_terakhir
 FROM d GROUP BY nomor_sarana, bulan;
 
@@ -25,8 +26,8 @@ CREATE OR REPLACE TABLE `${PROJECT}.kai_agg.rhi_status_terakhir`
 OPTIONS(description="Status RHI terakhir per sarana (baris tanggal terbaru)") AS
 SELECT x.* FROM (
   SELECT ARRAY_AGG(STRUCT(UPPER(REGEXP_REPLACE(nomor_sarana, r'\s+', '')) AS nomor_sarana, UPPER(tipe_sarana) AS tipe_sarana, tgl_data,
-           IF(healthy_index_pulih <= 100, healthy_index_pulih, NULL) AS healthy_index, UPPER(healthy_status) AS healthy_status,
-           rams_index, reliability_index, perawatan_terakhir, tgl_perawatan) ORDER BY tgl_data DESC LIMIT 1)[OFFSET(0)] AS x
+           IF(healthy_index <= 100, healthy_index, NULL) AS healthy_index, UPPER(healthy_status) AS healthy_status,
+           rams_index, reliability_index, dipo, daop) ORDER BY tgl_data DESC LIMIT 1)[OFFSET(0)] AS x
   FROM `${PROJECT}.kai_snap.rhi`
   WHERE nomor_sarana IS NOT NULL AND tgl_data IS NOT NULL
   GROUP BY UPPER(REGEXP_REPLACE(nomor_sarana, r'\s+', ''))

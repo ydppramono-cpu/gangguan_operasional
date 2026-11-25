@@ -21,6 +21,12 @@ Rincian: `docs/ARSITEKTUR.md`, kontrak data: `docs/KONTRAK_DATA.md`.
 Ruang kerja Batubara menggantikan aplikasi WTT lama: Capaian · Siklus & terminal · Papan skenario + profil terminal/relasi/rangkaian (`bb-profil`).
 Data: Script Property `BB_DB_ID` (DB Batubara, hanya baca; REAL_GANGGUAN tidak dibaca) → `28_BatubaraSync.gs` (`Bb.sync`, `apiBatubaraPart`, `syncBatubaraNow`). Rumus WTT di `Js.BbData` (`BBK`), UI di `Js.BbUi`. Papan skenario: `Js.Simulasi` (`KAISim`: antrean terminal, KLB + `findSlots`, `backtest`) + `Js.Skenario`. Data realisasi asli tidak masuk repo; uji pakai `tools/batubara/fixture_sintetis.py`. Uji: `npm run test:sim`.
 
+## RHI sarana (v3.23)
+Lokomotif: tab RHI basis data utama (ekspor 22 kolom). Kereta & gerbong: spreadsheet "KAI | RHI Sarana" (Script Property `RHI_DB_ID`) → `29_RhiSarana.gs` (`RhiS.sync`, `apiRhiSarana`, `syncRhiSaranaNow`) → `Js.RhiKG` (dimuat saat perlu) + `Part.RhiKG` (tab Kesehatan kereta/gerbong) + kartu unit. Status kini 5: H/M/D/P(oor)/C(ritical). Berkas dari ekspor RHI dibangun `tools/rhi/build_rhi.py` (gerbong harian tidak muat di Sheets → ringkas bulanan + arsip Drive). Uji `npm run test:rhi`.
+
+## Batubara alur 4 langkah (v3.23)
+Hari ini (`bb-hariini`, KPI utama siklus rangkaian vs program + pengecualian hari terakhir data) → Capaian → Penyebab (`bb-siklus`, + tab Gangguan KA batubara: Gangguan_Induk bernomor KA di M_KA) → Skenario.
+
 ## Mutu data & waktu muat (v3.22)
 Halaman `mutu` (ruang kerja Telusuri): skor kelengkapan per Daop/Divre dari kolom Gangguan_Induk + catatan kualitas (`q`) dan isian turunan (`drv`) — `Js.Mutu` (`KAIMutu`, fungsi murni, `npm run test:mutu`). Isian wajib = tanggal, kategori & subgangguan, menit, lokasi, jam; lainnya pelengkap. `02_Transform` menandai "Menit kosong" (data lama: label jujur "Menit 0 atau kosong").
 Waktu muat: `guard_` menambah `_ms` (lama kerja server) ke tiap respons API; `doGet` mengganti `__KAI_RENDER_MS__`; `KAI.perf` menyimpan 10 kali buka terakhir di localStorage (tidak dikirim) → kartu "Waktu muat di perangkat ini" di Metodologi. Lazy-load diputuskan setelah ada angka produksi.

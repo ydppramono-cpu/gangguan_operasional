@@ -9,10 +9,10 @@
           <div>
             <p class="note warn-note" x-show="S.stale" x-text="staleTxt"></p>
             <div class="kpis">
-              <template x-for="k in ['HEALTHY', 'MONITOR', 'DECLINING']" :key="k">
+              <template x-for="k in ['HEALTHY', 'MONITOR', 'DECLINING', 'POOR', 'CRITICAL'].filter(k => k !== 'CRITICAL' || S.byStatus.CRITICAL.units)" :key="k">
                 <div class="kpi"><span x-text="KAI.fmt.st(k) + ' · ' + day"></span><b :style="'color:#' + sc(k)" x-text="S.byStatus[k].units + ' unit'"></b><em x-text="S.byStatus[k].g6 + ' gangguan ' + w6 + ' · ' + KAI.fmt.d1(S.byStatus[k].rate6) + ' per 100 unit'"></em></div>
               </template>
-              <div class="kpi"><span x-text="'Gangguan lokomotif ' + R.label + ' (bernomor RHI)'"></span><b x-text="S.E.length + ' kejadian'"></b><em x-text="'saat MONITOR ' + S.atSt.MONITOR + ' · DECLINING ' + S.atSt.DECLINING + ' · tanpa nomor ' + S.miss.length"></em></div>
+              <div class="kpi"><span x-text="'Gangguan lokomotif ' + R.label + ' (bernomor RHI)'"></span><b x-text="S.E.length + ' kejadian'"></b><em x-text="'saat MONITOR ' + S.atSt.MONITOR + ' · DECLINING ' + S.atSt.DECLINING + ' · POOR ' + S.atSt.POOR + (S.atSt.CRITICAL ? ' · CRITICAL ' + S.atSt.CRITICAL : '') + ' · tanpa nomor ' + S.miss.length"></em></div>
             </div>
             <div class="grid g-2 mt">
               <div class="card"><div class="card-h"><div><h3>Status RHI saat gangguan vs armada</h3><p x-text="'Porsi status: seluruh hari-unit armada ' + KAI.fmt.mon(S.rhiYm) + ' dibanding status unit pada tanggal gangguan. Ruas merah lebih lebar di baris bawah = gangguan menumpuk pada unit kurang sehat.'"></p></div></div>
@@ -30,8 +30,8 @@
               </tbody></table></div>
             </div>
             <div class="grid g-2 mt">
-              <div class="card"><div class="card-h"><div><h3 x-text="'Daftar pantau: DECLINING per ' + day"></h3><p>HI &lt; 70 pada hari terakhir data RHI</p></div></div>
-                <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Lokomotif</th><th>Depo</th><th class="num">HI</th><th class="num">Hari DECLINING</th><th class="num">Reliability</th><th class="num">Maintenance index</th><th class="num">Umur (tahun)</th><th class="num" x-text="'Gangguan ' + w6"></th></tr></thead><tbody>
+              <div class="card"><div class="card-h"><div><h3 x-text="'Daftar pantau: HI di bawah 70 per ' + day"></h3><p>Status Declining, Poor, atau Critical pada hari terakhir data RHI</p></div></div>
+                <div class="card-b tbl-wrap"><table class="tbl"><thead><tr><th>Lokomotif</th><th>Depo</th><th class="num">HI</th><th class="num">Hari di bawah 70</th><th class="num">Reliability</th><th class="num">Maintenance index</th><th class="num">Umur (tahun)</th><th class="num" x-text="'Gangguan ' + w6"></th></tr></thead><tbody>
                   <template x-for="u in decl" :key="u.no"><tr class="click" @click="$store.app.open('sarana', u.no)"><td><b x-text="KAI.fmt.unit(u.no)"></b> <small x-text="u.tipe"></small></td><td x-text="u.depo || '–'"></td><td class="num bad-t" x-text="KAI.fmt.d1(u.hi)"></td><td class="num" x-text="u.nDecl"></td><td class="num" x-text="u.rel == null ? '–' : u.rel"></td><td class="num" x-text="KAI.fmt.d1(u.mi)"></td><td class="num" x-text="KAI.fmt.d1(u.age)"></td><td class="num" x-text="u.g6.n"></td></tr></template>
                 </tbody></table></div></div>
               <div class="card"><div class="card-h"><div><h3 x-text="'Gangguan berulang ≥3 kali · ' + w6"></h3><p x-text="'Status ' + day"></p></div></div>

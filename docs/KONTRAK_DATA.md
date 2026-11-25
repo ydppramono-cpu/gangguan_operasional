@@ -123,3 +123,13 @@ Kode spreadsheet: `DB` = KAI | Basis Data Gangguan dan Hambatan 2025–2026, `GA
 | API | `apiBatubaraPart(name)` — nama dari daftar tertutup; `BB_DB_ID` kosong → `{ok:true, empty:true}`. `apiBatubara()` = parameter Papan skenario dari seed `27_SeedBatubara.gs`. |
 | Repo publik | Data realisasi & SOP asli **tidak** masuk repo. Emulator/uji memakai `tests/emulator/bb_fixture.json` dari `tools/batubara/fixture_sintetis.py` (sintetis, benih tetap). |
 | Perhitungan | `Js.BbData` (`window.BBK`) = rumus aplikasi WTT lama apa adanya (WTT, WPKA, WPG, OTP, indeks terminal, 8 tahap siklus). |
+
+## 10. RHI sarana (sejak 25 Nov 2026, v3.23)
+| Hal | Ketentuan |
+|---|---|
+| Lokomotif | Tab `RHI` basis data utama = ekspor harian 22 kolom (jenis_sarana, tgl_data, nomor_sarana, … healthy_index, healthy_status, versi_formula). Tab lama 39 kolom (pulih) dicadangkan di `02_DB_Database/Cadangan_sebelum_RHI_25Nov2026`. `15_Kondisi` membaca berdasarkan nama kolom (kedua format dikenali). |
+| Kereta & gerbong | Spreadsheet `KAI \| RHI Sarana` (ID di Script Property `RHI_DB_ID`, hanya dibaca): `RHI_Kereta` (harian, untuk tim/DBeaver), `RHI_Kereta_Bulanan`, `RHI_Gerbong_Bulanan` (satu baris = unit × bulan; `status_harian` satu huruf per tanggal), `RHI_Harian_Depo`, `Keterangan`. Gerbong harian per unit (18,1 juta sel) tidak muat di Sheets → arsip `02_DB_Database/RHI/*.csv.gz`. |
+| Pembangkitan | `python3 -I tools/rhi/build_rhi.py --out DIR lok.csv kereta.csv gerbong.csv` → xlsx siap unggah + arsip gzip. Kunci jenis+nomor (tanpa spasi)+tanggal unik; HI di luar 0–100 menghentikan alat. Data asli tidak masuk repo. |
+| Web app | `29_RhiSarana.gs`: `RhiS.sync` (tiap putaran ETL bila berubah; baris turun > 20% ditolak; bulan ganda ditolak) → `apiRhiSarana()` dimuat browser saat perlu (`Js.RhiKG`). `syncRhiSaranaNow()` editor. |
+| Status | HEALTHY ≥ 85 · MONITOR 70–85 · DECLINING 55–70 · POOR < 55 · CRITICAL (teramati 39,4; ambang bawah tidak tertulis di sumber). "Di bawah 70" = Declining + Poor + Critical. |
+| BigQuery | Skema `rhi` di `db/schema/sumber_tabel.json` diperbarui ke 22 kolom (`tools/gen_schema.py`); agregat `rhi_bulanan`/`rhi_status_terakhir` memakai `healthy_index` dan menghitung Poor/Critical. |

@@ -1,8 +1,10 @@
 <script>
 /**
- * Js.BbUi — store & komponen ruang kerja Batubara (keputusan 24 Nov 2026: 3 halaman cerita + 3 profil).
- *   bb-capaian  "Target tercapai?"            KPI wajib + program vs realisasi per relasi
- *   bb-siklus   "Waktu hilang di mana & kenapa?" 8 tahap siklus · terminal · hambatan + PIC · awak
+ * Js.BbUi — store & komponen ruang kerja Batubara (keputusan 25 Nov 2026: alur cerita 4 langkah + 3 profil;
+ * KPI utama = siklus rangkaian realisasi vs program GAPEKA).
+ *   bb-hariini  "Apa yang terjadi?"            KPI utama + pengecualian hari terakhir data
+ *   bb-capaian  "Seberapa jauh dari target?"   KPI wajib + program vs realisasi per relasi
+ *   bb-siklus   "Mengapa?" (Penyebab)          8 tahap siklus · terminal · hambatan + PIC · awak · gangguan KA batubara
  *   batubara    Papan skenario GAPEKA (Js.Skenario)
  *   bb-profil   profil terminal / relasi / rangkaian (kepala profil + grafik saling menyaring)
  * Angka dari BBK (Js.BbData, definisi app WTT). Data: apiBatubaraPart (sinkron DB Batubara, 28_BatubaraSync.gs).
@@ -49,6 +51,43 @@ document.addEventListener('alpine:init', function () {
     stName: function (k) { return BBK.stName ? BBK.stName(k) : k; },
     relName: function (r) { return BBK.relName ? BBK.relName(r) : r; },
     open: function (type, id) { Alpine.store('app').go('bb-profil', { type: type, id: id }); },
+    /**
+     * KPI utama: siklus rangkaian (jam per putaran muat → isi → bongkar → kosong) realisasi vs program GAPEKA,
+     * rata-rata tertimbang jumlah KA per relasi (relasi dengan program & realisasi keempat komponen lengkap; sumber K.siklus).
+     */
+    get north() {
+      var KW = this.KW; if (!KW) return null;
+      return this.memo('north', function () {
+        var C = ['muat', 'isi', 'bongkar', 'kosong'], L = KW.SIK.filter(function (o) { return o.prgTotal != null && C.every(function (c) { return o.realT[c] != null; }); });
+        var n = BBK.sum(L, function (o) { return o.nKa; }); if (!n) return null;
+        var w = function (f) { return BBK.sum(L, function (o) { return f(o) * o.nKa; }) / n; };
+        var comp = C.map(function (c) { return { id: c, n: { muat: 'Di terminal muat', isi: 'Perjalanan isi', bongkar: 'Di terminal bongkar', kosong: 'Perjalanan kosong' }[c], prog: w(function (o) { return o.prg[c]; }), real: w(function (o) { return o.realT[c]; }) }; });
+        comp.forEach(function (c) { c.d = c.real - c.prog; });
+        var prog = BBK.sum(comp, function (c) { return c.prog; }), real = BBK.sum(comp, function (c) { return c.real; });
+        var worst = comp.slice().sort(function (a, b) { return b.d - a.d; })[0];
+        return { prog: prog, real: real, d: real - prog, pct: prog ? (real - prog) / prog * 100 : null, comp: comp, worst: worst.d > 0 ? worst : null, nRel: L.length, nKa: n,
+          tab: worst && (worst.id === 'muat' || worst.id === 'bongkar') ? 'terminal' : 'tahap' };
+      });
+    },
+    /** Nomor KA batubara (M_KA, kedua nomor pasangan "4000-4001") untuk menautkan Gangguan_Induk. */
+    get coalKa() {
+      if (!this.ready) return {};
+      return this.memo('coalKa', function () { var S = {}; BBK.rows('M_KA').forEach(function (k) { String(k.no_ka || '').split(/[-\/]/).forEach(function (x) { x = x.trim().toUpperCase(); if (x) S[x] = k; }); }); return S; });
+    },
+    /** Gangguan_Induk dengan nomor KA batubara (M_KA) pada bulan filter Batubara (tahun data realisasi). */
+    gangguan: function () {
+      var self = this, K = this.coalKa, y = (this.months[this.months.length - 1] || '2026').slice(0, 4), f = this.f;
+      return this.memo('ggn', function () {
+        return (KAI.data.all || []).filter(function (r) {
+          if (!r.date || r.date.slice(0, 4) !== y) return false; var m = +r.date.slice(5, 7); if (m < f.m0 || m > f.m1) return false;
+          var k = K[String(r.ka || '').toUpperCase().replace(/\s+/g, '')]; if (!k) return false;
+          if (f.wil !== 'Sumsel' && k.divre_asal !== f.wil.toUpperCase() && k.divre_tujuan !== f.wil.toUpperCase()) return false;
+          if (f.mut !== 'Semua' && k.muatan !== f.mut) return false;
+          if (f.pem !== 'Semua' && (k.pemilik === 'PTBA' ? 'PTBA' : 'Swasta') !== f.pem) return false;
+          return true;
+        }).sort(function (a, b) { return (b.menit || 0) - (a.menit || 0); });
+      });
+    },
     STC: STC, MON: MON
   });
 
@@ -95,11 +134,60 @@ document.addEventListener('alpine:init', function () {
     };
   });
 
-  /* ---------- Siklus & terminal ---------- */
+  /* ---------- Hari ini: KPI utama + pengecualian hari terakhir data ---------- */
+  Alpine.data('vBbHariIni', function () {
+    return {
+      init: function () { this.$store.bb.need(['core', 'perjalanan', 'terminal', 'hambatan']); },
+      get N() { return this.$store.bb.north; },
+      get D() {
+        var bb = this.$store.bb; if (!bb.KW) return null;
+        return bb.memo('hariini', function () {
+          var P = BBK.perjalanan(bb.F) || [], last = P.reduce(function (a, r) { return r.tanggal > a ? r.tanggal : a; }, '');
+          if (!last) return null;
+          var day = P.filter(function (r) { return r.tanggal === last; }), run = day.filter(function (r) { return !r.batal; });
+          var late = [];
+          run.forEach(function (r) {
+            var tb = BBK.otpTol(BBK.divOf(r.asal), 'brk'), tt = BBK.otpTol(BBK.divOf(r.tujuan), 'tiba');
+            var lb = typeof r.lambat_brk === 'number' && r.lambat_brk > tb ? r.lambat_brk : null, lt = typeof r.lambat_tiba === 'number' && r.lambat_tiba > tt ? r.lambat_tiba : null;
+            if (lb != null || lt != null) late.push({ ka: r.no_ka, rel: r.asal + '–' + r.tujuan, mut: r.muatan, lb: lb, lt: lt, tb: tb, tt: tt, brk: r.brk_prog + ' → ' + (r.brk_real || '–'), tiba: r.tiba_prog + ' → ' + (r.tiba_real || '–'), max: Math.max(lb || 0, lt || 0) });
+          });
+          late.sort(function (a, b) { return b.max - a.max; });
+          // Terminal: kegiatan yang dimulai pada hari itu, total pra+inti+pasca dibanding SOP kontrak (K.sop)
+          var T = (BBK.terminal(bb.F) || []).filter(function (r) { return String(r.mulai_muat || '').slice(0, 10) === last || String(r.mulai_bongkar || '').slice(0, 10) === last; }), wtt = [], nAct = 0;
+          T.forEach(function (r) {
+            var rel = r.stasiun_muat + '-' + r.stasiun_bongkar;
+            [['muat', r.stasiun_muat, r.mulai_muat], ['bongkar', r.stasiun_bongkar, r.mulai_bongkar]].forEach(function (u) {
+              if (String(u[2] || '').slice(0, 10) !== last) return; nAct++;
+              var ids = ['pra_' + u[0], u[0], 'pasca_' + u[0]], real = 0, sop = 0, ok = true, sopOk = true;
+              ids.forEach(function (id) { var v = r[id]; if (v == null || isNaN(v)) ok = false; else real += +v; var x = BBK.sop(rel, u[1], id); if (x == null) sopOk = false; else sop += x; });
+              if (ok && sopOk && real > sop) wtt.push({ ka: r.no_ka, st: u[1], uj: u[0], rel: rel, real: real, sop: sop, d: real - sop });
+            });
+          });
+          wtt.sort(function (a, b) { return b.d - a.d; });
+          var H = (BBK.hambatan(bb.F) || []).filter(function (h) { return h.tanggal === last; }).sort(function (a, b) { return (b.menit || 0) - (a.menit || 0); });
+          var G = bb.gangguan().filter(function (r) { return r.date === last; });
+          return { last: last, n: day.length, run: run.length, batal: day.length - run.length, late: late, wtt: wtt, nT: nAct, H: H, hMenit: BBK.sum(H, function (h) { return h.menit; }), G: G };
+        });
+      },
+      dur: function (m) { return m == null ? '–' : BBK.fmt.dur(m); },
+      sign: function (d) { return (d > 0 ? '+' : d < 0 ? '−' : '±') + BBK.fmt.dur(Math.abs(d)); },
+      get compOpt() {
+        var N = this.N; if (!N) return null;
+        var cat = N.comp.map(function (c) { return c.n; });
+        return { tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return BBK.fmt.dur(v); } }, legend: { bottom: 0 },
+          grid: { left: 14, right: 24, top: 10, bottom: 40, containLabel: true }, yAxis: { type: 'category', data: cat, inverse: true }, xAxis: { type: 'value', axisLabel: { formatter: function (v) { return Math.round(v / 60) + ' jam'; } } },
+          series: [{ name: 'Program GAPEKA', type: 'bar', data: N.comp.map(function (c) { return Math.round(c.prog); }), itemStyle: { color: '#A8B3C7' }, barGap: '10%' },
+            { name: 'Realisasi', type: 'bar', data: N.comp.map(function (c) { return { value: Math.round(c.real), itemStyle: { color: c.d > 0 ? '#C0392B' : '#1F8A2E' } }; }) }] };
+      },
+      goWhy: function (tab) { this.$store.app.go('bb-siklus', { tab: tab }); }
+    };
+  });
+
+  /* ---------- Penyebab (siklus, terminal, hambatan, awak, gangguan) ---------- */
   Alpine.data('vBbSiklus', function () {
     return {
       tab: 'tahap', term: '',
-      init: function () { var p = this.$store.app.params || {}; if (/^(tahap|terminal|hambatan|awak)$/.test(p.tab || '')) this.tab = p.tab; this.$store.bb.need(['core', 'perjalanan', 'terminal', 'hambatan']); },
+      init: function () { var p = this.$store.app.params || {}; if (/^(tahap|terminal|hambatan|awak|gangguan)$/.test(p.tab || '')) this.tab = p.tab; this.$store.bb.need(['core', 'perjalanan', 'terminal', 'hambatan']); },
       get KW() { return this.$store.bb.KW; },
       get stages() { var KW = this.KW; return KW ? this.$store.bb.memo('stage', function () { return BBK.stageAll(KW.SIK); }) : []; },
       get stageOpt() {
@@ -133,6 +221,14 @@ document.addEventListener('alpine:init', function () {
         return BBK.rows('DINASAN_AWAK').map(function (x) { var m0 = BBK.mins(x.mulai_dinas), b = BBK.mins(x.jam_berangkat), jd = BBK.mins(x.jam_dinas);
           return { upt: x.upt_crew, kode: x.kode, no: x.no_ka, nama: x.nama_ka, rel: x.relasi, lin: x.lintas_dinas, mulai: x.mulai_dinas, brk: x.jam_berangkat, habis: x.habis_dinas, jd: jd, siap: m0 != null && b != null ? (b - m0 + 1440) % 1440 : null, coal: /^L?[34]\d{3}/.test(x.no_ka) }; })
           .filter(function (r) { return r.coal; }).sort(function (a, b) { return (a.siap == null) - (b.siap == null) || a.siap - b.siap; });
+      },
+      get G() { return this.$store.bb.KW ? this.$store.bb.gangguan() : []; },
+      get Gsum() {
+        var G = this.G, by = {}, lok = {};
+        G.forEach(function (r) { var k = r.kelas || 'lain'; var o = by[k] = by[k] || { k: k, n: 0, m: 0 }; o.n++; o.m += r.menit || 0;
+          var l = r.lokasi || 'tidak tercatat', x = lok[l] = lok[l] || { l: l, n: 0, m: 0 }; x.n++; x.m += r.menit || 0; });
+        return { n: G.length, m: BBK.sum(G, function (r) { return r.menit; }), kelas: Object.keys(by).map(function (k) { return by[k]; }).sort(function (a, b) { return b.m - a.m; }),
+          lokasi: Object.keys(lok).map(function (k) { return lok[k]; }).sort(function (a, b) { return b.m - a.m || b.n - a.n; }).slice(0, 8) };
       },
       get awakFlag() { return this.awak.filter(function (r) { return r.siap != null && r.siap < 60; }).length; },
       insFor: function (tags) { return this.$store.bb.INS.filter(function (i) { return i.tag.some(function (t) { return tags.indexOf(t) >= 0; }); }); },

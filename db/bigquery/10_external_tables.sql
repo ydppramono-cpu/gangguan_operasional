@@ -155,48 +155,31 @@ CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.thi` (
   pembagi_indeks_sumber STRING OPTIONS(description="Pembagi indeks sumber")
 ) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/1HmlF2DL4KeHGVSO87aQAKu86dbfrnZohkCA7SsaL3OM"], sheet_range = "THI!A:AY", skip_leading_rows = 1, description = "Track Health Index per wilayah/resor/petak per bulan");
 
--- rhi: Rolling stock Health Index harian per sarana (DB!RHI)
+-- rhi: Rolling stock Health Index lokomotif harian per sarana (ekspor 22 kolom, sejak 25 Nov 2026) (DB!RHI)
 CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.rhi` (
+  jenis_sarana STRING OPTIONS(description="jenis_sarana"),
+  tgl_data STRING OPTIONS(description="tgl_data"),
   nomor_sarana STRING OPTIONS(description="nomor_sarana"),
   tipe_sarana STRING OPTIONS(description="tipe_sarana"),
-  tgl_data STRING OPTIONS(description="tgl_data"),
-  perawatan_terakhir STRING OPTIONS(description="perawatan_terakhir"),
-  tgl_perawatan STRING OPTIONS(description="tgl_perawatan"),
+  dipo STRING OPTIONS(description="dipo"),
+  daop STRING OPTIONS(description="daop"),
   reliability_index STRING OPTIONS(description="reliability_index"),
   maintainability_index STRING OPTIONS(description="maintainability_index"),
   availability_index STRING OPTIONS(description="availability_index"),
   rams_index STRING OPTIONS(description="rams_index"),
-  total_request_rows STRING OPTIONS(description="total_request_rows"),
-  total_terpenuhi STRING OPTIONS(description="total_terpenuhi"),
-  list_maintenance_realisasi STRING OPTIONS(description="list_maintenance_realisasi"),
-  list_maintenance_seharusnya STRING OPTIONS(description="list_maintenance_seharusnya"),
-  spare_management_score STRING OPTIONS(description="spare_management_score"),
   maintenance_completion_score STRING OPTIONS(description="maintenance_completion_score"),
+  spare_management_score STRING OPTIONS(description="spare_management_score"),
   maintenance_index STRING OPTIONS(description="maintenance_index"),
-  umur_kereta STRING OPTIONS(description="umur_kereta"),
   age_index STRING OPTIONS(description="age_index"),
-  penalti_open STRING OPTIONS(description="penalti_open"),
-  penalti_lengkap STRING OPTIONS(description="penalti_lengkap"),
-  real_condition_index STRING OPTIONS(description="real_condition_index"),
   onsite_inspection_index STRING OPTIONS(description="onsite_inspection_index"),
+  real_condition_index STRING OPTIONS(description="real_condition_index"),
   condition_index STRING OPTIONS(description="condition_index"),
   healthy_index STRING OPTIONS(description="healthy_index"),
   healthy_status STRING OPTIONS(description="healthy_status"),
-  berkas_sumber STRING OPTIONS(description="Berkas sumber"),
-  tab_sumber STRING OPTIONS(description="Tab sumber"),
-  baris_sumber STRING OPTIONS(description="Baris sumber"),
-  kunci_sarana_tanggal STRING OPTIONS(description="Kunci sarana-tanggal"),
-  sha_256_nilai_sumber STRING OPTIONS(description="SHA-256 nilai sumber"),
-  catatan_pemeriksaan STRING OPTIONS(description="Catatan pemeriksaan"),
-  healthy_index_pulih STRING OPTIONS(description="healthy_index (pulih)"),
-  condition_index_pulih STRING OPTIONS(description="condition_index (pulih)"),
-  onsite_inspection_index_pulih STRING OPTIONS(description="onsite_inspection_index (pulih)"),
-  maintenance_index_pulih STRING OPTIONS(description="maintenance_index (pulih)"),
-  umur_kereta_pulih_tahun STRING OPTIONS(description="umur_kereta (pulih; tahun)"),
-  age_index_pulih STRING OPTIONS(description="age_index (pulih)"),
-  pemeriksaan_pemulihan STRING OPTIONS(description="Pemeriksaan pemulihan"),
-  catatan_verifikasi_rumus STRING OPTIONS(description="Catatan verifikasi rumus")
-) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/1HmlF2DL4KeHGVSO87aQAKu86dbfrnZohkCA7SsaL3OM"], sheet_range = "RHI!A:AM", skip_leading_rows = 1, description = "Rolling stock Health Index harian per sarana");
+  kategori_gold STRING OPTIONS(description="kategori_gold"),
+  is_rhi_lengkap STRING OPTIONS(description="is_rhi_lengkap"),
+  versi_formula STRING OPTIONS(description="versi_formula")
+) OPTIONS (format = "GOOGLE_SHEETS", uris = ["https://docs.google.com/spreadsheets/d/1HmlF2DL4KeHGVSO87aQAKu86dbfrnZohkCA7SsaL3OM"], sheet_range = "RHI!A:V", skip_leading_rows = 1, description = "Rolling stock Health Index lokomotif harian per sarana (ekspor 22 kolom, sejak 25 Nov 2026)");
 
 -- wkp: Window time / WKP (program & realisasi) per wilayah (DB!WKP)
 CREATE OR REPLACE EXTERNAL TABLE `${PROJECT}.kai_raw.wkp` (

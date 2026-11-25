@@ -800,6 +800,11 @@ html { scroll-behavior: smooth; }
 .sk-real { align-items: center; padding-top: 10px; border-top: 1px solid var(--line-soft); }
 .sk-chk input { vertical-align: -2px; margin-right: 4px; } .sk-chk > span:last-child { display: inline-flex; align-items: center; height: 30px; font-size: 13px; }
 .sk-cmp .tbl th, .sk-cmp .tbl td { padding: 6px 8px; white-space: normal; } .sk-cmp .tbl td:first-child { min-width: 0; }
+.bb-north-b { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: 20px; align-items: center; }
+.bb-north-num .val { font-size: 34px; font-weight: 700; line-height: 1.1; } .bb-north-num .cmp { color: var(--muted); margin-top: 4px; } .bb-north-num .delta-big { font-size: 18px; font-weight: 700; margin-top: 6px; }
+.bb-north-chart .chart { height: 230px; } .bb-day-h { font-size: 18px; } .bb-kpi-main { cursor: pointer; }
+@media (max-width: 720px) { .bb-north-b { grid-template-columns: 1fr; } }
+.rhikg-kpi { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 .mutu-t th.pel, .mutu-t td.pel, .pel-t { color: var(--muted); } .mutu-t th { white-space: normal; min-width: 84px; vertical-align: bottom; } .mutu-t tr.sel td { background: var(--surface-2); }
 .chip-chk { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-sm); margin-left: 6px; }
 .sk-q input { width: 230px; } .sk-qrow { gap: 6px; flex-wrap: wrap; }

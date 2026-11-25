@@ -1,0 +1,60 @@
+<!-- View.BbHariIni — Batubara › Hari ini: KPI utama (siklus rangkaian vs program) + pengecualian pada hari terakhir data realisasi. -->
+<template x-if="$store.app.route === 'bb-hariini'">
+  <section class="view bb" x-data="vBbHariIni">
+    <?!= include('Part.BbFilter'); ?>
+
+    <div class="card mt bb-north" x-show="N">
+      <div class="card-h"><div><h3>Siklus rangkaian: realisasi vs program</h3>
+        <p x-text="N ? 'Jam per putaran muat → isi → bongkar → kosong · rata-rata tertimbang ' + KAI.fmt.n(N.nKa) + ' KA di ' + N.nRel + ' relasi · ' + $store.bb.periodTxt() + ' · program ' + $store.bb.versi : ''"></p></div></div>
+      <div class="card-b bb-north-b">
+        <div class="bb-north-num">
+          <div class="lbl">Realisasi per putaran</div>
+          <div class="val num" x-text="N ? dur(N.real) : '–'"></div>
+          <div class="cmp" x-text="N ? 'Program ' + dur(N.prog) : ''"></div>
+          <div class="delta-big" :class="N && N.d > 0 ? 'bad-t' : 'good-t'" x-text="N ? sign(N.d) + ' (' + (N.pct > 0 ? '+' : '') + KAI.fmt.d1(N.pct) + '%)' : ''"></div>
+          <p class="note" x-show="N && N.worst" x-text="N && N.worst ? 'Selisih terbesar: ' + N.worst.n.toLowerCase() + ' ' + sign(N.worst.d) + ' dari program.' : ''"></p>
+          <button class="btn sm primary mt-s" x-show="N && N.worst" @click="goWhy(N.tab)">Lihat penyebabnya</button>
+        </div>
+        <div class="bb-north-chart"><div class="chart" x-chart="compOpt"></div></div>
+      </div>
+    </div>
+    <p class="note mt" x-show="$store.bb.KW && !N">Siklus rangkaian belum dapat dihitung: tidak ada relasi dengan program dan realisasi keempat komponen pada saringan ini.</p>
+
+    <template x-if="D">
+      <div>
+        <h2 class="mt bb-day-h" x-text="'Hari terakhir data realisasi: ' + KAI.fmt.day(D.last)"></h2>
+        <p class="note">Bukan waktu nyata: angka mengikuti data terakhir di DB Batubara (sinkron tiap 15 menit bila DB berubah). Yang tampil di bawah hanya pengecualian.</p>
+        <div class="grid g-4 mt-s">
+          <div class="card kpi"><div class="lbl">Perjalanan KA</div><div class="val num" x-text="KAI.fmt.n(D.run)"></div><div class="note" x-text="D.batal ? D.batal + ' batal dari ' + D.n + ' terjadwal' : 'tidak ada yang batal'"></div></div>
+          <div class="card kpi" :style="D.late.length ? '--kpi-c:var(--bad)' : '--kpi-c:var(--good)'"><div class="lbl">Terlambat melewati toleransi</div><div class="val num" x-text="KAI.fmt.n(D.late.length)"></div><div class="note">berangkat atau datang · toleransi per Divre</div></div>
+          <div class="card kpi" :style="D.wtt.length ? '--kpi-c:var(--warn)' : '--kpi-c:var(--good)'"><div class="lbl">Di terminal melewati SOP</div><div class="val num" x-text="KAI.fmt.n(D.wtt.length)"></div><div class="note" x-text="'dari ' + D.nT + ' kegiatan muat/bongkar dimulai hari itu'"></div></div>
+          <div class="card kpi" :style="D.H.length || D.G.length ? '--kpi-c:var(--warn)' : ''"><div class="lbl">Hambatan & gangguan</div><div class="val num" x-text="KAI.fmt.n(D.H.length + D.G.length)"></div><div class="note" x-text="D.H.length + ' hambatan terminal (' + KAI.fmt.n(D.hMenit) + ' menit) · ' + D.G.length + ' gangguan KA batubara'"></div></div>
+        </div>
+
+        <div class="mt">
+          <div class="card"><div class="card-h"><div><h3>KA terlambat melewati toleransi</h3><p>Urut keterlambatan terbesar · program → realisasi</p></div></div>
+            <div class="card-b tbl-wrap"><table class="tbl sm" data-pg="10"><thead><tr><th>KA</th><th>Relasi</th><th>Berangkat</th><th class="num">Lambat berangkat</th><th>Datang</th><th class="num">Lambat datang</th></tr></thead>
+              <tbody><template x-for="r in D.late" :key="r.ka + r.rel"><tr><td><b x-text="r.ka"></b> <small x-text="r.mut"></small></td><td x-text="r.rel"></td><td class="nowrap" x-text="r.brk"></td>
+                <td class="num" :class="r.lb != null && 'bad-t'" :title="'Toleransi ' + r.tb + ' menit'" x-text="r.lb != null ? r.lb + ' menit' : 'dalam toleransi'"></td><td class="nowrap" x-text="r.tiba"></td><td class="num" :class="r.lt != null && 'bad-t'" :title="'Toleransi ' + r.tt + ' menit'" x-text="r.lt != null ? r.lt + ' menit' : 'dalam toleransi'"></td></tr></template>
+                <tr x-show="!D.late.length"><td colspan="6" class="muted">Tidak ada KA yang melewati toleransi.</td></tr></tbody></table></div></div>
+          <div class="card mt"><div class="card-h"><div><h3>Kegiatan terminal melewati SOP</h3><p>Pra + inti + pasca dibanding SOP kontrak · klik untuk profil terminal</p></div></div>
+            <div class="card-b tbl-wrap"><table class="tbl sm" data-pg="10"><thead><tr><th>Terminal</th><th>KA</th><th>Kegiatan</th><th class="num">Realisasi</th><th class="num">SOP</th><th class="num">Lewat</th></tr></thead>
+              <tbody><template x-for="(r, i) in D.wtt" :key="i"><tr class="click" @click="$store.bb.open('terminal', r.st)"><td><b x-text="$store.bb.stName(r.st)"></b></td><td x-text="r.ka"></td><td x-text="r.uj"></td>
+                <td class="num" x-text="dur(r.real)"></td><td class="num" x-text="dur(r.sop)"></td><td class="num bad-t" x-text="'+' + dur(r.d)"></td></tr></template>
+                <tr x-show="!D.wtt.length"><td colspan="6" class="muted">Tidak ada kegiatan terminal yang melewati SOP.</td></tr></tbody></table></div></div>
+        </div>
+
+        <div class="grid g-2 mt">
+          <div class="card"><div class="card-h"><div><h3>Hambatan terminal</h3><p>REAL_HAMBATAN hari itu · urut menit</p></div><span class="spacer"></span><button class="btn sm" @click="goWhy('hambatan')">Semua hambatan</button></div>
+            <div class="card-b tbl-wrap"><table class="tbl sm" data-pg="8"><thead><tr><th>Lokasi</th><th>Hambatan</th><th>PIC</th><th class="num">Menit</th></tr></thead>
+              <tbody><template x-for="(h, i) in D.H" :key="i"><tr><td x-text="h.lokasi"></td><td x-text="h.nama_std || h.uraian"></td><td x-text="h.pic || '–'"></td><td class="num" x-text="KAI.fmt.n(h.menit)"></td></tr></template>
+                <tr x-show="!D.H.length"><td colspan="4" class="muted">Tidak ada hambatan tercatat.</td></tr></tbody></table></div></div>
+          <div class="card"><div class="card-h"><div><h3>Gangguan KA batubara</h3><p>Gangguan_Induk, nomor KA terdaftar di M_KA · klik untuk rincian</p></div><span class="spacer"></span><button class="btn sm" @click="goWhy('gangguan')">Semua gangguan</button></div>
+            <div class="card-b tbl-wrap"><table class="tbl sm" data-pg="8"><thead><tr><th>KA</th><th>Judul</th><th>Lokasi</th><th class="num">Menit</th></tr></thead>
+              <tbody><template x-for="r in D.G" :key="r.id"><tr class="click" @click="$store.app.openEvent(r.id)"><td><b x-text="r.ka"></b></td><td class="wrap" x-text="r.judul"></td><td x-text="r.lokasi || 'tidak tercatat'"></td><td class="num" x-text="KAI.fmt.n(r.menit)"></td></tr></template>
+                <tr x-show="!D.G.length"><td colspan="4" class="muted">Tidak ada gangguan KA batubara tercatat pada tanggal ini.</td></tr></tbody></table></div></div>
+        </div>
+      </div>
+    </template>
+  </section>
+</template>

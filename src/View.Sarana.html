@@ -84,13 +84,10 @@
 </div></template>
           <template x-if="tab === 'kesehatan' && kind !== 'Lokomotif'">
             <div>
-              <div class="callout">
-                <b x-text="'RHI resmi ' + kind.toLowerCase() + ': belum tersedia'"></b>
-                <span x-text="'Tab RHI di database baru memuat lokomotif (' + KAI.fmt.n(S.byKind.Lokomotif.withRhi) + ' unit). Kolom RHI ' + kind.toLowerCase() + ' akan terisi otomatis begitu datanya ditambahkan. Sementara itu dipakai skor kesehatan turunan (usia, keandalan 12 bulan, kesiapan GAPEKA) — indikator internal, bukan RHI.'"></span>
-              </div>
+              <?!= include('Part.RhiKG'); ?>
               <div class="grid g-4 mt">
                 <template x-for="b in dbands" :key="b.k"><div class="card kpi" :style="'--kpi-c:' + b.c"><div class="lbl" x-text="b.k + ' · skor turunan ' + b.r"></div><div class="val num" x-text="KAI.fmt.n(b.n)"></div><div class="note" x-text="KAI.fmt.d1(A.n ? b.n / A.n * 100 : 0) + '% armada · ' + KAI.fmt.n(b.g) + ' gangguan 12 bulan'"></div></div></template>
-                <div class="card kpi"><div class="lbl">RHI resmi</div><div class="val num">–</div><div class="note">0 unit · menunggu data</div></div>
+                <div class="card kpi"><div class="lbl">RHI resmi</div><div class="val num" x-text="$store.rhikg.state === 'ready' ? 'Tersambung' : '–'"></div><div class="note" x-text="$store.rhikg.state === 'ready' ? 'lihat bagian RHI resmi di atas' : 'menunggu sinkron RHI kereta & gerbong'"></div></div>
               </div>
               <div class="grid g-2 mt">
                 <div class="card"><div class="card-h"><div><h3>Skor turunan × laju gangguan</h3><p>Batang = unit per kelas skor (sumbu kiri) · garis = gangguan 12 bulan per 100 unit (sumbu kanan; kelompok &lt; 30 unit tidak digaris — basis kecil)</p></div></div>
@@ -144,7 +141,7 @@
             <div class="card-b"><div x-table="unitTable" @row-click="$store.app.openUnit($event.detail.no)"></div></div>
           </div>
         </div>
-        <p class="note mt">KRL, KRD, dan pembangkit belum dihitung di halaman ini (gangguannya tetap masuk Ringkasan eksekutif & Telusuri). Skor kekuatan dan skor turunan adalah indikator internal; RHI resmi saat ini hanya lokomotif.</p>
+        <p class="note mt">KRL, KRD, dan pembangkit belum dihitung di halaman ini (gangguannya tetap masuk Ringkasan eksekutif & Telusuri). Skor kekuatan dan skor turunan adalah indikator internal. RHI resmi: lokomotif dari tab RHI basis data utama; kereta & gerbong dari spreadsheet KAI | RHI Sarana (Agu–Okt 2026).</p>
       </div>
     </template>
   </section>
@@ -205,7 +202,7 @@ document.addEventListener('alpine:init', function () {
       },
       get watch() { return this.units.slice().sort(function (a, b) { return a.health - b.health || b.m12 - a.m12; }).slice(0, 25); },
       scoreCls: function (v) { return v == null ? '' : v >= 85 ? 'ok' : v >= 70 ? 'mid' : 'low'; },
-      stCls: function (s) { return /HEALTHY|Baik/.test(s || '') ? 'ok' : /MONITOR|Pantau/.test(s || '') ? 'mid' : /DECLINING|Prioritas/.test(s || '') ? 'low' : ''; },
+      stCls: function (s) { return /HEALTHY|Baik/.test(s || '') ? 'ok' : /MONITOR|Pantau/.test(s || '') ? 'mid' : /DECLINING|POOR|CRITICAL|Prioritas/.test(s || '') ? 'low' : ''; },
       healthTxt: function (u) { return !u ? '–' : KAI.fmt.d1(u.health) + ' · ' + KAI.fmt.st(u.status) + (u.hiSrc === 'RHI' ? '' : ' (turunan)'); },
       base: function () { return { textStyle: { fontFamily: 'Inter, Arial' }, tooltip: { trigger: 'axis' }, legend: { bottom: 0 }, grid: { left: 14, right: 18, top: 24, bottom: 44, containLabel: true } }; },
       comboMonthly: function () {
@@ -304,7 +301,7 @@ document.addEventListener('alpine:init', function () {
 document.addEventListener('alpine:init', function () {
   Alpine.data('vKondisi', function () {
     var memo = {};   // hasil analitik per (versi data, bulan, wilayah) — dihitung sekali, tidak reaktif
-    var GC = { 'Sangat Baik': '1F8A2E', 'Baik': '2E6E62', 'Cukup': 'E0861A', 'Waspada': 'C0392B', 'Kritis': '7B1D1D' }, SC = { HEALTHY: '1F8A2E', MONITOR: 'E0861A', DECLINING: 'C0392B' };
+    var GC = { 'Sangat Baik': '1F8A2E', 'Baik': '2E6E62', 'Cukup': 'E0861A', 'Waspada': 'C0392B', 'Kritis': '7B1D1D' }, SC = { POOR: '8E1B1B', CRITICAL: '4A0E0E', HEALTHY: '1F8A2E', MONITOR: 'E0861A', DECLINING: 'C0392B' };
     var PC = { P1: '#C0392B', P2: '#E0861A', P3: '#E9C46A', P4: '#3B5BDB', '': '#A8B3C7' };
     return {
       tab: 'pra', pri: '', sortK: '', sortD: -1, pq: '',
@@ -338,7 +335,7 @@ document.addEventListener('alpine:init', function () {
         return { g: { n: s(function (x) { return x.g.n; }), menit: s(function (x) { return x.g.menit; }) }, g6: { n: s(function (x) { return x.g6.n; }), jr: s(function (x) { return x.g6.jr; }), sin: s(function (x) { return x.g6.sin; }) },
           wkp: { n: s(function (x) { return x.wkp.n; }), over: s(function (x) { return x.wkp.over; }), lebih: s(function (x) { return x.wkp.lebih; }), andil: s(function (x) { return x.wkp.andil; }) } };
       },
-      get decl() { return this.S.units.filter(function (u) { return u.st === 'DECLINING'; }).sort(function (a, b) { return a.hi - b.hi; }); },
+      get decl() { return this.S.units.filter(function (u) { return u.st === 'DECLINING' || u.st === 'POOR' || u.st === 'CRITICAL'; }).sort(function (a, b) { return a.hi - b.hi; }); },
       get rep3() { return this.S.units.filter(function (u) { return u.g6.n >= 3; }).sort(function (a, b) { return b.g6.n - a.g6.n || b.g6.menit - a.g6.menit; }); },
       gc: function (g) { return GC[g] || '17223B'; }, sc: function (s) { return SC[s] || '17223B'; },
       uptCols: [['id', 'UPT JR'], ['w', 'Wilayah'], ['hi', 'THI', 1], ['dhi', 'Δ sejak awal', 1], ['low', 'Komponen terendah'], ['g6', 'Gangguan prasarana (n · menit)', 1], ['wkp6', 'WKP JR (kegiatan · melebihi program · menit lebih · andil)', 1], ['lok', 'Lokasi gangguan terbanyak'], ['pri', 'Prioritas']],
@@ -371,7 +368,7 @@ document.addEventListener('alpine:init', function () {
       },
       /** Status RHI: dua baris 100% bertumpuk (armada vs saat gangguan) — perbandingan porsi langsung terbaca, label di dalam ruas. */
       atSar: function () {
-        var S = this.S, n = S.E.length, ks = ['HEALTHY', 'MONITOR', 'DECLINING'], rows = ['Armada (hari-unit)', 'Saat gangguan (' + n + ' kejadian)'];
+        var S = this.S, n = S.E.length, ks = ['HEALTHY', 'MONITOR', 'DECLINING', 'POOR', 'CRITICAL'].filter(function (k) { return k !== 'CRITICAL' || S.hari.CRITICAL || S.atSt.CRITICAL; }), rows = ['Armada (hari-unit)', 'Saat gangguan (' + n + ' kejadian)'];
         var v = function (k) { return [S.totHari ? Math.round(S.hari[k] / S.totHari * 1000) / 10 : 0, n ? Math.round(S.atSt[k] / n * 1000) / 10 : 0]; };
         return Object.assign(this.base(), { tooltip: { trigger: 'item', formatter: function (p) { return '<b>' + p.name + '</b><br>' + p.seriesName + ': ' + KAI.fmt.d1(p.value) + '%'; } },
           grid: { left: 14, right: 24, top: 16, bottom: 44, containLabel: true },
@@ -416,7 +413,7 @@ document.addEventListener('alpine:init', function () {
   function mix() { var o = {}; for (var i = 0; i < arguments.length; i++) Object.defineProperties(o, Object.getOwnPropertyDescriptors(arguments[i])); return o; }
   var common = {
     get ageWarn() { return (this.$store.app.config && this.$store.app.config.ageWarn) || 30; },
-    stCls: function (s) { return /HEALTHY|Baik/.test(s || '') ? 'ok' : /MONITOR|Pantau/.test(s || '') ? 'mid' : /DECLINING|Prioritas/.test(s || '') ? 'low' : ''; },
+    stCls: function (s) { return /HEALTHY|Baik/.test(s || '') ? 'ok' : /MONITOR|Pantau/.test(s || '') ? 'mid' : /DECLINING|POOR|CRITICAL|Prioritas/.test(s || '') ? 'low' : ''; },
     attrCls: function (v) { return v == null ? '' : v >= 16 ? 'a4' : v >= 11 ? 'a3' : v >= 6 ? 'a2' : 'a1'; },
     ringCls: function (v) { return v >= 80 ? 'ok' : v >= 65 ? 'mid2' : v >= 50 ? 'mid' : 'low'; }
   };
@@ -441,10 +438,16 @@ document.addEventListener('alpine:init', function () {
       },
       /** RHI pada tanggal tertentu dari RHI harian (rentang multi-bulan). */
       rhiOn: function (no, date) {
-        var K = KAI.data.ref.kondisi, G = K && K.rhiDay && K.rhiDay.range, a = G && G.u[no]; if (!a || !date) return null;
+        var K = KAI.data.ref.kondisi, G = K && K.rhiDay && K.rhiDay.range, a = G && G.u[no];
+        if (!a && date && this.u && this.u.kind !== 'Lokomotif') {     // kereta/gerbong: status harian dari KAI | RHI Sarana; HI = akhir bulan
+          if (this.$store.rhikg.state === 'idle') KAIRhiKG.ensure();
+          var x = this.$store.rhikg.state === 'ready' ? KAIRhiKG.at(no, date) : null;
+          return x ? { hi: x.hiMonthEnd, st: KAI.fmt.st(x.st), hiNote: 'HI akhir bulan' } : null;
+        }
+        if (!a || !date) return null;
         var i = Math.round((Date.parse(date + 'T00:00:00Z') - Date.parse(G.from + 'T00:00:00Z')) / 864e5), hs = String(a[0]).split(',');
         if (i < 0 || i >= hs.length || hs[i] === '') return null;
-        return { hi: Number(hs[i]) / 100, st: ({ H: 'Healthy', M: 'Monitor', D: 'Declining' })[String(a[1]).charAt(i)] || '' };
+        return { hi: Number(hs[i]) / 100, st: ({ H: 'Healthy', M: 'Monitor', D: 'Declining', P: 'Poor', C: 'Critical' })[String(a[1]).charAt(i)] || '' };
       },
       /** Riwayat dinasan terpadu: satu baris per kejadian unit (hari unit tercatat berdinas). Tanpa tebakan untuk hari lain. */
       get dinasRows() {
@@ -465,9 +468,19 @@ document.addEventListener('alpine:init', function () {
       },
       /** Skor RHI per bulan (tab RHI): RHI akhir bulan, kategori, RAMS, maintenance, condition + gangguan bulan itu. */
       get skorRows() {
-        var u = this.u, K = KAI.data.ref.kondisi; if (!u || !K || !K.rhi) return [];
+        var u = this.u, K = KAI.data.ref.kondisi; if (!u || !K || (!K.rhi && u.kind === 'Lokomotif')) return [];
         var ev = {}; u.events.forEach(function (r) { var ym = String(r.date || '').slice(0, 7); if (!ym) return; var e = ev[ym] = ev[ym] || { n: 0, m: 0 }; e.n++; e.m += r.menit || 0; });
         var T = function (s) { s = String(s || ''); return s ? s.charAt(0) + s.slice(1).toLowerCase() : ''; };
+        if (u.kind !== 'Lokomotif') {     // kereta/gerbong: bulanan dari KAI | RHI Sarana
+          if (this.$store.rhikg.state === 'idle') KAIRhiKG.ensure();
+          if (this.$store.rhikg.state !== 'ready') return [];
+          var C = KAIRhiKG.C;
+          return KAIRhiKG.months(u.no).slice().reverse().map(function (r) {
+            var e = ev[r[C.ym]] || { n: 0, m: 0 }, sd = String(r[C.sd]), c = function (ch) { return (sd.match(new RegExp(ch, 'g')) || []).length; };
+            return { ym: r[C.ym], hi: r[C.hi], st: T(KAIRhiKG.ST[r[C.st]]), avg: r[C.avg], min: r[C.min], rams: r[C.rams], mi: r[C.mi], ci: r[C.ci],
+              hmd: c('H') + ' / ' + c('M') + ' / ' + c('D') + (c('P') + c('C') ? ' / ' + (c('P') + c('C')) : ''), days: r[C.hari], n: e.n, menit: e.m };
+          });
+        }
         return K.rhi.filter(function (r) { return r[0] === u.no; }).sort(function (a, b) { return a[2] < b[2] ? 1 : -1; }).map(function (r) {
           var e = ev[r[2]] || { n: 0, m: 0 };
           return { ym: r[2], hi: r[4], st: T(r[7]), avg: r[5], min: r[6], rams: r[11], mi: r[15], ci: r[16], hmd: r[8] + ' / ' + r[9] + ' / ' + r[10], days: r[3], n: e.n, menit: e.m };

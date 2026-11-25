@@ -62,7 +62,7 @@
           <!-- Riwayat dinasan terpadu: satu baris per hari unit tercatat berdinas (kejadian), digabung KA, km, program, RHI hari itu, gangguan -->
           <div x-show="ht === 'd'">
             <p class="caption" x-show="dinasStat.n" x-text="dinasStat.n + ' hari tercatat berdinas pada kejadian · ' + dinasStat.ka + ' dengan nomor KA · ' + KAI.fmt.n(Math.round(dinasStat.km)) + ' km perjalanan KA · ' + KAI.fmt.n(dinasStat.menit) + ' menit kelambatan' + (dinasStat.batal ? ' · ' + dinasStat.batal + ' pada hari KA berstatus batal' : '')"></p>
-            <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Tanggal</th><th>No KA</th><th>Nama KA</th><th>Kelas</th><th>Relasi</th><th class="num">Km KA</th><th>Program</th><th class="num">RHI</th><th>Kategori</th><th>Gangguan</th><th class="num">Menit</th></tr></thead><tbody>
+            <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Tanggal</th><th>No KA</th><th>Nama KA</th><th>Kelas</th><th>Relasi</th><th class="num">Km KA</th><th>Program</th><th class="num" x-text="u.kind === 'Lokomotif' ? 'RHI' : 'RHI akhir bulan'"></th><th x-text="u.kind === 'Lokomotif' ? 'Kategori' : 'Status hari itu'"></th><th>Gangguan</th><th class="num">Menit</th></tr></thead><tbody>
               <template x-for="r in dinasRows.slice(0, 120)" :key="r.id"><tr class="click" @click="$store.app.openEvent(r.id)">
                 <td class="nowrap" x-text="r.tgl"></td>
                 <td><button class="link-btn" x-show="r.ka" @click.stop="$store.app.open('ka', r.ka)" x-text="r.ka"></button><span x-show="!r.ka" x-text="'–'"></span></td>
@@ -84,7 +84,7 @@
                 <td class="num" x-text="r.mi != null ? KAI.fmt.d1(r.mi) : '–'"></td><td class="num" x-text="r.ci != null ? KAI.fmt.d1(r.ci) : '–'"></td>
                 <td class="num" x-text="r.hmd"></td><td class="num" x-text="r.n"></td><td class="num" x-text="KAI.fmt.n(r.menit)"></td></tr></template>
             </tbody></table></div>
-            <p class="note">RHI dan kategori = nilai hari terakhir data bulan itu (tab RHI); rata-rata = rerata harian. Hari H/M/D = jumlah hari Healthy/Monitor/Declining. Condition kosong bila sumber hanya memuat nilai turunan.</p>
+            <p class="note" x-text="u.kind === 'Lokomotif' ? 'RHI dan kategori = nilai hari terakhir data bulan itu (tab RHI basis data utama); rata-rata = rerata harian. Hari H/M/D/P = jumlah hari Healthy/Monitor/Declining/Poor-Critical. Condition kosong bila sumber hanya memuat nilai turunan.' : 'RHI dan kategori = nilai hari terakhir data bulan itu (spreadsheet KAI | RHI Sarana); rata-rata = rerata harian. Hari H/M/D/P = jumlah hari Healthy/Monitor/Declining/Poor-Critical. HI harian kereta & gerbong tersedia di arsip Drive 02_DB_Database/RHI.'"></p>
           </div>
           <!-- KA depo (rencana) -->
           <div x-show="ht === 'k'">

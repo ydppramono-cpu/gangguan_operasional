@@ -28,6 +28,7 @@
     "src/25_Operasi.gs",
     "src/26_Batubara.gs",
     "src/27_SeedBatubara.gs",
-    "src/28_BatubaraSync.gs"
+    "src/28_BatubaraSync.gs",
+    "src/29_RhiSarana.gs"
   ]
 }

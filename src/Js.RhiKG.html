@@ -1,0 +1,125 @@
+<script>
+/**
+ * Js.RhiKG — RHI resmi kereta & gerbong (spreadsheet "KAI | RHI Sarana", 29_RhiSarana.gs → apiRhiSarana).
+ * Dimuat saat perlu (tab Kesehatan kereta/gerbong, kartu unit kereta/gerbong); tidak memperlambat muat awal.
+ * Baris: [jenis 'K'|'G', nomor, tipe, bulan, dipo, daop, hari, hiAkhir, hiRata, hiMin, statusAkhir, rams, mi, ci, tglAkhir, statusHarian]
+ * statusHarian: satu huruf per tanggal (H healthy ≥85, M monitor 70–<85, D declining 55–<70, P poor <55, C critical; '-' tidak ada data).
+ * HI harian per unit tidak dikirim (hanya status harian + HI akhir/rata/min bulanan) agar data tetap ringan.
+ */
+(function (root) {
+  'use strict';
+  var C = { j: 0, no: 1, tipe: 2, ym: 3, dipo: 4, daop: 5, hari: 6, hi: 7, avg: 8, min: 9, st: 10, rams: 11, mi: 12, ci: 13, last: 14, sd: 15 };
+  var ST = { H: 'HEALTHY', M: 'MONITOR', D: 'DECLINING', P: 'POOR', C: 'CRITICAL' }, LOW = { D: 1, P: 1, C: 1 };
+  var ROM = { I: 1, II: 2, III: 3, IV: 4 };
+  var data = null, promise = null;
+
+  /** "DAOP 7" → "Daop 7", "DIVRE IV" → "Divre 4" (nama wilayah app). */
+  function region(s) {
+    var m = /^\s*(DAOP|DIVRE)\s+([IVX]+|\d+)/i.exec(String(s || '')); if (!m) return '';
+    var n = /^\d+$/.test(m[2]) ? +m[2] : ROM[m[2].toUpperCase()]; return n ? (m[1].toUpperCase() === 'DAOP' ? 'Daop ' : 'Divre ') + n : '';
+  }
+  function index(p) {
+    var U = {}, yms = {};
+    p.rows.forEach(function (r) { (U[r[C.no]] = U[r[C.no]] || []).push(r); yms[r[C.ym]] = 1; });
+    Object.keys(U).forEach(function (k) { U[k].sort(function (a, b) { return a[C.ym] < b[C.ym] ? -1 : 1; }); });
+    return { meta: { version: p.version, built: p.built, sourceUpdated: p.sourceUpdated, db: p.db, counts: p.counts }, rows: p.rows, U: U, yms: Object.keys(yms).sort() };
+  }
+  /** Muat sekali. Hasil: 'ready' | 'empty' | 'error' di Alpine.store('rhikg'). */
+  function ensure() {
+    if (promise) return promise;
+    var S = root.Alpine && Alpine.store('rhikg'); if (S) S.state = 'loading';
+    promise = KAI.api('apiRhiSarana').then(function (res) {
+      if (!res || res.empty) { if (S) { S.state = 'empty'; S.msg = (res && res.message) || ''; } return null; }
+      return KAI.gunzipJson(res.gz).then(function (p) { p.version = res.version; p.built = res.built; p.sourceUpdated = res.sourceUpdated; p.db = res.db; p.counts = res.counts;
+        data = index(p); if (S) { S.meta = data.meta; S.state = 'ready'; S.ver++; } return data; });
+    }).catch(function (e) { if (S) { S.state = 'error'; S.msg = e.message; } promise = null; return null; });
+    return promise;
+  }
+  /** Status RHI unit pada tanggal (yyyy-mm-dd) dari status harian; HI = HI akhir bulan itu (harian tidak dikirim). */
+  function at(no, date) {
+    if (!data || !date) return null; var L = data.U[no]; if (!L) return null;
+    var ym = String(date).slice(0, 7), r = L.filter(function (x) { return x[C.ym] === ym; })[0]; if (!r) return null;
+    var ch = String(r[C.sd]).charAt(+String(date).slice(8, 10) - 1);
+    return ST[ch] ? { st: ST[ch], hiMonthEnd: r[C.hi], ym: ym } : null;
+  }
+  function months(no) { return data && data.U[no] ? data.U[no] : []; }
+  /**
+   * Armada satu jenis ('K'|'G') pada bulan RHI terakhir (≤ ym bila diberikan): status hari terakhir per unit, per wilayah, daftar pantau,
+   * porsi hari-unit per status, dan pembanding bulan sebelumnya.
+   */
+  function fleet(j, regs, ymMax) {
+    if (!data) return null;
+    var yms = data.yms.filter(function (y) { return !ymMax || y <= ymMax; }); if (!yms.length) return null;
+    var ym = yms[yms.length - 1], prev = yms.length > 1 ? yms[yms.length - 2] : null, inReg = function (w) { return !regs || !regs.length || regs.indexOf(w) >= 0; };
+    function agg(y) {
+      var o = { ym: y, units: 0, cnt: { HEALTHY: 0, MONITOR: 0, DECLINING: 0, POOR: 0, CRITICAL: 0 }, hari: { HEALTHY: 0, MONITOR: 0, DECLINING: 0, POOR: 0, CRITICAL: 0 }, totHari: 0, hiSum: 0, hiN: 0, byW: {}, list: [], last: '' };
+      data.rows.forEach(function (r) {
+        if (r[C.j] !== j || r[C.ym] !== y) return; var w = region(r[C.daop]); if (!inReg(w)) return;
+        var s = ST[r[C.st]] || '', b = o.byW[w || 'Wilayah tidak tercatat'] = o.byW[w || 'Wilayah tidak tercatat'] || { w: w || 'Wilayah tidak tercatat', units: 0, cnt: { HEALTHY: 0, MONITOR: 0, DECLINING: 0, POOR: 0, CRITICAL: 0 }, hiSum: 0, hiN: 0 };
+        o.units++; b.units++; if (s) { o.cnt[s]++; b.cnt[s]++; }
+        if (r[C.hi] != null) { o.hiSum += r[C.hi]; o.hiN++; b.hiSum += r[C.hi]; b.hiN++; }
+        var sd = String(r[C.sd]), low = 0; for (var i = 0; i < sd.length; i++) { var t = ST[sd.charAt(i)]; if (t) { o.hari[t]++; o.totHari++; if (LOW[sd.charAt(i)]) low++; } }
+        if (r[C.last] > o.last) o.last = r[C.last];
+        if (LOW[r[C.st]]) o.list.push({ no: r[C.no], tipe: r[C.tipe], dipo: r[C.dipo], w: w, hi: r[C.hi], st: s, low: low, hari: r[C.hari], rams: r[C.rams], mi: r[C.mi], ci: r[C.ci] });
+      });
+      o.hiMean = o.hiN ? Math.round(o.hiSum / o.hiN * 10) / 10 : null;
+      o.lowPct = o.units ? Math.round((o.cnt.DECLINING + o.cnt.POOR + o.cnt.CRITICAL) / o.units * 1000) / 10 : null;
+      o.rows = Object.keys(o.byW).map(function (k) { var b = o.byW[k]; b.hiMean = b.hiN ? Math.round(b.hiSum / b.hiN * 10) / 10 : null;
+        b.low = b.cnt.DECLINING + b.cnt.POOR + b.cnt.CRITICAL; b.lowPct = b.units ? Math.round(b.low / b.units * 1000) / 10 : null; return b; })
+        .sort(function (a, b) { var ra = /^Daop/.test(a.w) ? 0 : /^Divre/.test(a.w) ? 1 : 2, rb = /^Daop/.test(b.w) ? 0 : /^Divre/.test(b.w) ? 1 : 2; return ra - rb || (parseInt(a.w.replace(/\D/g, ''), 10) || 99) - (parseInt(b.w.replace(/\D/g, ''), 10) || 99); });
+      o.list.sort(function (a, b) { return (a.hi == null ? 999 : a.hi) - (b.hi == null ? 999 : b.hi); });
+      return o;
+    }
+    var A = agg(ym), P = prev ? agg(prev) : null;
+    if (P) A.rows.forEach(function (b) { var p = P.byW[b.w]; b.lowPctPrev = p && p.units ? Math.round((p.cnt.DECLINING + p.cnt.POOR + p.cnt.CRITICAL) / p.units * 1000) / 10 : null; });
+    A.prev = P; return A;
+  }
+  root.KAIRhiKG = { ensure: ensure, at: at, months: months, fleet: fleet, region: region, C: C, ST: ST, get data() { return data; } };
+})(window);
+
+document.addEventListener('alpine:init', function () {
+  Alpine.store('rhikg', { state: 'idle', msg: '', meta: null, ver: 0 });
+});
+
+/* Komponen bagian RHI resmi kereta/gerbong (Part.RhiKG, di dalam vSarana). */
+document.addEventListener('alpine:init', function () {
+  Alpine.data('vRhiKG', function () {
+    var COL = { HEALTHY: '1F8A2E', MONITOR: 'E0861A', DECLINING: 'C0392B', POOR: '8E1B1B', CRITICAL: '4A0E0E' }, memo = {}, ixm = { L: null, ix: {} };
+    return {
+      get j() { return this.kind === 'Gerbong' ? 'G' : 'K'; },
+      get F() {
+        var st = this.$store.rhikg; if (st.state !== 'ready') return null;
+        var k = st.ver + '|' + this.j + '|' + (this.regs || []).join(','); if (!(k in memo)) memo[k] = KAIRhiKG.fleet(this.j, this.regs);
+        return memo[k];
+      },
+      get stList() { var F = this.F; return ['HEALTHY', 'MONITOR', 'DECLINING', 'POOR', 'CRITICAL'].filter(function (k) { return k !== 'CRITICAL' || (F && (F.cnt.CRITICAL || F.hari.CRITICAL)); }); },
+      col: function (k) { return COL[k] || '17223B'; },
+      pct: function (a, b) { return b ? KAI.fmt.d1(a / b * 100) + '%' : '–'; },
+      unitOf: function (no) { var S = this.S, L = S && S.byKind[this.kind] ? S.byKind[this.kind].units : []; if (ixm.L !== L) { var ix = {}; L.forEach(function (u) { ix[u.no] = u; }); ixm = { L: L, ix: ix }; } return ixm.ix[no] || null; },
+      g12: function (no) { var u = this.unitOf(no); return u ? KAI.fmt.n(u.n12) : '–'; },
+      /** Gangguan jenis ini bernomor sarana pada bulan-bulan RHI: status pada tanggal kejadian. */
+      get E() {
+        var F = this.F, self = this, out = { n: 0, miss: 0, at: { HEALTHY: 0, MONITOR: 0, DECLINING: 0, POOR: 0, CRITICAL: 0 } }; if (!F) return out;
+        var yms = {}; KAIRhiKG.data.yms.forEach(function (y) { yms[y] = 1; });
+        var L = this.S && this.S.byKind[this.kind] ? this.S.byKind[this.kind].units : [];
+        L.forEach(function (u) { if (!self.inReg(u)) return; (u.events || []).forEach(function (r) {
+          if (!r.date || !yms[String(r.date).slice(0, 7)]) return; var a = KAIRhiKG.at(u.no, r.date);
+          if (a) { out.n++; out.at[a.st]++; } else out.miss++; }); });
+        return out;
+      },
+      atChart: function () {
+        var F = this.F, E = this.E, ks = this.stList, self = this; if (!F) return {};
+        var tot = { HEALTHY: 0, MONITOR: 0, DECLINING: 0, POOR: 0, CRITICAL: 0 }, th = 0;
+        KAIRhiKG.data.yms.forEach(function (y) { var A = KAIRhiKG.fleet(self.j, self.regs, y); if (A && A.ym === y) ks.forEach(function (k) { tot[k] += A.hari[k]; th += A.hari[k]; }); });
+        var v = function (k) { return [th ? Math.round(tot[k] / th * 1000) / 10 : 0, E.n ? Math.round(E.at[k] / E.n * 1000) / 10 : 0]; };
+        return { textStyle: { fontFamily: 'Inter, Arial' }, legend: { bottom: 0 }, tooltip: { trigger: 'item', formatter: function (p) { return '<b>' + p.name + '</b><br>' + p.seriesName + ': ' + KAI.fmt.d1(p.value) + '%'; } },
+          grid: { left: 14, right: 24, top: 16, bottom: 44, containLabel: true },
+          yAxis: { type: 'category', data: ['Armada (hari-unit)', 'Saat gangguan (' + E.n + ' kejadian)'], inverse: true, axisTick: { show: false }, axisLine: { show: false } },
+          xAxis: { type: 'value', max: 100, axisLabel: { formatter: '{value}%' } },
+          series: ks.map(function (k) { return { name: KAI.fmt.st(k), type: 'bar', stack: 'p', barWidth: 34, data: v(k), itemStyle: { color: '#' + COL[k], borderColor: '#fff', borderWidth: 1 },
+            label: { show: true, color: '#fff', fontWeight: 600, fontSize: 11, formatter: function (p) { return p.value >= 6 ? KAI.fmt.d1(p.value) + '%' : ''; } } }; }) };
+      }
+    };
+  });
+});
+</script>

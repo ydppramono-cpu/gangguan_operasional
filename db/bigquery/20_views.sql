@@ -158,49 +158,32 @@ SELECT
 FROM `${PROJECT}.kai_raw.thi`
 WHERE COALESCE(NULLIF(TRIM(wilayah),""), NULLIF(TRIM(periode),""), NULLIF(TRIM(bulan),"")) IS NOT NULL;
 
-CREATE OR REPLACE VIEW `${PROJECT}.kai.rhi` OPTIONS(description="Rolling stock Health Index harian per sarana") AS
+CREATE OR REPLACE VIEW `${PROJECT}.kai.rhi` OPTIONS(description="Rolling stock Health Index lokomotif harian per sarana (ekspor 22 kolom, sejak 25 Nov 2026)") AS
 SELECT
+  NULLIF(TRIM(jenis_sarana), "") AS jenis_sarana,
+  `${PROJECT}.kai.tgl`(tgl_data) AS tgl_data, tgl_data AS tgl_data_teks,
   NULLIF(TRIM(nomor_sarana), "") AS nomor_sarana,
   NULLIF(TRIM(tipe_sarana), "") AS tipe_sarana,
-  `${PROJECT}.kai.tgl`(tgl_data) AS tgl_data, tgl_data AS tgl_data_teks,
-  NULLIF(TRIM(perawatan_terakhir), "") AS perawatan_terakhir,
-  NULLIF(TRIM(tgl_perawatan), "") AS tgl_perawatan,
-  NULLIF(TRIM(reliability_index), "") AS reliability_index,
-  NULLIF(TRIM(maintainability_index), "") AS maintainability_index,
-  NULLIF(TRIM(availability_index), "") AS availability_index,
+  NULLIF(TRIM(dipo), "") AS dipo,
+  NULLIF(TRIM(daop), "") AS daop,
+  `${PROJECT}.kai.num`(reliability_index) AS reliability_index,
+  `${PROJECT}.kai.num`(maintainability_index) AS maintainability_index,
+  `${PROJECT}.kai.num`(availability_index) AS availability_index,
   `${PROJECT}.kai.num`(rams_index) AS rams_index,
-  NULLIF(TRIM(total_request_rows), "") AS total_request_rows,
-  NULLIF(TRIM(total_terpenuhi), "") AS total_terpenuhi,
-  NULLIF(TRIM(list_maintenance_realisasi), "") AS list_maintenance_realisasi,
-  NULLIF(TRIM(list_maintenance_seharusnya), "") AS list_maintenance_seharusnya,
-  NULLIF(TRIM(spare_management_score), "") AS spare_management_score,
-  NULLIF(TRIM(maintenance_completion_score), "") AS maintenance_completion_score,
+  `${PROJECT}.kai.num`(maintenance_completion_score) AS maintenance_completion_score,
+  `${PROJECT}.kai.num`(spare_management_score) AS spare_management_score,
   `${PROJECT}.kai.num`(maintenance_index) AS maintenance_index,
-  NULLIF(TRIM(umur_kereta), "") AS umur_kereta,
-  NULLIF(TRIM(age_index), "") AS age_index,
-  NULLIF(TRIM(penalti_open), "") AS penalti_open,
-  NULLIF(TRIM(penalti_lengkap), "") AS penalti_lengkap,
-  NULLIF(TRIM(real_condition_index), "") AS real_condition_index,
-  NULLIF(TRIM(onsite_inspection_index), "") AS onsite_inspection_index,
+  `${PROJECT}.kai.num`(age_index) AS age_index,
+  `${PROJECT}.kai.num`(onsite_inspection_index) AS onsite_inspection_index,
+  `${PROJECT}.kai.num`(real_condition_index) AS real_condition_index,
   `${PROJECT}.kai.num`(condition_index) AS condition_index,
   `${PROJECT}.kai.num`(healthy_index) AS healthy_index,
   NULLIF(TRIM(healthy_status), "") AS healthy_status,
-  NULLIF(TRIM(berkas_sumber), "") AS berkas_sumber,
-  NULLIF(TRIM(tab_sumber), "") AS tab_sumber,
-  NULLIF(TRIM(baris_sumber), "") AS baris_sumber,
-  NULLIF(TRIM(kunci_sarana_tanggal), "") AS kunci_sarana_tanggal,
-  NULLIF(TRIM(sha_256_nilai_sumber), "") AS sha_256_nilai_sumber,
-  NULLIF(TRIM(catatan_pemeriksaan), "") AS catatan_pemeriksaan,
-  `${PROJECT}.kai.num`(healthy_index_pulih) AS healthy_index_pulih,
-  NULLIF(TRIM(condition_index_pulih), "") AS condition_index_pulih,
-  NULLIF(TRIM(onsite_inspection_index_pulih), "") AS onsite_inspection_index_pulih,
-  NULLIF(TRIM(maintenance_index_pulih), "") AS maintenance_index_pulih,
-  NULLIF(TRIM(umur_kereta_pulih_tahun), "") AS umur_kereta_pulih_tahun,
-  NULLIF(TRIM(age_index_pulih), "") AS age_index_pulih,
-  NULLIF(TRIM(pemeriksaan_pemulihan), "") AS pemeriksaan_pemulihan,
-  NULLIF(TRIM(catatan_verifikasi_rumus), "") AS catatan_verifikasi_rumus
+  NULLIF(TRIM(kategori_gold), "") AS kategori_gold,
+  NULLIF(TRIM(is_rhi_lengkap), "") AS is_rhi_lengkap,
+  NULLIF(TRIM(versi_formula), "") AS versi_formula
 FROM `${PROJECT}.kai_raw.rhi`
-WHERE COALESCE(NULLIF(TRIM(nomor_sarana),""), NULLIF(TRIM(tipe_sarana),""), NULLIF(TRIM(tgl_data),"")) IS NOT NULL;
+WHERE COALESCE(NULLIF(TRIM(jenis_sarana),""), NULLIF(TRIM(tgl_data),""), NULLIF(TRIM(nomor_sarana),"")) IS NOT NULL;
 
 CREATE OR REPLACE VIEW `${PROJECT}.kai.wkp` OPTIONS(description="Window time / WKP (program & realisasi) per wilayah") AS
 SELECT

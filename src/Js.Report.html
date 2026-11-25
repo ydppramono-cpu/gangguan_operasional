@@ -875,7 +875,9 @@ window.KAIReport = (function () {
      * ===================================================================================== */
     // (blok ini berada setelah `return` di build(): hanya deklarasi fungsi yang ter-hoist, jadi konstanta dibuat lewat fungsi)
     function GRADE_CM() { return { 'Sangat Baik': '1F8A2E', 'Baik': '2E6E62', 'Cukup': 'E0861A', 'Waspada': 'C0392B', 'Kritis': '7B1D1D' }; }
-    function ST_CM() { return { HEALTHY: '1F8A2E', MONITOR: 'E0861A', DECLINING: 'C0392B' }; }
+    function ST_CM() { return { HEALTHY: '1F8A2E', MONITOR: 'E0861A', DECLINING: 'C0392B', POOR: '8E1B1B', CRITICAL: '4A0E0E' }; }
+    /** HI di bawah 70: Declining, Poor, Critical (Poor/Critical ada sejak ekspor RHI Agu–Okt 2026). */
+    function LOW(st) { return st === 'DECLINING' || st === 'POOR' || st === 'CRITICAL'; }
     function PRI_CM() { return { P1: 'C0392B', P2: 'E0861A', P3: 'E9C46A', P4: '3B5BDB', '': 'A8B3C7' }; }
     function KD() { return ctx.ref && ctx.ref.kondisi && !ctx.ref.kondisi.error ? ctx.ref.kondisi : null; }
     function d1(v) { return v == null ? '–' : KAI.fmt.d1(v); }
@@ -992,7 +994,7 @@ window.KAIReport = (function () {
     /** Status RHI pada tanggal gangguan vs sebaran armada (hari-unit). */
     function rhiIncidentSlide(SR, regionMode) {
       if (!SR) return;
-      var E = SR.E.filter(function (e) { return !regionMode || e.r.wilayah === regions[0]; }), at = { HEALTHY: 0, MONITOR: 0, DECLINING: 0 };
+      var E = SR.E.filter(function (e) { return !regionMode || e.r.wilayah === regions[0]; }), at = { HEALTHY: 0, MONITOR: 0, DECLINING: 0, POOR: 0, CRITICAL: 0 };
       E.forEach(function (e) { if (e.at && at[e.at.st] != null) at[e.at.st]++; });
       var n = E.length, pH = function (k) { return SR.totHari ? Math.round(SR.hari[k] / SR.totHari * 1000) / 10 : 0; }, pE = function (k) { return n ? Math.round(at[k] / n * 1000) / 10 : 0; };
       var s = slide(at.MONITOR || at.DECLINING ? f.n(at.MONITOR) + ' dari ' + f.n(n) + ' gangguan lokomotif ' + (regionMode ? regions[0] + ' ' : '') + monL(R.ym) + ' terjadi saat status monitor; ' + f.n(at.DECLINING) + ' saat declining'
@@ -1000,18 +1002,18 @@ window.KAIReport = (function () {
         { toc: regionMode ? 'Kondisi sarana: RHI lokomotif × gangguan' : null, tocGroup: 'rhi' });
       cite(s, [SRC.rhi()]);
       text(s, 0.45, 0.88, 12.4, 0.3, 'Status RHI lokomotif pada tanggal gangguan dibandingkan dengan sebaran status armada sepanjang ' + monL(SR.rhiYm) + ' (hari-unit).', { size: 10.5, bold: true, color: NAVY2 });
-      chart(s, 0.45, 1.25, 4.0, 4.0, { kind: 'bar', cats: ['HEALTHY', 'MONITOR', 'DECLINING'], labels: true, legendBottom: true, xName: 'Status healthy index', yName: 'Porsi (%)', fmt: '0.0',
-        series: [{ name: 'Armada (porsi hari-unit ' + monS(SR.rhiYm) + ', %)', values: ['HEALTHY', 'MONITOR', 'DECLINING'].map(pH), color: '9AA3B2' }, { name: 'Saat gangguan ' + monS(SR.rhiYm) + ' (' + f.n(n) + ' kejadian, %)', values: ['HEALTHY', 'MONITOR', 'DECLINING'].map(pE), color: NAVY }] });
+      chart(s, 0.45, 1.25, 4.0, 4.0, { kind: 'bar', cats: ['HEALTHY', 'MONITOR', 'DECLINING', 'POOR'], labels: true, legendBottom: true, xName: 'Status healthy index', yName: 'Porsi (%)', fmt: '0.0',
+        series: [{ name: 'Armada (porsi hari-unit ' + monS(SR.rhiYm) + ', %)', values: ['HEALTHY', 'MONITOR', 'DECLINING', 'POOR'].map(pH), color: '9AA3B2' }, { name: 'Saat gangguan ' + monS(SR.rhiYm) + ' (' + f.n(n) + ' kejadian, %)', values: ['HEALTHY', 'MONITOR', 'DECLINING', 'POOR'].map(pE), color: NAVY }] });
       var rows = [['Tanggal', 'Lokomotif', 'Depo', 'Gangguan', 'Menit', 'HI (status)', 'RAMS', 'Perawatan terakhir']];
       E.slice(0, 14).forEach(function (e) {
-        var a = e.at || {}, hl = a.st === 'DECLINING' ? 'FFF2DF' : null;
+        var a = e.at || {}, hl = LOW(a.st) ? 'FFF2DF' : null;
         rows.push([{ t: String(e.r.d), fill: hl }, { t: e.no + ' · ' + e.u.tipe, bold: true, fill: hl }, { t: e.u.depo || '–', fill: hl }, { t: clip(subOf(e.r).replace(/^Gangguan\s+/i, ''), 34), fill: hl }, { t: f.n(e.r.menit), bold: true, fill: hl },
           { t: hiTxt(a.hi, a.st), color: ST_CM()[a.st] || INK, bold: true, fill: hl }, { t: a.rams == null ? '–' : f.n(a.rams), fill: hl }, { t: (a.pt || '–') + (a.tp ? ' · ' + a.tp : ''), fill: hl }]);
       });
       if (rows.length === 1) rows.push(['–', 'Tidak ada gangguan lokomotif bernomor di RHI', '–', '–', '0', '–', '–', '–']);
       tbl(s, 4.6, 1.25, 8.25, 4.0, rows, { fs: 7.5, colW: [0.35, 1.45, 0.5, 2.0, 0.5, 1.15, 0.5, 1.75], headFill: NAVY });
       note(s, 4.6, 5.28, 8.25, 0.24, Math.min(14, n) + ' kejadian terlama dari ' + n + '. Gangguan lokomotif tanpa nomor/di luar RHI: ' + f.n(SR.miss.filter(function (r) { return !regionMode || r.wilayah === regions[0]; }).length) + ' kejadian.', 7);
-      var dec = E.filter(function (e) { return e.at && e.at.st === 'DECLINING'; }), big = E[0];
+      var dec = E.filter(function (e) { return e.at && LOW(e.at.st); }), big = E[0];
       duo(s, (pE('MONITOR') > pH('MONITOR') ? 'Status MONITOR hanya ' + KAI.fmt.d1(pH('MONITOR')) + '% hari-unit armada tetapi ' + KAI.fmt.d1(pE('MONITOR')) + '% gangguan — lokomotif berstatus MONITOR lebih rawan.' : 'Porsi gangguan saat MONITOR (' + KAI.fmt.d1(pE('MONITOR')) + '%) tidak melebihi porsi hari-unit armada (' + KAI.fmt.d1(pH('MONITOR')) + '%)' + (n < 10 ? '; jumlah kejadian kecil sehingga belum dapat disimpulkan.' : '.')) + (dec.length ? ' DECLINING saat terganggu: ' + dec.map(function (e) { return e.no + ' (' + e.r.d + ' ' + monS(R.ym) + ', ' + clip(subOf(e.r).replace(/^Gangguan\s+/i, ''), 40) + ')'; }).join('; ') + '.' : '') + (big ? ' Gangguan terlama: ' + big.no + ' ' + clip(subOf(big.r).replace(/^Gangguan\s+/i, ''), 44) + ' ' + f.n(big.r.menit) + ' menit (HI ' + d1(big.at && big.at.hi) + ').' : ''),
         'Integrasikan RHI harian ke penugasan lokomotif: unit MONITOR/DECLINING tidak ditempatkan pada KA prioritas tanpa pemeriksaan pradinas; catat komponen penyebab di laporan gangguan agar dapat dicocokkan dengan riwayat perawatan.', 5.58, 0.92);
       srcNote(s, 'tab RHI (nilai harian pada tanggal kejadian, kolom pulih); Gangguan_Induk (' + meta.rule + '), gangguan sarana dengan nomor lokomotif (kolom Nomor sarana) yang terdaftar di RHI. Depo = master Data Sarana.');
@@ -1019,24 +1021,24 @@ window.KAIReport = (function () {
     /** Daftar pantau: DECLINING per hari terakhir RHI & unit dengan ≥3 gangguan dalam jendela data. */
     function watchListSlide(SR) {
       if (!SR) return;
-      var dec = SR.units.filter(function (u) { return u.st === 'DECLINING'; }).sort(function (a, b) { return a.hi - b.hi; });
+      var dec = SR.units.filter(function (u) { return LOW(u.st); }).sort(function (a, b) { return a.hi - b.hi; });
       var rep = SR.units.filter(function (u) { return u.g6.n >= 3; }).sort(function (a, b) { return b.g6.n - a.g6.n || b.g6.menit - a.g6.menit; });
       var dd = +SR.lastDay.slice(8, 10), day = dd + ' ' + monS(SR.rhiYm), w6 = monS(SR.first) + '–' + monS(R.ym);
-      var s = slide('Daftar pantau: ' + f.n(dec.length) + ' lokomotif DECLINING per ' + day + ' dan unit dengan gangguan berulang ' + w6, { tocGroup: 'rhi' });
+      var s = slide('Daftar pantau: ' + f.n(dec.length) + ' lokomotif dengan HI di bawah 70 per ' + day + ' dan unit dengan gangguan berulang ' + w6, { tocGroup: 'rhi' });
       cite(s, [SRC.rhi()]);
-      band(s, 0.45, 0.95, 12.4, 0.28, 'Lokomotif berstatus DECLINING (HI < 70) per ' + dd + ' ' + monL(SR.rhiYm) + ' ' + SR.rhiYm.slice(0, 4), { fill: 'C0392B', size: 10.5 });
+      band(s, 0.45, 0.95, 12.4, 0.28, 'Lokomotif dengan HI di bawah 70 (Declining, Poor, Critical) per ' + dd + ' ' + monL(SR.rhiYm) + ' ' + SR.rhiYm.slice(0, 4), { fill: 'C0392B', size: 10.5 });
       var lastPt = function (u) { var p = u.pt[u.pt.length - 1] || []; return (p[1] || '–') + (p[2] ? ' · ' + p[2] : ''); };
-      var r1 = [['Lokomotif', 'Tipe', 'Depo', 'HI ' + day, 'Hari DECLINING (' + monS(SR.rhiYm) + ')', 'Reliability', 'Maintenance index', 'Umur (tahun)', 'Perawatan terakhir', 'Gangguan ' + w6]].concat(dec.slice(0, 10).map(function (u) {
+      var r1 = [['Lokomotif', 'Tipe', 'Depo', 'HI ' + day, 'Hari HI di bawah 70 (' + monS(SR.rhiYm) + ')', 'Reliability', 'Maintenance index', 'Umur (tahun)', 'Perawatan terakhir', 'Gangguan ' + w6]].concat(dec.slice(0, 10).map(function (u) {
         return [{ t: u.no, bold: true }, u.tipe, u.depo || '–', { t: d1(u.hi), bold: true, color: RED }, f.n(u.nDecl), u.rel == null ? '–' : f.n(u.rel), d1(u.mi), d1(u.age), lastPt(u), { t: f.n(u.g6.n), bold: u.g6.n > 0 }]; }));
       if (r1.length === 1) r1.push(['Tidak ada', '–', '–', '–', '–', '–', '–', '–', '–', '–']);
       tbl(s, 0.45, 1.25, 12.4, 2.6, r1, { fs: 7.5, colW: [1.05, 0.65, 0.6, 0.7, 1.0, 0.6, 0.75, 0.7, 2.2, 0.9], headFill: NAVY });
       band(s, 0.45, 3.98, 12.4, 0.28, 'Lokomotif dengan ≥3 gangguan ' + w6 + ' ' + R.ym.slice(0, 4) + ' (' + Math.min(7, rep.length) + ' teratas dari ' + rep.length + '; status RHI ' + day + ')', { size: 10.5 });
       var r2 = [['Lokomotif', 'Tipe', 'Depo', 'Gangguan ' + w6 + ' (n · menit)', 'Gangguan ' + monS(R.ym), 'HI ' + day + ' (status)', 'Reliability', 'Perawatan terakhir']].concat(rep.slice(0, 7).map(function (u) {
-        var hl = u.st === 'DECLINING' ? 'FFF2DF' : null;
+        var hl = LOW(u.st) ? 'FFF2DF' : null;
         return [{ t: u.no, bold: true, fill: hl }, { t: u.tipe, fill: hl }, { t: u.depo || '–', fill: hl }, { t: f.n(u.g6.n) + ' · ' + f.n(u.g6.menit) + ' menit', fill: hl }, { t: f.n(u.gOkt.n), fill: hl }, { t: hiTxt(u.hi, u.st), color: ST_CM()[u.st], bold: true, fill: hl }, { t: u.rel == null ? '–' : f.n(u.rel), fill: hl }, { t: lastPt(u), fill: hl }]; }));
       if (r2.length === 1) r2.push(['Tidak ada', '–', '–', '–', '–', '–', '–', '–']);
       tbl(s, 0.45, 4.28, 12.4, 2.12, r2, { fs: 7.5, colW: [1.05, 0.65, 0.6, 1.5, 0.95, 1.4, 0.6, 2.2], headFill: NAVY });
-      srcNote(s, 'tab RHI (kolom pulih); Gangguan_Induk (' + meta.rule + '). Hari DECLINING = jumlah hari status DECLINING pada data harian 1–' + dd + ' ' + monS(SR.rhiYm) + '. Umur dari tanggal mulai dinas (master Data Sarana).', 6.48);
+      srcNote(s, 'tab RHI (kolom pulih); Gangguan_Induk (' + meta.rule + '). Hari HI di bawah 70 = jumlah hari berstatus Declining, Poor, atau Critical pada data harian 1–' + dd + ' ' + monS(SR.rhiYm) + '. Umur dari tanggal mulai dinas (master Data Sarana).', 6.48);
     }
     /** Lampiran: kondisi lokomotif per tipe. */
     function rhiTipeSlide(SR) {
@@ -1068,10 +1070,10 @@ window.KAIReport = (function () {
       cite(s, [SRC.rhi()]);
       text(s, 0.45, 0.88, 12.4, 0.3, 'Depo = depo pemilik lokomotif pada master Data Sarana; wilayah = wilayah operasi kode depo di GAPEKA 2025.', { size: 10.5, bold: true, color: NAVY2 });
       chart(s, 0.45, 1.25, 5.9, 4.3, { kind: 'combo', stack: true, cats: D.map(function (d) { return d.code; }), small: true, legendBottom: true, xName: 'Depo lokomotif (kode)', yName: 'Jumlah lokomotif (unit)', y2Name: 'Gangguan per 100 unit (' + w6 + ')', fmt2: '0',
-        series: [{ name: 'HEALTHY', type: 'bar', values: D.map(function (d) { return d.H; }), color: ST_CM().HEALTHY }, { name: 'MONITOR', type: 'bar', values: D.map(function (d) { return d.M; }), color: 'F2A93B' }, { name: 'DECLINING', type: 'bar', values: D.map(function (d) { return d.D; }), color: ST_CM().DECLINING },
+        series: [{ name: 'HEALTHY', type: 'bar', values: D.map(function (d) { return d.H; }), color: ST_CM().HEALTHY }, { name: 'MONITOR', type: 'bar', values: D.map(function (d) { return d.M; }), color: 'F2A93B' }, { name: 'DECLINING', type: 'bar', values: D.map(function (d) { return d.D; }), color: ST_CM().DECLINING }, { name: 'POOR', type: 'bar', values: D.map(function (d) { return d.P + d.C; }), color: ST_CM().POOR },
           { name: 'Gangguan ' + w6 + ' per 100 unit', type: 'line', axis: 'y2', values: D.map(function (d) { return d.rate6; }), color: NAVY, labels: true, fmt: '0' }] });
-      var rows = [['Wilayah', 'Depo', 'Unit', 'H/M/D', 'HI rata', 'Reliability', 'Gangguan ' + monS(R.ym), w6, 'Unit terganggu ' + monS(R.ym)]].concat(D.map(function (d) {
-        return [romW(d.w || '–'), { t: d.code + ' ' + d.name, bold: true }, f.n(d.units), { runs: [{ text: f.n(d.H) + '/' }, { text: f.n(d.M), color: d.M ? 'B45309' : INK }, { text: '/' }, { text: f.n(d.D), color: d.D ? RED : INK, bold: !!d.D }] }, d1(d.hiMean), d1(d.relMean), f.n(d.gOkt.n) + ' · ' + f.n(d.gOkt.menit) + ' menit', f.n(d.g6), f.n(d.withOkt)]; }));
+      var rows = [['Wilayah', 'Depo', 'Unit', 'H/M/D/P', 'HI rata', 'Reliability', 'Gangguan ' + monS(R.ym), w6, 'Unit terganggu ' + monS(R.ym)]].concat(D.map(function (d) {
+        return [romW(d.w || '–'), { t: d.code + ' ' + d.name, bold: true }, f.n(d.units), { runs: [{ text: f.n(d.H) + '/' }, { text: f.n(d.M), color: d.M ? 'B45309' : INK }, { text: '/' }, { text: f.n(d.D), color: d.D ? RED : INK, bold: !!d.D }, { text: '/' }, { text: f.n(d.P + d.C), color: d.P + d.C ? RED : INK, bold: !!(d.P + d.C) }] }, d1(d.hiMean), d1(d.relMean), f.n(d.gOkt.n) + ' · ' + f.n(d.gOkt.menit) + ' menit', f.n(d.g6), f.n(d.withOkt)]; }));
       tbl(s, 6.5, 1.25, 6.35, 4.3, rows, { fs: 7.5, colW: [0.65, 1.45, 0.45, 0.75, 0.55, 0.55, 0.9, 0.55, 0.75], headFill: NAVY, zebra: true });
       var lo = D.filter(function (d) { return d.hiMean != null; }).sort(function (a, b) { return a.hiMean - b.hiMean; })[0];
       duo(s, 'Laju gangguan tertinggi (≥8 unit): ' + hiR.slice(0, 3).map(function (d) { return d.name + ' ' + KAI.fmt.d1(d.rate6) + '/100 unit'; }).join(', ') + '.' + (lo ? ' HI rata terendah: ' + lo.name + ' ' + d1(lo.hiMean) + ' (' + f.n(lo.units) + ' unit).' : ''),

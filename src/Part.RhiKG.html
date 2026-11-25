@@ -1,0 +1,46 @@
+<!-- Part.RhiKG — RHI resmi kereta/gerbong di tab Kesehatan (View.Sarana, jenis ≠ Lokomotif). Lingkup induk vSarana: kind, regs, S, inReg. -->
+<div x-data="vRhiKG" x-init="KAIRhiKG.ensure()">
+  <template x-if="$store.rhikg.state === 'idle' || $store.rhikg.state === 'loading'"><div class="card"><div class="card-b"><div class="skel" style="height:200px"></div><p class="note mt-s">Memuat RHI resmi kereta & gerbong…</p></div></div></template>
+  <template x-if="$store.rhikg.state === 'empty' || $store.rhikg.state === 'error'">
+    <div class="callout"><b x-text="'RHI resmi ' + kind.toLowerCase() + ': belum tersambung'"></b>
+      <span x-text="$store.rhikg.state === 'error' ? 'Gagal memuat: ' + $store.rhikg.msg : 'Spreadsheet KAI | RHI Sarana belum disinkron (Script Property RHI_DB_ID, lalu jalankan syncRhiSaranaNow). Di bawah ini skor turunan sebagai pembanding.'"></span></div>
+  </template>
+  <template x-if="$store.rhikg.state === 'ready' && F">
+    <div>
+      <p class="note story" x-text="'RHI resmi ' + kind.toLowerCase() + ' · status pada ' + KAI.fmt.day(F.last) + ' (hari terakhir data) · sumber spreadsheet KAI | RHI Sarana, diperbarui ' + ($store.rhikg.meta.sourceUpdated || '–') + '. Ambang: Healthy ≥ 85 · Monitor 70–85 · Declining 55–70 · Poor di bawah 55.'"></p>
+      <div class="grid mt-s rhikg-kpi">
+        <template x-for="k in stList" :key="k">
+          <div class="card kpi" :style="'--kpi-c:#' + col(k)"><div class="lbl" x-text="KAI.fmt.st(k)"></div><div class="val num" x-text="KAI.fmt.n(F.cnt[k])"></div>
+            <div class="note" x-text="pct(F.cnt[k], F.units) + ' dari ' + KAI.fmt.n(F.units) + ' unit'"></div></div>
+        </template>
+        <div class="card kpi"><div class="lbl">HI rata-rata akhir bulan</div><div class="val num" x-text="KAI.fmt.d1(F.hiMean)"></div>
+          <div class="note" x-text="F.prev ? 'Di bawah 70: ' + KAI.fmt.d1(F.lowPct) + '% unit (' + KAI.fmt.mon(F.prev.ym) + ' ' + KAI.fmt.d1(F.prev.lowPct) + '%)' : 'Di bawah 70: ' + KAI.fmt.d1(F.lowPct) + '% unit'"></div></div>
+      </div>
+
+      <div class="mt">
+        <div class="card"><div class="card-h"><div><h3>Status RHI per wilayah</h3><p x-text="'Unit per status pada ' + KAI.fmt.day(F.last) + ' · wilayah = Daop/Divre pada data RHI'"></p></div></div>
+          <div class="card-b tbl-wrap"><table class="tbl nopg">
+            <thead><tr><th>Wilayah</th><th class="num">Unit</th><template x-for="k in stList" :key="k"><th class="num" x-text="KAI.fmt.st(k)"></th></template><th class="num">HI rata-rata</th><th class="num">Di bawah 70</th><th class="num" x-text="F.prev ? 'vs ' + KAI.fmt.mon(F.prev.ym) : ''"></th></tr></thead>
+            <tbody><template x-for="b in F.rows" :key="b.w"><tr>
+              <td><b x-text="b.w"></b></td><td class="num" x-text="KAI.fmt.n(b.units)"></td>
+              <template x-for="k in stList" :key="k"><td class="num" :class="(k === 'POOR' || k === 'CRITICAL') && b.cnt[k] && 'bad-t'" x-text="b.cnt[k] ? KAI.fmt.n(b.cnt[k]) : '–'"></td></template>
+              <td class="num" x-text="KAI.fmt.d1(b.hiMean)"></td><td class="num" x-text="KAI.fmt.d1(b.lowPct) + '%'"></td>
+              <td class="num"><span class="delta" :class="b.lowPctPrev == null ? 'flat' : b.lowPct > b.lowPctPrev + 0.05 ? 'up' : b.lowPct < b.lowPctPrev - 0.05 ? 'down' : 'flat'" x-text="b.lowPctPrev == null ? '–' : (b.lowPct >= b.lowPctPrev ? '+' : '−') + KAI.fmt.d1(Math.abs(b.lowPct - b.lowPctPrev)) + ' poin'"></span></td></tr></template></tbody></table>
+            <p class="note mt-s">Di bawah 70 = Declining, Poor, atau Critical. Naik (merah) = memburuk dibanding bulan sebelumnya.</p></div></div>
+        <div class="card mt"><div class="card-h"><div><h3>Status saat gangguan vs armada</h3><p x-text="'Gangguan ' + kind.toLowerCase() + ' bernomor sarana selama periode RHI (' + E.n + ' kejadian) dibanding porsi hari-unit armada pada bulan yang sama'"></p></div></div>
+          <div class="card-b fill"><div class="chart" x-chart="atChart()"></div>
+            <p class="note" x-text="E.miss ? E.miss + ' kejadian lain tanpa data RHI pada tanggal itu (nomor tidak ada di RHI atau di luar periode).' : ''"></p></div></div>
+      </div>
+
+      <div class="card mt"><div class="card-h"><div><h3 x-text="'Daftar pantau: HI di bawah 70 per ' + KAI.fmt.day(F.last)"></h3><p x-text="KAI.fmt.n(F.list.length) + ' unit · urut HI terendah · klik untuk kartu unit'"></p></div></div>
+        <div class="card-b tbl-wrap"><table class="tbl" data-pg="20"><thead><tr><th>Unit</th><th>Tipe</th><th>Dipo</th><th>Wilayah</th><th class="num">HI akhir bulan</th><th>Status</th><th class="num">Hari di bawah 70 bulan ini</th><th class="num">RAMS</th><th class="num">Maintenance index</th><th class="num">Condition index</th><th class="num">Gangguan 12 bulan</th></tr></thead>
+          <tbody><template x-for="u in F.list.slice(0, 300)" :key="u.no"><tr class="click" @click="$store.app.openUnit(u.no)">
+            <td><b x-text="KAI.fmt.unit(u.no)"></b></td><td x-text="u.tipe"></td><td x-text="u.dipo || 'tidak tercatat'"></td><td x-text="u.w || 'tidak tercatat'"></td>
+            <td class="num bad-t" x-text="KAI.fmt.d1(u.hi)"></td><td><span class="st" :style="'color:#' + col(u.st)" x-text="KAI.fmt.st(u.st)"></span></td><td class="num" x-text="u.low + ' dari ' + u.hari"></td>
+            <td class="num" x-text="u.rams == null ? '–' : KAI.fmt.d1(u.rams)"></td><td class="num" x-text="u.mi == null ? '–' : KAI.fmt.d1(u.mi)"></td><td class="num" x-text="u.ci == null ? '–' : KAI.fmt.d1(u.ci)"></td>
+            <td class="num" x-text="g12(u.no)"></td></tr></template>
+            <tr x-show="!F.list.length"><td colspan="11" class="muted">Tidak ada unit dengan HI di bawah 70 pada hari terakhir data.</td></tr></tbody></table></div></div>
+      <h4 class="mt sub-h">Pembanding: skor kesehatan turunan</h4>
+    </div>
+  </template>
+</div>

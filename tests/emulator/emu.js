@@ -100,7 +100,30 @@ for (let m = 1; m <= 9; m++) { const per = '2026-0' + m; pnp.forEach(p => { cons
   pass.push([per, r, p.no, p.nama.toUpperCase(), 'EKS', p.lintas, n, 0, n, 0, '0,0%', '100,0%', '0,0%', 'Komersial', 0, r, 0]); });
   ['Baratarahan', 'Barapati', 'Barasimpang', 'Petikemas Sintetis'].forEach((k, i) => frei.push([per, Math.round(rnd() * 5e11), k, i < 3 ? 'Batu Bara' : 'Petikemas', 'x', 'PT MITRA ' + i, 1e5 * (1 + rnd()), 'TMB-THN', 120000])); }
 
+// RHI kereta & gerbong SINTETIS (format tab bulanan tools/rhi/build_rhi.py) — data asli tidak masuk repo.
+const rhiKG = { K: [], G: [] };
+(function () {
+  const MH = ['jenis_sarana', 'bulan', 'nomor_sarana', 'tipe_sarana', 'dipo', 'daop', 'dipo_lain_dalam_bulan', 'hari_data', 'hari_rhi_lengkap', 'tgl_akhir', 'healthy_index_akhir', 'healthy_status_akhir',
+    'healthy_index_rata', 'healthy_index_min', 'healthy_index_maks', 'hari_healthy', 'hari_monitor', 'hari_declining', 'hari_poor', 'hari_critical', 'reliability_index', 'maintainability_index',
+    'availability_index', 'rams_index', 'maintenance_index', 'age_index', 'onsite_inspection_index', 'condition_index', 'status_harian', 'healthy_index_harian', 'versi_formula'];
+  rhiKG.K.push(MH); rhiKG.G.push(MH);
+  const stOf = h => h >= 85 ? 'HEALTHY' : h >= 70 ? 'MONITOR' : h >= 55 ? 'DECLINING' : 'POOR';
+  const seenNo = {};
+  sarCsv.filter(r => r[1] === 'Kereta' || r[1] === 'Gerbong').forEach((r, i) => {
+    const j = r[1] === 'Kereta' ? 'K' : 'G', no = r[5].replace(/\s+/g, '');
+    if (!no || seenNo[no]) return; seenNo[no] = 1;
+    const base = 50 + rnd() * 45, daop = ['DAOP 1', 'DAOP 2', 'DAOP 6', 'DAOP 8', 'DIVRE III', 'DIVRE IV'][i % 6];
+    [['2026-08', 31], ['2026-09', 30], ['2026-10', 31]].forEach(([ym, nd], m) => {
+      const his = []; let sd = '';
+      for (let d = 0; d < nd; d++) { const h = Math.round(Math.max(40, Math.min(100, base - m * 2 + (rnd() - 0.5) * 6)) * 100) / 100; his.push(h); sd += stOf(h).charAt(0); }
+      const last = his[nd - 1], c = k => sd.split('').filter(x => x === k).length;
+      rhiKG[j].push([j === 'K' ? 'KERETA' : 'GERBONG', ym, no, r[3] || 'TIPE', r[2] || '', daop, '', nd, nd, new Date(+ym.slice(0, 4), +ym.slice(5) - 1, nd), last, stOf(last),
+        Math.round(his.reduce((a, b) => a + b, 0) / nd * 100) / 100, Math.min(...his), Math.max(...his), c('H'), c('M'), c('D'), c('P'), 0, 80, 60, 70, 72, 85, 30, 95, 70, sd, his.join(';'), 'sintetis']);
+    });
+  });
+})();
 const SS = {
+  'RHI_SARANA_SINTETIS': mkSS('rhis', 'KAI | RHI Sarana (sintetis)', { RHI_Kereta_Bulanan: mkSheet('RHI_Kereta_Bulanan', rhiKG.K), RHI_Gerbong_Bulanan: mkSheet('RHI_Gerbong_Bulanan', rhiKG.G) }),
   '1HmlF2DL4KeHGVSO87aQAKu86dbfrnZohkCA7SsaL3OM': mkSS('src', 'Sumber', { Gangguan_Induk: mkSheet('Gangguan_Induk', gRows), THI: mkSheet('THI', thi), RHI: mkSheet('RHI', rhi), WKP: mkSheet('WKP', wkp), Passenger: mkSheet('Passenger', pass), Freight: mkSheet('Freight', frei) }),
   '15yHI4aO3abw5D-Hhfmrhf0lk3hGQdWF99DRmv7aOoKI': mkSS('gap', 'GAPEKA', { 'LIST KA': mkSheet('LIST KA', kaRows), 'LIST STASIUN': mkSheet('LIST STASIUN', stRows), 'LIST PETAK JALAN': mkSheet('LIST PETAK JALAN', pjRows) }),
   '115j4MRjEKeUkKULyGGhF2pQ4l_OSGhnyBYmZE-pqSc0': mkSS('sar', 'Sarana', { Sheet1: mkSheet('Sheet1', sarRows) })
@@ -138,6 +161,10 @@ if (require.main === module) {
   console.log('runSync_', JSON.stringify(r), (Date.now() - t) + ' ms'); console.log('status', props.SYNC_STATUS);
   const out = {}; ['apiBootstrap()', 'apiNarratives()', 'apiRef()', 'apiStatus()', 'apiGapeka26()', 'apiBatubara()'].forEach(c => { out[c.replace('()', '')] = vm.runInContext(c, ctx); });
   out.apiGapeka = { __byArg: true, '2025': vm.runInContext('apiGapeka("2025")', ctx), '2026': vm.runInContext('apiGapeka("2026")', ctx), x: vm.runInContext('apiGapeka("1999")', ctx) };
+  // apiRhiSarana: lewat kode server asli (RhiS.sync) atas spreadsheet sintetis.
+  props.RHI_DB_ID = 'RHI_SARANA_SINTETIS';
+  console.log('RHI kereta/gerbong', JSON.stringify(vm.runInContext('RhiS.sync(true)', ctx)));
+  out.apiRhiSarana = vm.runInContext('apiRhiSarana()', ctx);
   // apiBatubaraPart: data SINTETIS (tools/batubara/fixture_sintetis.py) — server asli membaca DB Batubara lewat BB_DB_ID.
   try {
     const fx = JSON.parse(fs.readFileSync(path.join(__dirname, 'bb_fixture.json'), 'utf8'));

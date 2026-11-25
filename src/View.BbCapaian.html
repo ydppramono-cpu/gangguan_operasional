@@ -5,6 +5,16 @@
     <div class="headline mt" x-show="KW">
       <div style="flex:1"><h2>Capaian angkutan batubara</h2><p x-text="answer"></p></div>
     </div>
+    <div class="bb-band mt" x-show="$store.bb.north">
+      <div class="bb-band-h">KPI utama</div>
+      <div class="bb-kpis"><div class="bb-kpi bb-kpi-main" @click="$store.app.go('bb-hariini')" title="Buka Hari ini">
+        <span class="bb-dot" :style="'background:' + stc($store.bb.north && $store.bb.north.d > 0 ? ($store.bb.north.pct > 15 ? 'bad' : 'warn') : 'ok')"></span>
+        <div class="lbl">Siklus rangkaian per putaran (realisasi)</div>
+        <div class="val" x-text="$store.bb.north ? BBK.fmt.dur($store.bb.north.real) : '–'"></div>
+        <div class="tgt" x-text="$store.bb.north ? 'Program ' + BBK.fmt.dur($store.bb.north.prog) + ' · ' + ($store.bb.north.pct > 0 ? '+' : '') + KAI.fmt.d1($store.bb.north.pct) + '%' : ''"></div>
+        <div class="sub" x-text="$store.bb.north && $store.bb.north.worst ? 'Selisih terbesar: ' + $store.bb.north.worst.n.toLowerCase() : 'Semua komponen dalam program'"></div>
+      </div></div>
+    </div>
 
     <template x-for="g in groups" :key="g.n">
       <div class="bb-band mt">

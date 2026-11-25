@@ -5,7 +5,8 @@
  *         rel, pelat, penambat, wesel, balas, bantalan, badan, drainase, lingkungan, MI, gradeMI, inspeksi, ppj, mir, wmr,
  *         ppjProg, ppjReal, mirProg, mirReal, wmrProg, wmrReal, mSp, hm, hmMat, hmKons]
  *   rhi  [noSarana, tipe, ym, hari, hiAkhir, hiRata, hiMin, statusAkhir, hariHealthy, hariMonitor, hariDeclining, rams, reliability,
- *         maintainability, availability, mi, ci (kosong bila turunan), onsite, perawatanTerakhir, tglPerawatan, request, terpenuhi, tglAkhir]
+ *         maintainability, availability, mi, ci (kosong bila turunan), onsite, perawatanTerakhir, tglPerawatan, request, terpenuhi, tglAkhir, hariPoor, hariCritical]
+ *         Status harian: H healthy, M monitor, D declining, P poor, C critical (POOR/CRITICAL ada sejak ekspor RHI Agu–Okt 2026).
  *   wkp  [tgl yyyy-mm-dd, wilayah, kelompok, resorId, lokasi, progMenit, realMenit, andilMenit, uraianSingkat, mulaiProg, akhirProg,
  *         lokasiPetak ('A-B' petak | 'A~B' rentang | 'st:KODE' | ''), mulaiReal, akhirReal]
  * Nilai RHI memakai kolom "(pulih)" bila ada (pemulihan pemisah desimal yang hilang pada ekspor), diverifikasi
@@ -115,7 +116,7 @@ var Kondisi = (function () {
     var g = {};
     values.slice(1).forEach(function (r) {
       var no = D.txt(r[I.no]).toUpperCase().replace(/\s+/g, ''), day = dayOf(r[I.tgl]); if (!no || !day) return;
-      var ym = day.slice(0, 7), k = no + '|' + ym, x = g[k] = g[k] || { no: no, tipe: D.txt(r[I.tipe]).toUpperCase(), ym: ym, days: 0, his: [], last: null, cnt: { HEALTHY: 0, MONITOR: 0, DECLINING: 0 } };
+      var ym = day.slice(0, 7), k = no + '|' + ym, x = g[k] = g[k] || { no: no, tipe: D.txt(r[I.tipe]).toUpperCase(), ym: ym, days: 0, his: [], last: null, cnt: { HEALTHY: 0, MONITOR: 0, DECLINING: 0, POOR: 0, CRITICAL: 0 } };
       var hi = idxv(r, 'hi'), st = D.txt(r[I.st]).toUpperCase();
       x.days++; if (hi != null) x.his.push(hi); if (x.cnt[st] != null) x.cnt[st]++;
       if (!x.last || day >= x.last.day) x.last = { day: day, hi: hi, st: st, rams: n(r[I.rams]), rel: n(r[I.rel]), mtb: n(r[I.mtb]), av: n(r[I.av]), mi: idxv(r, 'mi'),
@@ -124,7 +125,7 @@ var Kondisi = (function () {
     return Object.keys(g).sort().map(function (k) {
       var x = g[k], L = x.last, s = x.his.reduce(function (a, b) { return a + b; }, 0);
       return [x.no, x.tipe, x.ym, x.days, L.hi, x.his.length ? Math.round(s / x.his.length * 100) / 100 : null, x.his.length ? Math.min.apply(null, x.his) : null,
-        L.st, x.cnt.HEALTHY, x.cnt.MONITOR, x.cnt.DECLINING, L.rams, L.rel, L.mtb, L.av, L.mi, L.ci, L.on, L.pt, L.tp, L.req, L.ok, L.day];
+        L.st, x.cnt.HEALTHY, x.cnt.MONITOR, x.cnt.DECLINING, L.rams, L.rel, L.mtb, L.av, L.mi, L.ci, L.on, L.pt, L.tp, L.req, L.ok, L.day, x.cnt.POOR, x.cnt.CRITICAL];
     });
   }
   /** RHI harian bulan terakhir: { ym, n (hari), u: { no: [hiX10 'a,b,..', status 'HMD..', rams, rel, mi, perawatan [[hari, jenis, tgl], ...]] } }.
@@ -145,7 +146,7 @@ var Kondisi = (function () {
       var r = x[1], no = D.txt(r[I.no]).toUpperCase().replace(/\s+/g, ''); if (!no) return;
       var o = u[no] = u[no] || { hi: arr(''), st: arr('-'), rams: arr(''), rel: arr(''), mi: arr(''), pt: [] }, di = Number(x[0].slice(8, 10)) - 1;
       var hi = n(r[I.hi]); o.hi[di] = hi != null && hi <= 100 ? Math.round(hi * 100) : '';
-      o.st[di] = ({ HEALTHY: 'H', MONITOR: 'M', DECLINING: 'D' })[D.txt(r[I.st]).toUpperCase()] || '-';
+      o.st[di] = ({ HEALTHY: 'H', MONITOR: 'M', DECLINING: 'D', POOR: 'P', CRITICAL: 'C' })[D.txt(r[I.st]).toUpperCase()] || '-';
       o.rams[di] = n(r[I.rams]); o.rel[di] = n(r[I.rel]); var mi = n(r[I.mi]); o.mi[di] = mi != null && mi <= 100 ? Math.round(mi * 10) : '';
       var pt = D.txt(r[I.pt]), tp = dayOf(r[I.tp]), lp = o.pt[o.pt.length - 1];
       if (!lp || lp[1] !== pt || lp[2] !== tp) o.pt.push([di + 1, pt, tp]);
@@ -160,7 +161,7 @@ var Kondisi = (function () {
       var o = mu[no] = mu[no] || { hi: [], st: [] }, di = Math.round((Date.UTC(+x[0].slice(0, 4), +x[0].slice(5, 7) - 1, +x[0].slice(8, 10)) - t0) / 864e5);
       if (!o.hi.length) for (var i = 0; i < span; i++) { o.hi.push(''); o.st.push('-'); }
       var hi = n(r[I.hi]); o.hi[di] = hi != null && hi <= 100 ? Math.round(hi * 100) : '';
-      o.st[di] = ({ HEALTHY: 'H', MONITOR: 'M', DECLINING: 'D' })[D.txt(r[I.st]).toUpperCase()] || '-';
+      o.st[di] = ({ HEALTHY: 'H', MONITOR: 'M', DECLINING: 'D', POOR: 'P', CRITICAL: 'C' })[D.txt(r[I.st]).toUpperCase()] || '-';
     });
     var span2 = {}; Object.keys(mu).forEach(function (no) { span2[no] = [mu[no].hi.join(','), mu[no].st.join('')]; });
     return { ym: ym, n: nd, u: out, range: { from: first, to: last, n: span, u: span2 } };

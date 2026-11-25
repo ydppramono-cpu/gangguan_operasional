@@ -719,18 +719,13 @@ var PLATFORM_TABLES = [
   "name": "rhi",
   "ss": "1HmlF2DL4KeHGVSO87aQAKu86dbfrnZohkCA7SsaL3OM",
   "sheet": "RHI",
-  "range": "RHI!A:AM",
+  "range": "RHI!A:V",
   "skip": 1,
-  "desc": "Rolling stock Health Index harian per sarana",
+  "desc": "Rolling stock Health Index lokomotif harian per sarana (ekspor 22 kolom, sejak 25 Nov 2026)",
   "cols": [
    [
-    "nomor_sarana",
-    "nomor_sarana",
-    "S"
-   ],
-   [
-    "tipe_sarana",
-    "tipe_sarana",
+    "jenis_sarana",
+    "jenis_sarana",
     "S"
    ],
    [
@@ -739,29 +734,39 @@ var PLATFORM_TABLES = [
     "D"
    ],
    [
-    "perawatan_terakhir",
-    "perawatan_terakhir",
+    "nomor_sarana",
+    "nomor_sarana",
     "S"
    ],
    [
-    "tgl_perawatan",
-    "tgl_perawatan",
+    "tipe_sarana",
+    "tipe_sarana",
+    "S"
+   ],
+   [
+    "dipo",
+    "dipo",
+    "S"
+   ],
+   [
+    "daop",
+    "daop",
     "S"
    ],
    [
     "reliability_index",
     "reliability_index",
-    "S"
+    "N"
    ],
    [
     "maintainability_index",
     "maintainability_index",
-    "S"
+    "N"
    ],
    [
     "availability_index",
     "availability_index",
-    "S"
+    "N"
    ],
    [
     "rams_index",
@@ -769,34 +774,14 @@ var PLATFORM_TABLES = [
     "N"
    ],
    [
-    "total_request_rows",
-    "total_request_rows",
-    "S"
-   ],
-   [
-    "total_terpenuhi",
-    "total_terpenuhi",
-    "S"
-   ],
-   [
-    "list_maintenance_realisasi",
-    "list_maintenance_realisasi",
-    "S"
-   ],
-   [
-    "list_maintenance_seharusnya",
-    "list_maintenance_seharusnya",
-    "S"
+    "maintenance_completion_score",
+    "maintenance_completion_score",
+    "N"
    ],
    [
     "spare_management_score",
     "spare_management_score",
-    "S"
-   ],
-   [
-    "maintenance_completion_score",
-    "maintenance_completion_score",
-    "S"
+    "N"
    ],
    [
     "maintenance_index",
@@ -804,34 +789,19 @@ var PLATFORM_TABLES = [
     "N"
    ],
    [
-    "umur_kereta",
-    "umur_kereta",
-    "S"
-   ],
-   [
     "age_index",
     "age_index",
-    "S"
-   ],
-   [
-    "penalti_open",
-    "penalti_open",
-    "S"
-   ],
-   [
-    "penalti_lengkap",
-    "penalti_lengkap",
-    "S"
-   ],
-   [
-    "real_condition_index",
-    "real_condition_index",
-    "S"
+    "N"
    ],
    [
     "onsite_inspection_index",
     "onsite_inspection_index",
-    "S"
+    "N"
+   ],
+   [
+    "real_condition_index",
+    "real_condition_index",
+    "N"
    ],
    [
     "condition_index",
@@ -849,73 +819,18 @@ var PLATFORM_TABLES = [
     "S"
    ],
    [
-    "berkas_sumber",
-    "Berkas sumber",
+    "kategori_gold",
+    "kategori_gold",
     "S"
    ],
    [
-    "tab_sumber",
-    "Tab sumber",
+    "is_rhi_lengkap",
+    "is_rhi_lengkap",
     "S"
    ],
    [
-    "baris_sumber",
-    "Baris sumber",
-    "S"
-   ],
-   [
-    "kunci_sarana_tanggal",
-    "Kunci sarana-tanggal",
-    "S"
-   ],
-   [
-    "sha_256_nilai_sumber",
-    "SHA-256 nilai sumber",
-    "S"
-   ],
-   [
-    "catatan_pemeriksaan",
-    "Catatan pemeriksaan",
-    "S"
-   ],
-   [
-    "healthy_index_pulih",
-    "healthy_index (pulih)",
-    "N"
-   ],
-   [
-    "condition_index_pulih",
-    "condition_index (pulih)",
-    "S"
-   ],
-   [
-    "onsite_inspection_index_pulih",
-    "onsite_inspection_index (pulih)",
-    "S"
-   ],
-   [
-    "maintenance_index_pulih",
-    "maintenance_index (pulih)",
-    "S"
-   ],
-   [
-    "umur_kereta_pulih_tahun",
-    "umur_kereta (pulih; tahun)",
-    "S"
-   ],
-   [
-    "age_index_pulih",
-    "age_index (pulih)",
-    "S"
-   ],
-   [
-    "pemeriksaan_pemulihan",
-    "Pemeriksaan pemulihan",
-    "S"
-   ],
-   [
-    "catatan_verifikasi_rumus",
-    "Catatan verifikasi rumus",
+    "versi_formula",
+    "versi_formula",
     "S"
    ]
   ]

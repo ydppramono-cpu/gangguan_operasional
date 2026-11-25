@@ -156,6 +156,8 @@ function syncScheduled_() {
   runSync_(false, 'jadwal');
   // DB Batubara (28_BatubaraSync.gs): terpisah agar kegagalannya tidak menahan snapshot gangguan.
   try { var b = Bb.sync(false); if (b.changed) console.log('Batubara: snapshot ' + b.version); } catch (e) { console.warn('Sinkron Batubara gagal: ' + e); }
+  // RHI kereta & gerbong (29_RhiSarana.gs): spreadsheet terpisah, kegagalan tidak menahan snapshot lain.
+  try { var rk = RhiS.sync(false); if (rk.changed) console.log('RHI kereta/gerbong: snapshot ' + rk.version); } catch (e) { console.warn('Sinkron RHI kereta/gerbong gagal: ' + e); }
 }
 
 

@@ -7,7 +7,8 @@
  * SARANA     = RHI (Rolling-stock Health Index lokomotif, harian; diringkas per bulan) × gangguan sarana per nomor lokomotif;
  *              depo pemilik dari master armada (DEPO LOK …) → wilayah depo.
  * Aturan grade THI (dari data THI): Sangat Baik ≥ 85 · Baik 70–<85 · Cukup 55–<70 · Waspada 40–<55 · Kritis < 40.
- * Status RHI (ambang tervalidasi data): HEALTHY ≥ 85 · MONITOR 70–<85 · DECLINING < 70.
+ * Status RHI (ambang tervalidasi data): HEALTHY ≥ 85 · MONITOR 70–<85 · DECLINING 55–<70 · POOR < 55 · CRITICAL (teramati 39,4) —
+ * POOR/CRITICAL muncul sejak ekspor RHI Agu–Okt 2026; ambang bawah POOR/CRITICAL tidak tertulis di sumber, hanya teramati.
  */
 (function (root) {
   'use strict';
@@ -175,13 +176,13 @@
         kinds: Object.keys(kinds).map(function (k) { return { k: k, menit: kinds[k] }; }).sort(function (a, b) { return b.menit - a.menit; }) };
     }).filter(function (u) { return inReg(u.w); });
     function grp(list) {
-      var o = { units: list.length, H: 0, M: 0, D: 0, withG: 0, gN: 0, gMenit: 0, hiMean: null };
-      list.forEach(function (u) { if (u.st === 'HEALTHY') o.H++; else if (u.st === 'MONITOR') o.M++; else if (u.st === 'DECLINING') o.D++; if (u.g.n) o.withG++; o.gN += u.g.n; o.gMenit += u.g.menit; });
+      var o = { units: list.length, H: 0, M: 0, D: 0, P: 0, C: 0, withG: 0, gN: 0, gMenit: 0, hiMean: null };
+      list.forEach(function (u) { if (u.st === 'HEALTHY') o.H++; else if (u.st === 'MONITOR') o.M++; else if (u.st === 'DECLINING') o.D++; else if (u.st === 'POOR') o.P++; else if (u.st === 'CRITICAL') o.C++; if (u.g.n) o.withG++; o.gN += u.g.n; o.gMenit += u.g.menit; });
       var hs = list.filter(function (u) { return u.hi != null; }); o.hiMean = hs.length ? Math.round(sum(hs, function (u) { return u.hi; }) / hs.length * 10) / 10 : null;
       o.rate = o.units ? Math.round(o.gN / o.units * 1000) / 10 : 0;     // kejadian per 100 unit
       return o;
     }
-    var byStatus = {}; ['HEALTHY', 'MONITOR', 'DECLINING'].forEach(function (s) { byStatus[s] = grp(units.filter(function (u) { return u.st === s; })); });
+    var byStatus = {}; ['HEALTHY', 'MONITOR', 'DECLINING', 'POOR', 'CRITICAL'].forEach(function (s) { byStatus[s] = grp(units.filter(function (u) { return u.st === s; })); });
     var depIds = {}; units.forEach(function (u) { depIds[u.depoId || u.depo] = 1; });
     var depots = Object.keys(depIds).map(function (id) {
       var U = units.filter(function (u) { return (u.depoId || u.depo) === id; }), g = grp(U);
@@ -309,13 +310,13 @@
       var li = nd - 1; while (li > 0 && hi[li] == null) li--;
       var y = f.since ? Number(String(f.since).slice(0, 4)) : null, mo = f.since ? Number(String(f.since).slice(5, 7)) || 1 : null;
       return { no: no, tipe: f.tipe || no.slice(0, 5), hiD: hi, stD: st, ramsD: rams, relD: rel, miD: mi, pt: a[5] || [],
-        hi: hi[li], st: { H: 'HEALTHY', M: 'MONITOR', D: 'DECLINING' }[st.charAt(li)] || '', rel: rel[li] === '' ? null : Number(rel[li]), mi: mi[li], rams: rams[li] === '' ? null : Number(rams[li]),
+        hi: hi[li], st: { H: 'HEALTHY', M: 'MONITOR', D: 'DECLINING', P: 'POOR', C: 'CRITICAL' }[st.charAt(li)] || '', rel: rel[li] === '' ? null : Number(rel[li]), mi: mi[li], rams: rams[li] === '' ? null : Number(rams[li]),
         depoId: f.depoId || '', depo: dp ? dp.code || dp.raw : (f.depo || ''), depoName: dp ? (dp.stName || dp.label || dp.raw) : (f.depo || ''), w: dp ? dp.region : '',
         age: y ? Math.round(((Date.UTC(+last.slice(0, 4), +last.slice(5, 7) - 1, +last.slice(8, 10)) - Date.UTC(y, mo - 1, 1)) / (365.25 * 864e5)) * 10) / 10 : null,
-        nDecl: (st.match(/D/g) || []).length };
+        nDecl: (st.match(/[DPC]/g) || []).length };
     }
     var U = {}; Object.keys(D.u).forEach(function (no) { U[no] = unitOf(no); });
-    var RG = D.range || null, ST = { H: 'HEALTHY', M: 'MONITOR', D: 'DECLINING' };
+    var RG = D.range || null, ST = { H: 'HEALTHY', M: 'MONITOR', D: 'DECLINING', P: 'POOR', C: 'CRITICAL' };
     function dayIdx(a, b) { return Math.round((Date.UTC(+b.slice(0, 4), +b.slice(5, 7) - 1, +b.slice(8, 10)) - Date.UTC(+a.slice(0, 4), +a.slice(5, 7) - 1, +a.slice(8, 10))) / 864e5); }
     /** RHI unit pada tanggal d. Bila tanggal di luar data: memakai RHI terakhir ≤ d (asOf = tanggal RHI yang dipakai). */
     function at(u, d) {
@@ -364,12 +365,12 @@
       o.withOkt = L.filter(function (u) { return u.gOkt.n; }).length;
       return o;
     }
-    var hari = { HEALTHY: 0, MONITOR: 0, DECLINING: 0 }, totH = 0;
-    units.forEach(function (u) { for (var i = 0; i < u.stD.length; i++) { var s = { H: 'HEALTHY', M: 'MONITOR', D: 'DECLINING' }[u.stD.charAt(i)]; if (s) { hari[s]++; totH++; } } });
-    var atSt = { HEALTHY: 0, MONITOR: 0, DECLINING: 0 }; E.forEach(function (e) { if (e.at && atSt[e.at.st] != null) atSt[e.at.st]++; });
+    var hari = { HEALTHY: 0, MONITOR: 0, DECLINING: 0, POOR: 0, CRITICAL: 0 }, totH = 0;
+    units.forEach(function (u) { for (var i = 0; i < u.stD.length; i++) { var s = { H: 'HEALTHY', M: 'MONITOR', D: 'DECLINING', P: 'POOR', C: 'CRITICAL' }[u.stD.charAt(i)]; if (s) { hari[s]++; totH++; } } });
+    var atSt = { HEALTHY: 0, MONITOR: 0, DECLINING: 0, POOR: 0, CRITICAL: 0 }; E.forEach(function (e) { if (e.at && atSt[e.at.st] != null) atSt[e.at.st]++; });
     var tipes = {}; units.forEach(function (u) { (tipes[u.tipe] = tipes[u.tipe] || []).push(u); });
     var deps = {}; units.forEach(function (u) { var k = u.depoId || u.depo || '–'; (deps[k] = deps[k] || []).push(u); });
-    var byStatus = {}; ['HEALTHY', 'MONITOR', 'DECLINING'].forEach(function (s) { byStatus[s] = grp(units.filter(function (u) { return u.st === s; })); });
+    var byStatus = {}; ['HEALTHY', 'MONITOR', 'DECLINING', 'POOR', 'CRITICAL'].forEach(function (s) { byStatus[s] = grp(units.filter(function (u) { return u.st === s; })); });
     return { ym: ym, rhiYm: D.ym, lastDay: last, nDays: nd, stale: ym > D.ym, asOf: last, units: units, U: U, E: E.sort(function (a, b) { return b.r.menit - a.r.menit; }), E6: E6, miss: miss, first: thiFirst,
       all: grp(units), byStatus: byStatus, hari: hari, totHari: totH, atSt: atSt,
       hiAtMean: E.length ? Math.round(sum(E.filter(function (e) { return e.at && e.at.hi != null; }), function (e) { return e.at.hi; }) / Math.max(1, E.filter(function (e) { return e.at && e.at.hi != null; }).length) * 10) / 10 : null,

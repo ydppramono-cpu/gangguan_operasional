@@ -57,6 +57,10 @@ window.KAIHelp = (function () {
       { sel: '.sk-add', t: 'KLB & slot kosong', d: 'Pilih KLB, isi nomor KA pola, lalu "Cari slot kosong": jam berangkat tanpa benturan petak yang sudah diverifikasi simulasi. "Simpan sebagai A" untuk membandingkan dua skenario.' },
       { sel: '.sk-asumsi', t: 'Baca asumsinya', d: 'Hasil adalah simulasi dari GAPEKA + data prasarana DB Batubara, bukan realisasi. Tombol Realisasi menguji model terhadap jejak Rolink.' }
     ],
+    'bb-hariini': [
+      { sel: '.bb-north', t: 'KPI utama', d: 'Siklus rangkaian per putaran (muat → isi → bongkar → kosong): realisasi dibanding program GAPEKA. Batang merah = komponen yang lebih lama dari program; tombol membawa ke penyebabnya.' },
+      { sel: '.bb-day-h', t: 'Hari terakhir data', d: 'Hanya pengecualian pada tanggal terakhir di DB Batubara: KA yang melewati toleransi, kegiatan terminal melewati SOP, hambatan, dan gangguan KA batubara.' }
+    ],
     'bb-capaian': [
       { sel: '.bb-filter', t: 'Saring sekali', d: 'Periode, wilayah, pemilik muatan, dan isi/kosong berlaku untuk semua angka di halaman Batubara.' },
       { sel: '.view.bb .card', t: 'Capaian vs SOP', d: 'WTT muat/bongkar, WPKA, WPG, dan OTP dibanding SOP & target. Klik baris untuk membuka profil terminal atau relasi.' }
@@ -112,7 +116,8 @@ window.KAIHelp = (function () {
       '<b>Realisasi</b>: jejak Rolink (REAL_JEJAK) satu tanggal digambar putus-putus hijau, dan model diuji: simpangan pertama tiap KA dimasukkan, lalu waktu simulasi dibandingkan dengan jam realisasi di stasiun berikutnya.'
     ] },
     { id: 'ws-bb-capaian', h: 'Batubara — Capaian & Siklus', b: [
-      'Pengganti aplikasi WTT lama. Data disinkronkan otomatis dari DB Batubara (hanya baca) tiap 15 menit bila berubah.',
+      'Pengganti aplikasi WTT lama, disusun sebagai alur: Hari ini → Capaian → Penyebab → Skenario. Data disinkronkan otomatis dari DB Batubara (hanya baca) tiap 15 menit bila berubah.',
+      '<b>KPI utama</b>: siklus rangkaian per putaran (realisasi vs program GAPEKA). <b>Penyebab</b> memuat tab Gangguan KA batubara: kejadian Gangguan_Induk yang nomor KA-nya terdaftar di M_KA.',
       '<b>Capaian</b>: WTT muat/bongkar, WPKA, WPG (program · realisasi · evaluasi) dan OTP (toleransi KELKA per Divre) dibanding SOP dan target. <b>Siklus & terminal</b>: 8 tahap siklus, indeks kinerja terminal (4 komponen), hambatan per PIC, dan awak.',
       'Profil terminal, relasi, dan rangkaian terbuka dari klik baris; grafik di dalamnya saling menyaring.'
     ] },
